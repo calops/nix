@@ -13,7 +13,7 @@
       system = "x86_64-linux";
     };
   in {
-    devShells.x86_64-linux.stockly = pkgs.mkShell {
+    devShells.x86_64-linux.rust = pkgs.mkShell {
       nativeBuildInputs = with pkgs; [
         pkg-config
       ];
