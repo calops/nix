@@ -31,50 +31,14 @@
       inputs.stylix.homeManagerModules.stylix
     ];
 
-    availableSystems = [
-      "x86_64-linux"
-    ];
-
-    mkLib = pkgs:
-      pkgs.lib.extend
-      (self: super:
-        {
-          my = import ./lib {
-            inherit pkgs;
-            lib = self;
-          };
-        }
-        // home-manager.lib);
-
-    mkHomeConfiguration = configurationName: machine:
-      home-manager.lib.homeManagerConfiguration rec {
-        pkgs = import nixpkgs {
-          system = machine.system or "x86_64-linux";
-          config.allowUnfree = true;
-          overlays = overlays;
-        };
-        modules =
-          extraModules
-          ++ [
-            ./roles
-            ./colorschemes
-            ./machines/${machine}.nix
-            {
-              home.stateVersion = "23.11";
-              # targets.genericLinux.enable = false;
-            }
-          ];
-        extraSpecialArgs = {
-          inherit inputs;
-          inherit configurationName;
-          lib = mkLib pkgs;
-        };
-      };
-    mkHomeConfigurations = configs: builtins.mapAttrs (name: machine: mkHomeConfiguration name machine) configs;
     machines = import ./machines;
+    shells = import ./shells;
+    lib = import ./lib {
+      inherit inputs overlays extraModules;
+    };
   in {
-    homeConfigurations = mkHomeConfigurations machines;
-    nixosConfigurations = mkNixosConfigurations machines;
-    devShells = mkDevShells (import ./shells);
+    homeConfigurations = lib.mkHomeConfigurations machines;
+    nixosConfigurations = lib.mkNixosConfigurations machines;
+    devShells = lib.mkDevShells shells;
   };
 }
