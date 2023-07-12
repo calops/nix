@@ -7,7 +7,7 @@
 }: let
   cfg = config.my.roles.terminal;
   palette = config.my.colors.palette;
-  nvimDir = "${config.home.homeDirectory}/.config/home-manager/roles/terminal/neovim";
+  nvimDir = "${config.home.homeDirectory}/.config/home-manager/programs/cli/neovim";
   # We want gcc to override the system's one or treesitter throws a fit
   my.neovim = pkgs.neovim-nightly.overrideAttrs (attrs: {
     disallowedReferences = [];

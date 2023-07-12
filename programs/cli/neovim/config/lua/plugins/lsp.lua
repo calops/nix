@@ -69,7 +69,7 @@ return {
 					mode = { "n", "v" },
 				},
 				["<leader>i"] = {
-					function() vim.lsp.buf.inlay_hint(0) end,
+					function() vim.lsp.inlay_hint(0) end,
 					"Toggle inlay hints for buffer",
 				},
 			}
@@ -103,7 +103,7 @@ return {
 				capabilities = capabilities,
 				on_attach = function(client, bufnr)
 					if client.server_capabilities.inlayHintProvider then
-						vim.lsp.buf.inlay_hint(bufnr, true)
+						vim.lsp.inlay_hint(bufnr, true)
 					end
 				end,
 			})
