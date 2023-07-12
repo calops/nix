@@ -29,6 +29,7 @@ in
           stylua
           nixd
           sqlfluff
+          nodePackages.prettier
         ];
       };
       xdg.configFile = {

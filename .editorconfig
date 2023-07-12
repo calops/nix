@@ -1,0 +1,11 @@
+root = true
+
+[*]
+indent-style = tab
+indent-size = 4
+end_of_line = lf
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.nix]
+indent-size = 2
