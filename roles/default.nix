@@ -4,9 +4,9 @@
   ...
 }: {
   imports = [
-    ./terminal
-    ./graphical
-    ./gaming
+    ./terminal.nix
+    ./graphical.nix
+    ./gaming.nix
   ];
 
   programs.home-manager.enable = true;

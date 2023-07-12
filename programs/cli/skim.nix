@@ -1,10 +1,10 @@
 {config, ...}: {
   programs.skim = {
-    enable = config.my.terminal.enable;
+    enable = config.my.roles.terminal.enable;
     defaultCommand = "fd --color=always";
     defaultOptions = ["--ansi"];
     fileWidgetCommand = "fd --color=always";
     fileWidgetOptions = ["--ansi" "--preview '~/scripts/preview.sh {}'"];
-    changeDirWidgetCommane = "fd --type d --color=always";
+    changeDirWidgetCommand = "fd --type d --color=always";
   };
 }

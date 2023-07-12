@@ -1,5 +1,5 @@
 {
   tocardstation = import ./tocardstation;
-  charybdis = import ./charybdis;
+  charybdis = import ./stockly-charybdis;
   stockly-laptop = import ./stockly-laptop;
 }

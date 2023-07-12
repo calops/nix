@@ -6,7 +6,13 @@
   home-manager = inputs.home-manager;
   nixpkgs = inputs.nixpkgs;
 
-  mkLib = pkgs: hm:
+  pkgs = import nixpkgs {
+    system = "x86_64-linux";
+    config.allowUnfree = true;
+    overlays = overlays;
+  };
+
+  lib =
     pkgs.lib.extend
     (self: super:
       {
@@ -15,21 +21,17 @@
           lib = self;
         };
       }
-      // hm.lib);
+      // home-manager.lib);
 
   mkHomeConfiguration = configurationName: machine:
-    home-manager.lib.homeManagerConfiguration rec {
-      pkgs = import nixpkgs {
-        system = "x86_64-linux";
-        config.allowUnfree = true;
-        overlays = overlays;
-      };
+    home-manager.lib.homeManagerConfiguration {
+      inherit pkgs;
       modules =
         extraModules
         ++ [
-          ./roles
-          ./programs
-          ./colors
+          ../roles
+          ../programs
+          ../colors
           machine
           {
             home.stateVersion = "23.11";
@@ -37,13 +39,17 @@
           }
         ];
       extraSpecialArgs = {
-        inherit inputs;
-        inherit configurationName;
-        lib = mkLib pkgs home-manager;
+        inherit inputs configurationName lib;
       };
     };
 in {
-  mkHomeConfigurations = machines: builtins.mapAttrs (name: machine: mkHomeConfiguration name machine) machines;
-  mkNixosConfigurations = machines: builtins.mapAttrs (name: machine: mkNixosConfiguration name machine) machines;
-  mkDevShells = shells: builtins.mapAttrs (name: shell: mkDevShell name shell) shells;
+  # mkNixosConfigurations = machines: builtins.mapAttrs (name: machine: mkNixosConfiguration name machine) machines;
+  mkHomeConfigurations = configs:
+    lib.attrsets.mapAttrs' (host: machine: let
+      configurationName = "${machine.home.username}@${host}";
+    in (lib.attrsets.nameValuePair
+      configurationName (mkHomeConfiguration configurationName machine)))
+    configs;
+
+  mkDevShells = shells: shells {inherit pkgs;};
 }

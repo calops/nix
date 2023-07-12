@@ -37,8 +37,8 @@
       inherit inputs overlays extraModules;
     };
   in {
+    # nixosConfigurations = lib.mkNixosConfigurations machines;
     homeConfigurations = lib.mkHomeConfigurations machines;
-    nixosConfigurations = lib.mkNixosConfigurations machines;
     devShells = lib.mkDevShells shells;
   };
 }
