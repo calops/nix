@@ -5,7 +5,7 @@
   ...
 }: let
   cfg = config.my.roles.graphical;
-  configDir = "${config.home.homeDirectory}/.config/home-manager/roles/graphical/ulauncher/config";
+  configDir = "${config.home.homeDirectory}/.config/home-manager/programs/gui/ulauncher/config";
 in
   with lib; {
     config = mkIf cfg.enable {
