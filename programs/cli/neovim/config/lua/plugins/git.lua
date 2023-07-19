@@ -62,15 +62,16 @@ return {
 		"NeogitOrg/neogit",
 		dependencies = "nvim-lua/plenary.nvim",
 		opts = {
-			integrations = {
-				telescope = true,
-				diffview = true,
-			},
+			disable_builtin_notifications = true,
 			kind = "tab",
 			popup = { kind = "vsplit" },
 			commit_popup = { kind = "vsplit" },
 			commit = { kind = "vsplit" },
 			preview_buffer = { kind = "vsplit" },
+			integrations = {
+				telescope = true,
+				diffview = true,
+			},
 		},
 	},
 }
