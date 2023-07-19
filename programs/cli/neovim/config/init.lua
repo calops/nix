@@ -35,7 +35,7 @@ vim.o.virtualedit = "block"
 -- GUI
 vim.o.background = "dark"
 vim.o.cursorline = true
-vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:,diff:╱]]
+vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:,diff:🮙]]
 vim.o.guicursor = "a:blinkon100"
 vim.o.laststatus = 3
 vim.o.list = true
