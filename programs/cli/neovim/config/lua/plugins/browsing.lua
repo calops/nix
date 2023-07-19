@@ -101,27 +101,25 @@ return {
 				},
 			}
 		end,
-		config = function()
-			require("neo-tree").setup {
-				popup_border_style = "rounded",
-				filesystem = {
-					filtered_items = {
-						visible = true,
-						hide_dotfiles = false,
-						hide_gitignored = true,
-					},
+		opts = {
+			popup_border_style = "rounded",
+			filesystem = {
+				filtered_items = {
+					visible = true,
+					hide_dotfiles = false,
+					hide_gitignored = true,
 				},
-				source_selector = {
-					winbar = true,
-					statusline = false,
+			},
+			source_selector = {
+				winbar = true,
+				statusline = false,
+			},
+			default_component_config = {
+				modified = {
+					symbol = "",
+					highlight = "NeoTreeModified",
 				},
-				default_component_config = {
-					modified = {
-						symbol = "",
-						highlight = "NeoTreeModified",
-					},
-				},
-			}
-		end,
+			},
+		},
 	},
 }

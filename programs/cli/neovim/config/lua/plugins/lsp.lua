@@ -76,19 +76,6 @@ return {
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
 			vim.lsp.handlers["textDocument/signatureHelp"] =
 				vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
-
-			-- Auto format on save
-			vim.api.nvim_create_autocmd("BufWritePre", {
-				pattern = "*.rs,*.nix,*.lua",
-				callback = function()
-					for _, client in ipairs(vim.lsp.get_active_clients()) do
-						if client.attached_buffers[vim.api.nvim_get_current_buf()] then
-							vim.lsp.buf.format()
-							return
-						end
-					end
-				end,
-			})
 		end,
 		config = function()
 			require("neoconf")
@@ -110,26 +97,6 @@ return {
 
 			-- Installed by nix
 			lspconfig.nixd.setup {}
-		end,
-	},
-	-- LSP bridge for non-LSP utilities
-	{
-		"jose-elias-alvarez/null-ls.nvim",
-		enabled = true,
-		event = "BufRead",
-		config = function()
-			local nls = require("null-ls")
-			nls.setup {
-				sources = {
-					nls.builtins.formatting.stylua,
-					nls.builtins.diagnostics.buf,
-					nls.builtins.formatting.npm_groovy_lint,
-					nls.builtins.formatting.alejandra,
-					nls.builtins.formatting.sqlfluff.with {
-						extraArgs = { "--dialect", "postgres" },
-					},
-				},
-			}
 		end,
 	},
 	-- Rust-specific utilities and LSP configurations

@@ -24,12 +24,12 @@ in
         package = my.neovim;
         defaultEditor = true;
         extraPackages = with pkgs; [
-          fzf
           alejandra
-          stylua
+          fzf
           nixd
-          sqlfluff
           nodePackages.prettier
+          sqlfluff
+          stylua
         ];
       };
       xdg.configFile = {
