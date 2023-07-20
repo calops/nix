@@ -57,7 +57,6 @@ return {
 					"Show diagnostics",
 				},
 				["<C-k>"] = { vim.lsp.buf.signature_help, "Interactive signature help" },
-				["<space>f"] = { vim.lsp.buf.format, "Format code" },
 				["<leader>r"] = {
 					name = "refactor",
 					n = { vim.lsp.buf.rename, "Interactive rename" },

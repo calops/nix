@@ -86,6 +86,7 @@ return {
 					GitSignsChange = { fg = palette.peach },
 					GitSignsDelete = { fg = palette.red },
 					DiffDeleteVirtLn = { fg = utils.darken(palette.red, 0.3) },
+					DiffviewDiffDeleteDim = { fg = palette.surface0 },
 
 					CustomTabline = { fg = palette.base, bg = palette.surface1 },
 					CustomTablineSel = { fg = palette.base, bg = palette.overlay1 },

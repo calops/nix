@@ -80,7 +80,7 @@ return {
 			trim_scope = "outer",
 			zindex = 40,
 			mode = "cursor",
-			separator = "🮙",
+			separator = "🮕",
 		},
 	},
 	-- Playground treesitter utility
