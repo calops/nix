@@ -9,6 +9,7 @@ return {
 	font = wezterm.font(nix.font.name),
 	font_size = nix.font.size,
 	freetype_load_target = nix.font.hinting,
+	cell_width = 0.7,
 	underline_thickness = 2,
 	underline_position = -2,
 	enable_tab_bar = false,

@@ -42,7 +42,7 @@ in
         fonts = {
           monospace = mkOption {
             type = my.types.font;
-            default = lib.my.fonts.iosevka-comfy;
+            default = lib.my.fonts.dina;
             description = "Monospace font";
           };
           serif = mkOption {

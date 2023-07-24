@@ -45,5 +45,17 @@
       name = "Noto Emoji";
       package = pkgs.noto-fonts-emoji;
     };
+    dina = {
+      name = "Dina";
+      package = pkgs.dina-font;
+    };
+    terminus = {
+      name = "Terminus";
+      package = pkgs.terminus_font;
+    };
+    cozette = {
+      name = "Cozette";
+      package = pkgs.cozette;
+    };
   };
 }

@@ -21,6 +21,7 @@ return {
 					rust = formatters.lsp,
 					sh = formatters.shfmt,
 					sql = formatters.shell { cmd = { "sqlfluff" } },
+					toml = formatters.lsp,
 					yaml = formatters.lsp,
 				},
 			}
