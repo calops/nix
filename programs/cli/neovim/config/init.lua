@@ -16,8 +16,7 @@ vim.opt.runtimepath:prepend(lazypath)
 vim.g.neovide_floating_blur_amount_x = 1.5
 vim.g.neovide_floating_blur_amount_y = 1.5
 vim.g.neovide_scroll_animation_length = 0.13
-vim.g.neovide_background_color = "#000000aa"
-vim.o.guifont = "Iosevka:h9"
+vim.o.guifont = "Iosevka Comfy:h10"
 
 ---------- Settings
 -- Search
@@ -84,13 +83,16 @@ require("lazy").setup("plugins", {
 	ui = { border = "rounded" },
 })
 
--- Fixed size help panel
-vim.cmd([[
-    augroup vimrc_help
-        autocmd!
-        autocmd BufEnter *.txt if &buftype == 'help' | wincmd L | vert resize 80 | set winfixwidth | endif
-    augroup END
-]])
+local group = vim.api.nvim_create_augroup("HelpHandler", {})
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+	pattern = "*.txt",
+	group = group,
+	callback = function()
+		if vim.bo.buftype == "help" and vim.wo.winfixwidth == false then
+			vim.cmd([[wincmd L | vert resize 80 | set winfixwidth | wincmd =]])
+		end
+	end,
+})
 
 -- Full line error highlights
 local utils = require("plugins.ui.utils")
