@@ -9,7 +9,6 @@
       options = {
         name = mkOption {
           type = types.str;
-          default = lib.my.fonts.iosevka-comfy.name;
           description = "Font name";
         };
         package = mkOption {
@@ -42,7 +41,7 @@ in
         fonts = {
           monospace = mkOption {
             type = my.types.font;
-            default = lib.my.fonts.dina;
+            default = lib.my.fonts.iosevka-comfy;
             description = "Monospace font";
           };
           serif = mkOption {
@@ -70,6 +69,18 @@ in
               type = types.int;
               default = 10;
               description = "Terminal font size";
+            };
+            terminalCell = {
+              width = mkOption {
+                type = types.float;
+                default = 1.0;
+                description = "Terminal cell width";
+              };
+              height = mkOption {
+                type = types.float;
+                default = 1.0;
+                description = "Terminal cell height";
+              };
             };
             applications = mkOption {
               type = types.int;
