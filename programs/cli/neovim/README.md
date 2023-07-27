@@ -6,13 +6,15 @@
 
 
 ## Install Instructions
+> ℹ️ This configuration is designed to be installed through nix (which is why the `lazy-lock.json` file is weirdly located), but should be useable stand-alone with the following instructions.
 
- > Install requires Neovim 0.9+. Always review the code before installing a configuration.
+> ⚠️ Install requires Neovim 0.9+. Always review the code before installing a configuration.
 
 Clone the repository and install the plugins:
 
 ```sh
 git clone git@github.com:calops/nix ~/.config/calops/nix
+cp ~/.config/calops/nix/programs/cli/neovim/lazy-lock.json ~/.config/calops/nix/programs/cli/neovim/config
 NVIM_APPNAME=calops/nix/programs/cli/neovim/config nvim --headless +Lazy! sync +qa
 ```
 
