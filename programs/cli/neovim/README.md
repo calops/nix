@@ -6,9 +6,11 @@
 
 
 ## Install Instructions
-> ℹ️ This configuration is designed to be installed through nix (which is why the `lazy-lock.json` file is weirdly located), but should be useable stand-alone with the following instructions.
+> [!NOTE]  
+> This configuration is designed to be installed through nix (which is why the `lazy-lock.json` file is weirdly located), but should be useable stand-alone with the following instructions.
 
-> ⚠️ Install requires Neovim 0.9+. Always review the code before installing a configuration.
+> [!IMPORTANT]  
+> Install requires Neovim 0.9+. Always review the code before installing a configuration.
 
 Clone the repository and install the plugins:
 
