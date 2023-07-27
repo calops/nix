@@ -24,7 +24,7 @@
       enable = true;
       fonts.hinting = "HorizontalLcd";
       monitors = {
-        primary.name = "HDMI-0";
+        primary.name = "HDMI-A-1";
         secondary = {
           name = "eDP-1";
           position = "left";

@@ -21,7 +21,6 @@
       options = {
         id = mkOption {
           type = types.str;
-          default = "eDP-1";
           description = "Monitor name";
         };
         position = mkOption {

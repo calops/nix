@@ -8,14 +8,16 @@
   cfg = config.my.roles.terminal;
   palette = config.my.colors.palette;
   nvimDir = "${config.home.homeDirectory}/.config/home-manager/programs/cli/neovim";
-  # We want gcc to override the system's one or treesitter throws a fit
-  my.neovim = pkgs.neovim-nightly.overrideAttrs (attrs: {
-    disallowedReferences = [];
-    nativeBuildInputs = attrs.nativeBuildInputs ++ [pkgs.makeWrapper];
-    postFixup = ''
-      wrapProgram $out/bin/nvim --prefix PATH : ${lib.makeBinPath [pkgs.gcc]}
-    '';
-  });
+  my = {
+    # We want gcc to override the system's one or treesitter throws a fit
+    neovim = pkgs.neovim-nightly.overrideAttrs (attrs: {
+      disallowedReferences = [];
+      nativeBuildInputs = attrs.nativeBuildInputs ++ [pkgs.makeWrapper];
+      postFixup = ''
+        wrapProgram $out/bin/nvim --prefix PATH : ${lib.makeBinPath [pkgs.gcc]}
+      '';
+    });
+  };
 in
   with lib; {
     config = mkIf cfg.enable {
@@ -32,6 +34,7 @@ in
           stylua
         ];
       };
+
       xdg.configFile = {
         # Raw symlink to the plugin manager lock file, so that it stays writeable
         "nvim/lazy-lock.json".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/lazy-lock.json";
@@ -49,6 +52,29 @@ in
           };
         };
       };
+
       stylix.targets.vim.enable = false;
+
+      home.activation.neovim = lib.hm.dag.entryAfter ["linkGeneration"] ''
+        STATE_DIR=~/.local/state/nix/
+        STATE_FILE=$STATE_DIR/lazy-lock-checksum
+        LOCK_FILE=~/.config/nvim/lazy-lock.json
+
+        if [ ! -d $STATE_DIR ]; then
+          mkdir -p $STATE_DIR
+        fi
+
+        if [ ! -f $STATE_FILE ]; then
+          touch $STATE_FILE
+        fi
+
+        if [ "$(cat $STATE_FILE)" != "$(nix-hash $LOCK_FILE)" ]; then
+          echo "Syncing neovim plugins"
+          PATH="$PATH:${pkgs.git}/bin" $DRY_RUN_CMD ${lib.getExe my.neovim} --headless "+Lazy! update" +qa
+          nix-hash $LOCK_FILE > $STATE_FILE
+        else
+          $VERBOSE_ECHO "Neovim plugins already synced, skipping"
+        fi
+      '';
     };
   }

@@ -10,6 +10,10 @@
     if cfg.nvidia.enable
     then "hyprland-nvidia"
     else "hyprland";
+  monitors = rec {
+    primary = cfg.monitors.primary.name;
+    secondary = cfg.monitors.secondary.name or primary;
+  };
 in {
   config = lib.mkIf cfg.enable {
     wayland.windowManager.hyprland = {
@@ -23,9 +27,20 @@ in {
       ];
       extraConfig = ''
         $wallpaper=~/Pictures/Wallpapers/z-w-gu-canal.jpg
-        $term=kitty
+        $term=${cfg.terminal}
 
         monitor=,preferred,auto,1
+
+        wsbind = 1,${monitors.primary}
+        wsbind = 3,${monitors.primary}
+        wsbind = 2,${monitors.primary}
+        wsbind = 4,${monitors.primary}
+        wsbind = 5,${monitors.primary}
+        wsbind = 6,${monitors.primary}
+        wsbind = 7,${monitors.primary}
+        wsbind = 8,${monitors.primary}
+        wsbind = 9,${monitors.primary}
+        wsbind = 10,${monitors.secondary}
 
         exec-once = hyprpaper & clipit & udiskie &
         exec-once = eww -c ~/.config/eww/bar open bar &

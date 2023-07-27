@@ -16,14 +16,12 @@ in
         [registries.search]
         registries = ['docker.io']
       '';
-      xdg.configFile."containers/policy.json".text = ''
-        {
-          "default": [
-            {
-              "type": "insecureAcceptAnything"
-            }
-          ]
-        }
-      '';
+      xdg.configFile."containers/policy.json".text = builtins.toJSON {
+        default = [
+          {
+            type = "insecureAcceptAnything";
+          }
+        ];
+      };
     };
   }
