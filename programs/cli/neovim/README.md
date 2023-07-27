@@ -17,7 +17,7 @@ Clone the repository and install the plugins:
 ```sh
 git clone git@github.com:calops/nix ~/.config/calops/nix
 cp ~/.config/calops/nix/programs/cli/neovim/lazy-lock.json ~/.config/calops/nix/programs/cli/neovim/config
-NVIM_APPNAME=calops/nix/programs/cli/neovim/config nvim --headless +Lazy! sync +qa
+NVIM_APPNAME=calops/nix/programs/cli/neovim/config nvim --headless "+Lazy! restore" +qa
 ```
 
 Open Neovim with this config:
