@@ -30,6 +30,7 @@ in
           fzf
           nixd
           nodePackages.prettier
+          shfmt
           sqlfluff
           stylua
         ];
