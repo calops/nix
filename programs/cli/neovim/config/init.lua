@@ -81,6 +81,10 @@ vim.o.mousescroll = "ver:6,hor:6"
 
 require("lazy").setup("plugins", {
 	ui = { border = "rounded" },
+	dev = {
+		fallback = true,
+		path = "~/github",
+	},
 })
 
 local group = vim.api.nvim_create_augroup("HelpHandler", {})

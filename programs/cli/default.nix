@@ -22,6 +22,7 @@
   ];
   config = lib.mkIf config.my.roles.terminal.enable {
     home.packages = with pkgs; [
+      ast-grep
       fd
       ripgrep
       rm-improved

@@ -5,8 +5,9 @@ return {
 	lazy = false,
 	priority = 1000,
 	config = function()
-		vim.g.catppuccin_flavour = "mocha"
 		require("catppuccin").setup {
+			flavour = "mocha",
+			term_colors = true,
 			integrations = {
 				telescope = true,
 				neotree = {
@@ -23,9 +24,7 @@ return {
 				notify = true,
 				mini = true,
 				native_lsp = {
-					inlay_hints = {
-						background = false,
-					},
+					inlay_hints = { background = false },
 				},
 			},
 			compile = {
