@@ -30,6 +30,7 @@
       choose
       rargs
       sshfs
+      fclones
     ];
   };
 }

@@ -175,10 +175,6 @@ return {
 	{
 		"calops/hmts.nvim",
 		ft = { "nix", "query" },
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-		config = true,
 		dev = true,
 	},
 }
