@@ -57,7 +57,7 @@ in
       stylix.targets.vim.enable = false;
 
       home.activation.neovim = lib.hm.dag.entryAfter ["linkGeneration"] ''
-        #! /bin/sh
+        #! /bin/bash
         STATE_DIR=~/.local/state/nix/
         STATE_FILE=$STATE_DIR/lazy-lock-checksum
         LOCK_FILE=~/.config/nvim/lazy-lock.json

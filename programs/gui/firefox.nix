@@ -44,7 +44,7 @@ in {
           z-index: 2 !important;
         }
 
-        @-moz-document url(chrome://browser/content/browser.xhtml){
+        @-moz-document url("chrome://browser/content/browser.xhtml"){
           #browser {
             overflow: hidden;
           }

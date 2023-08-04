@@ -82,7 +82,10 @@ in
         };
         tag.sort = "version:refname";
         pull.rebase = "true";
-        push.default = "upstream";
+        push = {
+          autoSetupRemote = true;
+          default = "upstream";
+        };
       };
       includes = [
         {path = config.xdg.configHome + "/git/delta/themes.gitconfig";}
