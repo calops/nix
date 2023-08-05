@@ -17,7 +17,18 @@ return {
 		config = function()
 			require("nvim-treesitter.configs").setup {
 				auto_install = true,
-				ensure_installed = { "vim", "lua", "rust", "bash", "toml", "fish" },
+				ensure_installed = {
+					"bash",
+					"fish",
+					"json",
+					"lua",
+					"markdown",
+					"nix",
+					"python",
+					"rust",
+					"toml",
+					"vim",
+				},
 				indent = { enable = true },
 				highlight = {
 					enable = true,
