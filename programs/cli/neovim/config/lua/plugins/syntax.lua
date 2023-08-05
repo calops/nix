@@ -175,7 +175,7 @@ return {
 	{
 		"calops/hmts.nvim",
 		ft = { "nix", "query" },
-		dev = true,
+		dev = false,
 		config = false,
 	},
 }

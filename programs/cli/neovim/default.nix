@@ -61,6 +61,7 @@ in
         STATE_DIR=~/.local/state/nix/
         STATE_FILE=$STATE_DIR/lazy-lock-checksum
         LOCK_FILE=~/.config/nvim/lazy-lock.json
+        HASH=$(nix-hash $LOCK_FILE)
 
         if [ ! -d $STATE_DIR ]; then
           mkdir -p $STATE_DIR
@@ -70,10 +71,10 @@ in
           touch $STATE_FILE
         fi
 
-        if [ "$(cat $STATE_FILE)" != "$(nix-hash $LOCK_FILE)" ]; then
+        if [ "$(cat $STATE_FILE)" != "$HASH" ]; then
           echo "Syncing neovim plugins"
-          PATH="$PATH:${pkgs.git}/bin" $DRY_RUN_CMD ${lib.getExe my.neovim} --headless "+Lazy! update" +qa
-          nix-hash $LOCK_FILE > $STATE_FILE
+          PATH="$PATH:${pkgs.git}/bin" $DRY_RUN_CMD ${lib.getExe my.neovim} --headless "+Lazy! restore" +qa
+          $DRY_RUN_CMD echo $HASH >$STATE_FILE
         else
           $VERBOSE_ECHO "Neovim plugins already synced, skipping"
         fi
