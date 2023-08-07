@@ -12,12 +12,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
--- Neovide configuration
-vim.g.neovide_floating_blur_amount_x = 1.5
-vim.g.neovide_floating_blur_amount_y = 1.5
-vim.g.neovide_scroll_animation_length = 0.13
-vim.o.guifont = "Iosevka Comfy:h10"
-
 ---------- Settings
 -- Search
 vim.o.ignorecase = true
@@ -30,10 +24,21 @@ vim.o.colorcolumn = "120"
 vim.o.concealcursor = "nc"
 vim.o.textwidth = 120
 vim.o.virtualedit = "block"
+require("editorconfig").properties.insert_final_newline = nil
 
 -- GUI
 vim.o.background = "dark"
 vim.o.cursorline = true
+vim.o.guicursor = "a:blinkon100"
+vim.o.laststatus = 3
+vim.o.list = true
+vim.o.number = true
+vim.o.pumblend = 0
+vim.o.scrolloff = 4
+vim.o.shortmess = "c"
+vim.o.termguicolors = true
+vim.o.winblend = 0
+vim.o.wrap = false
 vim.opt.fillchars = {
 	eob = " ",
 	fold = " ",
@@ -42,9 +47,6 @@ vim.opt.fillchars = {
 	foldsep = " ",
 	diff = "╳",
 }
-vim.o.guicursor = "a:blinkon100"
-vim.o.laststatus = 3
-vim.o.list = true
 vim.opt.listchars = {
 	tab = "→ ",
 	nbsp = "␣",
@@ -52,13 +54,6 @@ vim.opt.listchars = {
 	precedes = "«",
 	extends = "»",
 }
-vim.o.number = true
-vim.o.pumblend = 0
-vim.o.scrolloff = 4
-vim.o.shortmess = "c"
-vim.o.termguicolors = true
-vim.o.winblend = 0
-vim.o.wrap = false
 
 -- Indentation
 vim.o.autoindent = true
@@ -78,6 +73,12 @@ vim.o.mouse = "a"
 vim.o.mousemodel = "extend"
 vim.o.mousemoveevent = true
 vim.o.mousescroll = "ver:6,hor:6"
+--
+-- Neovide configuration
+vim.g.neovide_floating_blur_amount_x = 1.5
+vim.g.neovide_floating_blur_amount_y = 1.5
+vim.g.neovide_scroll_animation_length = 0.13
+vim.o.guifont = "Iosevka Comfy:h10"
 
 require("lazy").setup("plugins", {
 	ui = { border = "rounded" },
