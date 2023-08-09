@@ -2,6 +2,7 @@
   inputs,
   overlays,
   extraModules,
+  stateVersion,
 }: let
   home-manager = inputs.home-manager;
   nixpkgs = inputs.nixpkgs;
@@ -34,7 +35,7 @@
           ../colors
           machine
           {
-            home.stateVersion = "23.11";
+            home.stateVersion = stateVersion;
             # targets.genericLinux.enable = false;
           }
         ];

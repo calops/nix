@@ -31,10 +31,12 @@
       inputs.stylix.homeManagerModules.stylix
     ];
 
+    stateVersion = "23.11";
+
     machines = import ./machines;
     shells = import ./shells;
     lib = import ./lib {
-      inherit inputs overlays extraModules;
+      inherit inputs overlays extraModules stateVersion;
     };
   in {
     # nixosConfigurations = lib.mkNixosConfigurations machines;
