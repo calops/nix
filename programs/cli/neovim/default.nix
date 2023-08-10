@@ -61,7 +61,7 @@ in
         STATE_DIR=~/.local/state/nix/
         STATE_FILE=$STATE_DIR/lazy-lock-checksum
         LOCK_FILE=~/.config/nvim/lazy-lock.json
-        HASH=$(nix-hash $LOCK_FILE)
+        HASH=$(nix-hash --flat $LOCK_FILE)
 
         if [ ! -d $STATE_DIR ]; then
           mkdir -p $STATE_DIR
