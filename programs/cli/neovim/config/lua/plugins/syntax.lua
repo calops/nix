@@ -185,7 +185,7 @@ return {
 	},
 	{
 		"calops/hmts.nvim",
-		dev = true,
+		dev = false,
 		config = false,
 	},
 }

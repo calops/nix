@@ -47,6 +47,7 @@ return {
 		event = "UIEnter",
 		-- Wait for the plugin to become more stable
 		version = "*",
+		enabled = true,
 		config = function()
 			local bar = require("dropbar.bar")
 			local palette = utils.palette()

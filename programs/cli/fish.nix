@@ -36,30 +36,8 @@ in {
       };
       functions = {
         dev = ''nix develop "github:calops/nix#$argv[1]" --command fish'';
-        smake = ''
-          if test -d "./StocklyContinuousDeployment"
-            make -C "./StocklyContinuousDeployment" $argv
-          else
-            make -C "./scd" $argv
-          end
-        '';
         run = ''nix run nixpkgs#"$argv[1]" -- $argv[2..-1]'';
         runi = ''nix run --impure nixpkgs#"$argv[1]" -- $argv[2..-1]'';
-        cdr = ''
-          if test (count $argv) -gt 0
-            cd $STOCKLY_MAIN/$argv[1]
-          else
-            cd $STOCKLY_MAIN
-          end
-        '';
-        s = ''
-          cargo run --manifest-path "$STOCKLY_MAIN/.cargo/workspace/Cargo.toml" -p "stockly_cli" --release -- $argv
-        '';
-        eol = ''
-          echo "adding missing EOLs"
-          git status --short | choose 1 | rargs sed -i '$a\\' {0}
-          git status --short
-        '';
         gc = ''git commit -m "$argv"'';
       };
       interactiveShellInit = ''

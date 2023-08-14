@@ -89,16 +89,6 @@ in
       };
       includes = [
         {path = config.xdg.configHome + "/git/delta/themes.gitconfig";}
-        {
-          condition = "gitdir:~/stockly/";
-          contents = {
-            user = {
-              name = "Remi Labeyrie";
-              email = "remi.labeyrie@stockly.ai";
-              signingKey = "0C4A 765B BFDA 280C 47C1  73EE 8769 75DF 5890 0393";
-            };
-          };
-        }
       ];
     };
 

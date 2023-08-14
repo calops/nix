@@ -17,9 +17,7 @@
     }
   '';
 
-  home.sessionVariables = {
-    STOCKLY_MAIN = "${config.home.homeDirectory}/stockly/Main";
-  };
+  home.sessionVariables = {};
 
   home.file.scripts = {
     source = ../scripts;

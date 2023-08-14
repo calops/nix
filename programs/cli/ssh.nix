@@ -21,11 +21,6 @@ in
               hostname = "tocards.net";
               user = "calops";
             };
-            charybdis = {
-              hostname = "charybdis.stockly.tech";
-              user = "rlabeyrie";
-              port = 23;
-            };
           }
           // cfg.ssh.hosts;
       };
