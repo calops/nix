@@ -134,6 +134,7 @@ return {
 					["@lsp.type.keyword"] = { fg = palette.mauve },
 					["@lsp.type.decorator"] = { fg = palette.blue },
 					["@lsp.type.unresolvedReference"] = { sp = palette.surface2, style = { "undercurl" } },
+					["@lsp.type.derive.rust"] = { link = "@lsp.type.interface" },
 
 					["@lsp.mod.reference"] = { style = { "italic" } },
 					["@lsp.mod.mutable"] = { style = { "bold" } },

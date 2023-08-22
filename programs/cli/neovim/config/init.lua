@@ -73,7 +73,7 @@ vim.o.mouse = "a"
 vim.o.mousemodel = "extend"
 vim.o.mousemoveevent = true
 vim.o.mousescroll = "ver:6,hor:6"
---
+
 -- Neovide configuration
 vim.g.neovide_floating_blur_amount_x = 1.5
 vim.g.neovide_floating_blur_amount_y = 1.5

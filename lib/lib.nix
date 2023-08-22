@@ -57,5 +57,9 @@
       name = "Cozette";
       package = pkgs.cozette;
     };
+    terminus-nerdfont = {
+      name = "Terminus Nerd Font";
+      package = pkgs.terminus-nerdfont;
+    };
   };
 }

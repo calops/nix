@@ -1,10 +1,9 @@
 return {
 	"b0o/incline.nvim",
+	enabled = not vim.g.started_by_firenvim,
 	event = "UIEnter",
 	config = function()
-		local function format_color(color)
-			return string.format("#%x", color)
-		end
+		local function format_color(color) return string.format("#%x", color) end
 
 		local incline = require("incline")
 		local color_utils = require("catppuccin.utils.colors")

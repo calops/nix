@@ -59,7 +59,7 @@ in
             description = "Emoji font";
           };
           hinting = mkOption {
-            type = types.enum ["Normal" "Mono" "HorizontalLcd"];
+            type = types.enum ["Normal" "Mono" "HorizontalLcd" "Light"];
             default = "Normal";
             description = "Font hinting strategy";
           };

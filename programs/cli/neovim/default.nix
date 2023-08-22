@@ -33,6 +33,7 @@ in
           shfmt
           sqlfluff
           stylua
+          rust-analyzer
         ];
       };
 

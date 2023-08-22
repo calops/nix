@@ -45,102 +45,10 @@ return {
 	{
 		"Bekaboo/dropbar.nvim",
 		event = "UIEnter",
-		-- Wait for the plugin to become more stable
 		version = "*",
-		enabled = true,
+		enabled = not vim.g.started_by_firenvim,
 		config = function()
-			local bar = require("dropbar.bar")
-			local palette = utils.palette()
-			local sources = require("dropbar.sources")
-			local function wrap_path(buf, win, cursor)
-				local symbols_len = 0
-				local symbols = {
-					content = {},
-					insert = function(self, elt)
-						symbols_len = symbols_len + 1
-						if type(elt.hl) == "table" then
-							elt.name_hl = utils.get_hl_group(elt.hl)
-						end
-						table.insert(self.content, symbols_len, elt)
-					end,
-				}
-				local path_symbols = sources.path.get_symbols(buf, win, cursor)
-				local left, mid = {}, {}
-				for i, item in ipairs(path_symbols) do
-					if i < #path_symbols then
-						if i ~= 1 then
-							item.lite = true
-						end
-						item.hl = { fg = palette.text, bg = palette.surface1 }
-						item.icon_hl = utils.get_hl_group {
-							fg = utils.get_hl(item.icon_hl).fg,
-							bg = palette.surface1,
-						}
-						table.insert(left, item)
-					else
-						if vim.api.nvim_get_current_buf() == buf then
-							item.hl = {
-								fg = palette.peach,
-								bg = palette.overlay0,
-								style = { "bold" },
-							}
-						else
-							item.hl = {
-								fg = palette.text,
-								bg = palette.surface1,
-							}
-						end
-						table.insert(left, {
-							name = item.icon,
-							hl = utils.get_hl(item.icon_hl),
-						})
-						item.icon = nil
-						mid = item
-					end
-				end
-				local pill = utils.build_pill(left, mid, {}, "name")
-				for _, item in ipairs(pill) do
-					if not item.win then
-						item = bar.dropbar_symbol_t:new(item)
-					end
-					symbols:insert(item)
-				end
-
-				return symbols.content
-			end
 			require("dropbar").setup {
-				-- bar = {
-				-- 	sources = function(_, _)
-				-- 		return {
-				-- 			-- sources.path,
-				-- 			{ get_symbols = wrap_path },
-				-- 			{
-				-- 				get_symbols = function(_, _, _)
-				-- 					return { bar.dropbar_symbol_t:new { name = "%=" } }
-				-- 				end,
-				-- 			},
-				-- 			{
-				-- 				get_symbols = function(buf, win, cursor)
-				-- 					if vim.bo[buf].ft == "markdown" then
-				-- 						return sources.markdown.get_symbols(buf, win, cursor)
-				-- 					end
-				-- 					for _, source in ipairs {
-				-- 						sources.lsp,
-				-- 						sources.treesitter,
-				-- 					} do
-				-- 						local symbols = source.get_symbols(buf, win, cursor)
-				-- 						if not vim.tbl_isempty(symbols) then
-				-- 							table.remove(symbols, 1)
-				-- 							return core_utils.reverse_table(symbols)
-				-- 						end
-				-- 					end
-				-- 					return {}
-				-- 				end,
-				-- 			},
-				-- 		}
-				-- 	end,
-				-- },
-				-- icons = { ui = { bar = { separator = "" } } },
 				menu = {
 					win_configs = {
 						border = "rounded",
@@ -274,7 +182,6 @@ return {
 		"echasnovski/mini.hipatterns",
 		event = "VeryLazy",
 		config = function()
-			local palette = utils.palette()
 			local hipatterns = require("mini.hipatterns")
 			local palette_patterns = {}
 			local palette_highlights = {}

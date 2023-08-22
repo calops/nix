@@ -86,4 +86,20 @@ return {
 			retirementAgeMins = 10,
 		},
 	},
+	{
+		"glacambre/firenvim",
+		lazy = not vim.g.started_by_firenvim,
+		priority = 100,
+		build = function() vim.fn["firenvim#install"](0) end,
+		init = function()
+			vim.g.firenvim_config = {
+				localSettings = {
+					[".*"] = {
+						cmdline = "neovim",
+						takeover = "never",
+					},
+				},
+			}
+		end,
+	},
 }

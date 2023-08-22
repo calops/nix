@@ -34,6 +34,8 @@ in
       };
       ignores = [
         ".aws"
+        ".direnv"
+        ".envrc"
         ".lsp.lua"
         ".neoconf.json"
         ".venv"
