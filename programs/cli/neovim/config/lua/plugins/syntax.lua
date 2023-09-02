@@ -185,7 +185,14 @@ return {
 	},
 	{
 		"calops/hmts.nvim",
-		dev = true,
+		dev = false,
 		config = false,
+	},
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {
+			signs = false,
+		},
 	},
 }

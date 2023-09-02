@@ -10,9 +10,11 @@ return {
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-cmdline",
 			"hrsh7th/cmp-git",
+			"hrsh7th/cmp-emoji",
 			"saadparwaiz1/cmp_luasnip",
 			"davidsierradz/cmp-conventionalcommits",
 			"L3MON4D3/LuaSnip",
+			"chrisgrieser/cmp-nerdfont",
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -30,8 +32,13 @@ return {
 					{ name = "nvim_lsp" },
 					{ name = "nvim_lua" },
 					{ name = "luasnip" },
+				}, {
 					{ name = "path" },
-				}, { { name = "buffer" } }),
+					{ name = "nerdfont" },
+					{ name = "emoji" },
+				}, {
+					{ name = "buffer" },
+				}),
 				snippet = {
 					expand = function(args) require("luasnip").lsp_expand(args.body) end,
 				},
