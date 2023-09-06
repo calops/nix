@@ -15,6 +15,7 @@ return {
 			}
 		end,
 		config = function()
+			require("nvim-treesitter.install").compilers = { require("nix.tools").gcc }
 			require("nvim-treesitter.configs").setup {
 				auto_install = true,
 				ensure_installed = {

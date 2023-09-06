@@ -8,22 +8,13 @@
   cfg = config.my.roles.terminal;
   palette = config.my.colors.palette;
   nvimDir = "${config.home.homeDirectory}/.config/home-manager/programs/cli/neovim";
-  my = {
-    # We want gcc to override the system's one or treesitter throws a fit
-    neovim = pkgs.neovim-nightly.overrideAttrs (attrs: {
-      disallowedReferences = [];
-      nativeBuildInputs = attrs.nativeBuildInputs ++ [pkgs.makeWrapper];
-      postFixup = ''
-        wrapProgram $out/bin/nvim --prefix PATH : ${lib.makeBinPath [pkgs.gcc]}
-      '';
-    });
-  };
+  nvim-pkg = pkgs.neovim-nightly;
 in
   with lib; {
     config = mkIf cfg.enable {
       programs.neovim = {
         enable = true;
-        package = my.neovim;
+        package = nvim-pkg;
         defaultEditor = true;
         extraPackages = with pkgs; [
           alejandra
@@ -41,6 +32,11 @@ in
         # Raw symlink to the plugin manager lock file, so that it stays writeable
         "nvim/lazy-lock.json".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/lazy-lock.json";
         "nvim/lua/nix/palette.lua".text = "return ${lib.generators.toLua {} palette}";
+        "nvim/lua/nix/tools.lua".text = ''
+          return {
+          	gcc = '${lib.getExe pkgs.gcc}';
+          }
+        '';
         "nvim" = {
           source = ./config;
           recursive = true;
@@ -74,7 +70,7 @@ in
 
         if [ "$(cat $STATE_FILE)" != "$HASH" ]; then
           echo "Syncing neovim plugins"
-          PATH="$PATH:${pkgs.git}/bin" $DRY_RUN_CMD ${lib.getExe my.neovim} --headless "+Lazy! restore" +qa
+          PATH="$PATH:${pkgs.git}/bin" $DRY_RUN_CMD ${lib.getExe nvim-pkg} --headless "+Lazy! restore" +qa
           $DRY_RUN_CMD echo $HASH >$STATE_FILE
         else
           $VERBOSE_ECHO "Neovim plugins already synced, skipping"
