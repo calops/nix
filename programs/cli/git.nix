@@ -30,7 +30,8 @@ in
         llg = "log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'";
         oops = "commit --amend --no-edit";
         pushf = "push --force-with-lease";
-        mom = "merge origin/master --no-edit";
+        mom = "merge origin/main --no-edit";
+        pum = "pull upstream main";
       };
       ignores = [
         ".aws"
