@@ -26,10 +26,12 @@ in {
         rm = "rip";
         sd = "dev rust";
         cp = "xcp";
+        df = "dysk";
+        du = "dust";
       };
       shellAliases = {
         copy = "xclip -selection clipboard";
-        ls = "exa";
+        ls = "eza";
         ll = "ls -lH --time-style=long-iso";
         la = "ll -a";
         lt = "ll -T";

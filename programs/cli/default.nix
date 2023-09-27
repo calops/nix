@@ -8,7 +8,7 @@
     ./bat.nix
     ./btop.nix
     ./direnv.nix
-    ./exa.nix
+    ./eza.nix
     ./fish.nix
     ./git.nix
     ./helix.nix
@@ -23,14 +23,16 @@
   config = lib.mkIf config.my.roles.terminal.enable {
     home.packages = with pkgs; [
       ast-grep
+      choose
+      du-dust
+      dysk
+      fclones
       fd
+      rargs
       ripgrep
       rm-improved
-      xcp
-      choose
-      rargs
       sshfs
-      fclones
+      xcp
     ];
   };
 }
