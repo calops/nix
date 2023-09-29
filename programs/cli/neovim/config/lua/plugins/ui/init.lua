@@ -143,9 +143,7 @@ return {
 				char = "│",
 				tab_char = "│",
 			},
-			scope = {
-				show_start = false,
-			},
+			scope = { show_start = false },
 		},
 	},
 	-- Notification handler
