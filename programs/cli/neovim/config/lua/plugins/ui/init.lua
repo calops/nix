@@ -137,20 +137,14 @@ return {
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		event = "BufRead",
+		main = "ibl",
 		opts = {
-			show_current_context = true,
-			show_current_context_start = false,
-			use_treesitter = true,
-			use_treesitter_scope = false,
-			max_indent_increase = 1,
-			show_trailing_blankline_indent = false,
-			blankline_char_priority = 10,
-			integrations = {
-				neotree = {
-					enabled = true,
-					show_root = false,
-					transparent_panel = false,
-				},
+			indent = {
+				char = "│",
+				tab_char = "│",
+			},
+			scope = {
+				show_start = false,
 			},
 		},
 	},

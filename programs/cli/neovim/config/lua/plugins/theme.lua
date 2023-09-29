@@ -24,7 +24,9 @@ return {
 				notify = true,
 				mini = true,
 				native_lsp = {
-					inlay_hints = { background = false },
+					inlay_hints = {
+						background = false,
+					},
 				},
 			},
 			compile = {
@@ -62,7 +64,7 @@ return {
 
 					DiagnosticUnnecessary = { sp = palette.mauve, style = { "undercurl" } },
 
-					IndentBlanklineContextChar = { fg = palette.mauve, style = { "nocombine" } },
+					IblScope = { fg = palette.mauve },
 
 					ModesInsert = { bg = palette.green },
 					ModesVisual = { bg = palette.mauve },
