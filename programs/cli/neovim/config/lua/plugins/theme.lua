@@ -111,6 +111,8 @@ return {
 					FlashMatch = { bg = palette.lavender, fg = palette.base },
 					FlashBackdrop = { bg = nil, fg = palette.overlay0, style = { "nocombine" } },
 
+					SatelliteCursor = { fg = palette.mauve },
+
 					-- Syntax
 					["@parameter"] = { fg = palette.text, style = { "nocombine" } },
 					["@namespace"] = { fg = palette.pink, style = { "nocombine" } },

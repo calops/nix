@@ -312,14 +312,14 @@ return {
 	},
 	-- Scrollbar with git signs and diagnostics
 	{
-		"petertriho/nvim-scrollbar",
+		"lewis6991/satellite.nvim",
 		event = "VeryLazy",
 		opts = {
-			handle = {
-				color = palette.surface1,
-			},
 			handlers = {
-				gitsigns = true,
+				cursor = {
+					enable = true,
+					symbols = { "🭶", "🭷", "🭸", "🭹", "🭺", "🭻" },
+				},
 			},
 		},
 	},

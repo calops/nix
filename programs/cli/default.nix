@@ -35,5 +35,7 @@
       sshfs
       xcp
     ];
+
+    programs.zathura.enable = true;
   };
 }
