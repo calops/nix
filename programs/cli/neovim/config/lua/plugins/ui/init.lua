@@ -265,7 +265,7 @@ return {
 		enable = false,
 		event = "VeryLazy",
 		dependencies = "kevinhwang91/promise-async",
-		config = function()
+		opts = function()
 			vim.o.foldlevel = 99
 			vim.o.foldlevelstart = 99
 			vim.o.foldenable = true
@@ -304,7 +304,7 @@ return {
 				return newVirtText
 			end
 
-			require("ufo").setup {
+			return {
 				fold_virt_text_handler = handler,
 				provider_selector = function() return { "treesitter", "indent" } end,
 			}
@@ -315,6 +315,7 @@ return {
 		"lewis6991/satellite.nvim",
 		event = "VeryLazy",
 		opts = {
+			winblend = 0,
 			handlers = {
 				cursor = {
 					enable = true,
