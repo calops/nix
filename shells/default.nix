@@ -1,5 +1,5 @@
 {pkgs}: {
-  devShells.x86_64-linux.rust = pkgs.mkShell {
+  x86_64-linux.rust = pkgs.mkShell {
     nativeBuildInputs = with pkgs; [
       pkg-config
     ];
