@@ -3,11 +3,6 @@ local utils = require("plugins.ui.utils")
 local palette = require("nix.palette")
 local map = core_utils.map
 
-vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", numhl = "" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", numhl = "" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", numhl = "" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint", numhl = "" })
-
 return {
 	-- TUI
 	{
@@ -72,7 +67,9 @@ return {
 		},
 		enabled = true,
 		lazy = false,
-		init = function() map { ["<leader><leader>"] = { ":noh<CR>", "Hide search highlights" } } end,
+		init = function()
+			map { ["<leader><leader>"] = { ":noh<CR>", "Hide search highlights" } }
+		end,
 		opts = {
 			lsp = {
 				override = {
@@ -306,7 +303,9 @@ return {
 
 			return {
 				fold_virt_text_handler = handler,
-				provider_selector = function() return { "treesitter", "indent" } end,
+				provider_selector = function()
+					return { "treesitter", "indent" }
+				end,
 			}
 		end,
 	},

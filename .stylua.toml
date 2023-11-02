@@ -1,5 +1,5 @@
 call_parentheses = "NoSingleTable"
-collapse_simple_statement = "FunctionOnly"
+collapse_simple_statement = "Never"
 
 [sort_requires]
 enabled = false

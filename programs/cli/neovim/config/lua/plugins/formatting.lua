@@ -13,7 +13,7 @@ return {
 		opts = function()
 			local formatters = require("format-on-save.formatters")
 			return {
-				experiments = { partial_update = true },
+				experiments = { partial_update = "diff" },
 				formatter_by_ft = {
 					json = formatters.lsp,
 					lua = formatters.stylua,

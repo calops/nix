@@ -80,6 +80,17 @@ vim.g.neovide_floating_blur_amount_y = 1.5
 vim.g.neovide_scroll_animation_length = 0.13
 vim.o.guifont = "Iosevka Comfy:h10"
 
+vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", numhl = "" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", numhl = "" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", numhl = "" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint", numhl = "" })
+
+vim.fn.sign_define("GitSignsAdd", { text = "┃", texthl = "GitSignsAdd", numhl = "" })
+vim.fn.sign_define("GitSignsChange", { text = "┃", texthl = "GitSignsChange", numhl = "" })
+vim.fn.sign_define("GitSignsDelete", { text = "┃", texthl = "GitSignsDelete", numhl = "" })
+vim.fn.sign_define("GitSignsChangedelete", { text = "┃", texthl = "GitSignsChangedelete", numhl = "" })
+vim.fn.sign_define("GitSignsUntracked", { text = "┋", texthl = "GitSignsAdd", numhl = "" })
+
 require("lazy").setup("plugins", {
 	ui = { border = "rounded" },
 	dev = {
@@ -103,7 +114,9 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 local utils = require("plugins.ui.utils")
 local lines_ns = vim.api.nvim_create_namespace("diag_lines")
 
-local function clear_highlights(buf) vim.api.nvim_buf_clear_namespace(buf, lines_ns, 0, -1) end
+local function clear_highlights(buf)
+	vim.api.nvim_buf_clear_namespace(buf, lines_ns, 0, -1)
+end
 
 local function update_highlights(buf, diagnostics)
 	clear_highlights(buf)
@@ -120,6 +133,10 @@ local function update_highlights(buf, diagnostics)
 end
 
 vim.diagnostic.handlers.diagnostic_lines = {
-	show = function(_, bufnr, diagnostics, _) update_highlights(bufnr, diagnostics) end,
-	hide = function(_, bufnr) clear_highlights(bufnr) end,
+	show = function(_, bufnr, diagnostics, _)
+		update_highlights(bufnr, diagnostics)
+	end,
+	hide = function(_, bufnr)
+		clear_highlights(bufnr)
+	end,
 }

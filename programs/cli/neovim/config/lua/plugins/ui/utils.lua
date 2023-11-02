@@ -20,18 +20,23 @@ function module.git()
 		module._git_data = {
 			add = {
 				colors = module.get_hl("GitSignsAdd"),
+				sign = vim.fn.sign_getdefined("GitSignsAdd")[1].text,
 			},
 			change = {
 				colors = module.get_hl("GitSignsChange"),
+				sign = vim.fn.sign_getdefined("GitSignsChange")[1].text,
 			},
 			delete = {
 				colors = module.get_hl("GitSignsDelete"),
+				sign = vim.fn.sign_getdefined("GitSignsDelete")[1].text,
 			},
 			untracked = {
 				colors = module.get_hl("GitSignsUntracked"),
+				sign = vim.fn.sign_getdefined("GitSignsUntracked")[1].text,
 			},
 			changedelete = {
 				colors = module.get_hl("GitSignsChangedelete"),
+				sign = vim.fn.sign_getdefined("GitSignsChangedelete")[1].text,
 			},
 		}
 	end

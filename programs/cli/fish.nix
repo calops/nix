@@ -38,6 +38,7 @@ in {
       };
       functions = {
         dev = ''nix develop "github:calops/nix#$argv[1]" --command fish'';
+        devu = ''nix flake update "github:calops/nix#$argv[1]"'';
         run = ''nix run nixpkgs#"$argv[1]" -- $argv[2..-1]'';
         runi = ''nix run --impure nixpkgs#"$argv[1]" -- $argv[2..-1]'';
         gc = ''git commit -m "$argv"'';

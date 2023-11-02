@@ -1,27 +1,109 @@
-local utils = require("heirline.utils")
+local hl_utils = require("heirline.utils")
 local ui_utils = require("plugins.ui.utils")
+
+---Create a new object
+---@param class table
+---@param default table
+local function new_object(class, default)
+	default = default or {}
+	setmetatable(default, class)
+	class.__index = class
+	return default
+end
+
+---@class Signs
+---@field diagnostics table<integer, integer>
+---@field git table<integer, string>
+local Signs = {}
+
+function Signs:new()
+	return new_object(self, {
+		diagnostics = {},
+		git = {},
+	})
+end
+
+---@class CachedSigns
+---@field buffers table<integer, Signs>
+local CachedSigns = {}
+
+---@return CachedSigns
+function CachedSigns:new()
+	return new_object(self, {
+		buffers = {},
+	})
+end
+
+---@param bufnr integer
+---@return Signs
+function CachedSigns:get(bufnr)
+	if not self[bufnr] then
+		self[bufnr] = Signs:new()
+	end
+	return self[bufnr]
+end
+
+local cached_signs = CachedSigns:new()
+
+---@param bufnr integer
+---@param diagnostics table
+local function update_cached_diagnostics(bufnr, diagnostics)
+	local signs = cached_signs:get(bufnr)
+
+	signs.diagnostics = {}
+
+	for _, diag in ipairs(diagnostics) do
+		local current_severity = signs.diagnostics[diag.lnum + 1] or 4
+		signs.diagnostics[diag.lnum + 1] = math.min(current_severity, diag.severity)
+	end
+end
+
+---@param bufnr integer
+local function update_cached_git_signs(bufnr)
+	local signs = cached_signs:get(bufnr)
+	local hunks = require("gitsigns").get_hunks(bufnr) or {}
+
+	signs.git = {}
+
+	for _, hunk in ipairs(hunks) do
+		local added = hunk.added
+		for i = added.start, added.start + math.max(added.count - 1, 0) do
+			signs.git[i] = hunk.type
+		end
+	end
+end
+
+vim.api.nvim_create_autocmd("DiagnosticChanged", {
+	callback = function(args)
+		update_cached_diagnostics(args.buf, args.data.diagnostics)
+	end,
+})
+
+vim.api.nvim_create_autocmd("User", {
+	pattern = "GitSignsUpdate",
+	callback = function(args)
+		update_cached_git_signs(args.buf)
+	end,
+})
 
 return {
 	{
 		condition = function()
-			if vim.tbl_contains({
+			return not vim.tbl_contains({
 				"help",
 				"neo-tree",
 				"Trouble",
-			}, vim.bo.filetype) then
-				return false
-			end
-
-			return true
+			}, vim.bo.filetype)
 		end,
 		static = {
 			colors = {
-				cursor_line = utils.get_highlight("CursorLine").bg,
-				cursor_num = utils.get_highlight("CursorLineNr").fg,
-				base = utils.get_highlight("Normal").bg,
-				num = utils.get_highlight("LineNr").fg,
+				cursor_line = hl_utils.get_highlight("CursorLine").bg,
+				cursor_num = hl_utils.get_highlight("CursorLineNr").fg,
+				base = hl_utils.get_highlight("Normal").bg,
+				num = hl_utils.get_highlight("LineNr").fg,
 			},
-			diagnostics = ui_utils.diags_signs(),
+			diagnostics = ui_utils.diags_sorted(),
+			gitsigns = ui_utils.git(),
 		},
 		init = function(self)
 			if require("heirline.conditions").is_active() and vim.v.lnum == vim.api.nvim_win_get_cursor(0)[1] then
@@ -32,33 +114,35 @@ return {
 				self.fg = self.colors.num
 			end
 
-			-- TODO: call this once for the whole file and cache results
-			self.signs = vim.fn.sign_getplaced(vim.fn.bufnr(), { lnum = vim.v.lnum, group = "*" })[1].signs
+			local signs = cached_signs:get(vim.fn.bufnr())
 
-			self.diagsign = nil
-			for _, sign in ipairs(self.signs) do
-				local diagsign_name = sign.name:match("DiagnosticSign.*")
-				if diagsign_name then
-					local diag = self.diagnostics[diagsign_name]
-					if not self.diagsign or diag.severity < self.diagsign.severity then
-						self.diagsign = diag
-						self.bg = diag.colors.bg
-						self.fg = diag.colors.fg
-					end
-				end
+			local diag = signs.diagnostics[vim.v.lnum]
+			if diag ~= nil then
+				self.diagsign = self.diagnostics[diag]
+				self.bg = self.diagsign.colors.bg
+				self.fg = self.diagsign.colors.fg
+			else
+				self.diagsign = nil
+			end
+
+			local git_status = signs.git[vim.v.lnum]
+			if git_status ~= nil then
+				self.gitsign = self.gitsigns[git_status]
+			else
+				self.gitsign = nil
 			end
 		end,
 		-- LSP diagnostics
 		{
-			condition = function()
-				return vim.v.virtnum == 0
-			end,
 			provider = function(self)
-				if self.diagsign then
+				if self.diagsign ~= nil then
 					return self.diagsign.sign .. " "
 				else
-					return "   "
+					return "  "
 				end
+			end,
+			condition = function()
+				return vim.v.virtnum == 0
 			end,
 			hl = function(self)
 				local fg = self.fg
@@ -87,33 +171,21 @@ return {
 		-- Git chunks
 		{
 			condition = require("heirline.conditions").is_git_repo,
-			init = function(self)
-				for _, sign in ipairs(self.signs) do
-					self.gitsign = sign.name:match("GitSigns.*")
-					if self.gitsign then
-						return
-					end
-				end
-				self.gitsign = nil
-			end,
 			provider = function(self)
-				if self.gitsign == "GitSignsUntrackedUntracked" then
-					return "┋ "
-				elseif self.gitsign then
-					return "┃ "
+				if self.gitsign then
+					return self.gitsign.sign
 				else
 					return "  "
 				end
 			end,
 			hl = function(self)
 				local fg = self.colors.num
-				local bg = self.bg
 
 				if self.gitsign then
-					fg = ui_utils.get_hl(self.gitsign).fg
+					fg = self.gitsign.colors.fg
 				end
 
-				return { fg = fg, bg = bg }
+				return { fg = fg, bg = self.bg }
 			end,
 			on_click = {
 				name = "git_sign_callback",
