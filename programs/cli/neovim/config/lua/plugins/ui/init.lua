@@ -1,6 +1,5 @@
 local core_utils = require("core.utils")
 local utils = require("plugins.ui.utils")
-local palette = require("nix.palette")
 local map = core_utils.map
 
 return {
@@ -172,18 +171,20 @@ return {
 		event = "VeryLazy",
 		config = function()
 			local hipatterns = require("mini.hipatterns")
+			local palette = utils.palette()
 			local palette_patterns = {}
 			local palette_highlights = {}
 
 			for name, color in pairs(palette) do
 				palette_patterns[name] = {
 					pattern = "%f[%w]palette[.]()" .. name .. "()%f[%W]",
-					group = "HiPatternsPalette_" .. name,
+					group = "",
+					extmark_opts = {
+						virt_text_pos = "inline",
+						virt_text = { { " ", "HiPatternsPalette_" .. name } },
+					},
 				}
-				palette_highlights["HiPatternsPalette_" .. name] = {
-					bg = color,
-					fg = utils.compute_opposite_color(color:lower():sub(2)),
-				}
+				palette_highlights["HiPatternsPalette_" .. name] = { fg = color }
 			end
 
 			local function gen_palette_colors()
@@ -194,7 +195,8 @@ return {
 						end
 						return nil
 					end,
-					group = function(_, _, data)
+					group = "",
+					extmark_opts = function(_, _, data)
 						local func, base_color, ratio =
 							data.full_match:match("utils[.](%w*)[(]palette[.](.*), (%d[.]%d+)[)]")
 						local group_name = "HiPatternsPalette_"
@@ -204,18 +206,19 @@ return {
 							.. "_"
 							.. ratio:gsub("%.", "_")
 						base_color = palette[base_color]
-						local bg_color = utils[func](base_color, tonumber(ratio))
-						local fg_color = utils.compute_opposite_color(bg_color:lower():sub(2))
+						print("DEBUGPRINT[3]: init.lua:207: base_color=" .. vim.inspect(base_color))
 						if vim.fn.hlexists(group_name) == 0 then
 							require("catppuccin.lib.highlighter").syntax {
 								[group_name] = {
-									fg = fg_color,
-									bg = bg_color,
+									fg = utils[func](base_color, tonumber(ratio)),
 								},
 							}
 						end
 
-						return group_name
+						return {
+							virt_text_pos = "inline",
+							virt_text = { { " ", group_name } },
+						}
 					end,
 				}
 			end
@@ -234,7 +237,7 @@ return {
 						local group_name = "HiPatternsGroup_" .. group
 						local group_def = loadstring([[
 							local utils = require("plugins.ui.utils")
-							local palette = require("catppuccin.palettes").get_palette()
+							local palette = utils.palette()
 							return ]] .. body)
 						-- The group name isn't fully descriptive of what's inside, so we need to redefine it each time
 						require("catppuccin.lib.highlighter").syntax {
@@ -247,7 +250,10 @@ return {
 
 			require("catppuccin.lib.highlighter").syntax(palette_highlights)
 			local highlighters = {
-				hex_color = hipatterns.gen_highlighter.hex_color(),
+				hex_color = hipatterns.gen_highlighter.hex_color {
+					style = "inline",
+					inline_text = " ",
+				},
 				palette_colors = gen_palette_colors(),
 				group_colors = gen_group_colors(),
 			}

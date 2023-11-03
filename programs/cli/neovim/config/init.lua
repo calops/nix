@@ -88,8 +88,6 @@ vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSig
 vim.fn.sign_define("GitSignsAdd", { text = "┃", texthl = "GitSignsAdd", numhl = "" })
 vim.fn.sign_define("GitSignsChange", { text = "┃", texthl = "GitSignsChange", numhl = "" })
 vim.fn.sign_define("GitSignsDelete", { text = "┃", texthl = "GitSignsDelete", numhl = "" })
-vim.fn.sign_define("GitSignsChangedelete", { text = "┃", texthl = "GitSignsChangedelete", numhl = "" })
-vim.fn.sign_define("GitSignsUntracked", { text = "┋", texthl = "GitSignsAdd", numhl = "" })
 
 require("lazy").setup("plugins", {
 	ui = { border = "rounded" },

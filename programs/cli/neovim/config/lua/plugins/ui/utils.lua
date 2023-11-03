@@ -30,28 +30,9 @@ function module.git()
 				colors = module.get_hl("GitSignsDelete"),
 				sign = vim.fn.sign_getdefined("GitSignsDelete")[1].text,
 			},
-			untracked = {
-				colors = module.get_hl("GitSignsUntracked"),
-				sign = vim.fn.sign_getdefined("GitSignsUntracked")[1].text,
-			},
-			changedelete = {
-				colors = module.get_hl("GitSignsChangedelete"),
-				sign = vim.fn.sign_getdefined("GitSignsChangedelete")[1].text,
-			},
 		}
 	end
 	return module._git_data
-end
-
-function module.git_signs()
-	return {
-		GitSignsAdd = module.git().add,
-		GitSignsChange = module.git().change,
-		GitSignsDelete = module.git().delete,
-		GitSignsTopdelete = module.git().delete,
-		GitSignsChangedelete = module.git().changedelete,
-		GitSignsUntracked = module.git().untracked,
-	}
 end
 
 module._diags_data = nil
