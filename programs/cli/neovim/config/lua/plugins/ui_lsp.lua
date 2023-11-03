@@ -82,7 +82,9 @@ return {
 		init = function()
 			map {
 				["<leader>t"] = {
-					function() require("trouble").toggle() end,
+					function()
+						require("trouble").toggle()
+					end,
 					"Open diagnostics window",
 				},
 			}
