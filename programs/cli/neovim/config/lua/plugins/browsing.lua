@@ -60,7 +60,13 @@ return {
 						flex = { flip_columns = 200 },
 					},
 					mappings = {
-						i = { ["<esc>"] = require("telescope.actions").close },
+						i = {
+							["<esc>"] = require("telescope.actions").close,
+							["<C-q>"] = require("trouble.providers.telescope").open_with_trouble,
+						},
+						n = {
+							["<C-q>"] = require("trouble.providers.telescope").open_with_trouble,
+						},
 					},
 				},
 				extensions = {
