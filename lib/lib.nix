@@ -61,5 +61,11 @@
       name = "Terminus Nerd Font";
       package = pkgs.terminus-nerdfont;
     };
+    nerdfont-symbols = {
+      name = "Nerd Font Symbols";
+      package = pkgs.nerdfonts.override {
+        fonts = ["NerdFontsSymbolsOnly"];
+      };
+    };
   };
 }

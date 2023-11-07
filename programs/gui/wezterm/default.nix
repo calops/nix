@@ -13,6 +13,7 @@
       hinting = cfg.fonts.hinting;
       cell_width = cfg.fonts.sizes.terminalCell.width;
       cell_height = cfg.fonts.sizes.terminalCell.height;
+      symbols = cfg.fonts.symbols.name;
     };
   };
 in

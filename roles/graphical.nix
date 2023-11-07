@@ -58,6 +58,11 @@ in
             default = lib.my.fonts.noto-emoji;
             description = "Emoji font";
           };
+          symbols = mkOption {
+            type = my.types.font;
+            default = lib.my.fonts.nerdfont-symbols;
+            description = "Symbols font";
+          };
           hinting = mkOption {
             type = types.enum ["Normal" "Mono" "HorizontalLcd" "Light"];
             default = "Normal";

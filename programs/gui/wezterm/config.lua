@@ -6,7 +6,10 @@ return {
 	enable_wayland = nix.nvidia == false,
 	front_end = nix.nvidia and "WebGpu" or "OpenGL",
 	term = "wezterm",
-	font = wezterm.font(nix.font.name),
+	font = wezterm.font_with_fallback {
+		nix.font.name,
+		nix.font.symbols,
+	},
 	font_size = nix.font.size,
 	freetype_load_target = nix.font.hinting,
 	cell_width = nix.font.cell_width,

@@ -66,9 +66,7 @@ return {
 		},
 		enabled = true,
 		lazy = false,
-		init = function()
-			map { ["<leader><leader>"] = { ":noh<CR>", "Hide search highlights" } }
-		end,
+		init = function() map { ["<leader><leader>"] = { ":noh<CR>", "Hide search highlights" } } end,
 		opts = {
 			lsp = {
 				override = {
@@ -206,7 +204,6 @@ return {
 							.. "_"
 							.. ratio:gsub("%.", "_")
 						base_color = palette[base_color]
-						print("DEBUGPRINT[3]: init.lua:207: base_color=" .. vim.inspect(base_color))
 						if vim.fn.hlexists(group_name) == 0 then
 							require("catppuccin.lib.highlighter").syntax {
 								[group_name] = {
@@ -309,9 +306,7 @@ return {
 
 			return {
 				fold_virt_text_handler = handler,
-				provider_selector = function()
-					return { "treesitter", "indent" }
-				end,
+				provider_selector = function() return { "treesitter", "indent" } end,
 			}
 		end,
 	},
