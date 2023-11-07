@@ -51,19 +51,4 @@ return {
 			action = act.SendKey { key = "Enter", mods = "ALT" },
 		},
 	},
-	unix_domains = {
-		{
-			name = "charybdis-hack",
-			socket_path = "~/charyb.socket",
-			proxy_command = { "ssh", "-T", "-A", "charybdis", "~/.local/bin/wezterm", "cli", "proxy" },
-			local_echo_threshold_ms = 50000,
-		},
-	},
-	ssh_domains = {
-		{
-			name = "charybdis",
-			remote_address = "charybdis",
-			remote_wezterm_path = "~/.local/bin/wezterm",
-		},
-	},
 }

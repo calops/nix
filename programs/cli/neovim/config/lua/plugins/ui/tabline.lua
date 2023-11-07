@@ -1,23 +1,19 @@
 local utils = require("plugins.ui.utils")
 
 return {
-	init = function(self)
-		self.tabpages = vim.api.nvim_list_tabpages()
-	end,
+	init = function(self) self.tabpages = vim.api.nvim_list_tabpages() end,
 	{
-		condition = function(self)
-			return not vim.tbl_isempty(self.tabpages)
-		end,
+		condition = function(self) return not vim.tbl_isempty(self.tabpages) end,
 		static = {
 			sep = utils.separators,
 			diags = utils.diags_sorted(),
 			colors = {
-				logo = utils.get_hl("CustomTablineLogo"),
-				tab_active = utils.get_hl("CustomTablineSel"),
-				tab_inactive = utils.get_hl("CustomTabline"),
-				icon_pill_inactive = utils.get_hl("CustomTablinePillIcon"),
-				icon_pill_active = utils.get_hl("CustomTablinePillIconSel"),
-				icon_modified = utils.get_hl("CustomTablineModifiedIcon"),
+				logo = utils.hl.CustomTablineLogo,
+				tab_active = utils.hl.CustomTablineSel,
+				tab_inactive = utils.hl.CustomTabline,
+				icon_pill_inactive = utils.hl.CustomTablinePillIcon,
+				icon_pill_active = utils.hl.CustomTablinePillIconSel,
+				icon_modified = utils.hl.CustomTablineModifiedIcon,
 			},
 		},
 		{
@@ -25,7 +21,7 @@ return {
 		},
 		-- Logo
 		{
-			utils.build_pill({}, { provider = " Tabs", hl = utils.get_hl("CustomTablineLogo") }, {}, "provider"),
+			utils.build_pill({}, { provider = " Tabs", hl = utils.hl.CustomTablineLogo }, {}, "provider"),
 		},
 		-- Tabs
 		utils.make_tablist {
@@ -71,7 +67,7 @@ return {
 						self.pill_color = self.colors.icon_pill_inactive
 					end
 
-					if vim.api.nvim_buf_get_option(buffer, "modified") then
+					if vim.api.nvim_get_option_value("modified", { buf = buffer }) then
 						modified = true
 					end
 				end
@@ -108,16 +104,12 @@ return {
 					}, {
 						{
 							hl = self.pill_color,
-							condition = function()
-								return not vim.tbl_isempty(diag_pills)
-							end,
+							condition = function() return not vim.tbl_isempty(diag_pills) end,
 							diag_pills,
 						},
 						{
 							provider = "  ",
-							condition = function()
-								return modified
-							end,
+							condition = function() return modified end,
 							hl = { fg = self.colors.icon_modified.fg },
 						},
 					}),

@@ -1,33 +1,61 @@
 local module = {}
 
-module._colors_data = nil
-function module.colors()
-	if not module._colors_data then
-		module._colors_data = {
-			normal = module.get_hl("Normal"),
-		}
-	end
-	return module._colors_data
+local function get_hl(name) return vim.api.nvim_get_hl(0, { name = name, link = false }) end
+
+---Create a new object
+---@param class table
+---@param default table
+function module.new_object(class, default)
+	default = default or {}
+	setmetatable(default, class)
+	class.__index = class
+	return default
 end
 
-function module.get_hl(name)
-	return vim.api.nvim_get_hl(0, { name = name, link = false })
+---@class CachedHighlights
+---@field highlights table<string, table>
+local CachedHighlights = {}
+CachedHighlights.mt = {
+	__index = function(table, key)
+		if not table.highlights[key] then
+			table.highlights[key] = get_hl(key)
+		end
+		return table.highlights[key]
+	end,
+}
+
+function CachedHighlights:new()
+	local obj = {
+		highlights = {},
+	}
+	setmetatable(obj, self.mt)
+	return obj
 end
+
+module.hl = CachedHighlights:new()
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+	callback = function()
+		module.hl = CachedHighlights:new()
+		module._diags_data = nil
+		module._git_data = nil
+	end,
+})
 
 module._git_data = nil
 function module.git()
 	if not module._git_data then
 		module._git_data = {
 			add = {
-				colors = module.get_hl("GitSignsAdd"),
+				colors = module.hl.GitSignsAdd,
 				sign = vim.fn.sign_getdefined("GitSignsAdd")[1].text,
 			},
 			change = {
-				colors = module.get_hl("GitSignsChange"),
+				colors = module.hl.GitSignsChange,
 				sign = vim.fn.sign_getdefined("GitSignsChange")[1].text,
 			},
 			delete = {
-				colors = module.get_hl("GitSignsDelete"),
+				colors = module.hl.GitSignsDelete,
 				sign = vim.fn.sign_getdefined("GitSignsDelete")[1].text,
 			},
 		}
@@ -41,22 +69,22 @@ function module.diags()
 		module._diags_data = {
 			error = {
 				severity = 1,
-				colors = module.get_hl("DiagnosticVirtualTextError"),
+				colors = module.hl.DiagnosticVirtualTextError,
 				sign = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
 			},
 			warn = {
 				severity = 2,
-				colors = module.get_hl("DiagnosticVirtualTextWarn"),
+				colors = module.hl.DiagnosticVirtualTextWarn,
 				sign = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
 			},
 			info = {
 				severity = 3,
-				colors = module.get_hl("DiagnosticVirtualTextInfo"),
+				colors = module.hl.DiagnosticVirtualTextInfo,
 				sign = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
 			},
 			hint = {
 				severity = 4,
-				colors = module.get_hl("DiagnosticVirtualTextHint"),
+				colors = module.hl.DiagnosticVirtualTextHint,
 				sign = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
 			},
 		}
@@ -107,21 +135,13 @@ module.separators = {
 	right_lite = "",
 }
 
-function module.darken(color, amount, bg)
-	return require("catppuccin.utils.colors").darken(color, amount, bg)
-end
+function module.darken(color, amount, bg) return require("catppuccin.utils.colors").darken(color, amount, bg) end
 
-function module.brighten(color, amount, bg)
-	return require("catppuccin.utils.colors").brighten(color, amount, bg)
-end
+function module.brighten(color, amount, bg) return require("catppuccin.utils.colors").brighten(color, amount, bg) end
 
-function module.palette()
-	return require("catppuccin.palettes").get_palette()
-end
+function module.palette() return require("catppuccin.palettes").get_palette() end
 
-function module.correct_channel(x)
-	return 0.04045 < x and math.pow((x + 0.055) / 1.055, 2.4) or (x / 12.92)
-end
+function module.correct_channel(x) return 0.04045 < x and math.pow((x + 0.055) / 1.055, 2.4) or (x / 12.92) end
 
 function module.correct_lightness(x)
 	local k1, k2 = 0.206, 0.03
@@ -130,9 +150,7 @@ function module.correct_lightness(x)
 	return 0.5 * (k3 * x - k1 + math.sqrt((k3 * x - k1) ^ 2 + 4 * k2 * k3 * x))
 end
 
-function module.cuberoot(x)
-	return math.pow(x, 0.333333)
-end
+function module.cuberoot(x) return math.pow(x, 0.333333) end
 
 function module.compute_opposite_color(hex)
 	local dec = tonumber(hex, 16)
@@ -160,12 +178,9 @@ end
 
 function module.build_pill(left, center, right, key)
 	key = key or "provider"
-	local colors = module.colors()
 	local sep = module.separators
 	local result = {
-		insert = function(self, item)
-			table.insert(self.content, item)
-		end,
+		insert = function(self, item) table.insert(self.content, item) end,
 		content = {},
 	}
 	local function bg(color)
@@ -182,7 +197,7 @@ function module.build_pill(left, center, right, key)
 		return fmt(color.bg)
 	end
 
-	local prev_color = colors.normal
+	local prev_color = module.hl.Normal
 	for _, item in ipairs(left) do
 		if not item.condition or item.condition() then
 			result:insert {
@@ -209,7 +224,7 @@ function module.build_pill(left, center, right, key)
 		end
 	end
 
-	result:insert { [key] = sep.right, hl = { fg = bg(prev_color), bg = bg(colors.normal) } }
+	result:insert { [key] = sep.right, hl = { fg = bg(prev_color), bg = bg(module.hl.Normal) } }
 
 	return result.content
 end

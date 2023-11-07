@@ -1,15 +1,4 @@
-local hl_utils = require("heirline.utils")
-local ui_utils = require("plugins.ui.utils")
-
----Create a new object
----@param class table
----@param default table
-local function new_object(class, default)
-	default = default or {}
-	setmetatable(default, class)
-	class.__index = class
-	return default
-end
+local utils = require("plugins.ui.utils")
 
 ---@class Signs
 ---@field diagnostics table<integer, integer>
@@ -17,7 +6,7 @@ end
 local Signs = {}
 
 function Signs:new()
-	return new_object(self, {
+	return utils.new_object(self, {
 		diagnostics = {},
 		git = {},
 	})
@@ -29,7 +18,7 @@ local CachedSigns = {}
 
 ---@return CachedSigns
 function CachedSigns:new()
-	return new_object(self, {
+	return utils.new_object(self, {
 		buffers = {},
 	})
 end
@@ -74,16 +63,12 @@ local function update_cached_git_signs(bufnr)
 end
 
 vim.api.nvim_create_autocmd("DiagnosticChanged", {
-	callback = function(args)
-		update_cached_diagnostics(args.buf, args.data.diagnostics)
-	end,
+	callback = function(args) update_cached_diagnostics(args.buf, args.data.diagnostics) end,
 })
 
 vim.api.nvim_create_autocmd("User", {
 	pattern = "GitSignsUpdate",
-	callback = function(args)
-		update_cached_git_signs(args.buf)
-	end,
+	callback = function(args) update_cached_git_signs(args.buf) end,
 })
 
 return {
@@ -97,13 +82,13 @@ return {
 		end,
 		static = {
 			colors = {
-				cursor_line = hl_utils.get_highlight("CursorLine").bg,
-				cursor_num = hl_utils.get_highlight("CursorLineNr").fg,
-				base = hl_utils.get_highlight("Normal").bg,
-				num = hl_utils.get_highlight("LineNr").fg,
+				cursor_line = utils.hl.CursorLine.bg,
+				cursor_num = utils.hl.CursorLineNr.fg,
+				base = utils.hl.Normal.bg,
+				num = utils.hl.LineNr.fg,
 			},
-			diagnostics = ui_utils.diags_sorted(),
-			gitsigns = ui_utils.git(),
+			diagnostics = utils.diags_sorted(),
+			gitsigns = utils.git(),
 		},
 		init = function(self)
 			if require("heirline.conditions").is_active() and vim.v.lnum == vim.api.nvim_win_get_cursor(0)[1] then
@@ -141,9 +126,7 @@ return {
 					return "  "
 				end
 			end,
-			condition = function()
-				return vim.v.virtnum == 0
-			end,
+			condition = function() return vim.v.virtnum == 0 end,
 			hl = function(self)
 				local fg = self.fg
 				local bg = self.bg
@@ -164,9 +147,7 @@ return {
 				end
 				return "%=" .. num
 			end,
-			hl = function(self)
-				return { fg = self.fg, bg = self.bg }
-			end,
+			hl = function(self) return { fg = self.fg, bg = self.bg } end,
 		},
 		-- Git chunks
 		{

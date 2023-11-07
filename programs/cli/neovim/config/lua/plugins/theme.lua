@@ -100,9 +100,6 @@ return {
 
 					VirtColumn = { fg = palette.surface0 },
 
-					CuicuiCharColumn1 = { fg = utils.darken(palette.surface0, 0.8) },
-					CuicuiCharColumn2 = { fg = palette.surface0 },
-
 					CopilotSuggestion = { fg = utils.darken(palette.peach, 0.8), style = { "italic" } },
 
 					MultiCursor = { bg = palette.peach, fg = palette.base },
