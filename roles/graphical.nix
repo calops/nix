@@ -1,9 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
+{lib, ...}: let
   my.types = with lib; {
     font = types.submodule {
       options = {
