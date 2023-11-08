@@ -1,61 +1,21 @@
 local module = {}
 
-local function get_hl(name) return vim.api.nvim_get_hl(0, { name = name, link = false }) end
-
----Create a new object
----@param class table
----@param default table
-function module.new_object(class, default)
-	default = default or {}
-	setmetatable(default, class)
-	class.__index = class
-	return default
-end
-
----@class CachedHighlights
----@field highlights table<string, table>
-local CachedHighlights = {}
-CachedHighlights.mt = {
-	__index = function(table, key)
-		if not table.highlights[key] then
-			table.highlights[key] = get_hl(key)
-		end
-		return table.highlights[key]
-	end,
-}
-
-function CachedHighlights:new()
-	local obj = {
-		highlights = {},
-	}
-	setmetatable(obj, self.mt)
-	return obj
-end
-
-module.hl = CachedHighlights:new()
-
-vim.api.nvim_create_autocmd("ColorScheme", {
-	callback = function()
-		module.hl = CachedHighlights:new()
-		module._diags_data = nil
-		module._git_data = nil
-	end,
-})
+local colors = require("core.colors")
 
 module._git_data = nil
 function module.git()
 	if not module._git_data then
 		module._git_data = {
 			add = {
-				colors = module.hl.GitSignsAdd,
+				colors = colors.hl.GitSignsAdd,
 				sign = vim.fn.sign_getdefined("GitSignsAdd")[1].text,
 			},
 			change = {
-				colors = module.hl.GitSignsChange,
+				colors = colors.hl.GitSignsChange,
 				sign = vim.fn.sign_getdefined("GitSignsChange")[1].text,
 			},
 			delete = {
-				colors = module.hl.GitSignsDelete,
+				colors = colors.hl.GitSignsDelete,
 				sign = vim.fn.sign_getdefined("GitSignsDelete")[1].text,
 			},
 		}
@@ -69,36 +29,27 @@ function module.diags()
 		module._diags_data = {
 			error = {
 				severity = 1,
-				colors = module.hl.DiagnosticVirtualTextError,
+				colors = colors.hl.DiagnosticVirtualTextError,
 				sign = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
 			},
 			warn = {
 				severity = 2,
-				colors = module.hl.DiagnosticVirtualTextWarn,
+				colors = colors.hl.DiagnosticVirtualTextWarn,
 				sign = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
 			},
 			info = {
 				severity = 3,
-				colors = module.hl.DiagnosticVirtualTextInfo,
+				colors = colors.hl.DiagnosticVirtualTextInfo,
 				sign = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
 			},
 			hint = {
 				severity = 4,
-				colors = module.hl.DiagnosticVirtualTextHint,
+				colors = colors.hl.DiagnosticVirtualTextHint,
 				sign = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
 			},
 		}
 	end
 	return module._diags_data
-end
-
-function module.diags_signs()
-	return {
-		DiagnosticSignError = module.diags().error,
-		DiagnosticSignWarn = module.diags().warn,
-		DiagnosticSignInfo = module.diags().info,
-		DiagnosticSignHint = module.diags().hint,
-	}
 end
 
 function module.diags_sorted()
@@ -119,54 +70,12 @@ function module.diags_lines()
 	}
 end
 
-function module.diags_underlines()
-	return {
-		"DiagnosticUnderlineError",
-		"DiagnosticUnderlineWarn",
-		"DiagnosticUnderlineInfo",
-		"DiagnosticUnderlineHint",
-	}
-end
-
 module.separators = {
 	left = "",
 	left_lite = "",
 	right = "",
 	right_lite = "",
 }
-
-function module.darken(color, amount, bg) return require("catppuccin.utils.colors").darken(color, amount, bg) end
-
-function module.brighten(color, amount, bg) return require("catppuccin.utils.colors").brighten(color, amount, bg) end
-
-function module.palette() return require("catppuccin.palettes").get_palette() end
-
-function module.correct_channel(x) return 0.04045 < x and math.pow((x + 0.055) / 1.055, 2.4) or (x / 12.92) end
-
-function module.correct_lightness(x)
-	local k1, k2 = 0.206, 0.03
-	local k3 = (1 + k1) / (1 + k2)
-
-	return 0.5 * (k3 * x - k1 + math.sqrt((k3 * x - k1) ^ 2 + 4 * k2 * k3 * x))
-end
-
-function module.cuberoot(x) return math.pow(x, 0.333333) end
-
-function module.compute_opposite_color(hex)
-	local dec = tonumber(hex, 16)
-	local b = module.correct_channel(math.fmod(dec, 256) / 255)
-	local g = module.correct_channel(math.fmod((dec - b) / 256, 256) / 255)
-	local r = module.correct_channel(math.floor(dec / 65536) / 255)
-
-	local l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b
-	local m = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b
-	local s = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b
-
-	local l_, m_, s_ = module.cuberoot(l), module.cuberoot(m), module.cuberoot(s)
-	local L = module.correct_lightness(0.2104542553 * l_ + 0.7936177850 * m_ - 0.0040720468 * s_)
-
-	return L < 0.5 and module.palette().text or module.palette().base
-end
 
 local function fmt(color)
 	if type(color) == "string" then
@@ -190,20 +99,20 @@ function module.build_pill(left, center, right, key)
 		if not color.bg then
 			local fg = color.fg
 			if not fg then
-				fg = module.palette().text
+				fg = colors.palette().text
 			end
-			color.bg = module.darken(fmt(fg), 0.3)
+			color.bg = colors.darken(fmt(fg), 0.3)
 		end
 		return fmt(color.bg)
 	end
 
-	local prev_color = module.hl.Normal
+	local prev_color = colors.hl.Normal
 	for _, item in ipairs(left) do
 		if not item.condition or item.condition() then
 			result:insert {
 				[key] = item.lite and sep.left_lite or sep.left,
 				hl = {
-					fg = item.lite and module.palette().base or bg(item.hl),
+					fg = item.lite and colors.palette().base or bg(item.hl),
 					bg = bg(prev_color),
 				},
 			}
@@ -224,7 +133,7 @@ function module.build_pill(left, center, right, key)
 		end
 	end
 
-	result:insert { [key] = sep.right, hl = { fg = bg(prev_color), bg = bg(module.hl.Normal) } }
+	result:insert { [key] = sep.right, hl = { fg = bg(prev_color), bg = bg(colors.hl.Normal) } }
 
 	return result.content
 end

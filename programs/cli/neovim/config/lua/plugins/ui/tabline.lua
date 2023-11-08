@@ -1,4 +1,5 @@
 local utils = require("plugins.ui.utils")
+local colors = require("core.colors")
 
 return {
 	init = function(self) self.tabpages = vim.api.nvim_list_tabpages() end,
@@ -8,12 +9,12 @@ return {
 			sep = utils.separators,
 			diags = utils.diags_sorted(),
 			colors = {
-				logo = utils.hl.CustomTablineLogo,
-				tab_active = utils.hl.CustomTablineSel,
-				tab_inactive = utils.hl.CustomTabline,
-				icon_pill_inactive = utils.hl.CustomTablinePillIcon,
-				icon_pill_active = utils.hl.CustomTablinePillIconSel,
-				icon_modified = utils.hl.CustomTablineModifiedIcon,
+				logo = colors.hl.CustomTablineLogo,
+				tab_active = colors.hl.CustomTablineSel,
+				tab_inactive = colors.hl.CustomTabline,
+				icon_pill_inactive = colors.hl.CustomTablinePillIcon,
+				icon_pill_active = colors.hl.CustomTablinePillIconSel,
+				icon_modified = colors.hl.CustomTablineModifiedIcon,
 			},
 		},
 		{
@@ -21,7 +22,7 @@ return {
 		},
 		-- Logo
 		{
-			utils.build_pill({}, { provider = " Tabs", hl = utils.hl.CustomTablineLogo }, {}, "provider"),
+			utils.build_pill({}, { provider = " Tabs", hl = colors.hl.CustomTablineLogo }, {}, "provider"),
 		},
 		-- Tabs
 		utils.make_tablist {
@@ -31,7 +32,7 @@ return {
 					if self.is_active then
 						return color
 					end
-					return utils.darken(color, 0.4, string.format("#%x", self.colors.icon_pill_inactive.bg))
+					return colors.darken(color, 0.4, string.format("#%x", self.colors.icon_pill_inactive.bg))
 				end
 
 				local icons = {}

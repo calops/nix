@@ -6,11 +6,12 @@ return {
 		local function format_color(color) return string.format("#%x", color) end
 
 		local incline = require("incline")
+		local colors = require("core.colors")
 		local utils = require("plugins.ui.utils")
-		local col_inactive = format_color(utils.hl.InclineNormalNC.bg)
-		local col_active = format_color(utils.hl.InclineNormal.bg)
-		local col_base = format_color(utils.hl.Normal.bg)
-		local col_modified = format_color(utils.hl.CustomTablineModifiedIcon.fg)
+		local col_inactive = format_color(colors.hl.InclineNormalNC.bg)
+		local col_active = format_color(colors.hl.InclineNormal.bg)
+		local col_base = format_color(colors.hl.Normal.bg)
+		local col_modified = format_color(colors.hl.CustomTablineModifiedIcon.fg)
 		local diags = utils.diags_sorted()
 
 		incline.setup {
@@ -23,7 +24,7 @@ return {
 
 				local icon_color = {
 					fg = icon_fg_color,
-					bg = utils.darken(icon_fg_color, 0.3),
+					bg = colors.darken(icon_fg_color, 0.3),
 				}
 
 				local color = col_inactive
@@ -54,7 +55,7 @@ return {
 				end
 
 				if modified then
-					local bg = utils.darken(col_modified, 0.3)
+					local bg = colors.darken(col_modified, 0.3)
 					table.insert(result, { "", guifg = prev_color, guibg = bg })
 					table.insert(result, { "  ", guifg = col_modified, guibg = bg })
 					prev_color = bg

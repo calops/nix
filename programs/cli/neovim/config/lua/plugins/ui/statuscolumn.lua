@@ -1,3 +1,5 @@
+local core_utils = require("core.utils")
+local colors = require("core.colors")
 local utils = require("plugins.ui.utils")
 
 ---@class Signs
@@ -6,7 +8,7 @@ local utils = require("plugins.ui.utils")
 local Signs = {}
 
 function Signs:new()
-	return utils.new_object(self, {
+	return core_utils.new_object(self, {
 		diagnostics = {},
 		git = {},
 	})
@@ -18,7 +20,7 @@ local CachedSigns = {}
 
 ---@return CachedSigns
 function CachedSigns:new()
-	return utils.new_object(self, {
+	return core_utils.new_object(self, {
 		buffers = {},
 	})
 end
@@ -82,10 +84,10 @@ return {
 		end,
 		static = {
 			colors = {
-				cursor_line = utils.hl.CursorLine.bg,
-				cursor_num = utils.hl.CursorLineNr.fg,
-				base = utils.hl.Normal.bg,
-				num = utils.hl.LineNr.fg,
+				cursor_line = colors.hl.CursorLine.bg,
+				cursor_num = colors.hl.CursorLineNr.fg,
+				base = colors.hl.Normal.bg,
+				num = colors.hl.LineNr.fg,
 			},
 			diagnostics = utils.diags_sorted(),
 			gitsigns = utils.git(),

@@ -33,8 +33,8 @@ return {
 				enabled = true,
 			},
 			custom_highlights = function()
-				local palette = require("plugins.ui.utils").palette()
-				local utils = require("plugins.ui.utils")
+				local colors = require("core.colors")
+				local palette = colors.palette()
 
 				return {
 					NormalFloat = { bg = palette.base },
@@ -58,10 +58,10 @@ return {
 					DiagnosticUnderlineInfo = { sp = palette.sky, style = { "undercurl" } },
 					DiagnosticUnderlineHint = { sp = palette.teal, style = { "undercurl" } },
 
-					DiagnosticLineError = { bg = utils.darken(palette.red, 0.095, palette.base) },
-					DiagnosticLineWarn = { bg = utils.darken(palette.yellow, 0.095, palette.base) },
-					DiagnosticLineInfo = { bg = utils.darken(palette.sky, 0.095, palette.base) },
-					DiagnosticLineHint = { bg = utils.darken(palette.teal, 0.095, palette.base) },
+					DiagnosticLineError = { bg = colors.darken(palette.red, 0.095, palette.base) },
+					DiagnosticLineWarn = { bg = colors.darken(palette.yellow, 0.095, palette.base) },
+					DiagnosticLineInfo = { bg = colors.darken(palette.sky, 0.095, palette.base) },
+					DiagnosticLineHint = { bg = colors.darken(palette.teal, 0.095, palette.base) },
 
 					DiagnosticUnnecessary = { sp = palette.mauve, style = { "undercurl" } },
 
@@ -71,7 +71,7 @@ return {
 					ModesVisual = { bg = palette.mauve },
 
 					LspInlayHint = { fg = palette.surface1 },
-					Comment = { fg = utils.darken(palette.lavender, 0.6) },
+					Comment = { fg = colors.darken(palette.lavender, 0.6) },
 
 					IlluminatedWordText = { bg = palette.surface1, style = { "bold", "underdotted" } },
 					IlluminatedWordWrite = { bg = palette.surface1, style = { "bold", "underdotted" } },
@@ -79,7 +79,7 @@ return {
 
 					UfoVirtText = { fg = palette.base, bg = palette.teal, style = { "bold" } },
 					UfoVirtTextPill = { fg = palette.teal },
-					UfoFoldedBg = { bg = utils.darken(palette.teal, 0.3) },
+					UfoFoldedBg = { bg = colors.darken(palette.teal, 0.3) },
 					Folded = { bg = palette.base },
 
 					CursorLineSign = { link = "CursorLine" },
@@ -87,9 +87,10 @@ return {
 					GitSignsAdd = { fg = palette.green, bg = "none" },
 					GitSignsChange = { fg = palette.peach },
 					GitSignsDelete = { fg = palette.red },
-					DiffDeleteVirtLn = { fg = utils.darken(palette.red, 0.3) },
+					DiffDeleteVirtLn = { fg = colors.darken(palette.red, 0.3) },
 					DiffviewDiffDeleteDim = { fg = palette.surface0 },
 
+					TabLine = { bg = palette.mantle },
 					CustomTabline = { fg = palette.base, bg = palette.surface1 },
 					CustomTablineSel = { fg = palette.base, bg = palette.overlay1 },
 					CustomTablineLogo = { fg = palette.base, bg = palette.mauve },
@@ -100,7 +101,7 @@ return {
 
 					VirtColumn = { fg = palette.surface0 },
 
-					CopilotSuggestion = { fg = utils.darken(palette.peach, 0.8), style = { "italic" } },
+					CopilotSuggestion = { fg = colors.darken(palette.peach, 0.8), style = { "italic" } },
 
 					MultiCursor = { bg = palette.peach, fg = palette.base },
 					VM_Mono = { bg = palette.peach, fg = palette.base },
@@ -119,11 +120,11 @@ return {
 					["@type.qualifier"] = { fg = palette.mauve, style = { "bold" } },
 					["@function.macro"] = { fg = palette.blue },
 					["@constant.builtin"] = { fg = palette.green },
-					["@property"] = { fg = utils.brighten(palette.yellow, 0.7) },
-					["@field"] = { fg = utils.brighten(palette.yellow, 0.7) },
+					["@property"] = { fg = colors.brighten(palette.yellow, 0.7) },
+					["@field"] = { fg = colors.brighten(palette.yellow, 0.7) },
 
 					["@lsp.type.struct"] = { fg = palette.yellow },
-					["@lsp.type.property"] = { fg = utils.brighten(palette.yellow, 0.7) },
+					["@lsp.type.property"] = { fg = colors.brighten(palette.yellow, 0.7) },
 					["@lsp.type.interface"] = { fg = palette.peach },
 					["@lsp.type.builtinType"] = { fg = palette.yellow, style = { "bold" } },
 					["@lsp.type.enum"] = { fg = palette.teal },

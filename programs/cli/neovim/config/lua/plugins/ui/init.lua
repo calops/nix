@@ -1,5 +1,5 @@
 local core_utils = require("core.utils")
-local utils = require("plugins.ui.utils")
+local colors = require("core.colors")
 local map = core_utils.map
 
 return {
@@ -8,8 +8,6 @@ return {
 		"rebelot/heirline.nvim",
 		lazy = false,
 		config = function()
-			require("catppuccin")
-
 			vim.o.signcolumn = "no"
 			vim.o.foldcolumn = "0"
 
@@ -20,11 +18,9 @@ return {
 			}
 
 			local function new_tab()
-				vim.cmd([[
-                    let view = winsaveview()
-                    tabedit %
-                    call winrestview(view)
-                ]])
+				local view = vim.fn.winsaveview()
+				vim.cmd.tabedit("%")
+				vim.fn.winrestview(view)
 			end
 
 			map {
@@ -36,19 +32,6 @@ return {
 		end,
 	},
 	require("plugins.ui.windowline"),
-	{
-		"Bekaboo/dropbar.nvim",
-		event = "UIEnter",
-		version = "*",
-		enabled = false,
-		opts = {
-			menu = {
-				win_configs = {
-					border = "rounded",
-				},
-			},
-		},
-	},
 	-- Colorful modes
 	{
 		"mvllow/modes.nvim",
@@ -167,7 +150,7 @@ return {
 		event = "VeryLazy",
 		config = function()
 			local hipatterns = require("mini.hipatterns")
-			local palette = utils.palette()
+			local palette = colors.palette()
 			local palette_patterns = {}
 			local palette_highlights = {}
 
@@ -187,14 +170,14 @@ return {
 				return {
 					pattern = function(bufnr)
 						if vim.api.nvim_buf_get_name(bufnr):match("theme.lua$") then
-							return "utils[.]%w*[(]palette[.].*, %d[.]%d+[)]"
+							return "colors[.]%w*[(]palette[.].*, %d[.]%d+[)]"
 						end
 						return nil
 					end,
 					group = "",
 					extmark_opts = function(_, _, data)
 						local func, base_color, ratio =
-							data.full_match:match("utils[.](%w*)[(]palette[.](.*), (%d[.]%d+)[)]")
+							data.full_match:match("colors[.](%w*)[(]palette[.](.*), (%d[.]%d+)[)]")
 						local group_name = "HiPatternsPalette_"
 							.. base_color
 							.. "_"
@@ -205,7 +188,7 @@ return {
 						if vim.fn.hlexists(group_name) == 0 then
 							require("catppuccin.lib.highlighter").syntax {
 								[group_name] = {
-									fg = utils[func](base_color, tonumber(ratio)),
+									fg = colors[func](base_color, tonumber(ratio)),
 								},
 							}
 						end
@@ -231,8 +214,8 @@ return {
 						group = group:gsub('[]"[]+', "")
 						local group_name = "HiPatternsGroup_" .. group
 						local group_def = loadstring([[
-							local utils = require("plugins.ui.utils")
-							local palette = utils.palette()
+							local colors = require("core.colors")
+							local palette = colors.palette()
 							return ]] .. body)
 						-- The group name isn't fully descriptive of what's inside, so we need to redefine it each time
 						require("catppuccin.lib.highlighter").syntax {
