@@ -80,6 +80,15 @@ vim.g.neovide_floating_blur_amount_y = 1.5
 vim.g.neovide_scroll_animation_length = 0.13
 vim.o.guifont = "Iosevka Comfy:h10"
 
+-- Clipboard
+-- vim.g.clipboard = {
+-- 	name = "OSC 52",
+-- 	copy = {
+-- 		["+"] = require("vim.clipboard.osc52").copy,
+-- 		["*"] = require("vim.clipboard.osc52").copy,
+-- 	},
+-- }
+
 vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", numhl = "" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", numhl = "" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", numhl = "" })
@@ -112,9 +121,7 @@ vim.api.nvim_create_autocmd({ "BufEnter" }, {
 local utils = require("plugins.ui.utils")
 local lines_ns = vim.api.nvim_create_namespace("diag_lines")
 
-local function clear_highlights(buf)
-	vim.api.nvim_buf_clear_namespace(buf, lines_ns, 0, -1)
-end
+local function clear_highlights(buf) vim.api.nvim_buf_clear_namespace(buf, lines_ns, 0, -1) end
 
 local function update_highlights(buf, diagnostics)
 	clear_highlights(buf)
@@ -131,10 +138,6 @@ local function update_highlights(buf, diagnostics)
 end
 
 vim.diagnostic.handlers.diagnostic_lines = {
-	show = function(_, bufnr, diagnostics, _)
-		update_highlights(bufnr, diagnostics)
-	end,
-	hide = function(_, bufnr)
-		clear_highlights(bufnr)
-	end,
+	show = function(_, bufnr, diagnostics, _) update_highlights(bufnr, diagnostics) end,
+	hide = function(_, bufnr) clear_highlights(bufnr) end,
 }

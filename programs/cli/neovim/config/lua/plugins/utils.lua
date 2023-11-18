@@ -31,20 +31,6 @@ return {
 			follow_cwd = false,
 		},
 	},
-	-- Universal clipboard forwarding
-	{
-		"ojroques/nvim-osc52",
-		lazy = true,
-		init = function()
-			vim.api.nvim_create_autocmd("TextYankPost", {
-				callback = function()
-					if vim.v.event.operator == "y" and vim.v.event.regname == "+" then
-						require("osc52").copy_register("+")
-					end
-				end,
-			})
-		end,
-	},
 	-- Startup time analyzer
 	{
 		"dstein64/vim-startuptime",

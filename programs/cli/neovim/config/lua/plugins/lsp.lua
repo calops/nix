@@ -11,6 +11,8 @@ return {
 		"williamboman/mason.nvim",
 		lazy = false,
 		config = function()
+			require("neoconf")
+			require("neodev")
 			require("mason").setup {
 				ui = { border = "rounded" },
 			}
@@ -25,7 +27,7 @@ return {
 			local mason_lspconfig = require("mason-lspconfig")
 			mason_lspconfig.setup { automatic_installation = false }
 			mason_lspconfig.setup_handlers {
-				function(server_name) -- default handler (optional)
+				function(server_name) -- automatically setup server by default
 					lspconfig[server_name].setup {}
 				end,
 				rust_analyzer = nil, -- handled entirely by rust-tools.nvim, and installed by nix
@@ -35,10 +37,6 @@ return {
 							Lua = {
 								format = { enable = false },
 								hint = { enable = true },
-								runtime = { version = "LuaJIT" },
-								diagnostics = {
-									globals = { "vim" },
-								},
 							},
 						},
 					}
@@ -77,7 +75,7 @@ return {
 				vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
 		end,
 		config = function()
-			require("neoconf")
+			require("neodev")
 			local lspconfig = require("lspconfig")
 			local capabilities =
 				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -141,7 +139,16 @@ return {
 	{
 		"folke/neodev.nvim",
 		ft = "lua",
-		config = true,
+		priority = 1000,
+		opts = {
+			pathStrict = false,
+			-- Always load nvim plugins for lua_ls, this is a temporary hack
+			-- FIXME: this hurts performance, should be fixed upstream
+			override = function(_, library)
+				library.enabled = true
+				library.plugins = true
+			end,
+		},
 	},
 	{
 		"zbirenbaum/copilot.lua",

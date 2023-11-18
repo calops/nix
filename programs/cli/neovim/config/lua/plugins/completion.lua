@@ -15,6 +15,7 @@ return {
 			"davidsierradz/cmp-conventionalcommits",
 			"L3MON4D3/LuaSnip",
 			"chrisgrieser/cmp-nerdfont",
+			"chrisgrieser/cmp_yanky",
 		},
 		config = function()
 			local cmp = require("cmp")
@@ -28,17 +29,16 @@ return {
 					["<S-Tab>"] = cmp.mapping.select_prev_item(),
 					["<CR>"] = cmp.mapping.confirm { select = false },
 				},
-				sources = cmp.config.sources({
+				sources = cmp.config.sources {
 					{ name = "nvim_lsp" },
 					{ name = "nvim_lua" },
 					{ name = "luasnip" },
-				}, {
 					{ name = "path" },
 					{ name = "nerdfont" },
 					{ name = "emoji" },
-				}, {
+					{ name = "cmp_yanky" },
 					{ name = "buffer" },
-				}),
+				},
 				snippet = {
 					expand = function(args) require("luasnip").lsp_expand(args.body) end,
 				},

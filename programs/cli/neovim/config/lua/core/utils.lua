@@ -19,10 +19,30 @@ module.new_object = function(class, default)
 	return default
 end
 
-module.setup = function(_)
-	vim.api.nvim_create_autocmd("ColorScheme", {
-		callback = function() require("core.colors").reset_cache() end,
+---@class CachedDict<T>: { [string]: T }
+
+---Create a new [CachedDict<T>] object
+---@generic T
+---@param cacher fun(key: string): T
+---@return CachedDict<T>
+module.new_cached_dict = function(cacher)
+	local obj = {
+		_cache = {},
+	}
+	setmetatable(obj, {
+		__index = function(table, key)
+			if key == "reset" then
+				return function() table._cache = {} end
+			end
+			if not table._cache[key] then
+				table._cache[key] = cacher(key)
+			end
+			return table._cache[key]
+		end,
 	})
+	return obj
 end
+
+module.with_reset = function(constructor) end
 
 return module

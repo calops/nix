@@ -123,10 +123,14 @@ return {
 				winbar = true,
 				statusline = false,
 			},
-			default_component_config = {
+			default_component_configs = {
 				modified = {
 					symbol = "",
-					highlight = "NeoTreeModified",
+				},
+				git_status = {
+					symbols = {
+						unstaged = "",
+					},
 				},
 			},
 		},

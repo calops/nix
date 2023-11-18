@@ -37,6 +37,11 @@
     };
     autoEnable = true;
     polarity = config.my.colors.background;
+    cursor = {
+      name = "Catppuccin-Mocha-Peach-Cursors";
+      size = 32;
+      package = pkgs.catppuccin-cursors.mochaPeach;
+    };
     base16Scheme = {
       base00 = palette.base; # Default Background
       base01 = palette.subtext0; # Lighter Background (Used for status bars)

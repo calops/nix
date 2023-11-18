@@ -1,6 +1,7 @@
 local core_utils = require("core.utils")
-local colors = require("core.colors")
-local utils = require("plugins.ui.utils")
+local color_utils = require("core.colors")
+local git_utils = require("core.git")
+local plugin_utils = require("plugins.ui.utils")
 
 ---@class Signs
 ---@field diagnostics table<integer, integer>
@@ -84,15 +85,20 @@ return {
 		end,
 		static = {
 			colors = {
-				cursor_line = colors.hl.CursorLine.bg,
-				cursor_num = colors.hl.CursorLineNr.fg,
-				base = colors.hl.Normal.bg,
-				num = colors.hl.LineNr.fg,
+				cursor_line = color_utils.hl.CursorLine.bg,
+				cursor_num = color_utils.hl.CursorLineNr.fg,
+				base = color_utils.hl.Normal.bg,
+				num = color_utils.hl.LineNr.fg,
 			},
-			diagnostics = utils.diags_sorted(),
-			gitsigns = utils.git(),
+			diagnostics = plugin_utils.diags_sorted(),
+			gitsigns = git_utils.signs,
 		},
 		init = function(self)
+			local bufnr = vim.fn.bufnr()
+			if not bufnr then
+				return
+			end
+
 			if require("heirline.conditions").is_active() and vim.v.lnum == vim.api.nvim_win_get_cursor(0)[1] then
 				self.bg = self.colors.cursor_line
 				self.fg = self.colors.cursor_num
@@ -101,7 +107,7 @@ return {
 				self.fg = self.colors.num
 			end
 
-			local signs = cached_signs:get(vim.fn.bufnr())
+			local signs = cached_signs:get(bufnr)
 
 			local diag = signs.diagnostics[vim.v.lnum]
 			if diag ~= nil then
@@ -156,7 +162,7 @@ return {
 			condition = require("heirline.conditions").is_git_repo,
 			provider = function(self)
 				if self.gitsign then
-					return self.gitsign.sign
+					return self.gitsign.text
 				else
 					return "  "
 				end
@@ -165,7 +171,7 @@ return {
 				local fg = self.colors.num
 
 				if self.gitsign then
-					fg = self.gitsign.colors.fg
+					fg = self.gitsign.hl.fg
 				end
 
 				return { fg = fg, bg = self.bg }
@@ -174,6 +180,9 @@ return {
 				name = "git_sign_callback",
 				callback = function(_, _, _, button)
 					local mouse_pos = vim.fn.getmousepos()
+					if not mouse_pos then
+						return
+					end
 					vim.api.nvim_set_current_win(mouse_pos.winid)
 					vim.api.nvim_win_set_cursor(mouse_pos.winid, { mouse_pos.line, 0 })
 					if button == "l" then

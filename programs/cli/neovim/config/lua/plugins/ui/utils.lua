@@ -1,27 +1,7 @@
 local module = {}
 
 local colors = require("core.colors")
-
-module._git_data = nil
-function module.git()
-	if not module._git_data then
-		module._git_data = {
-			add = {
-				colors = colors.hl.GitSignsAdd,
-				sign = vim.fn.sign_getdefined("GitSignsAdd")[1].text,
-			},
-			change = {
-				colors = colors.hl.GitSignsChange,
-				sign = vim.fn.sign_getdefined("GitSignsChange")[1].text,
-			},
-			delete = {
-				colors = colors.hl.GitSignsDelete,
-				sign = vim.fn.sign_getdefined("GitSignsDelete")[1].text,
-			},
-		}
-	end
-	return module._git_data
-end
+local symbols = require("core.symbols")
 
 module._diags_data = nil
 function module.diags()
@@ -30,22 +10,22 @@ function module.diags()
 			error = {
 				severity = 1,
 				colors = colors.hl.DiagnosticVirtualTextError,
-				sign = vim.fn.sign_getdefined("DiagnosticSignError")[1].text,
+				sign = symbols.signs.DiagnosticSignError,
 			},
 			warn = {
 				severity = 2,
 				colors = colors.hl.DiagnosticVirtualTextWarn,
-				sign = vim.fn.sign_getdefined("DiagnosticSignWarn")[1].text,
+				sign = symbols.signs.DiagnosticSignWarn,
 			},
 			info = {
 				severity = 3,
 				colors = colors.hl.DiagnosticVirtualTextInfo,
-				sign = vim.fn.sign_getdefined("DiagnosticSignInfo")[1].text,
+				sign = symbols.signs.DiagnosticSignInfo,
 			},
 			hint = {
 				severity = 4,
 				colors = colors.hl.DiagnosticVirtualTextHint,
-				sign = vim.fn.sign_getdefined("DiagnosticSignHint")[1].text,
+				sign = symbols.signs.DiagnosticSignHint,
 			},
 		}
 	end
@@ -85,17 +65,23 @@ local function fmt(color)
 	end
 end
 
-function module.build_pill(left, center, right, key)
+function module.build_pill(left, center, right, key, opts)
 	key = key or "provider"
 	local sep = module.separators
 	local result = {
-		insert = function(self, item) table.insert(self.content, item) end,
+		insert = function(self, item)
+			if opts then
+				vim.tbl_extend("force", item, opts)
+			end
+			table.insert(self.content, item)
+		end,
 		content = {},
 	}
 	local function bg(color)
 		if not color then
 			color = {}
 		end
+
 		if not color.bg then
 			local fg = color.fg
 			if not fg then
@@ -103,16 +89,18 @@ function module.build_pill(left, center, right, key)
 			end
 			color.bg = colors.darken(fmt(fg), 0.3)
 		end
+
 		return fmt(color.bg)
 	end
 
 	local prev_color = colors.hl.Normal
-	for _, item in ipairs(left) do
+	for i, item in ipairs(left) do
 		if not item.condition or item.condition() then
+			local lite = item.lite and i > 1
 			result:insert {
-				[key] = item.lite and sep.left_lite or sep.left,
+				[key] = lite and sep.left_lite or sep.left,
 				hl = {
-					fg = item.lite and colors.palette().base or bg(item.hl),
+					fg = lite and colors.palette().base or bg(item.hl),
 					bg = bg(prev_color),
 				},
 			}
@@ -151,7 +139,7 @@ function module.diag_count_for_buffer(bufnr, diag_count)
 end
 
 function module.make_tablist(tab_component)
-	local tablist = {
+	return {
 		init = function(self)
 			local tabpages = vim.api.nvim_list_tabpages()
 			for i, tabpage in ipairs(tabpages) do
@@ -177,7 +165,6 @@ function module.make_tablist(tab_component)
 			end
 		end,
 	}
-	return tablist
 end
 
 function module.get_hl_group(hl)

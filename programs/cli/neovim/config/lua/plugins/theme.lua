@@ -67,8 +67,17 @@ return {
 
 					IblScope = { fg = palette.mauve },
 
-					ModesInsert = { bg = palette.green },
-					ModesVisual = { bg = palette.mauve },
+					ModeNormal = { fg = palette.base, bg = palette.blue, style = { "bold" } },
+					ModeInsert = { fg = palette.base, bg = palette.green, style = { "bold" } },
+					ModeVisual = { fg = palette.base, bg = palette.mauve, style = { "bold" } },
+					ModeOperator = { fg = palette.base, bg = palette.peach, style = { "bold" } },
+					ModeReplace = { fg = palette.base, bg = palette.red, style = { "bold" } },
+					ModeCommand = { fg = palette.base, bg = palette.sky, style = { "bold" } },
+					ModePrompt = { fg = palette.base, bg = palette.teal, style = { "bold" } },
+					ModeTerminal = { fg = palette.base, bg = palette.yellow, style = { "bold" } },
+
+					ModesInsert = { link = "ModeInsert" },
+					ModesVisual = { link = "ModeVisual" },
 
 					LspInlayHint = { fg = palette.surface1 },
 					Comment = { fg = colors.darken(palette.lavender, 0.6) },
@@ -79,7 +88,7 @@ return {
 
 					UfoVirtText = { fg = palette.base, bg = palette.teal, style = { "bold" } },
 					UfoVirtTextPill = { fg = palette.teal },
-					UfoFoldedBg = { bg = colors.darken(palette.teal, 0.3) },
+					UfoFoldedBg = { bg = colors.darken(palette.teal, 0.33) },
 					Folded = { bg = palette.base },
 
 					CursorLineSign = { link = "CursorLine" },
@@ -90,27 +99,35 @@ return {
 					DiffDeleteVirtLn = { fg = colors.darken(palette.red, 0.3) },
 					DiffviewDiffDeleteDim = { fg = palette.surface0 },
 
-					TabLine = { bg = palette.mantle },
 					CustomTabline = { fg = palette.base, bg = palette.surface1 },
 					CustomTablineSel = { fg = palette.base, bg = palette.overlay1 },
-					CustomTablineLogo = { fg = palette.base, bg = palette.mauve },
+					CustomTablineLogo = { fg = palette.mauve, bg = colors.darken(palette.mauve, 0.33) },
 					CustomTablinePillIcon = { bg = palette.surface1 },
 					CustomTablinePillIconSel = { bg = palette.surface2 },
 					CustomTablineModifiedIcon = { fg = palette.peach },
 					CustomTablineNumber = { style = { "bold" } },
+					CustomTablineLsp = { fg = palette.base, bg = palette.green },
+					CustomTablineLspActive = {
+						fg = palette.green,
+						bg = colors.darken(palette.green, 0.33),
+						style = { "bold" },
+					},
+					CustomTablineLspInactive = { fg = palette.text, bg = colors.darken(palette.green, 0.33) },
+					CustomTablineCwd = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.33) },
+					CustomTablineGitBranch = { fg = palette.peach, bg = colors.darken(palette.peach, 0.33) },
+					CustomTablineGitLogo = { fg = palette.base, bg = palette.peach },
 
 					VirtColumn = { fg = palette.surface0 },
 
 					CopilotSuggestion = { fg = colors.darken(palette.peach, 0.8), style = { "italic" } },
-
-					MultiCursor = { bg = palette.peach, fg = palette.base },
-					VM_Mono = { bg = palette.peach, fg = palette.base },
 
 					FlashLabel = { bg = palette.peach, fg = palette.base, style = { "bold" } },
 					FlashMatch = { bg = palette.lavender, fg = palette.base },
 					FlashBackdrop = { bg = nil, fg = palette.overlay0, style = { "nocombine" } },
 
 					SatelliteCursor = { fg = palette.mauve },
+
+					NoiceMini = { fg = palette.blue, bg = colors.darken(palette.blue, 0.33), blend = 0 },
 
 					-- Syntax
 					["@parameter"] = { fg = palette.text, style = { "nocombine" } },

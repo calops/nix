@@ -8,6 +8,7 @@ return {
 		local incline = require("incline")
 		local colors = require("core.colors")
 		local utils = require("plugins.ui.utils")
+
 		local col_inactive = format_color(colors.hl.InclineNormalNC.bg)
 		local col_active = format_color(colors.hl.InclineNormal.bg)
 		local col_base = format_color(colors.hl.Normal.bg)
@@ -16,8 +17,12 @@ return {
 
 		incline.setup {
 			render = function(props)
-				local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":.")
-				local modified = vim.api.nvim_buf_get_option(props.buf, "modified")
+				local filename_modifier = vim.api.nvim_get_option_value("buftype", { buf = props.buf }) == "help"
+						and ":t"
+					or ":."
+				local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), filename_modifier)
+					or "[no name]"
+				local modified = vim.api.nvim_get_option_value("modified", { buf = props.buf })
 				local extension = filename:match("^.+%.(.+)$")
 				local icon, icon_fg_color =
 					require("nvim-web-devicons").get_icon_colors(filename, extension, { default = true })
@@ -66,6 +71,10 @@ return {
 				return result
 			end,
 			hide = { cursorline = true },
+			ignore = {
+				unlisted_buffers = false,
+				buftypes = function(_, buftype) return buftype ~= "" and buftype ~= "help" end,
+			},
 			window = {
 				padding = 0,
 				placement = { horizontal = "center", vertical = "bottom" },

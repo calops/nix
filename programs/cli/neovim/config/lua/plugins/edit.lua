@@ -128,10 +128,51 @@ return {
 		},
 		keys = {
 			{
-				"s",
+				"f",
 				mode = { "n", "x", "o" },
 				function() require("flash").jump() end,
 			},
+		},
+	},
+	-- Improved yanking
+	{
+		"gbprod/yanky.nvim",
+		event = "BufRead",
+		dependencies = {
+			"kkharji/sqlite.lua",
+		},
+		opts = {
+			ring = {
+				storage = "sqlite",
+			},
+		},
+		config = function(_, opts)
+			require("yanky").setup(opts)
+			require("telescope").load_extension("yank_history")
+			map {
+				["<C-y>"] = {
+					require("telescope").extensions.yank_history.yank_history,
+					"Yank history",
+				},
+			}
+		end,
+	},
+	-- Substitute operator
+	{
+		"gbprod/substitute.nvim",
+		lazy = true,
+		init = function()
+			map {
+				s = { require("substitute").operator, "Substitute" },
+				ss = { require("substitute").line, "Substitute line" },
+				S = { require("substitute").eol, "Substitute until end of line" },
+			}
+			map {
+				s = { require("substitute").visual, "Substitute", mode = "x" },
+			}
+		end,
+		opts = {
+			on_substitute = function() require("yanky.integration").substitute() end,
 		},
 	},
 }

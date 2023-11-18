@@ -20,7 +20,11 @@ return {
 			local function new_tab()
 				local view = vim.fn.winsaveview()
 				vim.cmd.tabedit("%")
-				vim.fn.winrestview(view)
+				if view then
+					vim.fn.winrestview(view)
+				else
+					vim.notify("Failed to save view for new tab", vim.log.levels.WARN)
+				end
 			end
 
 			map {
@@ -68,10 +72,17 @@ return {
 			popupmenu = { enabled = true, backend = "nui" },
 			routes = {
 				{
-					view = "notify",
 					filter = { event = "msg_show", find = '"*"*lines --*%--' },
+					view = "notify",
 					opts = { skip = true },
 				},
+			},
+			messages = {
+				view = "mini",
+				view_error = "notify",
+				view_warn = "notify",
+				view_search = "virtualtext",
+				view_history = "messages",
 			},
 		},
 	},

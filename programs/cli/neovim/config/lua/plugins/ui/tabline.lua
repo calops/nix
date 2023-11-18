@@ -1,30 +1,115 @@
 local utils = require("plugins.ui.utils")
 local colors = require("core.colors")
 
+vim.go.laststatus = 0
+vim.go.showtabline = 2
+
+local function map_to_names(client_list)
+	return vim.tbl_map(function(client) return client.name end, client_list)
+end
+
+local spacer = {
+	provider = function() return "%=" end,
+}
+
+local mode = {
+	static = {
+		modes = {
+			n = { "NORMAL", "ModeNormal" },
+			no = { "NORMAL?", "ModeOperator" },
+			v = { "VISUAL", "ModeVisual" },
+			V = { "VISUAL-L", "ModeVisual" },
+			[""] = { "VISUAL-B", "ModeVisual" },
+			s = { "SELECT", "ModeVisual" },
+			S = { "SELECT-L", "ModeVisual" },
+			[""] = { "SELECT-B", "ModeVisual" },
+			i = { "INSERT", "ModeInsert" },
+			R = { "REPLACE", "ModeReplace" },
+			c = { "COMMAND", "ModeCommand" },
+			["!"] = { "SHELL", "ModeCommand" },
+			r = { "PROMPT", "ModePrompt" },
+			t = { "TERMINAL", "ModeTerminal" },
+		},
+	},
+	init = function(self)
+		local short_mode = vim.fn.mode(1) or "n"
+		local mode = self.modes[short_mode:sub(1, 2)] or self.modes[short_mode:sub(1, 1)] or { "UNKNOWN", "ModeNormal" }
+
+		self[1] = self:new(
+			utils.build_pill({}, {
+				provider = mode[1],
+				hl = colors.hl[mode[2]],
+			}, {}, "provider"),
+			1
+		)
+	end,
+	update = { "ModeChanged" },
+	provider = " ",
+	hl = { bold = true },
+}
+
+local cwd = {
+	init = function(self)
+		local icon = (vim.fn.haslocaldir(0) == 1 and "local: " or "") .. " "
+		local cwd = vim.fn.fnamemodify(vim.fn.getcwd(0), ":~")
+		local short_cwd = vim.fn.pathshorten(cwd)
+
+		self[1] = self:new(
+			utils.build_pill({}, {
+				provider = icon .. cwd,
+				hl = colors.hl.CustomTablineCwd,
+			}, {}, "provider"),
+			1
+		)
+		self[2] = self:new(
+			utils.build_pill({}, {
+				provider = icon .. short_cwd,
+				hl = colors.hl.CustomTablineCwd,
+			}, {}, "provider"),
+			2
+		)
+	end,
+	provider = " ",
+	flexible = 10,
+}
+
+local git = {
+	condition = require("heirline.conditions").is_git_repo,
+	init = function(self)
+		local status = vim.b.gitsigns_status_dict
+		self[1] = self:new(
+			utils.build_pill(
+				{ { provider = " " .. status.head .. " ", hl = colors.hl.CustomTablineGitBranch } },
+				{ provider = " ", hl = colors.hl.CustomTablineGitLogo },
+				{},
+				"provider"
+			),
+			1
+		)
+	end,
+	update = { "BufEnter", "BufWritePost" },
+	provider = " ",
+}
+
 return {
 	init = function(self) self.tabpages = vim.api.nvim_list_tabpages() end,
+	static = {
+		sep = utils.separators,
+		diags = utils.diags_sorted(),
+	},
+	mode,
+	cwd,
+	git,
+	spacer,
+	-- Logo
 	{
 		condition = function(self) return not vim.tbl_isempty(self.tabpages) end,
-		static = {
-			sep = utils.separators,
-			diags = utils.diags_sorted(),
-			colors = {
-				logo = colors.hl.CustomTablineLogo,
-				tab_active = colors.hl.CustomTablineSel,
-				tab_inactive = colors.hl.CustomTabline,
-				icon_pill_inactive = colors.hl.CustomTablinePillIcon,
-				icon_pill_active = colors.hl.CustomTablinePillIconSel,
-				icon_modified = colors.hl.CustomTablineModifiedIcon,
-			},
-		},
-		{
-			provider = "%=",
-		},
-		-- Logo
-		{
-			utils.build_pill({}, { provider = " Tabs", hl = colors.hl.CustomTablineLogo }, {}, "provider"),
-		},
-		-- Tabs
+		flexible = 1,
+		{ utils.build_pill({}, { provider = "󱂬 Tabs", hl = colors.hl.CustomTablineLogo }, {}, "provider") },
+	},
+	-- Tabs
+	{
+		condition = function(self) return not vim.tbl_isempty(self.tabpages) end,
 		utils.make_tablist {
 			init = function(self)
 				local devicons = require("nvim-web-devicons")
@@ -32,7 +117,7 @@ return {
 					if self.is_active then
 						return color
 					end
-					return colors.darken(color, 0.4, string.format("#%x", self.colors.icon_pill_inactive.bg))
+					return colors.darken(color, 0.4, string.format("#%x", colors.hl.CustomTablinePillIcon.bg))
 				end
 
 				local icons = {}
@@ -61,11 +146,11 @@ return {
 					end
 
 					if self.is_active then
-						self.tab_color = self.colors.tab_active
-						self.pill_color = self.colors.icon_pill_active
+						self.tab_color = colors.hl.CustomTablineSel
+						self.pill_color = colors.hl.CustomTablinePillIconSel
 					else
-						self.tab_color = self.colors.tab_inactive
-						self.pill_color = self.colors.icon_pill_inactive
+						self.tab_color = colors.hl.CustomTabline
+						self.pill_color = colors.hl.CustomTablinePillIcon
 					end
 
 					if vim.api.nvim_get_option_value("modified", { buf = buffer }) then
@@ -111,7 +196,7 @@ return {
 						{
 							provider = "  ",
 							condition = function() return modified end,
-							hl = { fg = self.colors.icon_modified.fg },
+							hl = { fg = colors.hl.CustomTablineModifiedIcon.fg },
 						},
 					}),
 					2
@@ -120,8 +205,42 @@ return {
 			end,
 			provider = " ",
 		},
-		{
-			provider = "%=",
-		},
+	},
+	{
+		provider = "%=",
+	},
+	-- Lsp
+	{
+		condition = function(self)
+			self.active_clients = vim.lsp.get_clients()
+			return not vim.tbl_isempty(self.active_clients)
+		end,
+		update = { "LspAttach", "LspDetach", "BufEnter" },
+		init = function(self)
+			local servers = {}
+			local active_clients = map_to_names(self.active_clients)
+			local buffer_clients = map_to_names(vim.lsp.get_clients { bufnr = vim.api.nvim_get_current_buf() })
+
+			for _, client in ipairs(active_clients) do
+				table.insert(servers, {
+					provider = client .. " ",
+					hl = vim.tbl_contains(buffer_clients, client) and colors.hl.CustomTablineLspActive
+						or colors.hl.CustomTablineLspInactive,
+					lite = true,
+				})
+			end
+
+			local diagnostics = {}
+			self[1] = self:new(
+				utils.build_pill(
+					servers,
+					{ provider = " LSP", hl = colors.hl.CustomTablineLsp },
+					diagnostics,
+					"provider"
+				),
+				1
+			)
+			self[2] = self:new({ provider = " " }, 2)
+		end,
 	},
 }

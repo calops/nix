@@ -17,12 +17,12 @@ in {
   config = lib.mkIf cfg.enable {
     fonts.fontconfig.enable = true;
 
-    home.pointerCursor = {
-      name = "Catppuccin-Mocha-Peach-Cursors";
-      size = 32;
-      package = pkgs.catppuccin-cursors.mochaPeach;
-      gtk.enable = true;
-    };
+    # home.pointerCursor = {
+    #   name = "Catppuccin-Mocha-Peach-Cursors";
+    #   size = 32;
+    #   package = pkgs.catppuccin-cursors.mochaPeach;
+    #   gtk.enable = true;
+    # };
 
     stylix.fonts = {
       sizes = {
