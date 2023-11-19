@@ -37,6 +37,11 @@ return {
 				local palette = colors.palette()
 
 				return {
+					Error = { fg = palette.red },
+					Warning = { fg = palette.yellow },
+					Info = { fg = palette.sky },
+					Hint = { fg = palette.teal },
+
 					NormalFloat = { bg = palette.base },
 					FloatBorder = { fg = palette.mauve },
 					TermFloatBorder = { fg = palette.red },
@@ -67,14 +72,14 @@ return {
 
 					IblScope = { fg = palette.mauve },
 
-					ModeNormal = { fg = palette.base, bg = palette.blue, style = { "bold" } },
-					ModeInsert = { fg = palette.base, bg = palette.green, style = { "bold" } },
-					ModeVisual = { fg = palette.base, bg = palette.mauve, style = { "bold" } },
-					ModeOperator = { fg = palette.base, bg = palette.peach, style = { "bold" } },
-					ModeReplace = { fg = palette.base, bg = palette.red, style = { "bold" } },
-					ModeCommand = { fg = palette.base, bg = palette.sky, style = { "bold" } },
-					ModePrompt = { fg = palette.base, bg = palette.teal, style = { "bold" } },
-					ModeTerminal = { fg = palette.base, bg = palette.yellow, style = { "bold" } },
+					ModeNormal = { fg = palette.blue, bg = colors.darken(palette.blue, 0.33), style = { "bold" } },
+					ModeInsert = { fg = palette.green, bg = colors.darken(palette.green, 0.33), style = { "bold" } },
+					ModeVisual = { fg = palette.mauve, bg = colors.darken(palette.mauve, 0.33), style = { "bold" } },
+					ModeOperator = { fg = palette.peach, bg = colors.darken(palette.peach, 0.33), style = { "bold" } },
+					ModeReplace = { fg = palette.red, bg = colors.darken(palette.red, 0.33), style = { "bold" } },
+					ModeCommand = { fg = palette.sky, bg = colors.darken(palette.sky, 0.33), style = { "bold" } },
+					ModePrompt = { fg = palette.teal, bg = colors.darken(palette.teal, 0.33), style = { "bold" } },
+					ModeTerminal = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.33), style = { "bold" } },
 
 					ModesInsert = { link = "ModeInsert" },
 					ModesVisual = { link = "ModeVisual" },
@@ -99,11 +104,11 @@ return {
 					DiffDeleteVirtLn = { fg = colors.darken(palette.red, 0.3) },
 					DiffviewDiffDeleteDim = { fg = palette.surface0 },
 
-					CustomTabline = { fg = palette.base, bg = palette.surface1 },
-					CustomTablineSel = { fg = palette.base, bg = palette.overlay1 },
-					CustomTablineLogo = { fg = palette.mauve, bg = colors.darken(palette.mauve, 0.33) },
-					CustomTablinePillIcon = { bg = palette.surface1 },
-					CustomTablinePillIconSel = { bg = palette.surface2 },
+					CustomTabline = { fg = palette.mauve, bg = colors.darken(palette.mauve, 0.33) },
+					CustomTablineSel = { fg = palette.base, bg = palette.mauve },
+					CustomTablineLogo = { fg = palette.mauve },
+					CustomTablinePillIcon = { bg = colors.darken(palette.mauve, 0.33) },
+					CustomTablinePillIconSel = { bg = colors.darken(palette.mauve, 0.33) },
 					CustomTablineModifiedIcon = { fg = palette.peach },
 					CustomTablineNumber = { style = { "bold" } },
 					CustomTablineLsp = { fg = palette.base, bg = palette.green },

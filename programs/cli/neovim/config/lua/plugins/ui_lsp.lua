@@ -49,10 +49,9 @@ return {
 				},
 			}
 		end,
-		config = function()
-			local glance = require("glance")
-			local actions = glance.actions
-			glance.setup {
+		opts = function()
+			local actions = require("glance").actions
+			return {
 				height = 25,
 				border = {
 					enable = true,
@@ -82,9 +81,7 @@ return {
 		init = function()
 			map {
 				["<leader>t"] = {
-					function()
-						require("trouble").toggle()
-					end,
+					function() require("trouble").toggle() end,
 					"Open diagnostics window",
 				},
 			}

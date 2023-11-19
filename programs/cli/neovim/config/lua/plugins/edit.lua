@@ -86,7 +86,17 @@ return {
 	-- Edit filesystem as a buffer
 	{
 		"stevearc/oil.nvim",
-		config = function() require("oil").setup() end,
+		opts = {
+			columns = { "icon", "permissions", "size", "mtime" },
+			view_options = {
+				show_hidden = true,
+			},
+			float = {
+				padding = 5,
+				max_width = 120,
+				max_height = 200,
+			},
+		},
 	},
 	-- Move stuff around
 	{

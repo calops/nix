@@ -1,5 +1,6 @@
 local utils = require("plugins.ui.utils")
 local colors = require("core.colors")
+local core_diagnostics = require("core.diagnostics")
 
 vim.go.laststatus = 0
 vim.go.showtabline = 2
@@ -34,12 +35,15 @@ local mode = {
 	init = function(self)
 		local short_mode = vim.fn.mode(1) or "n"
 		local mode = self.modes[short_mode:sub(1, 2)] or self.modes[short_mode:sub(1, 1)] or { "UNKNOWN", "ModeNormal" }
+		local hl = colors.hl[mode[2]]
 
 		self[1] = self:new(
-			utils.build_pill({}, {
-				provider = mode[1],
-				hl = colors.hl[mode[2]],
-			}, {}, "provider"),
+			utils.build_pill(
+				{},
+				{ provider = " ", hl = { fg = colors.palette().base, bg = hl.fg } },
+				{ { provider = " " .. mode[1], hl = hl } },
+				"provider"
+			),
 			1
 		)
 	end,
@@ -91,23 +95,16 @@ local git = {
 	provider = " ",
 }
 
-return {
+local tabs = {
 	init = function(self) self.tabpages = vim.api.nvim_list_tabpages() end,
 	static = {
-		sep = utils.separators,
 		diags = utils.diags_sorted(),
 	},
-	mode,
-	cwd,
-	git,
-	spacer,
-	-- Logo
 	{
 		condition = function(self) return not vim.tbl_isempty(self.tabpages) end,
 		flexible = 1,
-		{ utils.build_pill({}, { provider = "󱂬 Tabs", hl = colors.hl.CustomTablineLogo }, {}, "provider") },
+		{ provider = "󱂬 ", hl = colors.hl.CustomTablineLogo },
 	},
-	-- Tabs
 	{
 		condition = function(self) return not vim.tbl_isempty(self.tabpages) end,
 		utils.make_tablist {
@@ -141,7 +138,7 @@ return {
 
 					diag_count = utils.diag_count_for_buffer(buffer, diag_count)
 
-					if not self.tab_name then
+					if not self.tab_name and win == vim.api.nvim_tabpage_get_win(self.tabpage) then
 						self.tab_name = file_name
 					end
 
@@ -206,41 +203,52 @@ return {
 			provider = " ",
 		},
 	},
-	{
-		provider = "%=",
-	},
-	-- Lsp
-	{
-		condition = function(self)
-			self.active_clients = vim.lsp.get_clients()
-			return not vim.tbl_isempty(self.active_clients)
-		end,
-		update = { "LspAttach", "LspDetach", "BufEnter" },
-		init = function(self)
-			local servers = {}
-			local active_clients = map_to_names(self.active_clients)
-			local buffer_clients = map_to_names(vim.lsp.get_clients { bufnr = vim.api.nvim_get_current_buf() })
+}
 
-			for _, client in ipairs(active_clients) do
-				table.insert(servers, {
-					provider = client .. " ",
-					hl = vim.tbl_contains(buffer_clients, client) and colors.hl.CustomTablineLspActive
-						or colors.hl.CustomTablineLspInactive,
-					lite = true,
+local lsp = {
+	condition = function(self)
+		self.active_clients = vim.lsp.get_clients()
+		return not vim.tbl_isempty(self.active_clients)
+	end,
+	update = { "LspAttach", "LspDetach", "BufEnter", "DiagnosticChanged" },
+	init = function(self)
+		local servers = {}
+		local active_clients = map_to_names(self.active_clients)
+		local buffer_clients = map_to_names(vim.lsp.get_clients { bufnr = vim.api.nvim_get_current_buf() })
+
+		for _, client in ipairs(active_clients) do
+			table.insert(servers, {
+				provider = client .. " ",
+				hl = vim.tbl_contains(buffer_clients, client) and colors.hl.CustomTablineLspActive
+					or colors.hl.CustomTablineLspInactive,
+				lite = true,
+			})
+		end
+
+		local diagnostics = {}
+		core_diagnostics.for_each_severity(function(severity)
+			local diag_count = vim.diagnostic.get(nil, { severity = severity })
+			if #diag_count > 0 then
+				table.insert(diagnostics, {
+					provider = " " .. core_diagnostics.map[severity].sign .. #diag_count,
+					hl = core_diagnostics.map[severity].colors,
 				})
 			end
+		end)
 
-			local diagnostics = {}
-			self[1] = self:new(
-				utils.build_pill(
-					servers,
-					{ provider = " LSP", hl = colors.hl.CustomTablineLsp },
-					diagnostics,
-					"provider"
-				),
-				1
-			)
-			self[2] = self:new({ provider = " " }, 2)
-		end,
-	},
+		self[1] = self:new(
+			utils.build_pill(servers, { provider = " ", hl = colors.hl.CustomTablineLsp }, diagnostics, "provider"),
+			1
+		)
+		self[2] = self:new({ provider = " " }, 2)
+	end,
+}
+
+return {
+	-- Left
+	{ mode, cwd, git, spacer },
+	-- Center
+	{ tabs, spacer },
+	-- Right
+	{ lsp },
 }

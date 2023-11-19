@@ -19,7 +19,7 @@ in {
         ga = "git add -v";
         gu = "git add -vu";
         gp = "git push";
-        st = "git status";
+        st = "git status -bs";
         di = "git diff";
         lg = "git lg";
         cc = "cargo check";
