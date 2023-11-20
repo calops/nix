@@ -36,11 +36,11 @@ return {
 			}
 		end,
 		opts = {
-			numhl = false,
-			sign_priority = 1,
 			preview_config = {
 				border = "rounded",
 			},
+			_signs_staged_enable = true,
+			_extmark_signs = false,
 		},
 	},
 	-- Git commands

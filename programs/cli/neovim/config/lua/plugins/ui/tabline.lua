@@ -2,9 +2,6 @@ local utils = require("plugins.ui.utils")
 local colors = require("core.colors")
 local core_diagnostics = require("core.diagnostics")
 
-vim.go.laststatus = 0
-vim.go.showtabline = 2
-
 local function map_to_names(client_list)
 	return vim.tbl_map(function(client) return client.name end, client_list)
 end
@@ -174,8 +171,7 @@ local tabs = {
 					self.tab_name = "[no name]"
 				end
 
-				self[1] = self:new({ provider = "%" .. self.tabnr .. "T" }, 1)
-				self[2] = self:new(
+				self[1] = self:new(
 					utils.build_pill({
 						{ hl = self.pill_color, icons },
 					}, {
@@ -193,12 +189,16 @@ local tabs = {
 						{
 							provider = "  ",
 							condition = function() return modified end,
-							hl = { fg = colors.hl.CustomTablineModifiedIcon.fg },
+							hl = colors.hl.CustomTablineModifiedIcon,
 						},
 					}),
-					2
+					1
 				)
-				self[3] = self:new({ provider = "%T" }, 3)
+
+				self.on_click = {
+					name = "set_current_tabpage_" .. self.tabpage,
+					callback = function() vim.api.nvim_set_current_tabpage(self.tabpage) end,
+				}
 			end,
 			provider = " ",
 		},
@@ -231,7 +231,7 @@ local lsp = {
 			if #diag_count > 0 then
 				table.insert(diagnostics, {
 					provider = " " .. core_diagnostics.map[severity].sign .. #diag_count,
-					hl = core_diagnostics.map[severity].colors,
+					hl = core_diagnostics.map[severity].hl,
 				})
 			end
 		end)

@@ -10,10 +10,12 @@ return {
 		config = function()
 			vim.o.signcolumn = "no"
 			vim.o.foldcolumn = "0"
+			vim.go.laststatus = 3
+			vim.go.showtabline = 0
 
 			require("heirline").setup {
 				statuscolumn = require("plugins.ui.statuscolumn"),
-				tabline = require("plugins.ui.tabline"),
+				statusline = require("plugins.ui.tabline"),
 				-- statusline = require('plugins.ui.statusline'),
 			}
 
@@ -51,7 +53,12 @@ return {
 		},
 		enabled = true,
 		lazy = false,
-		init = function() map { ["<leader><leader>"] = { ":noh<CR>", "Hide search highlights" } } end,
+		init = function()
+			map {
+				["<leader><leader>"] = { ":noh<CR>", "Hide search highlights" },
+				["<leader>d"] = { ":Noice dismiss<CR>", "Dismiss notifications" },
+			}
+		end,
 		opts = {
 			lsp = {
 				override = {

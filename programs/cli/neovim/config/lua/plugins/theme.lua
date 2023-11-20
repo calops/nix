@@ -42,6 +42,16 @@ return {
 					Info = { fg = palette.sky },
 					Hint = { fg = palette.teal },
 
+					ErrorSign = { fg = palette.red, bg = colors.darken(palette.red, 0.095, palette.base) },
+					WarnSign = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.095, palette.base) },
+					InfoSign = { fg = palette.sky, bg = colors.darken(palette.sky, 0.095, palette.base) },
+					HintSign = { fg = palette.teal, bg = colors.darken(palette.teal, 0.095, palette.base) },
+
+					CursorLine = { bg = palette.surface0 },
+					CursorLineSign = { link = "CursorLine" },
+					LineNr = { fg = palette.surface2 },
+					CursorLineNr = { fg = palette.lavender, bg = palette.surface0 },
+
 					NormalFloat = { bg = palette.base },
 					FloatBorder = { fg = palette.mauve },
 					TermFloatBorder = { fg = palette.red },
@@ -96,9 +106,7 @@ return {
 					UfoFoldedBg = { bg = colors.darken(palette.teal, 0.33) },
 					Folded = { bg = palette.base },
 
-					CursorLineSign = { link = "CursorLine" },
-
-					GitSignsAdd = { fg = palette.green, bg = "none" },
+					GitSignsAdd = { fg = palette.green },
 					GitSignsChange = { fg = palette.peach },
 					GitSignsDelete = { fg = palette.red },
 					DiffDeleteVirtLn = { fg = colors.darken(palette.red, 0.3) },
@@ -109,7 +117,7 @@ return {
 					CustomTablineLogo = { fg = palette.mauve },
 					CustomTablinePillIcon = { bg = colors.darken(palette.mauve, 0.33) },
 					CustomTablinePillIconSel = { bg = colors.darken(palette.mauve, 0.33) },
-					CustomTablineModifiedIcon = { fg = palette.peach },
+					CustomTablineModifiedIcon = { fg = palette.peach, bg = colors.darken(palette.peach, 0.33) },
 					CustomTablineNumber = { style = { "bold" } },
 					CustomTablineLsp = { fg = palette.base, bg = palette.green },
 					CustomTablineLspActive = {

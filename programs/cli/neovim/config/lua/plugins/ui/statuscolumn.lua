@@ -1,7 +1,7 @@
 local core_utils = require("core.utils")
 local color_utils = require("core.colors")
 local git_utils = require("core.git")
-local plugin_utils = require("plugins.ui.utils")
+local diag_utils = require("core.diagnostics")
 
 ---@class Signs
 ---@field diagnostics table<integer, integer>
@@ -84,13 +84,6 @@ return {
 			}, vim.bo.filetype)
 		end,
 		static = {
-			colors = {
-				cursor_line = color_utils.hl.CursorLine.bg,
-				cursor_num = color_utils.hl.CursorLineNr.fg,
-				base = color_utils.hl.Normal.bg,
-				num = color_utils.hl.LineNr.fg,
-			},
-			diagnostics = plugin_utils.diags_sorted(),
 			gitsigns = git_utils.signs,
 		},
 		init = function(self)
@@ -100,20 +93,17 @@ return {
 			end
 
 			if require("heirline.conditions").is_active() and vim.v.lnum == vim.api.nvim_win_get_cursor(0)[1] then
-				self.bg = self.colors.cursor_line
-				self.fg = self.colors.cursor_num
+				self.hl = color_utils.hl.CursorLineNr
 			else
-				self.bg = self.colors.base
-				self.fg = self.colors.num
+				self.hl = color_utils.hl.LineNr
 			end
 
 			local signs = cached_signs:get(bufnr)
 
 			local diag = signs.diagnostics[vim.v.lnum]
 			if diag ~= nil then
-				self.diagsign = self.diagnostics[diag]
-				self.bg = self.diagsign.colors.bg
-				self.fg = self.diagsign.colors.fg
+				self.diagsign = diag_utils.map[diag]
+				self.hl = self.diagsign.hl
 			else
 				self.diagsign = nil
 			end
@@ -135,16 +125,7 @@ return {
 				end
 			end,
 			condition = function() return vim.v.virtnum == 0 end,
-			hl = function(self)
-				local fg = self.fg
-				local bg = self.bg
-
-				if self.diagsign then
-					fg = self.diagsign.colors.fg
-				end
-
-				return { fg = fg, bg = bg }
-			end,
+			hl = function(self) return self.diagsign and self.diagsign.hl or nil end,
 		},
 		-- Line number
 		{
@@ -155,7 +136,6 @@ return {
 				end
 				return "%=" .. num
 			end,
-			hl = function(self) return { fg = self.fg, bg = self.bg } end,
 		},
 		-- Git chunks
 		{
@@ -167,15 +147,7 @@ return {
 					return "  "
 				end
 			end,
-			hl = function(self)
-				local fg = self.colors.num
-
-				if self.gitsign then
-					fg = self.gitsign.hl.fg
-				end
-
-				return { fg = fg, bg = self.bg }
-			end,
+			hl = function(self) return self.gitsign and self.gitsign.hl or nil end,
 			on_click = {
 				name = "git_sign_callback",
 				callback = function(_, _, _, button)
