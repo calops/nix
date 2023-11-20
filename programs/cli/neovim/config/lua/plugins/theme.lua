@@ -61,8 +61,8 @@ return {
 					TelescopePreviewBorder = { fg = palette.teal },
 					TelescopeResultsBorder = { fg = palette.green },
 
-					InclineNormalNC = { bg = palette.surface1, fg = palette.base, blend = 0 },
-					InclineNormal = { bg = palette.overlay1, fg = palette.base, blend = 0 },
+					InclineNormal = { fg = palette.base, bg = palette.sapphire, style = { "bold" } },
+					InclineNormalNC = { fg = palette.sapphire, bg = colors.darken(palette.sapphire, 0.33) },
 
 					TreesitterContext = { bg = palette.base, style = { "italic" }, blend = 0 },
 					TreesitterContextSeparator = { fg = palette.surface1 },
