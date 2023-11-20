@@ -22,6 +22,7 @@ return {
 	animation_fps = 30,
 	cursor_blink_rate = 500,
 	default_cursor_style = "BlinkingBlock",
+	warn_about_missing_glyphs = false,
 	window_padding = {
 		left = 0,
 		bottom = 0,
@@ -33,6 +34,9 @@ return {
 		fade_in_duration_ms = 150,
 		fade_out_function = "Ease",
 		fade_out_duration_ms = 150,
+	},
+	window_frame = {
+		font = wezterm.font(nix.font.name),
 	},
 	keys = {
 		{
