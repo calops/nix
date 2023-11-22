@@ -6,6 +6,16 @@ return {
 		"olimorris/persisted.nvim",
 		lazy = false,
 		init = function()
+			vim.opt.sessionoptions = {
+				"buffers",
+				"curdir",
+				"folds",
+				"globals",
+				"help",
+				"tabpages",
+				"winpos",
+				"winsize",
+			}
 			map {
 				["<leader>S"] = { ":Telescope persisted<CR>", "Browse sessions" },
 			}
@@ -16,7 +26,7 @@ return {
 				group = group,
 				callback = function()
 					for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-						local file_type = vim.api.nvim_buf_get_option(buf, "filetype")
+						local file_type = vim.api.nvim_get_option_value("filetype", { buf = buf })
 						if vim.tbl_contains(ignored_file_types, file_type) then
 							vim.api.nvim_command("silent! bwipeout! " .. buf)
 						end

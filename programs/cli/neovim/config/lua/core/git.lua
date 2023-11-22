@@ -1,4 +1,3 @@
-local utils = require("core.utils")
 local colors = require("core.colors")
 local symbols = require("core.symbols")
 

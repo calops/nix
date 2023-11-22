@@ -15,7 +15,7 @@ return {
 
 			require("heirline").setup {
 				statuscolumn = require("plugins.ui.statuscolumn"),
-				statusline = require("plugins.ui.tabline"),
+				statusline = require("plugins.ui.statusline"),
 				-- statusline = require('plugins.ui.statusline'),
 			}
 

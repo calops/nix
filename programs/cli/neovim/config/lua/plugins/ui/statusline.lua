@@ -1,6 +1,7 @@
 local utils = require("plugins.ui.utils")
 local colors = require("core.colors")
 local core_diagnostics = require("core.diagnostics")
+local map = require("core.utils").map
 
 local function map_to_names(client_list)
 	return vim.tbl_map(function(client) return client.name end, client_list)
@@ -53,7 +54,6 @@ local cwd = {
 	init = function(self)
 		local icon = (vim.fn.haslocaldir(0) == 1 and "local: " or "") .. " "
 		local cwd = vim.fn.fnamemodify(vim.fn.getcwd(0), ":~")
-		local short_cwd = vim.fn.pathshorten(cwd)
 
 		self[1] = self:new(
 			utils.build_pill({}, {
@@ -64,7 +64,7 @@ local cwd = {
 		)
 		self[2] = self:new(
 			utils.build_pill({}, {
-				provider = icon .. short_cwd,
+				provider = function() return icon .. vim.fn.pathshorten(cwd) end,
 				hl = colors.hl.CustomTablineCwd,
 			}, {}, "provider"),
 			2
@@ -92,6 +92,54 @@ local git = {
 	provider = " ",
 }
 
+---@type table<number, string>
+local tab_names = {}
+
+local function serialize_tab_names_for_session()
+	local tab_names_sorted = {}
+	for _, tabpage in ipairs(vim.api.nvim_list_tabpages()) do
+		table.insert(tab_names_sorted, tab_names[tabpage])
+	end
+	vim.g.TabNamesJson = vim.fn.json_encode(tab_names_sorted)
+end
+
+local function deserialize_tab_names_from_session()
+	if vim.g.TabNamesJson then
+		local tab_names_sorted = vim.fn.json_decode(vim.g.TabNamesJson)
+		for i, tabpage in ipairs(vim.api.nvim_list_tabpages()) do
+			tab_names[tabpage] = tab_names_sorted[i]
+		end
+	end
+end
+
+vim.api.nvim_create_autocmd({ "SessionLoadPost" }, {
+	callback = deserialize_tab_names_from_session,
+})
+
+vim.api.nvim_create_autocmd({ "TabClosed" }, {
+	callback = function(data)
+		local tabpage = tonumber(data.file)
+		table.remove(tab_names, tabpage)
+		serialize_tab_names_for_session()
+	end,
+})
+
+map {
+	["<leader>;"] = {
+		function()
+			local tabpage = vim.api.nvim_get_current_tabpage()
+			vim.ui.input({ prompt = "Tab name: " }, function(input)
+				if input == "" then
+					input = nil
+				end
+				tab_names[tabpage] = input
+				serialize_tab_names_for_session()
+			end)
+		end,
+		"Set tab name",
+	},
+}
+
 local tabs = {
 	init = function(self) self.tabpages = vim.api.nvim_list_tabpages() end,
 	static = {
@@ -117,7 +165,7 @@ local tabs = {
 				local icons = {}
 				local diag_count = { 0, 0, 0, 0 }
 				local modified = false
-				self.tab_name = nil
+				self.tab_name = tab_names[self.tabpage]
 				self.wins = vim.api.nvim_tabpage_list_wins(self.tabpage)
 				for _, win in ipairs(self.wins) do
 					local buffer = vim.api.nvim_win_get_buf(win)
@@ -135,7 +183,7 @@ local tabs = {
 
 					diag_count = utils.diag_count_for_buffer(buffer, diag_count)
 
-					if not self.tab_name and win == vim.api.nvim_tabpage_get_win(self.tabpage) then
+					if self.tab_name == nil and win == vim.api.nvim_tabpage_get_win(self.tabpage) then
 						self.tab_name = file_name
 					end
 
