@@ -114,7 +114,7 @@ function module.build_pill(left, center, right, key, opts)
 	prev_color = center.hl
 
 	for _, item in ipairs(right) do
-		if not item.condition or item.condition() then
+		if not item.condition or item:condition() then
 			result:insert { [key] = sep.right, hl = { fg = bg(prev_color), bg = bg(item.hl) } }
 			result:insert(item)
 			prev_color = item.hl

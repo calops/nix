@@ -78,6 +78,11 @@ return {
 					DiagnosticLineInfo = { bg = colors.darken(palette.sky, 0.095, palette.base) },
 					DiagnosticLineHint = { bg = colors.darken(palette.teal, 0.095, palette.base) },
 
+					SatelliteDiagnosticError = { fg = colors.darken(palette.red, 0.5, palette.base) },
+					SatelliteDiagnosticWarn = { fg = colors.darken(palette.yellow, 0.5, palette.base) },
+					SatelliteDiagnosticInfo = { fg = colors.darken(palette.sky, 0.5, palette.base) },
+					SatelliteDiagnosticHint = { fg = colors.darken(palette.teal, 0.5, palette.base) },
+
 					DiagnosticUnnecessary = { sp = palette.mauve, style = { "undercurl" } },
 
 					IblScope = { fg = palette.mauve },
@@ -86,10 +91,10 @@ return {
 					ModeInsert = { fg = palette.green, bg = colors.darken(palette.green, 0.33), style = { "bold" } },
 					ModeVisual = { fg = palette.mauve, bg = colors.darken(palette.mauve, 0.33), style = { "bold" } },
 					ModeOperator = { fg = palette.peach, bg = colors.darken(palette.peach, 0.33), style = { "bold" } },
-					ModeReplace = { fg = palette.red, bg = colors.darken(palette.red, 0.33), style = { "bold" } },
+					ModeReplace = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.33), style = { "bold" } },
 					ModeCommand = { fg = palette.sky, bg = colors.darken(palette.sky, 0.33), style = { "bold" } },
 					ModePrompt = { fg = palette.teal, bg = colors.darken(palette.teal, 0.33), style = { "bold" } },
-					ModeTerminal = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.33), style = { "bold" } },
+					ModeTerminal = { fg = palette.red, bg = colors.darken(palette.red, 0.33), style = { "bold" } },
 
 					ModesInsert = { link = "ModeInsert" },
 					ModesVisual = { link = "ModeVisual" },
@@ -127,8 +132,9 @@ return {
 					},
 					CustomTablineLspInactive = { fg = palette.text, bg = colors.darken(palette.green, 0.33) },
 					CustomTablineCwd = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.33) },
+					CustomTablineCwdIcon = { fg = palette.base, bg = palette.yellow },
 					CustomTablineGitBranch = { fg = palette.peach, bg = colors.darken(palette.peach, 0.33) },
-					CustomTablineGitLogo = { fg = palette.base, bg = palette.peach },
+					CustomTablineGitIcon = { fg = palette.base, bg = palette.peach },
 
 					VirtColumn = { fg = palette.surface0 },
 

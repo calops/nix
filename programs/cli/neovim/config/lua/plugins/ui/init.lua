@@ -56,7 +56,7 @@ return {
 		init = function()
 			map {
 				["<leader><leader>"] = { ":noh<CR>", "Hide search highlights" },
-				["<leader>d"] = { ":Noice dismiss<CR>", "Dismiss notifications" },
+				["<leader>k"] = { ":Noice dismiss<CR>", "Dismiss notifications" },
 			}
 		end,
 		opts = {

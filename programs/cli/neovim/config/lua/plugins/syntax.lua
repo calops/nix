@@ -7,7 +7,6 @@ return {
 		lazy = false,
 		dependencies = {
 			{ "nvim-treesitter/nvim-treesitter-textobjects" },
-			{ "JoosepAlviste/nvim-ts-context-commentstring" },
 		},
 		init = function()
 			map {
@@ -68,9 +67,6 @@ return {
 				matchup = {
 					enable = true,
 				},
-				context_commentstring = {
-					enable = true,
-				},
 				playground = { enable = true },
 				query_linter = {
 					enable = true,
@@ -80,6 +76,7 @@ return {
 			}
 		end,
 	},
+	{ "JoosepAlviste/nvim-ts-context-commentstring" },
 	-- Show sticky context for off-screen scope beginnings
 	{
 		"nvim-treesitter/nvim-treesitter-context",

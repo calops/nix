@@ -185,4 +185,14 @@ return {
 			on_substitute = function() require("yanky.integration").substitute() end,
 		},
 	},
+	-- More convenient word motions
+	{
+		"chrisgrieser/nvim-spider",
+		init = function()
+			map({
+				["<C-Left>"] = { "<cmd>lua require('spider').motion('b')<cr>", "Move backwards word-wise" },
+				["<C-Right>"] = { "<cmd>lua require('spider').motion('w')<cr>", "Move forwards word-wise" },
+			}, { mode = { "n", "x", "o", "i" } })
+		end,
+	},
 }

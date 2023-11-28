@@ -1,6 +1,8 @@
 local utils = require("plugins.ui.utils")
 local colors = require("core.colors")
 local core_diagnostics = require("core.diagnostics")
+local core_utils = require("core.utils")
+local git_utils = require("core.git")
 local map = require("core.utils").map
 
 local function map_to_names(client_list)
@@ -52,22 +54,31 @@ local mode = {
 
 local cwd = {
 	init = function(self)
-		local icon = (vim.fn.haslocaldir(0) == 1 and "local: " or "") .. " "
+		local icon = (vim.fn.haslocaldir(0) == 1 and "local " or "") .. " "
 		local cwd = vim.fn.fnamemodify(vim.fn.getcwd(0), ":~")
 
+		local icon_pill = { provider = icon, hl = colors.hl.CustomTablineCwdIcon }
+
 		self[1] = self:new(
-			utils.build_pill({}, {
-				provider = icon .. cwd,
-				hl = colors.hl.CustomTablineCwd,
-			}, {}, "provider"),
+			utils.build_pill(
+				{},
+				icon_pill,
+				{ {
+					provider = " " .. cwd,
+					hl = colors.hl.CustomTablineCwd,
+				} },
+				"provider"
+			),
 			1
 		)
 		self[2] = self:new(
-			utils.build_pill({}, {
-				provider = function() return icon .. vim.fn.pathshorten(cwd) end,
-				hl = colors.hl.CustomTablineCwd,
-			}, {}, "provider"),
-			2
+			utils.build_pill({}, icon_pill, {
+				{
+					provider = function() return " " .. vim.fn.pathshorten(cwd) end,
+					hl = colors.hl.CustomTablineCwd,
+				},
+			}, "provider"),
+			1
 		)
 	end,
 	provider = " ",
@@ -75,20 +86,27 @@ local cwd = {
 }
 
 local git = {
-	condition = require("heirline.conditions").is_git_repo,
+	update = { "User", pattern = "GitStatusUpdated" },
+	condition = function() return git_utils.status.root ~= nil end,
 	init = function(self)
-		local status = vim.b.gitsigns_status_dict
 		self[1] = self:new(
-			utils.build_pill(
-				{ { provider = " " .. status.head .. " ", hl = colors.hl.CustomTablineGitBranch } },
-				{ provider = " ", hl = colors.hl.CustomTablineGitLogo },
-				{},
-				"provider"
-			),
+			utils.build_pill({
+				{
+					provider = "  ",
+					hl = colors.hl.CustomTablineGitBranch,
+					lite = true,
+					condition = function() return git_utils.status.has_stash end,
+				},
+			}, { provider = " ", hl = colors.hl.CustomTablineGitIcon }, {
+				{
+					provider = "  " .. git_utils.status.head,
+					hl = colors.hl.CustomTablineGitBranch,
+					condition = function() return git_utils.status.head ~= nil end,
+				},
+			}, "provider"),
 			1
 		)
 	end,
-	update = { "BufEnter", "BufWritePost" },
 	provider = " ",
 }
 
