@@ -70,13 +70,29 @@ return {
 						function() return require("debugprint").debugprint { variable = true } end,
 						"Add variable debug print below",
 						expr = true,
-						mode = { "n", "x", "o" },
+						mode = { "n", "o" },
 					},
 					V = {
 						function() return require("debugprint").debugprint { variable = true, above = true } end,
 						"Add variable debug print above",
 						expr = true,
-						mode = { "n", "x", "o" },
+						mode = { "n", "o" },
+					},
+				},
+			}
+			map {
+				["<leader>"] = {
+					p = {
+						function() return require("debugprint").debugprint { variable = true } end,
+						"Add variable debug print below",
+						expr = true,
+						mode = { "x" },
+					},
+					P = {
+						function() return require("debugprint").debugprint { variable = true, above = true } end,
+						"Add variable debug print above",
+						expr = true,
+						mode = { "x" },
 					},
 				},
 			}
