@@ -26,6 +26,9 @@ in
           stylua
           rust-analyzer
         ];
+        plugins = [
+          pkgs.vimPlugins.lazy-nvim
+        ];
       };
 
       xdg.configFile = {
