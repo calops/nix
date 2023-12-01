@@ -74,8 +74,8 @@ function module.watch_file(path, on_event, flags)
 end
 
 ---@class Command
----@field cmd table<string>
----@field callback fun(lines: table<string>)
+---@field cmd string[]
+---@field callback fun(lines: string[])
 
 ---@param commands table<Command>
 ---@param finally fun() | nil
@@ -96,6 +96,32 @@ function module.chain_system_commands(commands, finally)
 			end
 		end
 	end)
+end
+
+---@param delay number
+---@param func fun(...)
+---@return fun(...), uv_timer_t
+function module.debounce(delay, func)
+	local timer = vim.uv.new_timer()
+	assert(timer, "Failed to create timer")
+
+	local argv, argc
+	local wrapped_fn = function(...)
+		argv = argv or { ... }
+		argc = argc or select("#", ...)
+
+		timer:start(delay, 0, function()
+			pcall(
+				vim.schedule_wrap(function(...)
+					func(...)
+					timer:stop()
+				end),
+				unpack(argv, 1, argc)
+			)
+		end)
+	end
+
+	return wrapped_fn, timer
 end
 
 return module
