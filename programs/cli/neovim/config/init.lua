@@ -1,17 +1,3 @@
--- Install plugin manager
--- local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
--- if not vim.loop.fs_stat(lazypath) then
--- 	vim.fn.system {
--- 		"git",
--- 		"clone",
--- 		"--filter=blob:none",
--- 		"--single-branch",
--- 		"git@github.com:folke/lazy.nvim.git",
--- 		lazypath,
--- 	}
--- end
--- vim.opt.runtimepath:prepend(lazypath)
-
 ---------- Settings
 -- Search
 vim.o.ignorecase = true
@@ -99,6 +85,7 @@ vim.fn.sign_define("GitSignsAdd", { text = "┃", texthl = "GitSignsAdd", numhl 
 vim.fn.sign_define("GitSignsChange", { text = "┃", texthl = "GitSignsChange", numhl = "" })
 vim.fn.sign_define("GitSignsDelete", { text = "┃", texthl = "GitSignsDelete", numhl = "" })
 
+-- The lazy.nvim plugin is installed through nix
 require("lazy").setup("plugins", {
 	ui = { border = "rounded" },
 	dev = {
