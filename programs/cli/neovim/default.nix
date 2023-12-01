@@ -25,6 +25,7 @@ in
           sqlfluff
           stylua
           rust-analyzer
+          gnumake
         ];
         plugins = [
           pkgs.vimPlugins.lazy-nvim
