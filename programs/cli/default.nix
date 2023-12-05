@@ -34,6 +34,8 @@
       rm-improved
       sshfs
       xcp
+      gh
+      # github-copilot-cli // TODO: add when it's working again
     ];
 
     programs.zathura.enable = true;
