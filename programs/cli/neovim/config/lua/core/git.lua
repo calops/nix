@@ -174,10 +174,17 @@ end
 function GitStatus:init()
 	local old_root = self.root
 	local new_root = ""
-	vim.system({ "git", "rev-parse", "--git-dir" }, {}, function(result)
-		if result.code == 0 then
-			new_root = result.stdout:gsub("\n", "")
-		end
+	core_utils.chain_system_commands({
+		{
+			cmd = { "git", "rev-parse", "--show-toplevel" },
+			---@param lines string[]
+			callback = function(lines)
+				if #lines > 0 then
+					new_root = lines[1]
+				end
+			end,
+		},
+	}, function()
 		if old_root ~= new_root then
 			self.is_git_repo = new_root ~= ""
 			self.root = new_root
