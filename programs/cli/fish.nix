@@ -28,6 +28,7 @@ in {
         cp = "xcp";
         df = "dysk";
         du = "dust";
+        bg = "batgrep";
       };
       shellAliases = {
         copy = "xclip -selection clipboard";

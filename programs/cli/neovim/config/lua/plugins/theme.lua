@@ -72,6 +72,7 @@ return {
 					DiagnosticUnderlineWarn = { sp = palette.yellow, style = { "undercurl" } },
 					DiagnosticUnderlineInfo = { sp = palette.sky, style = { "undercurl" } },
 					DiagnosticUnderlineHint = { sp = palette.teal, style = { "undercurl" } },
+					DiagnosticUnnecessary = { sp = palette.mauve, style = { "undercurl" } },
 
 					DiagnosticLineError = { bg = colors.darken(palette.red, 0.095, palette.base) },
 					DiagnosticLineWarn = { bg = colors.darken(palette.yellow, 0.095, palette.base) },
@@ -82,8 +83,6 @@ return {
 					SatelliteDiagnosticWarn = { fg = colors.darken(palette.yellow, 0.5, palette.base) },
 					SatelliteDiagnosticInfo = { fg = colors.darken(palette.sky, 0.5, palette.base) },
 					SatelliteDiagnosticHint = { fg = colors.darken(palette.teal, 0.5, palette.base) },
-
-					DiagnosticUnnecessary = { sp = palette.mauve, style = { "undercurl" } },
 
 					IblScope = { fg = palette.mauve },
 

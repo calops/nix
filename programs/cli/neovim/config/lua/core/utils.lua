@@ -10,8 +10,10 @@ module.reverse_table = function(table)
 end
 
 ---Helper function to help write constructors
+---@generic T: table
 ---@param class table
----@param default table
+---@param default T
+---@return T
 module.new_object = function(class, default)
 	default = default or {}
 	setmetatable(default, class)
@@ -19,13 +21,16 @@ module.new_object = function(class, default)
 	return default
 end
 
+---@generic T
 ---@class CachedDict<T>: { [string]: T }
+---@field _cache table
+CachedDict = {}
 
 ---Create a new [CachedDict<T>] object
 ---@generic T
 ---@param cacher fun(key: string): T
 ---@return CachedDict<T>
-module.new_cached_dict = function(cacher)
+function CachedDict:new(cacher)
 	local obj = {
 		_cache = {},
 	}
@@ -40,6 +45,35 @@ module.new_cached_dict = function(cacher)
 			return table._cache[key]
 		end,
 	})
+	return obj
+end
+
+---Create a new lazy-loaded object
+---@generic T
+---@param init fun(): T
+---@param reset_on_colorscheme_change boolean | nil
+---@return T
+-- TODO: find a way to have a proper generic class here
+module.lazy_init = function(init, reset_on_colorscheme_change)
+	local obj = {
+		_cache = {},
+	}
+	setmetatable(obj, {
+		__index = function(table, key)
+			if key == "reset" then
+				return function() table._cache = {} end
+			end
+			if #table._cache == 0 then
+				table._cache = init()
+			end
+			return table._cache[key]
+		end,
+	})
+
+	if reset_on_colorscheme_change then
+		require("core.events").on_colorscheme_change(function() obj:reset() end)
+	end
+
 	return obj
 end
 

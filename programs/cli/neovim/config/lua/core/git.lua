@@ -2,20 +2,25 @@ local colors = require("core.colors")
 local symbols = require("core.symbols")
 local core_utils = require("core.utils")
 
-local git_signs = {
-	add = {
-		hl = colors.hl.GitSignsAdd,
-		text = symbols.signs.GitSignsAdd,
-	},
-	change = {
-		hl = colors.hl.GitSignsChange,
-		text = symbols.signs.GitSignsChange,
-	},
-	delete = {
-		hl = colors.hl.GitSignsDelete,
-		text = symbols.signs.GitSignsDelete,
-	},
-}
+local git_signs = core_utils.lazy_init(
+	function()
+		return {
+			add = {
+				hl = colors.hl.GitSignsAdd,
+				text = symbols.signs.GitSignsAdd,
+			},
+			change = {
+				hl = colors.hl.GitSignsChange,
+				text = symbols.signs.GitSignsChange,
+			},
+			delete = {
+				hl = colors.hl.GitSignsDelete,
+				text = symbols.signs.GitSignsDelete,
+			},
+		}
+	end,
+	true
+)
 
 ---@class UnstagedStatus
 ---@field untracked number
@@ -45,6 +50,24 @@ function StagedStatus:new()
 	})
 end
 
+---@alias GitFileState "modified" | "added" | "deleted" | "untracked" | "ignored" | "renamed"
+
+---@class GitFileStatus
+---@field diff_added number
+---@field diff_deleted number
+---@field state GitFileState
+---@field staged boolean
+local GitFileStatus = {}
+
+function GitFileStatus:new()
+	return core_utils.new_object(self, {
+		diff_added = 0,
+		diff_deleted = 0,
+		state = "untracked",
+		staged = false,
+	})
+end
+
 ---@class GitStatus
 ---@field is_git_repo boolean
 ---@field root string
@@ -52,6 +75,7 @@ end
 ---@field has_stash boolean
 ---@field unstaged UnstagedStatus
 ---@field staged StagedStatus
+---@field files CachedDict<GitFileStatus>
 ---@field _watch_handles table<number, any>
 local GitStatus = {}
 
@@ -63,20 +87,16 @@ function GitStatus:new()
 		has_stash = false,
 		unstaged = UnstagedStatus:new(),
 		staged = StagedStatus:new(),
+		files = CachedDict:new(function(_) return GitFileStatus:new() end),
 		_watch_handles = {},
 	})
 end
 
----@type table<string, string[]>
-local commands = {
-	git_status = { "git", "status", "--porcelain", "--branch" },
-	git_diff = { "git", "diff", "--numstat" },
-}
 local status_map = {
 	M = "modified",
 	A = "added",
 	D = "deleted",
-	R = "modified",
+	R = "renamed",
 	["?"] = "untracked",
 }
 
@@ -95,7 +115,8 @@ GitStatus.update = core_utils.debounce(
 
 			core_utils.chain_system_commands({
 				{
-					cmd = commands.git_status,
+					cmd = { "git", "status", "--porcelain", "--branch" },
+					---@param lines string[]
 					callback = function(lines)
 						for _, line in ipairs(lines) do
 							if line:sub(1, 2) == "##" then
@@ -104,19 +125,28 @@ GitStatus.update = core_utils.debounce(
 									self.head = branch
 								end
 							else
-								local status_code = status_map[line:sub(2, 2)]
-								if status_code then
-									self.unstaged[status_code] = (self.unstaged[status_code] or 0) + 1
+								local staged_char, unstaged_char, filename = line:match("^(.)(.)%s+(.+)")
+
+								if staged_char and unstaged_char and filename then
+									self.unstaged[unstaged_char] = (self.unstaged[unstaged_char] or 0) + 1
+									self.staged[staged_char] = (self.staged[staged_char] or 0) + 1
+									self.files[filename].state = status_map[unstaged_char]
+									self.files[filename].staged = staged_char ~= " " and staged_char ~= "?"
 								end
 							end
 						end
 					end,
 				},
 				{
-					cmd = commands.git_diff,
+					cmd = { "git", "diff", "--numstat" },
+					---@param lines string[]
 					callback = function(lines)
 						for _, line in ipairs(lines) do
 							local added, deleted, filename = line:match("(%d+)%s+(%d+)%s+(.+)")
+							if filename then
+								self.files[filename].diff_added = tonumber(added) or 0
+								self.files[filename].diff_deleted = tonumber(deleted) or 0
+							end
 						end
 					end,
 				},

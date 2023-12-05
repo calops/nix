@@ -261,7 +261,6 @@ return {
 	-- Modern folds
 	{
 		"kevinhwang91/nvim-ufo",
-		enable = false,
 		event = "VeryLazy",
 		dependencies = "kevinhwang91/promise-async",
 		opts = function()

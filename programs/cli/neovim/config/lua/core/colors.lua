@@ -1,6 +1,6 @@
-local utils = require("core.utils")
+require("core.utils")
 
-local cached_highlights = utils.new_cached_dict(function(key)
+local cached_highlights = CachedDict:new(function(key)
 	return vim.api.nvim_get_hl(0, { name = key, link = false }) ---@type Highlight
 end)
 
@@ -43,10 +43,10 @@ end
 ---@return number
 local function cuberoot(x) return math.pow(x, 0.333333) end
 
----@param hex Color
+---@param background Color
 ---@return Color
-local function compute_visible_foreground(hex)
-	local dec = tonumber(hex, 16)
+local function compute_visible_foreground(background)
+	local dec = tonumber(background, 16)
 	local b = correct_channel(math.fmod(dec, 256) / 255)
 	local g = correct_channel(math.fmod((dec - b) / 256, 256) / 255)
 	local r = correct_channel(math.floor(dec / 65536) / 255)
