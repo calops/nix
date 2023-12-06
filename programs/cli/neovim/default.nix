@@ -26,6 +26,7 @@ in
           stylua
           rust-analyzer
           gnumake
+          prettierd
         ];
         plugins = [
           pkgs.vimPlugins.lazy-nvim

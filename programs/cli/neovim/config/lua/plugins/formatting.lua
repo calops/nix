@@ -22,7 +22,7 @@ return {
 					sh = formatters.shfmt,
 					sql = formatters.shell { cmd = { "sqlfluff" } },
 					toml = formatters.lsp,
-					yaml = formatters.lsp,
+					yaml = formatters.prettierd,
 				},
 			}
 		end,
