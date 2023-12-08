@@ -110,12 +110,13 @@ end
 ---@class Command
 ---@field cmd string[]
 ---@field callback fun(lines: string[])
+---@field ignore_errors boolean | nil
 
----@param commands table<Command>
+---@param commands Command[]
 ---@param finally fun() | nil
 function module.chain_system_commands(commands, finally)
 	vim.system(commands[1].cmd, {}, function(result)
-		if result.code ~= 0 then
+		if result.code ~= 0 and not commands[1].ignore_errors then
 			vim.notify(
 				"Error in system command: " .. vim.inspect(commands[1].cmd) .. "\n" .. result.stderr,
 				vim.log.levels.ERROR
@@ -132,10 +133,11 @@ function module.chain_system_commands(commands, finally)
 	end)
 end
 
----@param delay number
 ---@param func fun(...)
+---@param delay number | nil
 ---@return fun(...), uv_timer_t
-function module.debounce(delay, func)
+function module.debounce(func, delay)
+	delay = delay or 50
 	local timer = vim.uv.new_timer()
 	assert(timer, "Failed to create timer")
 

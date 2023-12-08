@@ -1,7 +1,6 @@
 local utils = require("plugins.ui.utils")
 local colors = require("core.colors")
 local core_diagnostics = require("core.diagnostics")
-local core_utils = require("core.utils")
 local git_utils = require("core.git")
 local map = require("core.utils").map
 
@@ -87,7 +86,7 @@ local cwd = {
 
 local git = {
 	update = { "User", pattern = "GitStatusUpdated" },
-	condition = function() return git_utils.status.root ~= nil end,
+	condition = function() return git_utils.status.is_git_repo end,
 	init = function(self)
 		self[1] = self:new(
 			utils.build_pill({

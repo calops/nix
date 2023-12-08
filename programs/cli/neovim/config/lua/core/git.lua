@@ -70,7 +70,8 @@ end
 
 ---@class GitStatus
 ---@field is_git_repo boolean
----@field root string
+---@field git_dir string
+---@field root_dir string
 ---@field head string
 ---@field has_stash boolean
 ---@field unstaged UnstagedStatus
@@ -82,7 +83,8 @@ local GitStatus = {}
 function GitStatus:new()
 	return core_utils.new_object(self, {
 		is_git_repo = false,
-		root = "",
+		git_dir = "",
+		root_dir = "",
 		head = "",
 		has_stash = false,
 		unstaged = UnstagedStatus:new(),
@@ -101,11 +103,10 @@ local status_map = {
 }
 
 GitStatus.update = core_utils.debounce(
-	100,
 	---@param self GitStatus
 	function(self)
 		if self.is_git_repo then
-			local stash_file = io.open(self.root .. "/logs/refs/stash", "r")
+			local stash_file = io.open(self.git_dir .. "/logs/refs/stash", "r")
 			if stash_file ~= nil then
 				self.has_stash = true
 				stash_file:close()
@@ -155,6 +156,7 @@ GitStatus.update = core_utils.debounce(
 	end
 )
 
+-- TODO: better granularity when updating only one file
 function GitStatus:watch_git_files()
 	for _, handle in ipairs(self._watch_handles) do
 		---@diagnostic disable-next-line: param-type-mismatch
@@ -166,33 +168,40 @@ function GitStatus:watch_git_files()
 	self._watch_handles = {}
 	if self.is_git_repo then
 		self._watch_handles = {
-			core_utils.watch_file(self.root .. "/logs/refs", function(_, _, _) self:update() end, { recursive = true }),
+			core_utils.watch_file(self.root_dir, function(_, _, _) self:update() end, { recursive = true }),
 		}
 	end
 end
 
-function GitStatus:init()
-	local old_root = self.root
-	local new_root = ""
-	core_utils.chain_system_commands({
-		{
-			cmd = { "git", "rev-parse", "--show-toplevel" },
-			---@param lines string[]
-			callback = function(lines)
-				if #lines > 0 then
-					new_root = lines[1]
-				end
-			end,
-		},
-	}, function()
-		if old_root ~= new_root then
-			self.is_git_repo = new_root ~= ""
-			self.root = new_root
-			self:watch_git_files()
-			self:update()
-		end
-	end)
-end
+GitStatus.init = core_utils.debounce(
+	---@param self GitStatus
+	function(self)
+		local old_root_dir = self.root_dir
+		self.git_dir = ""
+		self.root_dir = ""
+		core_utils.chain_system_commands({
+			{
+				cmd = { "git", "rev-parse", "--git-dir", "--show-toplevel" },
+				ignore_errors = true,
+				---@param lines string[]
+				callback = function(lines)
+					if #lines == 2 then
+						self.is_git_repo = true
+						self.git_dir = lines[1]
+						self.root_dir = lines[2]
+					else
+						self.is_git_repo = false
+					end
+				end,
+			},
+		}, function()
+			if old_root_dir ~= self.root_dir then
+				self:watch_git_files()
+				self:update()
+			end
+		end)
+	end
+)
 
 function GitStatus:redraw()
 	vim.defer_fn(function() vim.api.nvim_exec_autocmds("User", { pattern = "GitStatusUpdated" }) end, 50)

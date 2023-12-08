@@ -15,12 +15,7 @@
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = {
-    self,
-    home-manager,
-    nixpkgs,
-    ...
-  } @ inputs: let
+  outputs = {...} @ inputs: let
     overlays = [
       inputs.neovim-nightly-overlay.overlay
       inputs.nixgl.overlay
