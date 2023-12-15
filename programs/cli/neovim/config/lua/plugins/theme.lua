@@ -113,6 +113,10 @@ return {
 					GitSignsAdd = { fg = palette.green },
 					GitSignsChange = { fg = palette.peach },
 					GitSignsDelete = { fg = palette.red },
+					GitSignsAddInline = { bg = colors.darken(palette.green, 0.50) },
+					GitSignsChangeInline = { bg = colors.darken(palette.peach, 0.50) },
+					GitSignsDeleteInline = { bg = colors.darken(palette.red, 0.50) },
+
 					DiffDeleteVirtLn = { fg = colors.darken(palette.red, 0.3) },
 					DiffviewDiffDeleteDim = { fg = palette.surface0 },
 

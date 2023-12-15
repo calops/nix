@@ -26,7 +26,7 @@
       inputs.stylix.homeManagerModules.stylix
     ];
 
-    stateVersion = "23.11";
+    stateVersion = "24.05";
 
     machines = import ./machines;
     shells = import ./shells;

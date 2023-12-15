@@ -10,7 +10,6 @@ vim.o.colorcolumn = "120"
 vim.o.concealcursor = "nc"
 vim.o.textwidth = 120
 vim.o.virtualedit = "block"
-require("editorconfig").properties.insert_final_newline = nil
 
 -- GUI
 vim.o.background = "dark"
@@ -67,15 +66,6 @@ vim.g.neovide_floating_blur_amount_y = 1.5
 vim.g.neovide_scroll_animation_length = 0.13
 vim.o.guifont = "Iosevka Comfy:h10"
 
--- Clipboard
--- vim.g.clipboard = {
--- 	name = "OSC 52",
--- 	copy = {
--- 		["+"] = require("vim.clipboard.osc52").copy,
--- 		["*"] = require("vim.clipboard.osc52").copy,
--- 	},
--- }
-
 vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", numhl = "" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", numhl = "" })
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", numhl = "" })
@@ -116,10 +106,7 @@ local function update_highlights(buf, diagnostics)
 
 	for _, diagnostic in ipairs(diagnostics) do
 		vim.api.nvim_buf_set_extmark(buf, lines_ns, diagnostic.lnum, 0, {
-			hl_mode = "combine",
-			hl_eol = true,
-			hl_group = utils.diags_lines()[diagnostic.severity],
-			end_row = diagnostic.lnum + 1,
+			line_hl_group = utils.diags_lines()[diagnostic.severity],
 			priority = 14 - diagnostic.severity,
 		})
 	end
