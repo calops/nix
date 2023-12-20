@@ -2,7 +2,6 @@
   pkgs,
   config,
   inputs,
-  lib,
   ...
 }: let
   cfg = config.my.roles.graphical;

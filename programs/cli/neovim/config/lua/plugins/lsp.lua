@@ -150,6 +150,7 @@ return {
 			end,
 		},
 	},
+	-- AI, baby
 	{
 		"zbirenbaum/copilot.lua",
 		event = "VeryLazy",

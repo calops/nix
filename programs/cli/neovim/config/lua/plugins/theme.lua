@@ -184,6 +184,8 @@ return {
 					["@lsp.typemod.variable.static"] = { style = { "underdashed" } },
 					["@lsp.typemod.method.defaultLibrary"] = {},
 					["@lsp.typemod.variable.callable"] = { fg = palette.teal },
+
+					["@lsp.typemod.property.withAttribute.nix"] = { style = { "italic" } },
 				}
 			end,
 		}

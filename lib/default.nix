@@ -5,9 +5,8 @@
   stateVersion,
 }: let
   home-manager = inputs.home-manager;
-  nixpkgs = inputs.nixpkgs;
 
-  pkgs = import nixpkgs {
+  pkgs = import inputs.nixpkgs {
     system = "x86_64-linux";
     config.allowUnfree = true;
     overlays = overlays;
@@ -52,5 +51,6 @@ in {
       configurationName (mkHomeConfiguration configurationName machine)))
     configs;
 
-  mkDevShells = shells: shells {inherit pkgs;};
+  # TODO: split each shell into its own derivation
+  mkDevShells = shells: shells {inherit pkgs inputs;};
 }

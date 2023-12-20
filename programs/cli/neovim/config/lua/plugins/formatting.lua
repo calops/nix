@@ -2,27 +2,47 @@ local map = require("core.utils").map
 
 return {
 	{
-		"elentok/format-on-save.nvim",
-		cmd = { "Format" },
+		"stevearc/conform.nvim",
 		event = { "BufRead" },
+		cmd = { "ConformInfo" },
 		init = function()
+			vim.api.nvim_create_user_command("Format", function(args)
+				local range = nil
+				if args.count ~= -1 then
+					local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+					range = {
+						start = { args.line1, 0 },
+						["end"] = { args.line2, end_line:len() },
+					}
+				end
+				require("conform").format { async = true, lsp_fallback = true, range = range }
+			end, { range = true })
+
 			map {
-				["<space>f"] = { ":Format<cr>", "Format code" },
+				["<space>f"] = { ":Format<cr>", "Format code", mode = { "n", "x" } },
 			}
 		end,
 		opts = function()
-			local formatters = require("format-on-save.formatters")
 			return {
-				experiments = { partial_update = "diff" },
-				formatter_by_ft = {
-					json = formatters.lsp,
-					lua = formatters.stylua,
-					nix = formatters.shell { cmd = { "alejandra", "--quiet" } },
-					rust = formatters.lsp,
-					sh = formatters.shfmt,
-					sql = formatters.shell { cmd = { "sqlfluff" } },
-					toml = formatters.lsp,
-					yaml = formatters.prettierd,
+				formatters_by_ft = {
+					javascript = { "prettierd" },
+					json = { "prettierd" },
+					yaml = { "prettierd" },
+
+					lua = { "stylua" },
+					nix = { "alejandra" },
+					python = { "isort", "black" },
+					sh = { "shfmt" },
+					sql = { "sqlfluff" },
+				},
+				format_on_save = {
+					lsp_fallback = true,
+					timeout_ms = 500,
+				},
+				formatters = {
+					sqlfluff = {
+						args = { "format", "--dialect=postgres", "-" },
+					},
 				},
 			}
 		end,

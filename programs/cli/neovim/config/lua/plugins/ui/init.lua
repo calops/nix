@@ -133,10 +133,17 @@ return {
 		main = "ibl",
 		opts = {
 			indent = {
-				char = "│",
-				tab_char = "│",
+				char = "▎",
+				tab_char = "▎",
 			},
-			scope = { show_start = false },
+			scope = {
+				include = {
+					node_type = {
+						lua = { "table_constructor" },
+						nix = { "attrset_expression" },
+					},
+				},
+			},
 		},
 	},
 	-- Notification handler

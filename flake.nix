@@ -9,17 +9,20 @@
     };
     hy3.url = "github:outfoxxed/hy3";
     firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+    flake-utils.url = "github:numtide/flake-utils";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
     nixgl.url = "github:guibou/nixGL";
     nixd.url = "github:nix-community/nixd";
+    rust-overlay.url = "github:oxalica/rust-overlay";
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = {...} @ inputs: let
-    overlays = [
-      inputs.neovim-nightly-overlay.overlay
-      inputs.nixgl.overlay
-      inputs.nixd.overlays.default
+  outputs = inputs: let
+    overlays = with inputs; [
+      neovim-nightly-overlay.overlay
+      nixgl.overlay
+      nixd.overlays.default
+      rust-overlay.overlays.default
     ];
 
     extraModules = [

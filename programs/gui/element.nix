@@ -11,10 +11,6 @@ in
     config = mkIf cfg.enable {
       home.packages = [
         pkgs.element-desktop-wayland
-        # (lib.my.nixGlWrap {
-        #   inherit config;
-        #   pkg = pkgs.element-desktop-wayland;
-        # })
       ];
 
       xdg.configFile."Element/config.json".text = builtins.toJSON {

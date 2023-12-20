@@ -71,9 +71,9 @@ vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSig
 vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", numhl = "" })
 vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint", numhl = "" })
 
-vim.fn.sign_define("GitSignsAdd", { text = "┃", texthl = "GitSignsAdd", numhl = "" })
-vim.fn.sign_define("GitSignsChange", { text = "┃", texthl = "GitSignsChange", numhl = "" })
-vim.fn.sign_define("GitSignsDelete", { text = "┃", texthl = "GitSignsDelete", numhl = "" })
+vim.fn.sign_define("GitSignsAdd", { text = "▋", texthl = "GitSignsAdd", numhl = "" })
+vim.fn.sign_define("GitSignsChange", { text = "▋", texthl = "GitSignsChange", numhl = "" })
+vim.fn.sign_define("GitSignsDelete", { text = "▋", texthl = "GitSignsDelete", numhl = "" })
 
 -- The lazy.nvim plugin is installed through nix
 require("lazy").setup("plugins", {

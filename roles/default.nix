@@ -17,7 +17,9 @@
     }
   '';
 
-  home.sessionVariables = {};
+  home.sessionVariables = {
+    MOZ_ENABLE_WAYLAND = "1";
+  };
 
   home.file.scripts = {
     source = ../scripts;

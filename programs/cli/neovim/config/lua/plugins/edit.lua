@@ -45,8 +45,19 @@ return {
 	},
 	-- Word families substitutions
 	{
-		"tpope/vim-abolish",
+		"johmsalas/text-case.nvim",
+		dependencies = { "nvim-telescope/telescope.nvim" },
 		event = "VeryLazy",
+		opts = {
+			prefix = "gS",
+		},
+		config = function(_, opts)
+			require("textcase").setup(opts)
+			require("telescope").load_extension("textcase")
+		end,
+		keys = {
+			{ "gS.", "<cmd>TextCaseOpenTelescope<CR>", mode = { "n", "v" }, desc = "Telescope" },
+		},
 	},
 	-- Debug print statements
 	{
