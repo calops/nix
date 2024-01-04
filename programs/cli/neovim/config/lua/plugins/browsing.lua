@@ -81,12 +81,15 @@ return {
 			telescope.load_extension("media_files")
 			telescope.load_extension("persisted")
 			telescope.load_extension("ast_grep")
+			telescope.load_extension("textcase")
+			telescope.load_extension("yank_history")
 
 			require("telescope-all-recent").setup {
 				default = { sorting = "frecency" },
 				pickers = {
 					live_grep = { disable = false },
 					grep_string = { disable = false },
+					yank_history = { disable = true },
 				},
 			}
 		end,

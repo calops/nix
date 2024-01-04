@@ -29,18 +29,17 @@ return {
 					["<S-Tab>"] = cmp.mapping.select_prev_item(),
 					["<CR>"] = cmp.mapping.confirm { select = false },
 				},
-				sources = cmp.config.sources {
+				sources = cmp.config.sources({
 					{ name = "nvim_lsp" },
 					{ name = "nvim_lua" },
 					{ name = "luasnip" },
 					{ name = "path" },
 					{ name = "nerdfont" },
 					{ name = "emoji" },
-				},
-				{
-					{ name = "cmp_yanky" },
+				}, {
 					{ name = "buffer" },
-				},
+					{ name = "cmp_yanky" },
+				}),
 				snippet = {
 					expand = function(args) require("luasnip").lsp_expand(args.body) end,
 				},
@@ -55,8 +54,7 @@ return {
 
 			cmp.setup.filetype("gitcommit", {
 				sources = cmp.config.sources(
-					{ { name = "conventionalcommits" } },
-					{ { name = "cmp_git" } },
+					{ { name = "conventionalcommits" }, { name = "cmp_git" } },
 					{ { name = "buffer" } }
 				),
 			})

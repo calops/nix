@@ -95,6 +95,8 @@ return {
 					ModePrompt = { fg = palette.teal, bg = colors.darken(palette.teal, 0.33), style = { "bold" } },
 					ModeTerminal = { fg = palette.red, bg = colors.darken(palette.red, 0.33), style = { "bold" } },
 
+					MacroRecording = { fg = palette.base, bg = palette.pink, style = { "bold" } },
+
 					ModesInsert = { link = "ModeInsert" },
 					ModesVisual = { link = "ModeVisual" },
 

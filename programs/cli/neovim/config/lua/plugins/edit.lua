@@ -46,17 +46,10 @@ return {
 	-- Word families substitutions
 	{
 		"johmsalas/text-case.nvim",
-		dependencies = { "nvim-telescope/telescope.nvim" },
 		event = "VeryLazy",
 		opts = {
 			prefix = "gS",
-		},
-		config = function(_, opts)
-			require("textcase").setup(opts)
-			require("telescope").load_extension("textcase")
-		end,
-		keys = {
-			{ "gS.", "<cmd>TextCaseOpenTelescope<CR>", mode = { "n", "v" }, desc = "Telescope" },
+			substitude_command_name = "S",
 		},
 	},
 	-- Debug print statements
@@ -64,43 +57,36 @@ return {
 		"andrewferrier/debugprint.nvim",
 		lazy = true,
 		init = function()
+			local debugprint = function(opts)
+				return function() return require("debugprint").debugprint(opts) end
+			end
 			map {
 				["<leader>p"] = {
 					name = "debug print",
-					p = {
-						function() return require("debugprint").debugprint() end,
-						"Add simple debug print below",
-						expr = true,
-					},
-					P = {
-						function() return require("debugprint").debugprint { above = true } end,
-						"Add simple debug print above",
-						expr = true,
-					},
+					p = { debugprint(), "Add debug print below", expr = true },
+					P = { debugprint { above = true }, "Add debug print above", expr = true },
 					v = {
-						function() return require("debugprint").debugprint { variable = true } end,
+						debugprint { variable = true },
 						"Add variable debug print below",
 						expr = true,
 						mode = { "n", "o" },
 					},
 					V = {
-						function() return require("debugprint").debugprint { variable = true, above = true } end,
+						debugprint { variable = true, above = true },
 						"Add variable debug print above",
 						expr = true,
 						mode = { "n", "o" },
 					},
 				},
-			}
-			map {
 				["<leader>"] = {
 					p = {
-						function() return require("debugprint").debugprint { variable = true } end,
+						debugprint { variable = true },
 						"Add variable debug print below",
 						expr = true,
 						mode = { "x" },
 					},
 					P = {
-						function() return require("debugprint").debugprint { variable = true, above = true } end,
+						debugprint { variable = true, above = true },
 						"Add variable debug print above",
 						expr = true,
 						mode = { "x" },
@@ -185,7 +171,6 @@ return {
 		},
 		config = function(_, opts)
 			require("yanky").setup(opts)
-			require("telescope").load_extension("yank_history")
 			map {
 				["<C-y>"] = {
 					require("telescope").extensions.yank_history.yank_history,

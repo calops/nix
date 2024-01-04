@@ -39,7 +39,7 @@ local mode = {
 		self[1] = self:new(
 			utils.build_pill(
 				{},
-				{ provider = " ", hl = { fg = colors.palette().base, bg = hl.fg } },
+				{ provider = " ", hl = { fg = colors.palette().base, bg = hl.fg } },
 				{ { provider = " " .. mode[1], hl = hl } },
 				"provider"
 			),
@@ -49,6 +49,26 @@ local mode = {
 	update = { "ModeChanged" },
 	provider = " ",
 	hl = { bold = true },
+}
+
+local macro = {
+	condition = function(self)
+		self.recording_reg = vim.fn.reg_recording()
+		return self.recording_reg ~= ""
+	end,
+	init = function(self)
+		self[1] = self:new(
+			utils.build_pill({}, { provider = " ", hl = colors.hl.MacroRecording }, {
+				{
+					provider = " " .. self.recording_reg,
+					hl = { fg = colors.hl.MacroRecording.bg },
+				},
+			}, "provider"),
+			1
+		)
+	end,
+	update = { "RecordingEnter", "RecordingLeave" },
+	provider = " ",
 }
 
 local cwd = {
@@ -238,7 +258,7 @@ local tabs = {
 
 				self[1] = self:new(
 					utils.build_pill({
-						{ hl = self.pill_color, icons },
+						{ hl = self.pill_color, icons, lite = not self.is_active },
 					}, {
 						hl = self.tab_color,
 						{
@@ -311,7 +331,7 @@ local lsp = {
 
 return {
 	-- Left
-	{ mode, cwd, git, spacer },
+	{ mode, macro, cwd, git, spacer },
 	-- Center
 	{ tabs, spacer },
 	-- Right

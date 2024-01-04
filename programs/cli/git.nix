@@ -10,6 +10,8 @@ in
     home.packages = mkIf cfg.enable [pkgs.git-crypt];
     programs.git = {
       enable = cfg.enable;
+      userName = "Rémi Labeyrie";
+      userEmail = "calops@tocards.net";
       lfs.enable = true;
       signing = {
         signByDefault = true;
@@ -26,8 +28,8 @@ in
       aliases = {
         st = "status";
         ci = "commit";
-        lg = "log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset' -n25";
         llg = "log --graph --pretty=tformat:'%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%an %ar)%Creset'";
+        lg = "llg -n25";
         oops = "commit --amend --no-edit";
         pushf = "push --force-with-lease";
         mom = "merge origin/main --no-edit";
@@ -43,19 +45,13 @@ in
         ".vim"
         ".yarn"
         ".yarnrc"
-        "Cargo.lock"
         "Session.vim"
         "__pycache__"
-        "settings.json"
         "target"
         "tmp"
         "typings"
       ];
       extraConfig = {
-        user = {
-          name = "Rémi Labeyrie";
-          email = "calops@tocards.net";
-        };
         diff = {
           renames = true;
           mnemonicPrefix = true;
@@ -95,31 +91,33 @@ in
       ];
     };
 
-    xdg.configFile."git/delta/themes.gitconfig".text = ''
-      [delta "catppuccin"]
-        dark = true
-        true-color = always
+    xdg.configFile."git/delta/themes.gitconfig".text =
+      # gitconfig
+      ''
+        [delta "catppuccin"]
+          dark = true
+          true-color = always
 
-        commit-decoration-style = omit;
-        file-decoration-style = omit;
-        file-style = bold yellow;
-        hunk-header-style = omit
+          commit-decoration-style = omit;
+          file-decoration-style = omit;
+          file-style = bold yellow;
+          hunk-header-style = omit
 
-        line-numbers = true
-        line-numbers-left-format = "┃{nm:^5}"
-        line-numbers-left-style = "#45475a"
-        line-numbers-right-format = "┃{np:^5}"
-        line-numbers-right-style = "#45475a"
-        line-numbers-minus-style = "#f38ba8" "#302330"
-        line-numbers-plus-style = "#a6e3a1" "#2b3436"
-        line-numbers-zero-style = "#45475a"
+          line-numbers = true
+          line-numbers-left-format = "┃:{nm:^5}"
+          line-numbers-left-style = "#45475a"
+          line-numbers-right-format = "┃{np:^5}"
+          line-numbers-right-style = "#45475a"
+          line-numbers-minus-style = "#f38ba8" "#302330"
+          line-numbers-plus-style = "#a6e3a1" "#2b3436"
+          line-numbers-zero-style = "#45475a"
 
-        minus-emph-style = syntax "#5b435b"
-        minus-style = syntax "#302330"
+          minus-emph-style = syntax "#5b435b"
+          minus-style = syntax "#302330"
 
-        plus-emph-style = syntax "#475659"
-        plus-style = syntax "#2b3436"
+          plus-emph-style = syntax "#475659"
+          plus-style = syntax "#2b3436"
 
-        syntax-theme = catppuccin
-    '';
+          syntax-theme = catppuccin
+      '';
   }

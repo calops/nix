@@ -12,10 +12,12 @@ in
         pkgs.podman
       ];
 
-      xdg.configFile."containers/registries.conf".text = ''
-        [registries.search]
-        registries = ['docker.io']
-      '';
+      xdg.configFile."containers/registries.conf".text =
+        # toml
+        ''
+          [registries.search]
+          registries = ['docker.io']
+        '';
       xdg.configFile."containers/policy.json".text = builtins.toJSON {
         default = [
           {

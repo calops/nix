@@ -137,6 +137,8 @@ return {
 				tab_char = "▎",
 			},
 			scope = {
+				show_start = false,
+				show_end = false,
 				include = {
 					node_type = {
 						lua = { "table_constructor" },

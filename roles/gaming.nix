@@ -14,7 +14,7 @@ in
       home.packages = [pkgs.discord];
       programs.mangohud = {
         enable = true;
-        enableSessionWide = false;
+        enableSessionWide = true;
       };
     };
   }
