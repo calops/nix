@@ -104,7 +104,7 @@ in
             description = "Primary monitor";
           };
           secondary = mkOption {
-            type = my.types.monitor;
+            type = types.nullOr my.types.monitor;
             default = null;
             description = "Secondary monitor";
           };

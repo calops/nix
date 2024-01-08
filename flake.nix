@@ -7,7 +7,6 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hy3.url = "github:outfoxxed/hy3";
     firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     flake-utils.url = "github:numtide/flake-utils";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
@@ -25,19 +24,15 @@
       rust-overlay.overlays.default
     ];
 
-    extraModules = [
-      inputs.stylix.homeManagerModules.stylix
-    ];
-
     stateVersion = "24.05";
 
     machines = import ./machines;
     shells = import ./shells;
     lib = import ./lib {
-      inherit inputs overlays extraModules stateVersion;
+      inherit inputs overlays stateVersion;
     };
   in {
-    # nixosConfigurations = lib.mkNixosConfigurations machines;
+    nixosConfigurations = lib.mkNixosConfigurations {tocardstation = import ./machines/tocardstation;};
     homeConfigurations = lib.mkHomeConfigurations machines;
     devShells = lib.mkDevShells shells;
   };
