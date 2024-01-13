@@ -11,6 +11,11 @@
     overlays = overlays;
   };
 
+  nur = import inputs.nur {
+    inherit pkgs;
+    nurpkgs = pkgs;
+  };
+
   lib =
     pkgs.lib.extend
     (self: super:
@@ -22,19 +27,24 @@
       }
       // home-manager.lib);
 
+  commonModules = [
+    ../cachix.nix
+    ../roles
+    ../colors
+  ];
+
   mkHomeConfiguration = configurationName: machine:
     home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
-      modules = [
-        inputs.stylix.homeManagerModules.stylix
-        ../cachix.nix
-        ../roles
-        ../home
-        ../colors
-        machine
-      ];
+      modules =
+        commonModules
+        ++ [
+          inputs.stylix.homeManagerModules.stylix
+          ../home
+          machine
+        ];
       extraSpecialArgs = {
-        inherit inputs configurationName stateVersion lib;
+        inherit inputs configurationName stateVersion lib nur;
         isStandalone = true;
       };
     };
@@ -43,33 +53,32 @@
     inputs.nixpkgs.lib.nixosSystem {
       inherit pkgs;
       system = "x86_64-linux";
-      modules = [
-        home-manager.nixosModules.home-manager
-        inputs.stylix.nixosModules.stylix
-        ../cachix.nix
-        ../roles
-        ../system
-        ../colors
-        machine
-        ({config, ...}: {
-          system.stateVersion = stateVersion;
-          nix.settings.experimental-features = [
-            "flakes"
-            "nix-command"
-          ];
+      modules =
+        commonModules
+        ++ [
+          home-manager.nixosModules.home-manager
+          inputs.stylix.nixosModules.stylix
+          ../system
+          machine
+          ({config, ...}: {
+            system.stateVersion = stateVersion;
+            nix.settings.experimental-features = [
+              "flakes"
+              "nix-command"
+            ];
 
-          home-manager = {
-            useUserPackages = false;
-            useGlobalPkgs = true;
-            extraSpecialArgs = {
-              inherit inputs configurationName stateVersion lib;
-              roles = config.my.roles;
-              colors = config.my.colors;
+            home-manager = {
+              useUserPackages = false;
+              useGlobalPkgs = true;
+              extraSpecialArgs = {
+                inherit inputs configurationName stateVersion lib nur;
+                roles = config.my.roles;
+                colors = config.my.colors;
+              };
+              users.calops.imports = [../home];
             };
-            users.calops.imports = [../home];
-          };
-        })
-      ];
+          })
+        ];
       specialArgs = {
         inherit inputs configurationName stateVersion lib;
         isStandalone = false;

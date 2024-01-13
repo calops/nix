@@ -3,6 +3,8 @@
   lib,
   roles,
   colors,
+  inputs,
+  config,
   ...
 }: let
   cfg = roles.graphical;
@@ -38,12 +40,11 @@ in {
         #];
         exec-once = [
           #(lib.getExe pkgs.hyprpaper)
+          "eww -c ${config.xdg.configHome}/eww/bar open bar"
           (lib.getExe' pkgs.udiskie "udiskie")
           (lib.getExe pkgs.firefox)
           (lib.getExe' pkgs.ulauncher "ulauncher")
           (lib.getExe pkgs.element-desktop)
-          # "${lib.getExe' pkgs.wl-clipboard "wl-paste"} --type text --watch ${lib.getExe pkgs.cliphist}} store"
-          # "${lib.getExe' pkgs.wl-clipboard "wl-paste"} --type image --watch ${lib.getExe pkgs.cliphist}} store"
         ];
         windowrulev2 = [
           "workspace 1 silent,class:firefox"
@@ -52,6 +53,7 @@ in {
           "workspace 9 silent,class:Discord"
           "workspace 10 silent,class:Slack"
           "float,class:ulauncher"
+          "float,class:firefox,title:''"
         ];
         input = {
           kb_layout = "fr";
@@ -108,7 +110,7 @@ in {
           "SUPER, space, exec, ulauncher"
           "SUPER, P, pseudo,"
           "SUPER, backspace, togglesplit,"
-          "SUPER, R, exec, hyprshot -mregion"
+          "SUPER, R, exec, grimblast copy area"
           "SUPERSHIFT, delete, exec, scratchpad"
           "SUPER, delete, exec, scratchpad -g"
           "SUPER, left, ${movefocus}, l"
@@ -145,7 +147,7 @@ in {
           "SUPER SHIFT, 19, movetoworkspacesilent, 10"
         ];
         bindm = [
-          "SUPER, mouse:272, ${movewindow}"
+          "SUPER, mouse:272, movewindow"
           "SUPER, mouse:273, resizewindow"
         ];
         # binde = [
@@ -165,5 +167,10 @@ in {
       };
     };
     services.clipman.enable = true;
+    home.packages = with inputs.hyprland-contrib.packages.${pkgs.system}; [
+      grimblast
+      hyprprop
+      scratchpad
+    ];
   };
 }

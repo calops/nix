@@ -1,0 +1,186 @@
+/* Created   by https://github.com/rxyhn
+   Designed  by https://github.com/rxyhn
+   Maintaned by https://github.com/rxyhn
+*/
+
+// Global
+* {
+	all: unset;
+}
+
+// Variable Color's
+$background: #1A1B26;
+$foreground: #A9B1D6;
+
+$black: #24283B;
+$gray: #565F89;
+$red: #F7768E;
+$green: #73DACA;
+$yellow: #E0AF68;
+$blue: #7AA2F7;
+$magenta: #BB9AF7;
+$cyan: #7DCFFF;
+$white: $foreground;
+
+// EWW BAR
+.eww_bar {
+	background-color: $background;
+	padding: .3rem;
+}
+
+// Launcher
+.launcher_icon {
+	color: $cyan;
+	font-family: "Nerd Font Symbols";
+	font-size: 1.7em;
+	padding: 1rem 0 1rem 0;
+}
+
+// Workspaces
+.works {
+	font-family: "Nerf Font Symbols";
+	padding: .2rem .7rem .2rem .7rem;
+	background-color: $black;
+	border-radius: 5px;
+}
+
+// Control Panel
+.control {
+	padding: .5rem;
+	font-family: "Nerd Font Symbols";
+	font-size: 1.6em;
+	background-color: $black;
+	border-radius: 5px;
+}
+
+.bat {
+	font-family: Iosevka Comfy;
+	font-size: 1.2em;
+	padding-right: .5rem;
+	color: $blue;
+}
+
+.wifi-icon {
+	margin-bottom: .2rem;
+	color: $magenta;
+}
+
+.brightness-icon {
+	margin: .2rem 0 .2rem 0;
+	color: $yellow;
+}
+
+.volume-icon {
+	margin: .2rem 0 .2rem 0;
+	color: $green;
+}
+
+scale trough {
+	all: unset;
+	background-color: $background;
+	border-radius: 5px;
+	min-height: 80px;
+	min-width: 10px;
+	margin: .3rem 0 .3rem 0;
+}
+
+.bribar trough highlight {
+	background-color: $yellow;
+	border-radius: 5px;
+}
+
+.volbar trough highlight {
+	background-color: $green;
+	border-radius: 5px;
+}
+
+// Clock
+.time {
+	font-family: Iosevka Comfy;
+	font-weight: bold;
+	font-size: 1.2em;
+	background-color: $black;
+	color: $white;
+	border-radius: 5px;
+	padding: .7rem 0 .5rem 0;
+	margin: .5rem 0 .5rem 0;
+}
+
+// Calendar
+.cal-box {
+	background-color: $black;
+	font-family: "Iosevka Comfy";
+	font-size: 1em;
+	font-weight: bold;
+
+	.cal-inner-box {
+		padding: 1rem 1rem .2rem;
+
+		.cal {
+			&.highlight {
+				padding: 10rem;
+			}
+
+			padding: .8rem .25rem 0rem;
+			margin-left: 10px;
+		}
+	}
+}
+
+calendar:selected {
+	color: $blue;
+}
+
+calendar.header {
+	color: $blue;
+	font-weight: bold;
+}
+
+calendar.button {
+	color: $magenta;
+}
+
+calendar.highlight {
+	color: $magenta;
+	font-weight: bold;
+}
+
+calendar:indeterminate {
+	color: $background;
+}
+
+// Powermenu
+.powermenu {
+	font-family: feather;
+	font-size: 1.4em;
+	font-weight: bold;
+}
+
+.button-bspres,
+.button-reb,
+.button-lock,
+.button-quit,
+.button-off {
+	padding: .5rem .2rem .3rem .2rem;
+}
+
+.button-off {
+	margin-bottom: .5rem;
+	color: $red;
+}
+
+.button-bspres {
+	color: $green;
+}
+
+.button-reb {
+	color: $yellow
+}
+
+.button-quit {
+	color: $magenta;
+}
+
+.button-lock {
+	color: $blue;
+}

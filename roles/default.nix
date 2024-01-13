@@ -9,6 +9,7 @@
     ./terminal.nix
     ./graphical.nix
     ./gaming.nix
+    ./audio.nix
   ];
 
   options = {
@@ -23,6 +24,7 @@
       if isStandalone
       then "${config.xdg.configHome}/home-manager"
       else "/etc/nixos";
+
     stylix = let
       palette = builtins.mapAttrs (name: value: builtins.substring 1 (-1) value) config.my.colors.palette;
     in {
@@ -35,7 +37,7 @@
       base16Scheme = {
         base00 = palette.base; # Default Background
         base01 = palette.surface0; # Lighter Background (Used for status bars)
-        base02 = palette.surface2; # Selection Background
+        base02 = palette.surface1; # Selection Background
         base03 = palette.overlay0; # Comments, Invisibles, Line Highlighting
         base04 = palette.subtext0; # Dark Foreground (Used for status bars)
         base05 = palette.text; # Default Foreground, Caret, Delimiters, Operators
@@ -50,6 +52,13 @@
         base0E = palette.purple; # Keywords, Storage, Selector, Markup Italic, Diff Changed
         base0F = palette.cherry; # Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
       };
+    };
+
+    nix.optimise.automatic = true;
+    nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
     };
   };
 }

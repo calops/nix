@@ -14,6 +14,8 @@ in {
     ./gtk.nix
     ./hyprland.nix
     ./firefox.nix
+    ./waybar.nix
+    ./eww
   ];
 
   config = lib.mkIf cfg.enable {
@@ -41,9 +43,10 @@ in {
     programs.mpv.enable = true;
     programs.zathura.enable = true;
 
-    home.packages =
+    home.packages = with pkgs;
       [
-        pkgs.wl-clipboard
+        wl-clipboard
+        google-chrome
       ]
       ++ (
         if cfg.installAllFonts
