@@ -3,6 +3,7 @@
     ./gaming.nix
     ./terminal.nix
     ./graphical.nix
+    ./audio.nix
     ./programs
   ];
 

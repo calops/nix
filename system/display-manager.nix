@@ -7,10 +7,11 @@
   config = lib.mkIf config.my.roles.graphical.enable {
     services.xserver = {
       enable = true;
-      displayManager.sddm = {
-        enable = true;
-        theme = "catppuccin-mocha";
-      };
+      displayManager.gdm.enable = true;
+      # displayManager.sddm = {
+      #   enable = true;
+      #   theme = "catppuccin-mocha";
+      # };
     };
 
     environment.systemPackages = [

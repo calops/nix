@@ -33,14 +33,19 @@
     ../colors
   ];
 
+  hmModules = [
+    ../home
+    ../services
+  ];
+
   mkHomeConfiguration = configurationName: machine:
     home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
       modules =
         commonModules
+        ++ hmModules
         ++ [
           inputs.stylix.homeManagerModules.stylix
-          ../home
           machine
         ];
       extraSpecialArgs = {
@@ -75,7 +80,7 @@
                 roles = config.my.roles;
                 colors = config.my.colors;
               };
-              users.calops.imports = [../home];
+              users.calops.imports = hmModules;
             };
           })
         ];

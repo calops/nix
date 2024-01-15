@@ -14,6 +14,7 @@
     gaming.enable = true;
     audio.enable = true;
     printing.enable = true;
+    bluetooth.enable = true;
     graphical = {
       enable = true;
       nvidia.enable = true;

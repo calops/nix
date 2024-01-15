@@ -24,7 +24,6 @@ in {
         pkgs.hyprlandPlugins.hy3
       ];
       settings = {
-        debug.disable_logs = false;
         #monitor = ",preferred,auto,1";
         #wsbind = [
         #"1,${monitors.primary}"
@@ -45,6 +44,7 @@ in {
           (lib.getExe pkgs.firefox)
           (lib.getExe' pkgs.ulauncher "ulauncher")
           (lib.getExe pkgs.element-desktop)
+          # (lib.getExe pkgs.swaynotificationcenter)
         ];
         windowrulev2 = [
           "workspace 1 silent,class:firefox"
@@ -53,7 +53,6 @@ in {
           "workspace 9 silent,class:Discord"
           "workspace 10 silent,class:Slack"
           "float,class:ulauncher"
-          "float,class:firefox,title:''"
         ];
         input = {
           kb_layout = "fr";
@@ -106,6 +105,7 @@ in {
           "SUPER, E, exec, firefox"
           "SUPER, V, pin,"
           "SUPER, F, fullscreen,"
+          "SUPER, N, exec, ${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} -t"
           "SUPER SHIFT, F, togglefloating,"
           "SUPER, space, exec, ulauncher"
           "SUPER, P, pseudo,"

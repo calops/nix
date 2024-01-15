@@ -142,7 +142,7 @@ return {
 				include = {
 					node_type = {
 						lua = { "table_constructor" },
-						nix = { "attrset_expression" },
+						nix = { "attrset_expression", "list_expression" },
 					},
 				},
 			},

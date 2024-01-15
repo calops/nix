@@ -15,6 +15,7 @@ in {
     ./hyprland.nix
     ./firefox.nix
     ./waybar.nix
+    ./swaync.nix
     ./eww
   ];
 
@@ -47,6 +48,7 @@ in {
       [
         wl-clipboard
         google-chrome
+        libnotify
       ]
       ++ (
         if cfg.installAllFonts

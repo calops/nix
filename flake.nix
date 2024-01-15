@@ -27,6 +27,7 @@
       nixd.overlays.default
       rust-overlay.overlays.default
       nur.overlay
+      (import ./packages).overlay
     ];
 
     stateVersion = "24.05";
