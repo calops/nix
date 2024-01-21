@@ -5,6 +5,7 @@
   pkgs,
   configurationName,
   config,
+  isStandalone,
   ...
 }: let
   palette = colors.palette;
@@ -30,9 +31,10 @@ in {
         rust-analyzer
         rust-bin.nightly.latest.minimal
         shfmt
-        sqlfluff
+        # sqlfluff
         sqlite
         stylua
+        vscode-extensions.vadimcn.vscode-lldb.adapter
       ];
       plugins = [
         pkgs.vimPlugins.lazy-nvim
@@ -54,11 +56,14 @@ in {
         source = ./config;
         recursive = true;
       };
-      "home-manager/.nixd.json".text = builtins.toJSON {
+      "${config.home.homeDirectory}/nix/.nixd.json".text = builtins.toJSON {
         options = {
           enable = true;
           target = {
-            installable = ".#homeConfigurations.${configurationName}.options";
+            installable =
+              if isStandalone
+              then ".#homeConfigurations.${configurationName}.options"
+              else ".#nixosConfigurations.${configurationName}.options";
           };
         };
       };

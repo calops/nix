@@ -15,11 +15,15 @@ in
       ];
 
       xdg.configFile."Element/config.json".text = builtins.toJSON {
-        settingDefaults = {
+        setting_defaults = {
           custom_themes = [
             {
               name = "Catppuccin Mocha";
               is_dark = true;
+              fonts = {
+                general = "Iosevka Comfy";
+                monospace = "Iosevka Comfy";
+              };
               colors = {
                 accent-color = "#b4befe";
                 primary-color = "#b4befe";
@@ -60,58 +64,16 @@ in
                 ];
               };
             }
-            {
-              name = "Catppuccin Latte";
-              is_dark = false;
-              colors = {
-                accent-color = "#7287fd";
-                primary-color = "#7287fd";
-                warning-color = "#d20f39";
-                alert = "#df8e1d";
-                sidebar-color = "#dce0e8";
-                roomlist-background-color = "#e6e9ef";
-                roomlist-text-color = "#4c4f69";
-                roomlist-text-secondary-color = "#4c4f69";
-                roomlist-highlights-color = "#bcc0cc";
-                roomlist-separator-color = "#8c8fa1";
-                timeline-background-color = "#eff1f5";
-                timeline-text-color = "#4c4f69";
-                secondary-content = "#4c4f69";
-                tertiary-content = "#4c4f69";
-                timeline-text-secondary-color = "#6c6f85";
-                timeline-highlights-color = "#bcc0cc";
-                reaction-row-button-selected-bg-color = "#bcc0cc";
-                menu-selected-color = "#bcc0cc";
-                focus-bg-color = "#acb0be";
-                room-highlight-color = "#04a5e5";
-                togglesw-off-color = "#7c7f93";
-                other-user-pill-bg-color = "#04a5e5";
-                username-colors = [
-                  "#8839ef"
-                  "#e64553"
-                  "#fe640b"
-                  "#40a02b"
-                  "#179299"
-                  "#04a5e5"
-                  "#209fb5"
-                  "#7287fd"
-                ];
-                avatar-background-colors = [
-                  "#1e66f5"
-                  "#8839ef"
-                  "#40a02b"
-                ];
-              };
-            }
           ];
-          default_theme = "Catppuccin Mocha";
+          use_system_theme = false;
+          default_theme = "custom-Catppuccin Mocha";
           useSystemFont = true;
           systemFont = cfg.fonts.monospace.name;
           layout = "irc";
         };
         useSystemFont = true;
         systemFont = cfg.fonts.monospace.name;
-        default_theme = "Catppuccin Mocha";
+        default_theme = "custom-Catppuccin Mocha";
         show_labs_settings = true;
         features = {
           feature_spotlight = true;

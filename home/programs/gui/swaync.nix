@@ -32,12 +32,15 @@ in {
           @import url("file://${pkgs.catppuccin-mocha-swaync-theme}/style.css");
 
           * {
-            font-family: ${lib.my.fonts.iosevka-comfy.name};
+            font-family: ${roles.graphical.fonts.monospace.name};
           }
 
           .control-center {
-            opacity: 0.8;
-            border: solid 2px ${palette.peach};
+            background-color: rgba(30, 30, 46, 0.8); /* palette.base */
+          }
+
+          .notification {
+            background-color: ${palette.surface0};
           }
         '';
     };

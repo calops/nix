@@ -40,11 +40,9 @@ in {
         exec-once = [
           #(lib.getExe pkgs.hyprpaper)
           "eww -c ${config.xdg.configHome}/eww/bar open bar"
-          (lib.getExe' pkgs.udiskie "udiskie")
           (lib.getExe pkgs.firefox)
           (lib.getExe' pkgs.ulauncher "ulauncher")
           (lib.getExe pkgs.element-desktop)
-          # (lib.getExe pkgs.swaynotificationcenter)
         ];
         windowrulev2 = [
           "workspace 1 silent,class:firefox"
@@ -53,6 +51,13 @@ in {
           "workspace 9 silent,class:Discord"
           "workspace 10 silent,class:Slack"
           "float,class:ulauncher"
+          "float,class:pavucontrol"
+        ];
+        layerrule = [
+          "blur, swaync-control-center"
+          "ignorealpha 0.5, swaync-control-center"
+          "blur, swaync-notification-window"
+          "ignorealpha 0.5, swaync-notification-window"
         ];
         input = {
           kb_layout = "fr";

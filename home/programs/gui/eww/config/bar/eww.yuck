@@ -7,7 +7,7 @@
 		:spacing -15
 		:space-evenly "false"
 	(button :class "launcher_icon"
-		:onclick "ulauncher"  "󰌧")))
+		:onclick "ulauncher-toggle"  "󰌧")))
 
 ;; Workspaces Widgets ;;
 (defwidget workspaces []
@@ -52,8 +52,8 @@
 		:max 101
 		:min 0
 		:onchange "amixer sset Master {}%" ))
-	(button   :onclick "scripts/popup audio"   :class "volume-icon" ""))))
-(defpoll current-volume :interval "1s" "amixer sget Master | sed -rn 's/^.*\[(.+)%\].*$/\1/p'")
+	(button   :onclick "pavucontrol"   :class "volume-icon" ""))))
+(defpoll current-volume :interval "1s" "amixer sget Master | sed -rn 's/^.*\[(.+)%\].*$/\1/p' | head -n1")
 (defvar volum false)
 
 ;; Control Panel Widgets ;;

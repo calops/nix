@@ -79,6 +79,7 @@
                 inherit inputs configurationName stateVersion lib nur;
                 roles = config.my.roles;
                 colors = config.my.colors;
+                isStandalone = false;
               };
               users.calops.imports = hmModules;
             };

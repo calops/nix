@@ -36,6 +36,7 @@ return {
 					{ name = "path" },
 					{ name = "nerdfont" },
 					{ name = "emoji" },
+					{ name = "otter" },
 				}, {
 					{ name = "buffer" },
 					{ name = "cmp_yanky" },

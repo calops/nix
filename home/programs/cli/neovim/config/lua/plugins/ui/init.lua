@@ -44,6 +44,18 @@ return {
 		event = "VeryLazy",
 		config = true,
 	},
+	-- {
+	-- 	"rasulomaroff/reactive.nvim",
+	-- 	opts = {
+	-- 		configs = {
+	-- 			custom_preset = {
+	-- 				modes = {
+	-- 					i = { winhl = { CursorLine = { link = "ModeInsert" } } },
+	-- 				},
+	-- 			},
+	-- 		},
+	-- 	},
+	-- },
 	-- CMD line replacement and other UI niceties
 	{
 		"folke/noice.nvim",

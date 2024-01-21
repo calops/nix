@@ -42,7 +42,18 @@ in {
     };
 
     programs.mpv.enable = true;
-    programs.zathura.enable = true;
+    programs.zathura = {
+      enable = true;
+      options.font = cfg.fonts.monospace.name;
+    };
+
+    services.espanso = {
+      enable = true;
+      package = pkgs.espanso-wayland.overrideAttrs rec {
+        version = "2.2.1";
+        rev = "v${version}";
+      };
+    };
 
     home.packages = with pkgs;
       [

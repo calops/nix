@@ -30,7 +30,7 @@ return {
 				function(server_name) -- automatically setup server by default
 					lspconfig[server_name].setup {}
 				end,
-				rust_analyzer = nil, -- handled entirely by rust-tools.nvim, and installed by nix
+				rust_analyzer = nil, -- handled entirely by rustaceanvim, and installed by nix
 				lua_ls = nil,
 			}
 		end,
@@ -39,7 +39,7 @@ return {
 		"neovim/nvim-lspconfig",
 		lazy = true,
 		init = function()
-			vim.g.inlay_hints_enabled = false
+			vim.g.inlay_hints_enabled = true
 
 			map {
 				K = { vim.lsp.buf.hover, "Show documentation" },
@@ -113,42 +113,42 @@ return {
 	},
 	-- Rust-specific utilities and LSP configurations
 	{
-		"simrat39/rust-tools.nvim",
-		event = { "BufReadPost *.rs" },
-		opts = {
-			tools = {
-				inlay_hints = {
-					auto = false,
-				},
-			},
-			server = {
-				standalone = false,
-				on_attach = function(_, bufnr)
-					local rt = require("rust-tools")
-					map {
-						["<C-h>"] = { rt.hover_actions.hover_actions, "Hover actions", buffer = bufnr },
-						K = { rt.hover_range.hover_range, "Hover information", buffer = bufnr, mode = "x" },
-					}
-				end,
-				["rust-analyzer"] = {
-					semanticHighlighting = {
-						["punctuation.enable"] = true,
-						["punctuation.separate.macro.bang"] = true,
-					},
-					diagnostics = {
-						enable = true,
-						disabled = { "unresolved-method", "unresolved-field" },
-						experimental = { enable = false },
-					},
-					assist = {
-						emitMustUse = true,
-					},
-					procMacro = {
-						enable = true,
+		"mrcjkb/rustaceanvim",
+		ft = "rust",
+		init = function()
+			vim.g.rustaceanvim = {
+				tools = {
+					inlay_hints = {
+						auto = false,
 					},
 				},
-			},
-		},
+				server = {
+					standalone = false,
+					on_attach = function(_, bufnr)
+						map {
+							K = { "RustLsp hover range", "Hover information", buffer = bufnr, mode = "x" },
+						}
+					end,
+					["rust-analyzer"] = {
+						semanticHighlighting = {
+							["punctuation.enable"] = true,
+							["punctuation.separate.macro.bang"] = true,
+						},
+						diagnostics = {
+							enable = true,
+							-- disabled = { "unresolved-method", "unresolved-field" },
+							experimental = { enable = true },
+						},
+						assist = {
+							emitMustUse = true,
+						},
+						procMacro = {
+							enable = true,
+						},
+					},
+				},
+			}
+		end,
 	},
 	-- Neovim lua LSP utilities
 	{
@@ -188,5 +188,17 @@ return {
 				gitcommit = true,
 			},
 		},
+	},
+	-- LSP within TS injections
+	{
+		"jmbuhr/otter.nvim",
+		init = function()
+			vim.api.nvim_create_user_command(
+				"Otter",
+				function(cmd) require("otter").activate(cmd.fargs) end,
+				{ nargs = "+" }
+			)
+		end,
+		opts = {},
 	},
 }

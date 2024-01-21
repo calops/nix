@@ -154,15 +154,15 @@ return {
 					NoiceMini = { fg = palette.blue, bg = colors.darken(palette.blue, 0.33), blend = 0 },
 
 					-- Syntax
-					["@parameter"] = { fg = palette.text, style = { "nocombine" } },
-					["@namespace"] = { fg = palette.pink, style = { "nocombine" } },
+					["@variable.parameter"] = { fg = palette.text, style = { "nocombine" } },
+					["@module"] = { fg = palette.pink, style = { "nocombine" } },
 					["@number"] = { fg = palette.green },
 					["@boolean"] = { fg = palette.green, style = { "bold" } },
 					["@type.qualifier"] = { fg = palette.mauve, style = { "bold" } },
 					["@function.macro"] = { fg = palette.blue },
 					["@constant.builtin"] = { fg = palette.green },
 					["@property"] = { fg = colors.brighten(palette.yellow, 0.7) },
-					["@field"] = { fg = colors.brighten(palette.yellow, 0.7) },
+					["@variable.member"] = { fg = colors.brighten(palette.yellow, 0.7) },
 
 					["@lsp.type.struct"] = { fg = palette.yellow },
 					["@lsp.type.property"] = { fg = colors.brighten(palette.yellow, 0.7) },
