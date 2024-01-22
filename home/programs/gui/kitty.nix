@@ -1,9 +1,4 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}: let
+{config, ...}: let
   cfg = config.my.roles.graphical;
   palette = config.my.colors.palette;
 in {

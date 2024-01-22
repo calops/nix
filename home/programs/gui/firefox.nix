@@ -77,16 +77,14 @@ in {
       };
     };
 
-    home.file.".tridactylrc".text = ''
-      guiset_quiet gui none
-      guiset_quiet navbar always
+    xdg.configFile."tridactyl/tridactylrc".text = ''
       guiset_quiet hoverlink left
       guiset_quiet statuspanel left
 
       colorscheme dark
 
       set searchengine google
-      set editorcmd alacritty -e nvim
+      set editorcmd ${config.my.roles.graphical.terminal} -e nvim
 
       setpref browser.uidensity 1
 
