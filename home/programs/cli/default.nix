@@ -5,6 +5,7 @@
   ...
 }: {
   imports = [
+    ./atuin.nix
     ./bat.nix
     ./btop.nix
     ./direnv.nix
@@ -13,7 +14,7 @@
     ./git.nix
     ./helix.nix
     ./podman.nix
-    ./skim.nix
+    ./fuzzy-finder.nix
     ./ssh.nix
     ./starship.nix
     ./zellij.nix

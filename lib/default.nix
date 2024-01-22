@@ -33,7 +33,7 @@
   hmModules =
     commonModules
     ++ [
-      (import ../modules/home-manager).swaync
+      outputs.homeManagerModules.swaync
       ../home
     ];
 

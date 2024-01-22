@@ -27,12 +27,8 @@
       }
     '';
 
-    home.file.scripts = {
-      source = ../scripts;
-      recursive = true;
-    };
-
     programs.gpg.enable = true;
+    programs.dircolors.enable = true;
     services.udiskie.enable = true;
   };
 }

@@ -48,6 +48,5 @@
         end
       '';
     };
-    stylix.targets.fish.enable = true;
   };
 }
