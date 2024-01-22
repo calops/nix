@@ -2,7 +2,6 @@
   config,
   pkgs,
   lib,
-  isStandalone,
   ...
 }: {
   imports = [
@@ -17,13 +16,28 @@
       type = lib.types.str;
       description = "Location of the nix config directory (this repo)";
     };
+    my.roles.bluetooth.enable = lib.mkEnableOption "Bluetooth support";
+    my.roles.printing.enable = lib.mkEnableOption "Printing";
+    my.isNixOs = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether this is a NixOS system";
+    };
+    my.configurationName = lib.mkOption {
+      type = lib.types.str;
+      description = "Name of the configuration";
+    };
+    my.stateVersion = lib.mkOption {
+      type = lib.types.str;
+      description = "Version of nixpkgs";
+    };
   };
 
   config = {
     my.roles.configDir =
-      if isStandalone
-      then "${config.xdg.configHome}/home-manager"
-      else "/etc/nixos";
+      if config.my.isNixOs
+      then "/etc/nixos"
+      else "${config.xdg.configHome}/home-manager";
 
     stylix = let
       palette = builtins.mapAttrs (name: value: builtins.substring 1 (-1) value) config.my.colors.palette;
@@ -52,13 +66,6 @@
         base0E = palette.purple; # Keywords, Storage, Selector, Markup Italic, Diff Changed
         base0F = palette.cherry; # Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
       };
-    };
-
-    nix.optimise.automatic = true;
-    nix.gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
     };
   };
 }

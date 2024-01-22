@@ -1,31 +1,28 @@
 {
   inputs,
-  overlays,
+  outputs,
   stateVersion,
 }: let
-  home-manager = inputs.home-manager;
+  overlays = with inputs; [
+    neovim-nightly-overlay.overlay
+    nixgl.overlay
+    nixd.overlays.default
+    rust-overlay.overlays.default
+    nur.overlay
+    (import ../packages).overlay
+    (self: super: {
+      nur = import inputs.nur {
+        pkgs = super;
+        nurpkgs = super;
+      };
+    })
+  ];
 
   pkgs = import inputs.nixpkgs {
     system = "x86_64-linux";
     config.allowUnfree = true;
-    overlays = overlays;
+    inherit overlays;
   };
-
-  nur = import inputs.nur {
-    inherit pkgs;
-    nurpkgs = pkgs;
-  };
-
-  lib =
-    pkgs.lib.extend
-    (self: super:
-      {
-        my = import ./lib.nix {
-          inherit pkgs;
-          lib = self;
-        };
-      }
-      // home-manager.lib);
 
   commonModules = [
     ../cachix.nix
@@ -33,24 +30,35 @@
     ../colors
   ];
 
-  hmModules = [
-    ../home
-    ../services
-  ];
+  hmModules =
+    commonModules
+    ++ [
+      (import ../modules/home-manager).swaync
+      ../home
+    ];
+
+  nixosModules =
+    commonModules
+    ++ [
+      inputs.home-manager.nixosModules.home-manager
+      ../system
+    ];
 
   mkHomeConfiguration = configurationName: machine:
-    home-manager.lib.homeManagerConfiguration {
+    inputs.home-manager.lib.homeManagerConfiguration {
       inherit pkgs;
       modules =
-        commonModules
-        ++ hmModules
+        hmModules
         ++ [
           inputs.stylix.homeManagerModules.stylix
           machine
+          {
+            my.configurationName = configurationName;
+            my.stateVersion = stateVersion;
+          }
         ];
       extraSpecialArgs = {
-        inherit inputs configurationName stateVersion lib nur;
-        isStandalone = true;
+        inherit inputs outputs;
       };
     };
 
@@ -59,49 +67,39 @@
       inherit pkgs;
       system = "x86_64-linux";
       modules =
-        commonModules
+        nixosModules
         ++ [
-          home-manager.nixosModules.home-manager
           inputs.stylix.nixosModules.stylix
-          ../system
           machine
           ({config, ...}: {
-            system.stateVersion = stateVersion;
-            nix.settings.experimental-features = [
-              "flakes"
-              "nix-command"
-            ];
-
+            my.configurationName = configurationName;
+            my.stateVersion = stateVersion;
             home-manager = {
               useUserPackages = false;
               useGlobalPkgs = true;
               extraSpecialArgs = {
-                inherit inputs configurationName stateVersion lib nur;
-                roles = config.my.roles;
-                colors = config.my.colors;
-                isStandalone = false;
+                inherit inputs outputs;
               };
               users.calops.imports = hmModules;
             };
           })
         ];
       specialArgs = {
-        inherit inputs configurationName stateVersion lib;
-        isStandalone = false;
+        inherit inputs outputs;
       };
     };
 in {
   mkNixosConfigurations = configs:
-    lib.attrsets.mapAttrs' (host: machine: let
+    pkgs.lib.attrsets.mapAttrs' (host: machine: let
       configurationName = host;
-    in (lib.attrsets.nameValuePair
+    in (pkgs.lib.attrsets.nameValuePair
       configurationName (mkNixosConfiguration configurationName machine)))
     configs;
 
   mkHomeConfigurations = configs:
-    lib.attrsets.mapAttrs' (host: machine: let
+    pkgs.lib.attrsets.mapAttrs' (host: machine: let
       configurationName = "${machine.home.username}@${host}";
-    in (lib.attrsets.nameValuePair
+    in (pkgs.lib.attrsets.nameValuePair
       configurationName (mkHomeConfiguration configurationName machine)))
     configs;
 

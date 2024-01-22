@@ -1,6 +1,6 @@
-{roles, ...}: {
+{config, ...}: {
   programs.skim = {
-    enable = roles.terminal.enable;
+    enable = config.my.roles.terminal.enable;
     defaultCommand = "fd --color=always";
     defaultOptions = ["--ansi"];
     fileWidgetCommand = "fd --color=always";

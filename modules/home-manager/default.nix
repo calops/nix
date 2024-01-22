@@ -1,0 +1,3 @@
+{
+  swaync = import ./swaync.nix;
+}

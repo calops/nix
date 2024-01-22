@@ -1,4 +1,8 @@
 {
-  tocardstation = import ./tocardstation;
-  tocardland = import ./tocardland;
+  nixos = {
+    tocardstation = import ./tocardstation;
+  };
+  home-manager = {
+    tocardland = import ./tocardland;
+  };
 }

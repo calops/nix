@@ -1,9 +1,9 @@
 {
   lib,
-  roles,
+  config,
   ...
 }: {
-  config = lib.mkIf roles.graphical.enable {
+  config = lib.mkIf config.my.roles.graphical.enable {
     programs.waybar = {
       enable = true;
     };

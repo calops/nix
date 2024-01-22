@@ -1,6 +1,6 @@
-{roles, ...}: {
+{config, ...}: {
   programs.zoxide = {
-    enable = roles.terminal.enable;
+    enable = config.my.roles.terminal.enable;
     enableFishIntegration = true;
   };
 }

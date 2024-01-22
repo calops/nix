@@ -1,10 +1,10 @@
 {
   lib,
-  roles,
+  config,
   pkgs,
   ...
 }: let
-  cfg = roles.graphical;
+  cfg = config.my.roles.graphical;
   lua = lib.generators.toLua {} {
     nvidia = cfg.nvidia.enable;
     font = {
@@ -16,14 +16,13 @@
       symbols = cfg.fonts.symbols.name;
     };
   };
-in
-  {
-    config = lib.mkIf (cfg.enable && cfg.terminal == "wezterm") {
-      programs.wezterm = {
-        enable = true;
-        extraConfig = builtins.readFile ./config.lua;
-      };
-
-      xdg.configFile."wezterm/nix.lua".text = ''return ${lua}'';
+in {
+  config = lib.mkIf (cfg.enable && cfg.terminal == "wezterm") {
+    programs.wezterm = {
+      enable = true;
+      extraConfig = builtins.readFile ./config.lua;
     };
-  }
+
+    xdg.configFile."wezterm/nix.lua".text = ''return ${lua}'';
+  };
+}

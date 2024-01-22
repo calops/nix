@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-23.11";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -20,26 +21,20 @@
     nur.url = "github:nix-community/NUR";
   };
 
-  outputs = inputs: let
-    overlays = with inputs; [
-      neovim-nightly-overlay.overlay
-      nixgl.overlay
-      nixd.overlays.default
-      rust-overlay.overlays.default
-      nur.overlay
-      (import ./packages).overlay
-    ];
-
+  outputs = {self, ...} @ inputs: let
+    inherit (self) outputs;
     stateVersion = "24.05";
 
     machines = import ./machines;
-    shells = import ./shells;
     lib = import ./lib {
-      inherit inputs overlays stateVersion;
+      inherit inputs outputs stateVersion;
     };
   in {
-    nixosConfigurations = lib.mkNixosConfigurations {tocardstation = import ./machines/tocardstation;};
-    homeConfigurations = lib.mkHomeConfigurations machines;
-    devShells = lib.mkDevShells shells;
+    nixosConfigurations = lib.mkNixosConfigurations machines.nixos;
+    homeConfigurations = lib.mkHomeConfigurations machines.home-manager;
+
+    devShells = lib.mkDevShells import ./shells;
+    homeManagerModules = import ./modules/home-manager;
+    nixosModules = import ./modules/nixos;
   };
 }

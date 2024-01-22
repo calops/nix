@@ -1,7 +1,7 @@
 {
   pkgs,
   lib,
-  roles,
+  config,
   ...
 }: {
   imports = [
@@ -20,7 +20,7 @@
     ./zoxide.nix
     ./neovim
   ];
-  config = lib.mkIf roles.terminal.enable {
+  config = lib.mkIf config.my.roles.terminal.enable {
     home.packages = with pkgs; [
       megatools
       ast-grep

@@ -1,4 +1,9 @@
-{stateVersion, ...}: {
+{
+  config,
+  lib,
+  nixosConfig ? null,
+  ...
+}: {
   imports = [
     ./gaming.nix
     ./terminal.nix
@@ -8,8 +13,9 @@
   ];
 
   config = {
-    home.stateVersion = stateVersion;
     programs.home-manager.enable = true;
+    my = {isNixOs = false;} // lib.mkIf (nixosConfig != null) nixosConfig.my;
+    home.stateVersion = config.my.stateVersion;
 
     xdg.configFile."nixpkgs/config.nix".text = ''
       {
@@ -20,10 +26,6 @@
         ];
       }
     '';
-
-    home.sessionVariables = {
-      MOZ_ENABLE_WAYLAND = "1";
-    };
 
     home.file.scripts = {
       source = ../scripts;

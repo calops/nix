@@ -1,14 +1,12 @@
 {
   pkgs,
-  roles,
   config,
-  nur,
   lib,
   ...
 }: let
-  addons = nur.repos.rycee.firefox-addons;
+  addons = pkgs.nur.repos.rycee.firefox-addons;
 in {
-  config = lib.mkIf roles.graphical.enable {
+  config = lib.mkIf config.my.roles.graphical.enable {
     programs.firefox = {
       enable = true;
       package = pkgs.firefox-beta-bin.override {
@@ -107,5 +105,9 @@ in {
 
       autocmd TriStart .* source_quiet ${config.xdg.configHome}/tridactyl/tridactylrc
     '';
+
+    home.sessionVariables = {
+      MOZ_ENABLE_WAYLAND = "1";
+    };
   };
 }

@@ -508,6 +508,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-stable": {
+      "locked": {
+        "lastModified": 1705774713,
+        "narHash": "sha256-j6ADaDH9XiumUzkTPlFyCBcoWYhO83lfgiSqEJF2zcs=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "1b64fc1287991a9cce717a01c1973ef86cb1af0b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1703134684,
@@ -611,6 +627,7 @@
         "nixd": "nixd",
         "nixgl": "nixgl",
         "nixpkgs": "nixpkgs_4",
+        "nixpkgs-stable": "nixpkgs-stable",
         "nur": "nur",
         "rust-overlay": "rust-overlay",
         "stylix": "stylix"

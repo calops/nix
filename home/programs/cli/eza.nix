@@ -1,6 +1,6 @@
-{roles, ...}: {
+{config, ...}: {
   programs.eza = {
-    enable = roles.terminal.enable;
+    enable = config.my.roles.terminal.enable;
     icons = true;
     git = true;
   };

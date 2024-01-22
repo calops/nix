@@ -1,17 +1,13 @@
 {
-  roles,
-  colors,
+  config,
   lib,
   pkgs,
-  configurationName,
-  config,
-  isStandalone,
   ...
 }: let
-  palette = colors.palette;
-  nvimDir = "${roles.configDir}/home/programs/cli/neovim";
+  palette = config.my.colors.palette;
+  nvimDir = "${config.my.roles.configDir}/home/programs/cli/neovim";
 in {
-  config = lib.mkIf roles.terminal.enable {
+  config = lib.mkIf config.my.roles.terminal.enable {
     programs.neovim = {
       enable = true;
       package = pkgs.neovim-nightly;
@@ -61,9 +57,9 @@ in {
           enable = true;
           target = {
             installable =
-              if isStandalone
-              then ".#homeConfigurations.${configurationName}.options"
-              else ".#nixosConfigurations.${configurationName}.options";
+              if config.my.isNixOs
+              then ".#nixosConfigurations.${config.my.configurationName}.options"
+              else ".#homeConfigurations.${config.my.configurationName}.options";
           };
         };
       };

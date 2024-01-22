@@ -1,6 +1,6 @@
-{roles, ...}: {
+{config, ...}: {
   programs.starship = {
-    enable = roles.terminal.enable;
+    enable = config.my.roles.terminal.enable;
     settings = {
       nix_shell.symbol = " ";
       rust.symbol = " ";

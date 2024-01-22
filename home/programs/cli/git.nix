@@ -2,10 +2,9 @@
   pkgs,
   config,
   lib,
-  roles,
   ...
 }: {
-  config = lib.mkIf roles.terminal.enable {
+  config = lib.mkIf config.my.roles.terminal.enable {
     home.packages = [pkgs.git-crypt];
     programs.git = {
       enable = true;

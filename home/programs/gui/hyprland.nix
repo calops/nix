@@ -1,14 +1,12 @@
 {
   pkgs,
   lib,
-  roles,
-  colors,
   inputs,
   config,
   ...
 }: let
-  cfg = roles.graphical;
-  palette = colors.palette;
+  cfg = config.my.roles.graphical;
+  palette = config.my.colors.palette;
   monitors = rec {
     primary = cfg.monitors.primary.id;
     secondary = cfg.monitors.secondary.id or primary;

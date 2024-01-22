@@ -1,13 +1,12 @@
 {
   lib,
   pkgs,
-  roles,
-  colors,
+  config,
   ...
 }: let
-  palette = colors.palette;
+  palette = config.my.colors.palette;
 in {
-  config = lib.mkIf roles.graphical.enable {
+  config = lib.mkIf config.my.roles.graphical.enable {
     services.swaynotificationcenter = {
       enable = true;
 
@@ -32,7 +31,7 @@ in {
           @import url("file://${pkgs.catppuccin-mocha-swaync-theme}/style.css");
 
           * {
-            font-family: ${roles.graphical.fonts.monospace.name};
+            font-family: ${config.my.roles.graphical.fonts.monospace.name};
           }
 
           .control-center {

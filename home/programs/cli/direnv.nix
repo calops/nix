@@ -1,6 +1,6 @@
-{roles, ...}: {
+{config, ...}: {
   programs.direnv = {
-    enable = roles.terminal.enable;
+    enable = config.my.roles.terminal.enable;
     nix-direnv.enable = true;
   };
 }

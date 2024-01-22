@@ -1,4 +1,8 @@
-{lib, ...}: let
+{
+  lib,
+  pkgs,
+  ...
+}: let
   my.types = with lib; {
     font = types.submodule {
       options = {
@@ -26,6 +30,7 @@
       };
     };
   };
+  fonts = import ../lib/fonts.nix pkgs;
 in
   with lib; {
     options = {
@@ -35,27 +40,27 @@ in
         fonts = {
           monospace = mkOption {
             type = my.types.font;
-            default = lib.my.fonts.iosevka-comfy;
+            default = fonts.iosevka-comfy;
             description = "Monospace font";
           };
           serif = mkOption {
             type = my.types.font;
-            default = lib.my.fonts.noto-serif;
+            default = fonts.noto-serif;
             description = "Serif font";
           };
           sansSerif = mkOption {
             type = my.types.font;
-            default = lib.my.fonts.noto-sans;
+            default = fonts.noto-sans;
             description = "Sans-serif font";
           };
           emoji = mkOption {
             type = my.types.font;
-            default = lib.my.fonts.noto-emoji;
+            default = fonts.noto-emoji;
             description = "Emoji font";
           };
           symbols = mkOption {
             type = my.types.font;
-            default = lib.my.fonts.nerdfont-symbols;
+            default = fonts.nerdfont-symbols;
             description = "Symbols font";
           };
           hinting = mkOption {

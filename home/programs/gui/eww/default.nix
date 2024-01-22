@@ -1,10 +1,10 @@
 {
   lib,
-  roles,
+  config,
   pkgs,
   ...
 }: {
-  config = lib.mkIf roles.graphical.enable {
+  config = lib.mkIf config.my.roles.graphical.enable {
     programs.eww = {
       enable = true;
       package = pkgs.eww-wayland;

@@ -1,10 +1,10 @@
 {
   lib,
   pkgs,
-  roles,
+  config,
   ...
 }: {
-  config = lib.mkIf roles.terminal.enable {
+  config = lib.mkIf config.my.roles.terminal.enable {
     programs.bat = {
       enable = true;
       config = {

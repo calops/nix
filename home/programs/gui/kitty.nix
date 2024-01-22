@@ -1,12 +1,11 @@
 {
   lib,
-  roles,
-  colors,
+  config,
   pkgs,
   ...
 }: let
-  cfg = roles.graphical;
-  palette = colors.palette;
+  cfg = config.my.roles.graphical;
+  palette = config.my.colors.palette;
 in {
   programs.kitty = {
     enable = cfg.enable && cfg.terminal == "kitty";

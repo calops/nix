@@ -1,6 +1,6 @@
-{roles, ...}: {
+{config, ...}: {
   programs.btop = {
-    enable = roles.terminal.enable;
+    enable = config.my.roles.terminal.enable;
     settings = {
       color_theme = "Default";
       theme_background = false;

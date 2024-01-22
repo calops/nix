@@ -1,12 +1,11 @@
 {
   pkgs,
-  roles,
-  colors,
+  config,
   lib,
   ...
 }: let
-  cfg = roles.graphical;
-  palette = colors.palette; # TODO
+  cfg = config.my.roles.graphical;
+  palette = config.my.colors.palette; # TODO
 in
   with lib; {
     config = mkIf cfg.enable {

@@ -1,9 +1,9 @@
 {
-  roles,
+  config,
   lib,
   ...
 }: {
-  config = lib.mkIf roles.terminal.enable {
+  config = lib.mkIf config.my.roles.terminal.enable {
     programs.zellij = {
       enable = true;
       settings = {

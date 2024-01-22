@@ -1,10 +1,10 @@
 {
   pkgs,
-  roles,
+  config,
   lib,
   ...
 }: let
-  cfg = roles.graphical;
+  cfg = config.my.roles.graphical;
 in {
   imports = [
     ./element.nix
@@ -63,7 +63,7 @@ in {
       ]
       ++ (
         if cfg.installAllFonts
-        then lib.attrsets.mapAttrsToList (name: font: font.package) lib.my.fonts
+        then lib.attrsets.mapAttrsToList (name: font: font.package) (import ../../../lib/fonts.nix pkgs)
         else
           with cfg.fonts; [
             monospace.package
