@@ -24,8 +24,14 @@ in {
         nixd
         nodejs
         prettierd
-        rust-analyzer
-        rust-bin.nightly.latest.minimal
+        (fenix.complete.withComponents [
+          "cargo"
+          "clippy"
+          "rust-src"
+          "rustc"
+          "rustfmt"
+          "rust-analyzer"
+        ])
         shfmt
         # sqlfluff
         sqlite

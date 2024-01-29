@@ -37,6 +37,8 @@
       xcp
       gh
       killall
+      unzip
+      unrar
     ];
 
     programs.nix-index.enable = true;

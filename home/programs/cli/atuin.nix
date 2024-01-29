@@ -5,7 +5,7 @@
 }: {
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.atuin = {
-      enable = true;
+      enable = false;
       enableFishIntegration = true;
       settings = {
         style = "compact";

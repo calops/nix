@@ -60,6 +60,7 @@ in {
         wl-clipboard
         google-chrome
         libnotify
+        logseq
       ]
       ++ (
         if cfg.installAllFonts

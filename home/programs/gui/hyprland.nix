@@ -41,12 +41,13 @@ in {
           (lib.getExe pkgs.firefox)
           (lib.getExe' pkgs.ulauncher "ulauncher")
           (lib.getExe pkgs.element-desktop)
+          (lib.getExe pkgs.discord)
         ];
         windowrulev2 = [
           "workspace 1 silent,class:firefox"
           "workspace 6 silent,class:Steam"
           "workspace 9 silent,class:Element"
-          "workspace 9 silent,class:Discord"
+          "workspace 9 silent,class:discord"
           "workspace 10 silent,class:Slack"
           "float,class:ulauncher"
           "float,class:pavucontrol"
@@ -160,6 +161,7 @@ in {
         # ];
       };
     };
+
     programs.swaylock = {
       enable = true;
       settings = {
@@ -169,6 +171,7 @@ in {
         line-color = lib.mkForce "ffffff00";
       };
     };
+
     services.clipman.enable = true;
     home.packages = with inputs.hyprland-contrib.packages.${pkgs.system}; [
       grimblast

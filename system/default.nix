@@ -10,11 +10,6 @@
 
   system.stateVersion = config.my.stateVersion;
 
-  nix.settings.experimental-features = [
-    "flakes"
-    "nix-command"
-  ];
-
   hardware.enableAllFirmware = true;
 
   nix = {

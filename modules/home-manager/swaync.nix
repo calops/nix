@@ -25,7 +25,9 @@ in {
       default = null;
       example = ''
         config = {
-          # ...
+          control-center-margin-top = 20;
+          control-center-margin-bottom = 20;
+          control-center-margin-right = 20;
         };
       '';
       description = ''
@@ -37,7 +39,7 @@ in {
       type = lib.types.nullOr lib.types.str;
       default = null;
       example = ''
-        style = "body { background-color: #000000; }";
+        style = ".control-center { background-color: #000000; }";
       '';
       description = ''
         Extra CSS style to be passed to swaynotificationcenter.

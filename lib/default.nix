@@ -3,13 +3,12 @@
   outputs,
   stateVersion,
 }: let
-  overlays = with inputs; [
-    neovim-nightly-overlay.overlay
-    nixgl.overlay
-    nixd.overlays.default
-    rust-overlay.overlays.default
-    nur.overlay
-    (import ../packages).overlay
+  overlays = [
+    inputs.neovim-nightly-overlay.overlay
+    inputs.nixd.overlays.default
+    inputs.fenix.overlays.default
+    outputs.overlays.default
+    outputs.overlays.patches
     (self: super: {
       nur = import inputs.nur {
         pkgs = super;
@@ -24,10 +23,18 @@
     inherit overlays;
   };
 
+  nixSettingsModule = {
+    # nix.settings = {
+    #   experimental-features = ["flakes" "nix-command"];
+    #   trusted-users = ["root" "@wheel"];
+    # };
+  };
+
   commonModules = [
     ../cachix.nix
     ../roles
     ../colors
+    nixSettingsModule
   ];
 
   hmModules =
@@ -40,6 +47,7 @@
   nixosModules =
     commonModules
     ++ [
+      inputs.stylix.nixosModules.stylix
       inputs.home-manager.nixosModules.home-manager
       ../system
     ];
@@ -69,7 +77,6 @@
       modules =
         nixosModules
         ++ [
-          inputs.stylix.nixosModules.stylix
           machine
           ({config, ...}: {
             my.configurationName = configurationName;
@@ -103,6 +110,12 @@ in {
       configurationName (mkHomeConfiguration configurationName machine)))
     configs;
 
-  # TODO: split each shell into its own derivation
-  mkDevShells = shells: shells {inherit pkgs inputs;};
+  mkDevShells = shells: {
+    "x86_64-linux" = pkgs.lib.attrsets.mapAttrs (name: shell:
+      inputs.devenv.lib.mkShell {
+        inherit pkgs inputs;
+        modules = [shell];
+      })
+    shells;
+  };
 }

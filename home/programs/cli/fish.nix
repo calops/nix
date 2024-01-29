@@ -35,7 +35,7 @@
         lt = "ll -T";
       };
       functions = {
-        dev = ''nix develop "$HOME/nix#$argv[1]" --command fish'';
+        dev = ''nix develop --impure "$HOME/nix#$argv[1]" $argv[2..-1] --command "$SHELL"'';
         run = ''nix run nixpkgs#"$argv[1]" -- $argv[2..-1]'';
         runi = ''nix run --impure nixpkgs#"$argv[1]" -- $argv[2..-1]'';
         gc = ''git commit -m "$argv"'';

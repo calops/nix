@@ -1,8 +1,6 @@
-{
-  lib,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: let
+  lib = pkgs.lib;
+in {
   nixGlWrap = {
     config,
     pkg,

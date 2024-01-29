@@ -10,9 +10,8 @@ return {
 	{
 		"williamboman/mason.nvim",
 		lazy = false,
+		priority = 2,
 		config = function()
-			require("neoconf")
-			require("neodev")
 			require("mason").setup {
 				ui = { border = "rounded" },
 			}
@@ -83,6 +82,8 @@ return {
 		end,
 		config = function()
 			require("neodev")
+			require("neoconf")
+
 			local lspconfig = require("lspconfig")
 			local capabilities =
 				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
