@@ -11,7 +11,7 @@
         cat = "bat";
         hm = "home-manager";
         hs = "home-manager switch --impure";
-        ns = "nixos-rebuild switch";
+        ns = "sudo nixos-rebuild switch";
         ga = "git add -v";
         gu = "git add -vu";
         gp = "git push";

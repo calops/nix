@@ -39,7 +39,7 @@
   };
 
   commonModules = [
-    ../roles
+    ../options
     ../colors
     nixSettingsModule
   ];
@@ -48,7 +48,7 @@
     commonModules
     ++ [
       outputs.homeManagerModules.swaync
-      ../home
+      ../config/home
     ];
 
   nixosModules =
@@ -56,7 +56,7 @@
     ++ [
       inputs.stylix.nixosModules.stylix
       inputs.home-manager.nixosModules.home-manager
-      ../system
+      ../config/nixos
     ];
 
   mkHomeConfiguration = configurationName: machine:

@@ -64,7 +64,7 @@ in {
       ]
       ++ (
         if cfg.installAllFonts
-        then lib.attrsets.mapAttrsToList (name: font: font.package) (import ../../../lib/fonts.nix pkgs)
+        then lib.attrsets.mapAttrsToList (name: font: font.package) (import ../../../../lib/fonts.nix pkgs)
         else
           with cfg.fonts; [
             monospace.package
