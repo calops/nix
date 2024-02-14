@@ -6,7 +6,6 @@
   ...
 }: let
   cfg = config.my.roles.graphical;
-  palette = config.my.colors.palette;
   monitors = rec {
     primary = cfg.monitors.primary.id;
     secondary = cfg.monitors.secondary.id or primary;
@@ -22,22 +21,21 @@ in {
         pkgs.hyprlandPlugins.hy3
       ];
       settings = {
-        #monitor = ",preferred,auto,1";
-        #wsbind = [
-        #"1,${monitors.primary}"
-        #"3,${monitors.primary}"
-        #"2,${monitors.primary}"
-        #"4,${monitors.primary}"
-        #"5,${monitors.primary}"
-        #"6,${monitors.primary}"
-        #"7,${monitors.primary}"
-        #"8,${monitors.primary}"
-        #"9,${monitors.primary}"
-        #"10,${monitors.secondary}"
-        #];
+        monitor = ",preferred,auto,1";
+        workspace = [
+          "1,monitor:${monitors.primary}"
+          "3,monitor:${monitors.primary}"
+          "2,monitor:${monitors.primary}"
+          "4,monitor:${monitors.primary}"
+          "5,monitor:${monitors.primary}"
+          "6,monitor:${monitors.primary}"
+          "7,monitor:${monitors.primary}"
+          "8,monitor:${monitors.primary}"
+          "9,monitor:${monitors.primary}"
+          "10,monitor:${monitors.secondary}"
+        ];
         exec-once = [
           #(lib.getExe pkgs.hyprpaper)
-          "eww -c ${config.xdg.configHome}/eww/bar open bar"
           (lib.getExe pkgs.firefox)
           (lib.getExe' pkgs.ulauncher "ulauncher")
           (lib.getExe pkgs.element-desktop)
@@ -83,12 +81,15 @@ in {
         };
         animations = {
           enabled = true;
+          bezier = [
+            "in-out, .65, -0.01, 0, .95"
+          ];
           animation = [
             "windows, 1, 7, default"
             "windowsOut, 1, 7, default, popin 80%"
             "border, 1, 10, default"
             "fade, 1, 7, default"
-            "workspaces, 1, 6, default"
+            "workspaces, 1, 5, in-out, slide"
           ];
         };
         dwindle = {
@@ -103,7 +104,7 @@ in {
         };
         bind = [
           "SUPER, return, exec, ${cfg.terminal}"
-          "SUPER, L, exec, swaylock -S"
+          "SUPER, L, exec, ${lib.getExe config.programs.swaylock.package} -S"
           "SUPER SHIFT, Q, killactive,"
           "SUPER, M, exit,"
           "SUPER, E, exec, firefox"
@@ -164,12 +165,26 @@ in {
 
     programs.swaylock = {
       enable = true;
+      package = pkgs.swaylock-effects;
       settings = {
         clock = true;
         effect-pixelate = 7;
+        screenshots = true;
         ring-color = lib.mkForce "ffffff00";
         line-color = lib.mkForce "ffffff00";
+        fade-in = 0.5;
+        show-failed-attempts = true;
       };
+    };
+
+    services.swayidle = {
+      enable = true;
+      timeouts = [
+        {
+          timeout = 300;
+          command = "${lib.getExe config.programs.swaylock.package} --daemonize";
+        }
+      ];
     };
 
     services.clipman.enable = true;

@@ -37,6 +37,7 @@ in {
         sqlite
         stylua
         vscode-extensions.vadimcn.vscode-lldb.adapter
+        logseqlsp
       ];
       plugins = [
         pkgs.vimPlugins.lazy-nvim

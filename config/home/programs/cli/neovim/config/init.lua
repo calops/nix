@@ -75,15 +75,6 @@ vim.fn.sign_define("GitSignsAdd", { text = "▋", texthl = "GitSignsAdd", numhl 
 vim.fn.sign_define("GitSignsChange", { text = "▋", texthl = "GitSignsChange", numhl = "" })
 vim.fn.sign_define("GitSignsDelete", { text = "▋", texthl = "GitSignsDelete", numhl = "" })
 
--- The lazy.nvim plugin is installed through nix
-require("lazy").setup("plugins", {
-	ui = { border = "rounded" },
-	dev = {
-		fallback = true,
-		path = "~/github",
-	},
-})
-
 local group = vim.api.nvim_create_augroup("HelpHandler", {})
 vim.api.nvim_create_autocmd({ "BufEnter" }, {
 	pattern = "*.txt",
@@ -116,3 +107,12 @@ vim.diagnostic.handlers.diagnostic_lines = {
 	show = function(_, bufnr, diagnostics, _) update_highlights(bufnr, diagnostics) end,
 	hide = function(_, bufnr) clear_highlights(bufnr) end,
 }
+
+-- The lazy.nvim plugin is installed through nix
+require("lazy").setup("plugins", {
+	ui = { border = "rounded" },
+	dev = {
+		fallback = true,
+		path = "~/projects",
+	},
+})

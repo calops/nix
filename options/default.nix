@@ -36,11 +36,11 @@
   config = {
     my.roles.configDir =
       if config.my.isNixOs
-      then "/etc/nixos"
-      else "${config.xdg.configHome}/home-manager";
+      then "/etc/nixos/config"
+      else "${config.xdg.configHome}/home-manager/config";
 
     stylix = let
-      palette = builtins.mapAttrs (name: value: builtins.substring 1 (-1) value) config.my.colors.palette;
+      palette = config.my.colors.palette.withoutHashtag;
     in {
       image = pkgs.fetchurl {
         url = "https://user-images.githubusercontent.com/4097716/247954752-8c7f3db1-e6a3-4f77-9cc4-262b3d929c36.png";

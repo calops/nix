@@ -39,6 +39,8 @@
       killall
       unzip
       unrar
+      yq
+      pastel
     ];
 
     programs.nix-index.enable = true;

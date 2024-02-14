@@ -11,14 +11,13 @@ in {
       italic_font = "${cfg.fonts.monospace.name} Italic";
       bold_italic_font = "${cfg.fonts.monospace.name} Bold Italic";
       undercurl_style = "thick-sparse";
+      "modify_font underline_position" = "+2";
+      "modify_font underline_thickness" = "2px";
     };
-    extraConfig = ''
-      modify_font underline_position +2
-      modify_font underline_thickness 2px
-    '';
     keybindings = {
       "ctrl+tab" = "no_op";
       "ctrl+shift+tab" = "no_op";
+      "ctrl+shift+g" = "no_op";
     };
   };
 }

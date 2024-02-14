@@ -46,13 +46,14 @@
 
   hmModules =
     commonModules
+    ++ (builtins.attrValues outputs.homeManagerModules)
     ++ [
-      outputs.homeManagerModules.swaync
       ../config/home
     ];
 
   nixosModules =
     commonModules
+    ++ (builtins.attrValues outputs.nixosModules)
     ++ [
       inputs.stylix.nixosModules.stylix
       inputs.home-manager.nixosModules.home-manager

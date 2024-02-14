@@ -20,6 +20,7 @@
       nvidia.enable = true;
       installAllFonts = true;
       terminal = "kitty";
+      monitors.primary.id = "DP-2";
     };
   };
 
@@ -82,8 +83,6 @@
     enable = true;
     driSupport = true;
     driSupport32Bit = true;
-    extraPackages = [pkgs.mangohud];
-    extraPackages32 = [pkgs.mangohud];
   };
 
   services.xserver.videoDrivers = ["nvidia"];

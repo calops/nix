@@ -30,8 +30,8 @@ return {
 			end
 
 			map {
-				["<C-t>"] = { new_tab, "Open current buffer in new tab" },
-				["<C-g>"] = { ":tabclose<CR>", "Close current tab" },
+				["<C-g>"] = { new_tab, "Open current buffer in new tab" },
+				["<C-S-g>"] = { ":tabclose<CR>", "Close current tab" },
 				["<C-Tab>"] = { ":tabnext<CR>", "View next tab" },
 				["<C-S-Tab>"] = { ":tabprevious<CR>", "View previous tab" },
 			}

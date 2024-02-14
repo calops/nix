@@ -1,6 +1,7 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }: let
   mkColorOption = name:
@@ -8,70 +9,102 @@
       type = lib.types.str;
       description = "Color for " + name + " hue";
     };
+
+  hues = lib.attrsets.genAttrs [
+    "lime"
+    "green"
+    "forest"
+    "mint"
+    "teal"
+    "turquoise"
+    "sky"
+    "blue"
+    "navy"
+    "mauve"
+    "purple"
+    "violet"
+    "pink"
+    "red"
+    "cherry"
+    "orange"
+    "peach"
+    "tangerine"
+    "yellow"
+    "sand"
+    "gold"
+    "rosewater"
+    "flamingo"
+    "coral"
+    "text"
+    "subtext1"
+    "subtext0"
+    "overlay2"
+    "overlay1"
+    "overlay0"
+    "surface2"
+    "surface1"
+    "surface0"
+    "base"
+    "mantle"
+    "crust"
+  ] (name: mkColorOption name);
+
   my.types = {
     palette = lib.types.submodule {
-      options = lib.attrsets.genAttrs [
-        "lime"
-        "green"
-        "forest"
-        "mint"
-        "teal"
-        "turquoise"
-        "sky"
-        "blue"
-        "navy"
-        "mauve"
-        "purple"
-        "violet"
-        "pink"
-        "red"
-        "cherry"
-        "orange"
-        "peach"
-        "tangerine"
-        "yellow"
-        "sand"
-        "gold"
-        "rosewater"
-        "flamingo"
-        "coral"
-        "text"
-        "subtext1"
-        "subtext0"
-        "overlay2"
-        "overlay1"
-        "overlay0"
-        "surface2"
-        "surface1"
-        "surface0"
-        "base"
-        "mantle"
-        "crust"
-      ] (name: mkColorOption name);
+      options = hues;
     };
   };
-in
-  with lib; {
-    options = {
-      my.colors = {
-        scheme = mkOption {
-          type = types.enum ["radiant"];
-          default = "radiant";
-          description = "Colorscheme for relevant apps";
-        };
-        background = mkOption {
-          type = types.enum ["light" "dark"];
-          default = "dark";
-          description = "Background color";
-        };
-        palette = mkOption {
+in {
+  options = {
+    my.colors = {
+      scheme = lib.mkOption {
+        type = lib.types.enum ["radiant"];
+        default = "radiant";
+        description = "Colorscheme for relevant apps";
+      };
+
+      background = lib.mkOption {
+        type = lib.types.enum ["light" "dark"];
+        default = "dark";
+        description = "Background color";
+      };
+
+      palette = {
+        withHashtag = lib.mkOption {
           type = my.types.palette;
           description = "Color palette";
         };
+        withoutHashtag = lib.mkOption {
+          type = my.types.palette;
+          description = "Color palette";
+        };
+        asCss = lib.mkOption {
+          type = lib.types.path;
+          description = "Path to the CSS file";
+        };
+        asGtkCss = lib.mkOption {
+          type = lib.types.path;
+          description = "Path to the GTK CSS file";
+        };
       };
     };
-    config = {
-      my.colors.palette =
-        import ./${config.my.colors.scheme}/${config.my.colors.background}.nix;
+  };
+  config = {
+    my.colors.palette = rec {
+      withHashtag = import ./${config.my.colors.scheme}/${config.my.colors.background}.nix;
+      withoutHashtag = builtins.mapAttrs (name: value: builtins.substring 1 (-1) value) withHashtag;
+      asCss = pkgs.writeText "colors.css" ''
+        :root {
+          ${lib.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: value: "  --" + name + ": " + value + ";") withHashtag))}
+        }
+      '';
+      asGtkCss =
+        pkgs.writeText "colors.gtk.css"
+        (lib.concatStringsSep "\n"
+          (builtins.attrValues
+            (builtins.mapAttrs
+              (name: value: "@define-color " + name + " " + value + ";")
+              withHashtag)));
     };
-  }
+  };
+}

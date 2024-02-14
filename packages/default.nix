@@ -7,18 +7,8 @@ in {
         "catppuccin-mocha-grub-theme"
         "catppuccin-mocha-sddm-theme"
         "catppuccin-mocha-swaync-theme"
+        "logseqlsp"
       ];
-    patches = final: prev: {
-      # Fix electron version
-      logseq = prev.logseq.overrideAttrs (oldAttrs: {
-        postFixup = ''
-          makeWrapper ${prev.electron}/bin/electron $out/bin/${oldAttrs.pname} \
-            --set "LOCAL_GIT_DIRECTORY" ${prev.git} \
-            --add-flags $out/share/${oldAttrs.pname}/resources/app \
-            --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}" \
-            --prefix LD_LIBRARY_PATH : "${prev.lib.makeLibraryPath [prev.stdenv.cc.cc.lib]}"
-        '';
-      });
-    };
+    patches = final: prev: {};
   };
 }

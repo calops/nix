@@ -3,7 +3,9 @@
   config,
   lib,
   ...
-}: {
+}: let
+  palette = config.my.colors.palette.withHashtag;
+in {
   config = lib.mkIf config.my.roles.terminal.enable {
     home.packages = [pkgs.git-crypt];
     programs.git = {
@@ -89,6 +91,7 @@
       ];
     };
 
+    # TODO: remove hardcoded colors
     xdg.configFile."git/delta/themes.gitconfig".text =
       # gitconfig
       ''
@@ -106,8 +109,8 @@
           line-numbers-left-style = "#45475a"
           line-numbers-right-format = "┃{np:^5}"
           line-numbers-right-style = "#45475a"
-          line-numbers-minus-style = "#f38ba8" "#302330"
-          line-numbers-plus-style = "#a6e3a1" "#2b3436"
+          line-numbers-minus-style = "${palette.red}" "#302330"
+          line-numbers-plus-style = "${palette.green}" "#2b3436"
           line-numbers-zero-style = "#45475a"
 
           minus-emph-style = syntax "#5b435b"

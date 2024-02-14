@@ -63,7 +63,7 @@ return {
 					list = {
 						["<C-v>"] = actions.jump_vsplit,
 						["<C-x>"] = actions.jump_split,
-						["<C-t>"] = actions.jump_tab,
+						["<C-g>"] = actions.jump_tab,
 					},
 				},
 			}

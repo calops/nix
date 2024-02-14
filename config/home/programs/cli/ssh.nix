@@ -4,7 +4,7 @@
   ...
 }: {
   options = {
-    my.config.my.roles.terminal.ssh.hosts = lib.mkOption {
+    my.roles.terminal.ssh.hosts = lib.mkOption {
       default = {};
       description = "List of available SSH hosts";
     };
@@ -19,7 +19,7 @@
             user = "calops";
           };
         }
-        // config.my.config.my.roles.terminal.ssh.hosts;
+        // config.my.roles.terminal.ssh.hosts;
     };
   };
 }

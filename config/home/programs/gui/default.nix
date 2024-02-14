@@ -17,6 +17,8 @@ in {
     ./waybar.nix
     ./swaync.nix
     ./eww
+    ./logseq.nix
+    ./ironbar.nix
   ];
 
   config = lib.mkIf cfg.enable {
@@ -60,7 +62,6 @@ in {
         wl-clipboard
         google-chrome
         libnotify
-        logseq
       ]
       ++ (
         if cfg.installAllFonts

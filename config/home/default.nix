@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   nixosConfig ? null,
   ...
 }: {
@@ -19,6 +20,19 @@
 
     programs.gpg.enable = true;
     programs.dircolors.enable = true;
-    services.udiskie.enable = true;
+    services.udiskie = {
+      enable = true;
+      settings.program_options = {
+        tray = false; # FIXME: tray icon isn't working on ironbar
+      };
+    };
+
+    gtk = {
+      enable = true;
+      iconTheme = {
+        name = "Papirus";
+        package = pkgs.papirus-icon-theme;
+      };
+    };
   };
 }

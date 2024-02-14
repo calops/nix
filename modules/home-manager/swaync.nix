@@ -20,11 +20,11 @@ in {
       '';
     };
 
-    config = lib.mkOption {
+    settings = lib.mkOption {
       type = lib.types.nullOr lib.types.attrs;
       default = null;
       example = ''
-        config = {
+        settings = {
           control-center-margin-top = 20;
           control-center-margin-bottom = 20;
           control-center-margin-right = 20;
@@ -68,14 +68,14 @@ in {
         KillMode = "mixed";
       };
 
-      Install = {WantedBy = [cfg.systemdTarget];};
+      Install.WantedBy = [cfg.systemdTarget];
     };
 
-    xdg.configFile."swaync/config.json" = lib.mkIf (cfg.config != null) {
+    xdg.configFile."swaync/config.json" = lib.mkIf (cfg.settings != null) {
       onChange = ''
         ${cfg.package}/bin/swaync-client -R
       '';
-      text = builtins.toJSON cfg.config;
+      text = builtins.toJSON cfg.settings;
     };
 
     xdg.configFile."swaync/style.css" = lib.mkIf (cfg.style != null) {

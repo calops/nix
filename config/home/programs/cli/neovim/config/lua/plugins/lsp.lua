@@ -9,7 +9,7 @@ return {
 	-- Language servers and utilities orchestrator
 	{
 		"williamboman/mason.nvim",
-		lazy = false,
+		event = "VeryLazy",
 		priority = 2,
 		config = function()
 			require("mason").setup {
@@ -30,7 +30,7 @@ return {
 					lspconfig[server_name].setup {}
 				end,
 				rust_analyzer = nil, -- handled entirely by rustaceanvim, and installed by nix
-				lua_ls = nil,
+				lua_ls = nil, -- handled by neodev, and installed by nix
 			}
 		end,
 	},
@@ -38,8 +38,6 @@ return {
 		"neovim/nvim-lspconfig",
 		lazy = true,
 		init = function()
-			vim.g.inlay_hints_enabled = true
-
 			map {
 				K = { vim.lsp.buf.hover, "Show documentation" },
 				H = {
@@ -59,8 +57,10 @@ return {
 				},
 				["<leader>i"] = {
 					function()
-						vim.g.inlay_hints_enabled = not vim.g.inlay_hints_enabled
-						vim.lsp.inlay_hint.enable(0, vim.g.inlay_hints_enabled)
+						--False positive
+						---@diagnostic disable-next-line: inject-field
+						vim.b.inlay_hints_enabled = not vim.b.inlay_hints_enabled
+						vim.lsp.inlay_hint.enable(0, vim.b.inlay_hints_enabled or false)
 					end,
 					"Toggle inlay hints for buffer",
 				},
@@ -73,7 +73,7 @@ return {
 
 			vim.api.nvim_create_autocmd(
 				"InsertLeave",
-				{ callback = function() vim.lsp.inlay_hint.enable(0, vim.g.inlay_hints_enabled) end }
+				{ callback = function() vim.lsp.inlay_hint.enable(0, vim.b.inlay_hints_enabled or false) end }
 			)
 
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
@@ -95,7 +95,7 @@ return {
 				capabilities = capabilities,
 				on_attach = function(client, bufnr)
 					if client.server_capabilities.inlayHintProvider then
-						vim.lsp.inlay_hint.enable(bufnr, vim.g.inlay_hints_enabled)
+						vim.lsp.inlay_hint.enable(bufnr, vim.b.inlay_hints_enabled or false)
 					end
 				end,
 			})
@@ -154,8 +154,8 @@ return {
 	-- Neovim lua LSP utilities
 	{
 		"folke/neodev.nvim",
-		ft = "lua",
-		priority = 1000,
+		lazy = false,
+		enabled = true,
 		opts = {
 			pathStrict = false,
 			-- Always load nvim plugins for lua_ls, this is a temporary hack
@@ -187,6 +187,7 @@ return {
 			filetypes = {
 				yaml = true,
 				gitcommit = true,
+				markdown = true,
 			},
 		},
 	},
@@ -201,5 +202,16 @@ return {
 			)
 		end,
 		opts = {},
+	},
+	-- Tests
+	{
+		"nvim-neotest/neotest",
+		config = function()
+			require("neotest").setup {
+				adapters = {
+					require("rustaceanvim.neotest"),
+				},
+			}
+		end,
 	},
 }
