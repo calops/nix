@@ -22,8 +22,8 @@
 
     my.configDir =
       if nixosConfig != null
-      then "/etc/nixos/config"
-      else "${config.xdg.configHome}/home-manager/config";
+      then "/etc/nixos"
+      else "${config.xdg.configHome}/home-manager";
 
     programs.gpg.enable = true;
     programs.dircolors.enable = true;

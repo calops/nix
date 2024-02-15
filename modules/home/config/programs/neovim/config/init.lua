@@ -108,7 +108,6 @@ vim.diagnostic.handlers.diagnostic_lines = {
 	hide = function(_, bufnr) clear_highlights(bufnr) end,
 }
 
--- The lazy.nvim plugin is installed through nix
 require("lazy").setup("plugins", {
 	ui = { border = "rounded" },
 	dev = {

@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: {
   options.my.stateVersion = lib.mkOption {
@@ -19,6 +20,7 @@
         dates = "weekly";
         options = "--delete-older-than 30d";
       };
+      package = pkgs.nixVersions.nix_2_17; # TODO: remove once OOS symlinks are fixed, broken as of 2.19
     };
 
     services.udisks2.enable = true;
