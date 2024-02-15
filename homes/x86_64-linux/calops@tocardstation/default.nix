@@ -1,4 +1,5 @@
 {...}: {
+  my.roles.terminal.enable = true;
   my.roles.graphical = {
     installAllFonts = true;
     terminal = "kitty";

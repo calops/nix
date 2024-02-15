@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  nixosConfig,
   ...
 }: let
   palette = config.my.colors.palette;
@@ -37,7 +38,7 @@ in {
         sqlite
         stylua
         vscode-extensions.vadimcn.vscode-lldb.adapter
-        logseqlsp
+        my.logseqlsp
       ];
       plugins = [
         pkgs.vimPlugins.lazy-nvim
@@ -64,9 +65,9 @@ in {
           enable = true;
           target = {
             installable =
-              if config.my.isNixOs
-              then ".#nixosConfigurations.${config.my.configurationName}.options"
-              else ".#homeConfigurations.${config.my.configurationName}.options";
+              if nixosConfig != null
+              then ".#nixosConfigurations.${nixosConfig.networking.hostName}.options"
+              else ".#homeConfigurations.${config.my.configurationName}.options"; # FIXME: build config name here
           };
         };
       };
@@ -74,7 +75,7 @@ in {
 
     stylix.targets.vim.enable = false;
 
-    home.activation.neovim = lib.hm.dag.entryAfter ["linkGeneration"] ''
+    home.activation.neovim = lib.home-manager.hm.dag.entryAfter ["linkGeneration"] ''
       #! /bin/bash
       NVIM_WRAPPER=~/.nix-profile/bin/nvim
       STATE_DIR=~/.local/state/nix/
