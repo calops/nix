@@ -21,20 +21,61 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    snowfall-lib = {
+      url = "github:snowfallorg/lib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = {self, ...} @ inputs: let
-    inherit (self) outputs;
-    stateVersion = "24.05";
-    machines = import ./machines;
-    lib = import ./lib {inherit inputs outputs stateVersion;};
-  in {
-    nixosConfigurations = lib.mkNixosConfigurations machines.nixos;
-    homeConfigurations = lib.mkHomeConfigurations machines.home-manager;
+  outputs = inputs: let
+    commonModules = [
+      {
+        my.stateVersion = "24.05";
+        nix.settings = {
+          experimental-features = ["flakes" "nix-command"];
+          substituters = [
+            "https://cache.nixos.org"
+            "https://nix-community.cachix.org"
+          ];
+          trusted-public-keys = [
+            "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          ];
+          trusted-users = ["root" "@wheel"];
+        };
+      }
+    ];
+  in
+    inputs.snowfall-lib.mkFlake {
+      inherit inputs;
+      src = ./.;
+      snowfall.namespace = "my";
 
-    devShells = lib.mkDevShells (import ./shells);
-    homeManagerModules = import ./modules/home-manager;
-    nixosModules = import ./modules/nixos;
-    overlays = (import ./packages).overlays;
-  };
+      channels-config = {
+        allowUnfree = true;
+        overlays = [
+          inputs.neovim-nightly-overlay.overlay
+          inputs.nixd.overlays.default
+          inputs.fenix.overlays.default
+          (self: super: {
+            nur = import inputs.nur {
+              pkgs = super;
+              nurpkgs = super;
+            };
+          })
+        ];
+      };
+
+      systems.modules.nixos =
+        commonModules
+        ++ [
+          inputs.stylix.nixosModules.stylix
+        ];
+
+      homes.modules = commonModules;
+
+      outputs-builder = channels: {
+        formatter = channels.nixpkgs.alejandra;
+      };
+    };
 }
