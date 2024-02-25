@@ -7,28 +7,35 @@
   config = lib.mkIf config.my.roles.graphical.enable {
     services.ironbar = {
       enable = true;
-      package = pkgs.ironbar.overrideAttrs (oldAttrs: rec {
-        src = pkgs.fetchFromGitHub {
-          owner = "calops";
-          repo = "ironbar";
-          rev = "vertical-tray";
-          hash = "sha256-1nSg80bVasxqFqZSghczAxjR4zgZR3xo0xALOzi/ZNA=";
-        };
-        cargoDeps = oldAttrs.cargoDeps.overrideAttrs (lib.const {
-          name = "ironbar-custom-vendor.tar.gz";
-          inherit src;
-          outputHash = "sha256-/80u16JYST9hDe81mq9unvob5VoraGmiSgBi3tZATSM=";
-        });
-      });
+      # TODO: remove the override once vertical tray is released
+      # package = pkgs.ironbar.overrideAttrs {
+      #   version = "0.15.0";
+      #   src = pkgs.fetchFromGitHub {
+      #     owner = "calops";
+      #     repo = "ironbar";
+      #     rev = "180a5205b9eb316e4b2916ae2ed0b2198912b9cd";
+      #     hash = "sha256-T5aQ/lnW7wlIDpg7QEb32eYswAFSndFM+kfRk8uNHwQ=";
+      #   };
+      #   cargoHash = "";
+      # };
       settings = let
-        mkCustomWidget = class: {
-          bar ? null,
-          popup ? null,
-          tooltip ? null,
-        }: {
-          type = "custom";
-          inherit class bar popup tooltip;
-        };
+        ironbarClient = lib.getExe config.services.ironbar.package;
+        hyprctl = lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl";
+
+        mkCustomWidget = class: opts:
+          {
+            type = "custom";
+            inherit class;
+          }
+          // opts;
+
+        mkSlider = class: opts:
+          {
+            type = "slider";
+            orientation = "vertical";
+            inherit class;
+          }
+          // opts;
 
         mkHorizontalBox = class: widgets: {
           type = "box";
@@ -81,8 +88,8 @@
 
         workspaces = {
           type = "workspaces";
-          on_scroll_up = "hyprctl dispatch workspace -1";
-          on_scroll_down = "hyprctl dispatch workspace +1";
+          on_scroll_up = "${hyprctl} dispatch workspace -1";
+          on_scroll_down = "${hyprctl} dispatch workspace +1";
           name_map = {
             "1" = "";
             "2" = "";
@@ -101,6 +108,32 @@
           type = "tray";
           direction = "top_to_bottom";
         };
+
+        volume-slider = let
+          pamixer = lib.getExe pkgs.pamixer;
+          setVolume = pkgs.writeScript "setVolume" ''
+            ${pamixer} --set-volume $1
+            ${ironbarClient} set volume $1
+          '';
+        in
+          mkCustomWidget "volume-slider" {
+            bar = [
+              (mkSlider "volume-slider" {
+                show_if = "#show-volume-slider";
+                show_label = false;
+                length = 100;
+                max = 100;
+                value = "#volume";
+                on_change = "!${setVolume} $0";
+              })
+            ];
+          };
+
+        volume = {
+          on_mouse_enter = "${ironbarClient} set show-volume-slider true";
+          on_mouse_exit = "${ironbarClient} set show-volume-slider false";
+          type = "volume";
+        };
       in {
         name = "status";
         position = "left";
@@ -112,6 +145,7 @@
           workspaces
         ];
         end = [
+          volume
           clock
         ];
       };
@@ -187,7 +221,6 @@
           }
 
           /* Tray */
-
           .tray {
             margin-top: 5px;
             padding: 10px;
@@ -205,6 +238,18 @@
           }
           .tray .item:hover {
             background: ${palette.violet};
+          }
+
+          /* Volume */
+          .volume {
+            min-width: 24px;
+            min-height: 35px;
+            border-radius: 50px;
+            margin-bottom: 5px;
+            background: ${palette.base};
+          }
+          .volume label {
+            font-size: 25px;
           }
 
           /* Misc */

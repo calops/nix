@@ -31,7 +31,10 @@
       {
         my.stateVersion = "24.05";
         nix.settings = {
-          experimental-features = ["flakes" "nix-command"];
+          experimental-features = [
+            "flakes"
+            "nix-command"
+          ];
           substituters = [
             "https://cache.nixos.org"
             "https://nix-community.cachix.org"
@@ -49,21 +52,7 @@
       inherit inputs;
       src = ./.;
       snowfall.namespace = "my";
-
-      channels-config = {
-        allowUnfree = true;
-        overlays = [
-          inputs.neovim-nightly-overlay.overlay
-          inputs.nixd.overlays.default
-          inputs.fenix.overlays.default
-          (self: super: {
-            nur = import inputs.nur {
-              pkgs = super;
-              nurpkgs = super;
-            };
-          })
-        ];
-      };
+      channels-config.allowUnfree = true;
 
       systems.modules.nixos =
         commonModules

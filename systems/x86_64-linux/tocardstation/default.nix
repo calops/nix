@@ -11,6 +11,7 @@
 
   my.roles = {
     graphical.enable = true;
+    nvidia.enable = true;
     gaming.enable = true;
     audio.enable = true;
     printing.enable = true;
@@ -50,18 +51,8 @@
     shell = pkgs.fish;
   };
 
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "fr";
-    xkbVariant = "azerty";
-    videoDrivers = ["nvidia"];
-  };
-
-  hardware.nvidia = {
-    modesetting.enable = true; # Enable modesetting driver
-    powerManagement.enable = false; # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
-    powerManagement.finegrained = false; # Fine-grained power management. Turns off GPU when not in use.
-    open = false; # Open-source drivers
-    nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    variant = "azerty";
   };
 }

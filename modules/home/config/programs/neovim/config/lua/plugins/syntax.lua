@@ -5,6 +5,7 @@ return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		lazy = false,
+		build = function() vim.cmd("TSUpdate") end,
 		dependencies = {
 			{ "nvim-treesitter/nvim-treesitter-textobjects" },
 		},
