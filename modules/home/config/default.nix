@@ -2,6 +2,7 @@
   config,
   lib,
   nixosConfig ? null,
+  inputs,
   ...
 }: {
   options.my = {
@@ -14,6 +15,10 @@
       description = "Location of the nix config directory (this repo)";
     };
   };
+
+  imports = [
+    inputs.anyrun.homeManagerModules.default
+  ];
 
   config = {
     programs.home-manager.enable = true;

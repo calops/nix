@@ -31,6 +31,7 @@ return {
 				end,
 				rust_analyzer = nil, -- handled entirely by rustaceanvim, and installed by nix
 				lua_ls = nil, -- handled by neodev, and installed by nix
+				bash_language_server = nil, -- installed by nix
 			}
 		end,
 	},

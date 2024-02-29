@@ -37,7 +37,6 @@ in {
         exec-once = [
           #(lib.getExe pkgs.hyprpaper)
           (lib.getExe pkgs.firefox)
-          (lib.getExe' pkgs.ulauncher "ulauncher")
           (lib.getExe pkgs.element-desktop)
           (lib.getExe pkgs.discord)
         ];
@@ -53,8 +52,11 @@ in {
         layerrule = [
           "blur, swaync-control-center"
           "ignorealpha 0.5, swaync-control-center"
+
           "blur, swaync-notification-window"
           "ignorealpha 0.5, swaync-notification-window"
+
+          "blur, anyrun"
         ];
         input = {
           kb_layout = "fr";
@@ -112,7 +114,7 @@ in {
           "SUPER, F, fullscreen,"
           "SUPER, N, exec, ${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} -t"
           "SUPER SHIFT, F, togglefloating,"
-          "SUPER, space, exec, ulauncher"
+          "SUPER, space, exec, anyrun"
           "SUPER, P, pseudo,"
           "SUPER, backspace, togglesplit,"
           "SUPER, R, exec, grimblast copy area"
@@ -156,11 +158,11 @@ in {
           "SUPER, mouse:273, resizewindow"
         ];
         bindel = [
-          ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-          ", XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+          ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
+          ", XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
         ];
         bindl = [
-          ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+          ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
         ];
       };
     };
@@ -189,7 +191,6 @@ in {
       ];
     };
 
-    services.clipman.enable = true;
     home.packages = with inputs.hyprland-contrib.packages.${pkgs.system}; [
       grimblast
       hyprprop

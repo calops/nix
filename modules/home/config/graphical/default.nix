@@ -202,6 +202,9 @@ in {
       options.font = cfg.fonts.monospace.name;
     };
 
+    services.clipman.enable = true;
+    services.swayosd.enable = true;
+
     stylix = {
       fonts = {
         sizes = {

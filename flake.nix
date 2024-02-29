@@ -24,6 +24,10 @@
       url = "github:snowfallorg/lib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    anyrun = {
+      url = "github:Kirottu/anyrun";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs: let
@@ -54,13 +58,8 @@
       snowfall.namespace = "my";
       channels-config.allowUnfree = true;
 
-      systems.modules.nixos =
-        commonModules
-        ++ [
-          inputs.stylix.nixosModules.stylix
-        ];
-
-      homes.modules = commonModules;
+      systems.modules.nixos = commonModules ++ [inputs.stylix.nixosModules.stylix];
+      homes.modules = commonModules ++ []; # FIXME: not working (upstream?)
 
       outputs-builder = channels: {
         formatter = channels.nixpkgs.alejandra;
