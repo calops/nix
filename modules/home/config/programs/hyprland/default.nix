@@ -115,7 +115,7 @@ in {
           "SUPER, N, exec, ${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} -t"
           "SUPER SHIFT, F, togglefloating,"
           "SUPER, space, exec, anyrun"
-          "SUPER, P, pseudo,"
+          "SUPER, P, exec, hyprfreeze -a" # Pause active program
           "SUPER, backspace, togglesplit,"
           "SUPER, R, exec, grimblast copy area"
           "SUPERSHIFT, delete, exec, scratchpad"
@@ -195,6 +195,7 @@ in {
       grimblast
       hyprprop
       scratchpad
+      pkgs.my.hyprfreeze
     ];
   };
 }
