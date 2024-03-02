@@ -23,6 +23,8 @@ in {
       enableSessionWide = true;
     };
 
+    stylix.targets.mangohud.enable = false;
+
     # can't use the `programs.mangohud.settings` option as it sorts the keys, which changes the rendering order
     xdg.configFile."MangoHud/MangoHud.conf".text = ''
       font_size=18

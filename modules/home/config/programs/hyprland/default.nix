@@ -6,6 +6,7 @@
   ...
 }: let
   cfg = config.my.roles.graphical;
+  palette = config.my.colors.palette.withoutHashtag;
   monitors = rec {
     primary = cfg.monitors.primary.id;
     secondary = cfg.monitors.secondary.id or primary;
@@ -39,6 +40,7 @@ in {
 
         exec-once = [
           #(lib.getExe pkgs.hyprpaper)
+          (lib.getExe pkgs.hypridle)
           (lib.getExe pkgs.firefox)
           (lib.getExe pkgs.element-desktop)
           (lib.getExe pkgs.discord)
@@ -65,7 +67,9 @@ in {
         ];
 
         input = {
-          kb_layout = "fr";
+          kb_layout = "fr,us";
+          kb_options = "grp:alt_shift_toggle";
+
           follow_mouse = 1;
           float_switch_override_focus = 0;
           touchpad = {
@@ -118,7 +122,7 @@ in {
 
         bind = [
           "SUPER, return, exec, ${cfg.terminal}"
-          "SUPER, L, exec, ${lib.getExe config.programs.swaylock.package} -S"
+          "SUPER, L, exec, ${lib.getExe pkgs.hyprlock}"
           "SUPER SHIFT, Q, killactive,"
           "SUPER, M, exit,"
           "SUPER, E, exec, firefox"
@@ -201,29 +205,40 @@ in {
       };
     };
 
-    programs.swaylock = {
-      enable = true;
-      package = pkgs.swaylock-effects;
-      settings = {
-        clock = true;
-        effect-pixelate = 7;
-        screenshots = true;
-        ring-color = lib.mkForce "ffffff00";
-        line-color = lib.mkForce "ffffff00";
-        fade-in = 0.5;
-        show-failed-attempts = true;
-      };
-    };
-
-    services.swayidle = {
-      enable = true;
-      timeouts = [
-        {
-          timeout = 300;
-          command = "${lib.getExe config.programs.swaylock.package} --daemonize";
+    xdg.configFile."hypr/hyprlock.conf".text =
+      # hyprlang
+      ''
+        background {
+            path = screenshot
+            blur_passes = 3
+            blur_size = 7
         }
-      ];
-    };
+
+        input-field {
+            size = 300, 50
+            outline_thickness = 3
+            dots_size = 0.33 # Scale of input-field height, 0.2 - 0.8
+            dots_spacing = 0.15 # Scale of dots' absolute size, 0.0 - 1.0
+            dots_center = false
+            outer_color = rgb(${palette.crust})
+            inner_color = rgb(${palette.text})
+            font_color = rgb(${palette.base})
+            fade_on_empty = true
+            hide_input = false
+            position = 0, -20
+            halign = center
+            valign = center
+        }
+      '';
+
+    xdg.configFile."hypr/hypridle.conf".text =
+      # hyprlang
+      ''
+        listener {
+            timeout = 900 # 15 minutes
+            on-timeout = hyprlock
+        }
+      '';
 
     home.packages = with inputs.hyprland-contrib.packages.${pkgs.system}; [
       grimblast

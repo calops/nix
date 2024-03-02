@@ -5,7 +5,8 @@
   ...
 }: let
   cfg = config.my.roles.graphical;
-  palette = config.my.colors.palette; # TODO
+  palette = config.my.colors.palette.withHastag;
+  font = config.my.fonts.iosevka-comfy.name;
 
   # Electron doesn't play nice with the Wayland/NVidia combo
   pkg = pkgs.writeShellScriptBin "element-desktop" ''
@@ -22,62 +23,60 @@ in
         setting_defaults = {
           custom_themes = [
             {
-              name = "Catppuccin Mocha";
+              name = "Radiant";
               is_dark = true;
               fonts = {
-                general = "Iosevka Comfy";
-                monospace = "Iosevka Comfy";
+                general = font;
+                monospace = font;
               };
-              colors = {
-                accent-color = "#b4befe";
-                primary-color = "#b4befe";
-                warning-color = "#f38ba8";
-                alert = "#e5c890";
-                sidebar-color = "#11111b";
-                roomlist-background-color = "#181825";
-                roomlist-text-color = "#cdd6f4";
-                roomlist-text-secondary-color = "#1e1e2e";
-                roomlist-highlights-color = "#45475a";
-                roomlist-separator-color = "#7f849c";
-                timeline-background-color = "#1e1e2e";
-                timeline-text-color = "#cdd6f4";
-                secondary-content = "#cdd6f4";
-                tertiary-content = "#cdd6f4";
-                timeline-text-secondary-color = "#a6adc8";
-                timeline-highlights-color = "#181825";
-                reaction-row-button-selected-bg-color = "#585b70";
-                menu-selected-color = "#45475a";
-                focus-bg-color = "#585b70";
-                room-highlight-color = "#89dceb";
-                togglesw-off-color = "#9399b2";
-                other-user-pill-bg-color = "#89dceb";
-                username-colors = [
-                  "#cba6f7"
-                  "#eba0ac"
-                  "#fab387"
-                  "#a6e3a1"
-                  "#94e2d5"
-                  "#89dceb"
-                  "#74c7ec"
-                  "#b4befe"
+              colors = let
+                rainbow = [
+                  "${palette.purple}"
+                  "${palette.red}"
+                  "${palette.gold}"
+                  "${palette.green}"
+                  "${palette.blue}"
+                  "${palette.teal}"
+                  "${palette.coral}"
+                  "${palette.orange}"
                 ];
-                avatar-background-colors = [
-                  "#89b4fa"
-                  "#cba6f7"
-                  "#a6e3a1"
-                ];
+              in {
+                accent-color = "${palette.violet}";
+                primary-color = "${palette.violet}";
+                warning-color = "${palette.cherry}";
+                alert = "${palette.yellow}";
+                sidebar-color = "${palette.crust}";
+                roomlist-background-color = "${palette.mantle}";
+                roomlist-text-color = "${palette.text}";
+                roomlist-text-secondary-color = "${palette.base}";
+                roomlist-highlights-color = "${palette.surface1}";
+                roomlist-separator-color = "${palette.overlay0}";
+                timeline-background-color = "${palette.base}";
+                timeline-text-color = "${palette.text}";
+                secondary-content = "${palette.flamingo}";
+                tertiary-content = "${palette.coral}";
+                timeline-text-secondary-color = "${palette.subtext0}";
+                timeline-highlights-color = "${palette.mantle}";
+                reaction-row-button-selected-bg-color = "${palette.surface2}";
+                menu-selected-color = "${palette.surface1}";
+                focus-bg-color = "${palette.surface2}";
+                room-highlight-color = "${palette.teal}";
+                togglesw-off-color = "${palette.overlay2}";
+                other-user-pill-bg-color = "${palette.tangerine}";
+                username-colors = rainbow;
+                avatar-background-colors = rainbow;
               };
             }
           ];
           use_system_theme = false;
-          default_theme = "custom-Catppuccin Mocha";
+          default_theme = "custom-Radiant";
           useSystemFont = true;
           systemFont = cfg.fonts.monospace.name;
           layout = "irc";
         };
         useSystemFont = true;
         systemFont = cfg.fonts.monospace.name;
-        default_theme = "custom-Catppuccin Mocha";
+        default_theme = "custom-Radiant";
         show_labs_settings = true;
         features = {
           feature_spotlight = true;

@@ -9,7 +9,7 @@
     services.flameshot = {
       enable = true;
       package = pkgs.flameshot.overrideAttrs {
-        buildFlags = ["USE_WAYLAND_GRIM=1"];
+        makeFlags = ["CFLAGS=-DUSE_WAYLAND_GRIM"];
       };
     };
   };
