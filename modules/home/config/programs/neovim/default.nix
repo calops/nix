@@ -14,17 +14,23 @@ in {
       package = pkgs.neovim-nightly;
       defaultEditor = true;
       extraPackages = with pkgs; [
-        alejandra
-        black
+        alejandra # Nix formatter
+        black # Python formatter
         cmake
         fzf
         gcc
         gnumake
         isort
         lua-language-server
-        nixd
+        nixd # Nix language server
         nodejs
-        prettierd
+        prettierd # Multi-language formatter
+        fswatch # File watcher utility, replacing libuv.fs_event for neovim 10.0
+        shfmt
+        sqlite
+        stylua
+        vscode-extensions.vadimcn.vscode-lldb.adapter
+        my.logseqlsp
         (fenix.complete.withComponents [
           "cargo"
           "clippy"
@@ -33,15 +39,9 @@ in {
           "rustfmt"
           "rust-analyzer"
         ])
-        shfmt
-        # sqlfluff
-        sqlite
-        stylua
-        vscode-extensions.vadimcn.vscode-lldb.adapter
-        my.logseqlsp
       ];
       plugins = [
-        pkgs.vimPlugins.lazy-nvim
+        pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
       ];
     };
 

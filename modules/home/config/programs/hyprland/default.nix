@@ -47,13 +47,16 @@ in {
         ];
 
         windowrulev2 = [
-          "workspace 1 silent,class:firefox"
-          "workspace 6 silent,class:Steam"
-          "workspace 9 silent,class:Element"
-          "workspace 9 silent,class:discord"
-          "workspace 10 silent,class:Slack"
-          "float,class:ulauncher"
-          "float,class:pavucontrol"
+          "workspace 1 silent, class:firefox"
+          "workspace 6 silent, class:Steam"
+          "workspace 9 silent, class:Element"
+          "workspace 9 silent, class:discord"
+          "workspace 10 silent, class:Slack"
+
+          "float, class:ulauncher"
+          "float, class:pavucontrol"
+          "float, class:flameshot"
+          "noanim, class:flameshot"
         ];
 
         layerrule = [
@@ -133,7 +136,7 @@ in {
           "SUPER, space, exec, anyrun"
           "SUPER, P, exec, hyprfreeze -a" # Pause active program
           "SUPER, backspace, togglesplit,"
-          "SUPER, R, exec, grimblast copy area"
+          "SUPER, R, exec, flameshot gui"
           "SUPERSHIFT, delete, exec, scratchpad"
           "SUPER, delete, exec, scratchpad -g"
           "SUPER, left, ${movefocus}, l"
@@ -241,7 +244,7 @@ in {
       '';
 
     home.packages = with inputs.hyprland-contrib.packages.${pkgs.system}; [
-      grimblast
+      grimblast # TODO: see if i keep this
       hyprprop
       scratchpad
       pkgs.my.hyprfreeze
