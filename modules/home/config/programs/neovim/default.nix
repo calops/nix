@@ -7,6 +7,14 @@
 }: let
   palette = config.my.colors.palette;
   nvimDir = "${config.my.configDir}/modules/home/config/programs/neovim";
+  rustToolchain = pkgs.fenix.complete.withComponents [
+    "cargo"
+    "clippy"
+    "rust-src"
+    "rustc"
+    "rustfmt"
+    "rust-analyzer"
+  ];
 in {
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.neovim = {
@@ -14,31 +22,30 @@ in {
       package = pkgs.neovim-nightly;
       defaultEditor = true;
       extraPackages = with pkgs; [
-        alejandra # Nix formatter
-        black # Python formatter
+        # Formatters
+        alejandra # Nix
+        black # Python
+        prettierd # Multi-language
+        shfmt
+        isort
+        stylua
+
+        # LSP
+        lua-language-server
+        my.logseqlsp
+        nixd
+        rustToolchain
+
+        # Tools
+        git
         cmake
         fzf
         gcc
         gnumake
-        isort
-        lua-language-server
-        nixd # Nix language server
         nodejs
-        prettierd # Multi-language formatter
         fswatch # File watcher utility, replacing libuv.fs_event for neovim 10.0
-        shfmt
         sqlite
-        stylua
         vscode-extensions.vadimcn.vscode-lldb.adapter
-        my.logseqlsp
-        (fenix.complete.withComponents [
-          "cargo"
-          "clippy"
-          "rust-src"
-          "rustc"
-          "rustfmt"
-          "rust-analyzer"
-        ])
       ];
       plugins = [
         pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim

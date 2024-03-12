@@ -1,0 +1,11 @@
+{
+    "name": "test",
+    "version": "1.0.0",
+    "main": "index.js",
+    "types": "types",
+    "dependencies": {
+        "@girs/gjs": "^3.2.9",
+        "@girs/gtk-3.0": "^3.24.41-3.2.9",
+        "@girs/gtk-4.0": "^4.12.5-3.2.9"
+    }
+}

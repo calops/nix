@@ -10,6 +10,7 @@ vim.o.colorcolumn = "120"
 vim.o.concealcursor = "nc"
 vim.o.textwidth = 120
 vim.o.virtualedit = "block"
+vim.o.undofile = true
 
 -- GUI
 vim.o.background = "dark"

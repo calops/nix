@@ -2,7 +2,6 @@
   config,
   lib,
   nixosConfig ? null,
-  inputs,
   ...
 }: {
   options.my = {
@@ -16,19 +15,11 @@
     };
   };
 
-  imports = [
-    inputs.anyrun.homeManagerModules.default
-  ];
-
   config = {
     programs.home-manager.enable = true;
     home.stateVersion = config.my.stateVersion;
+    home.sessionVariables.FLAKE = config.my.configDir;
     my.stateVersion = lib.my.mkIfNotNull nixosConfig (lib.mkDefault nixosConfig.my.stateVersion);
-
-    my.configDir =
-      if nixosConfig != null
-      then "/etc/nixos"
-      else "${config.xdg.configHome}/home-manager";
 
     programs.gpg.enable = true;
     programs.dircolors.enable = true;
@@ -37,6 +28,12 @@
       settings.program_options = {
         tray = false; # FIXME: tray icon isn't working on ironbar
       };
+    };
+
+    nix.gc = {
+      automatic = true;
+      frequency = "weekly";
+      options = "--delete-older-than 30d";
     };
   };
 }

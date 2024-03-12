@@ -26,6 +26,7 @@
       unrar
       yq
       pastel
+      nh
     ];
 
     programs.btop = {

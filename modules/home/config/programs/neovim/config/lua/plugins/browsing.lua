@@ -8,6 +8,7 @@ return {
 			"nvim-telescope/telescope-media-files.nvim",
 			"nvim-telescope/telescope-symbols.nvim",
 			"Marskey/telescope-sg",
+			"polirritmico/telescope-lazy-plugins.nvim",
 			{
 				"nvim-telescope/telescope-fzf-native.nvim",
 				build = "make",
@@ -83,6 +84,7 @@ return {
 			telescope.load_extension("ast_grep")
 			telescope.load_extension("textcase")
 			telescope.load_extension("yank_history")
+			telescope.extensions.lazy_plugins.lazy_plugins()
 
 			require("telescope-all-recent").setup {
 				default = { sorting = "frecency" },

@@ -11,7 +11,7 @@
         cat = "bat";
         hm = "home-manager";
         hs = "home-manager switch --impure";
-        ns = "sudo nixos-rebuild switch";
+        ns = "nh os switch";
         ga = "git add -v";
         gu = "git add -vu";
         gp = "git push";
@@ -38,6 +38,7 @@
       functions = {
         dev = ''nix develop --impure "$HOME/nix#$argv[1]" $argv[2..-1] --command "$SHELL"'';
         run = ''nix run nixpkgs#"$argv[1]" -- $argv[2..-1]'';
+        shell = ''nix shell (string replace -r '(.*)' 'nixpkgs#$1' $argv)'';
         runi = ''nix run --impure nixpkgs#"$argv[1]" -- $argv[2..-1]'';
         gc = ''git commit -m "$argv"'';
       };

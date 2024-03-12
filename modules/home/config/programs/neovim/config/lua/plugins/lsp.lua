@@ -1,64 +1,30 @@
 local map = require("core.utils").map
 
 return {
-	-- Show icons for LSP completions
 	{
-		"onsails/lspkind.nvim",
-		event = "LspAttach",
-	},
-	-- Language servers and utilities orchestrator
-	{
-		"williamboman/mason.nvim",
-		event = "VeryLazy",
-		priority = 2,
-		config = function()
-			require("mason").setup {
-				ui = { border = "rounded" },
-			}
-			require("mason-lspconfig")
-		end,
-	},
-	{
-		"williamboman/mason-lspconfig.nvim",
-		lazy = true,
-		config = function()
-			local lspconfig = require("lspconfig")
-			local mason_lspconfig = require("mason-lspconfig")
-			mason_lspconfig.setup { automatic_installation = false }
-			mason_lspconfig.setup_handlers {
-				function(server_name) -- automatically setup server by default
-					lspconfig[server_name].setup {}
-				end,
-				rust_analyzer = nil, -- handled entirely by rustaceanvim, and installed by nix
-				lua_ls = nil, -- handled by neodev, and installed by nix
-				bash_language_server = nil, -- installed by nix
-			}
-		end,
-	},
-	{
-		"neovim/nvim-lspconfig",
-		lazy = true,
+		"VonHeikemen/lsp-zero.nvim",
+		lazy = false,
+		dependencies = {
+			"neovim/nvim-lspconfig",
+			"williamboman/mason-lspconfig.nvim",
+			"williamboman/mason.nvim",
+			"onsails/lspkind.nvim",
+			"folke/neodev.nvim",
+			"artemave/workspace-diagnostics.nvim",
+		},
 		init = function()
 			map {
 				K = { vim.lsp.buf.hover, "Show documentation" },
-				H = {
-					function() vim.diagnostic.open_float { border = "rounded" } end,
-					"Show diagnostics",
-				},
+				H = { function() vim.diagnostic.open_float { border = "rounded" } end, "Show diagnostics" },
 				["<C-k>"] = { vim.lsp.buf.signature_help, "Interactive signature help" },
 				["<leader>r"] = {
 					name = "refactor",
 					n = { vim.lsp.buf.rename, "Interactive rename" },
 					f = { vim.lsp.buf.format, "Format code" },
 				},
-				["<leader>a"] = {
-					vim.lsp.buf.code_action,
-					"Interactive list of code actions",
-					mode = { "n", "v" },
-				},
+				["<leader>a"] = { vim.lsp.buf.code_action, "Interactive list of code actions", mode = { "n", "v" } },
 				["<leader>i"] = {
 					function()
-						--False positive
 						---@diagnostic disable-next-line: inject-field
 						vim.b.inlay_hints_enabled = not vim.b.inlay_hints_enabled
 						vim.lsp.inlay_hint.enable(0, vim.b.inlay_hints_enabled or false)
@@ -85,23 +51,38 @@ return {
 			require("neodev")
 			require("neoconf")
 
-			local lspconfig = require("lspconfig")
-			local capabilities =
-				require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
-			capabilities.textDocument.foldingRange = {
-				dynamicRegistration = false,
-				lineFoldingOnly = true,
+			local lsp_zero = require("lsp-zero")
+
+			lsp_zero.on_attach(
+				function(client, bufnr) require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr) end
+			)
+
+			require("mason").setup { ui = { border = "rounded" } }
+			require("mason-lspconfig").setup {
+				automatic_installation = false,
+				handlers = {
+					lsp_zero.default_setup,
+					vtsls = function()
+						require("lspconfig").vtsls.setup {
+							settings = {
+								typescript = {
+									inlayHints = {
+										enumMemberValues = { enabled = true },
+										functionLikeReturnTypes = { enabled = true },
+										parameterNames = { enabled = "all" },
+										parameterTypes = { enabled = false },
+										propertyDeclarationTypes = { enabled = true },
+										variableTypes = { enabled = true },
+									},
+								},
+							},
+						}
+					end,
+				},
 			}
-			lspconfig.util.default_config = vim.tbl_extend("force", lspconfig.util.default_config, {
-				capabilities = capabilities,
-				on_attach = function(client, bufnr)
-					if client.server_capabilities.inlayHintProvider then
-						vim.lsp.inlay_hint.enable(bufnr, vim.b.inlay_hints_enabled or false)
-					end
-				end,
-			})
 
 			-- Installed by nix
+			local lspconfig = require("lspconfig")
 			lspconfig.nixd.setup {}
 			lspconfig.lua_ls.setup {
 				settings = {

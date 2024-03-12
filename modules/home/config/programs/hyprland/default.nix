@@ -20,7 +20,6 @@ in {
       enable = true;
       plugins = [
         pkgs.hyprlandPlugins.hy3
-        pkgs.my.hyprfocus
       ];
 
       settings = {
@@ -187,24 +186,24 @@ in {
           ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
         ];
 
-        "plugin:hyprfocus" = {
-          enabled = false;
-          keyboard_focus_animation = "flash";
-          mouse_focus_animation = "flash";
-
-          bezier = [
-            "bezIn, 0.5,0.0,1.0,0.5"
-            "bezOut, 0.0,0.5,0.5,1.0"
-          ];
-
-          flash = {
-            flash_opacity = 0.7;
-            in_speed = 1;
-            in_bezier = "bezIn";
-            out_speed = 3;
-            out_bezier = "bezOut";
-          };
-        };
+        # "plugin:hyprfocus" = {
+        #   enabled = false;
+        #   keyboard_focus_animation = "flash";
+        #   mouse_focus_animation = "flash";
+        #
+        #   bezier = [
+        #     "bezIn, 0.5,0.0,1.0,0.5"
+        #     "bezOut, 0.0,0.5,0.5,1.0"
+        #   ];
+        #
+        #   flash = {
+        #     flash_opacity = 0.7;
+        #     in_speed = 1;
+        #     in_bezier = "bezIn";
+        #     out_speed = 3;
+        #     out_bezier = "bezOut";
+        #   };
+        # };
       };
     };
 

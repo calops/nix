@@ -8,6 +8,7 @@
     stylix.url = "github:danth/stylix";
     nur.url = "github:nix-community/NUR";
     devenv.url = "github:cachix/devenv";
+    ags.url = "github:Aylur/ags";
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -21,7 +22,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     snowfall-lib = {
-      url = "github:snowfallorg/lib";
+      url = "github:snowfallorg/lib/dev";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     anyrun = {
@@ -57,9 +58,13 @@
       src = ./.;
       snowfall.namespace = "my";
       channels-config.allowUnfree = true;
+      channels-config.permittedInsecurePackages = [
+        "nix-2.17.1"
+        "nix-2.16.2" # FIXME: temporary, remove once upstream is updated
+      ];
 
       systems.modules.nixos = commonModules ++ [inputs.stylix.nixosModules.stylix];
-      homes.modules = commonModules ++ []; # FIXME: not working (upstream?)
+      homes.modules = commonModules ++ [inputs.anyrun.homeManagerModules.default];
 
       outputs-builder = channels: {
         formatter = channels.nixpkgs.alejandra;
