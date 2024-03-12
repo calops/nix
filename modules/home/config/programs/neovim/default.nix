@@ -67,7 +67,7 @@ in {
         source = ./config;
         recursive = true;
       };
-      "${config.home.homeDirectory}/nix/.nixd.json".text = builtins.toJSON {
+      "${config.my.configDir}/.nixd.json".text = builtins.toJSON {
         options = {
           enable = true;
           target = {

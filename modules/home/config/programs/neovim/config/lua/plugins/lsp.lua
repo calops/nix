@@ -10,7 +10,6 @@ return {
 			"williamboman/mason.nvim",
 			"onsails/lspkind.nvim",
 			"folke/neodev.nvim",
-			"artemave/workspace-diagnostics.nvim",
 		},
 		init = function()
 			map {
@@ -52,10 +51,6 @@ return {
 			require("neoconf")
 
 			local lsp_zero = require("lsp-zero")
-
-			lsp_zero.on_attach(
-				function(client, bufnr) require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr) end
-			)
 
 			require("mason").setup { ui = { border = "rounded" } }
 			require("mason-lspconfig").setup {
