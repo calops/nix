@@ -23,6 +23,8 @@
       package = pkgs.nixVersions.nix_2_17; # TODO: remove once OOS symlinks are fixed, broken as of 2.19
     };
 
+    stylix.homeManagerIntegration.autoImport = false;
+
     services.udisks2.enable = true;
     services.openssh.enable = true;
 

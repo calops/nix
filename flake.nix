@@ -64,7 +64,12 @@
       ];
 
       systems.modules.nixos = commonModules ++ [inputs.stylix.nixosModules.stylix];
-      homes.modules = commonModules ++ [inputs.anyrun.homeManagerModules.default];
+      homes.modules =
+        commonModules
+        ++ [
+          inputs.anyrun.homeManagerModules.default
+          inputs.stylix.homeManagerModules.stylix
+        ];
 
       outputs-builder = channels: {
         formatter = channels.nixpkgs.alejandra;
