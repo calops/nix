@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }: {
   imports = [
@@ -17,7 +18,8 @@
       };
       autoEnable = true;
       polarity = config.my.colors.background;
-      base16Scheme = {
+      # mkForce required when using both NixOS and Home Manager
+      base16Scheme = lib.mkForce {
         base00 = palette.base; # Default Background
         base01 = palette.surface0; # Lighter Background (Used for status bars)
         base02 = palette.surface1; # Selection Background
