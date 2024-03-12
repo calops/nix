@@ -1,4 +1,4 @@
-{...}: {
+{nixosConfig ? null, ...}: {
   imports = [
     ../common
   ];

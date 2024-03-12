@@ -8,6 +8,7 @@
   package = inputs.anyrun.packages.${pkgs.system}.anyrun-with-all-plugins;
   palette = config.my.colors.palette.asGtkCss;
 in {
+  imports = [inputs.anyrun.homeManagerModules.default];
   config = lib.mkIf config.my.roles.graphical.enable {
     programs.anyrun = {
       enable = true;

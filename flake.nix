@@ -48,7 +48,7 @@
             "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
             "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
           ];
-          trusted-users = ["root" "@wheel"];
+          trusted-users = ["root" "@wheel" "@sudo"];
         };
       }
     ];
@@ -60,16 +60,11 @@
       channels-config.allowUnfree = true;
       channels-config.permittedInsecurePackages = [
         "nix-2.17.1"
-        "nix-2.16.2" # FIXME: temporary, remove once upstream is updated
+        "nix-2.16.2" # FIXME: temporary, remove once nixd is updated
       ];
 
       systems.modules.nixos = commonModules ++ [inputs.stylix.nixosModules.stylix];
-      homes.modules =
-        commonModules
-        ++ [
-          inputs.anyrun.homeManagerModules.default
-          inputs.stylix.homeManagerModules.stylix
-        ];
+      homes.modules = commonModules ++ [inputs.stylix.homeManagerModules.stylix];
 
       outputs-builder = channels: {
         formatter = channels.nixpkgs.alejandra;

@@ -2,7 +2,7 @@
   lib,
   pkgs,
   config,
-  nixosConfig,
+  nixosConfig ? null,
   ...
 }: let
   palette = config.my.colors.palette.withoutHashtag;

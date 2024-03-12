@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  nixosConfig,
+  nixosConfig ? null,
   pkgs,
   ...
 }: let

@@ -2,7 +2,7 @@
   config,
   lib,
   pkgs,
-  nixosConfig,
+  nixosConfig ? null,
   ...
 }: let
   palette = config.my.colors.palette;
@@ -74,7 +74,7 @@ in {
             installable =
               if nixosConfig != null
               then ".#nixosConfigurations.${nixosConfig.networking.hostName}.options"
-              else ".#homeConfigurations.${config.my.configurationName}.options"; # FIXME: build config name here
+              else ".#homeConfigurations.calops@tocardland.options"; # FIXME: build config name here
           };
         };
       };
