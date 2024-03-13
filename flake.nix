@@ -59,8 +59,7 @@
       snowfall.namespace = "my";
       channels-config.allowUnfree = true;
       channels-config.permittedInsecurePackages = [
-        "nix-2.17.1"
-        "nix-2.16.2" # FIXME: temporary, remove once nixd is updated
+        "nix-2.17.1" # Needed for out of store symlinks
       ];
 
       systems.modules.nixos = commonModules ++ [inputs.stylix.nixosModules.stylix];

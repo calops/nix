@@ -41,7 +41,7 @@ in {
           #(lib.getExe pkgs.hyprpaper)
           (lib.getExe pkgs.hypridle)
           (lib.getExe pkgs.firefox)
-          (lib.getExe pkgs.element-desktop)
+          "element-desktop"
           (lib.getExe pkgs.discord)
         ];
 
