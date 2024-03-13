@@ -70,12 +70,7 @@ in {
       "${config.my.configDir}/.nixd.json".text = builtins.toJSON {
         options = {
           enable = true;
-          target = {
-            installable =
-              if nixosConfig != null
-              then ".#nixosConfigurations.${nixosConfig.networking.hostName}.options"
-              else ".#homeConfigurations.calops@tocardland.options"; # FIXME: build config name here
-          };
+          target.installable = ".#homeConfigurations.nixd.options";
         };
       };
     };
