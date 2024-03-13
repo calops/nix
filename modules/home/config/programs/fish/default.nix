@@ -10,7 +10,7 @@
         nv = "nvim";
         cat = "bat";
         hm = "home-manager";
-        hs = "home-manager switch --impure";
+        hs = "nh home switch";
         ns = "nh os switch";
         ga = "git add -v";
         gu = "git add -vu";
