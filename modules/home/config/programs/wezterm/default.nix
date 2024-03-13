@@ -1,12 +1,12 @@
 {
   lib,
   config,
-  pkgs,
+  nixosConfig ? null,
   ...
 }: let
   cfg = config.my.roles.graphical;
   lua = lib.generators.toLua {} {
-    nvidia = cfg.nvidia.enable;
+    nvidia = nixosConfig.my.roles.nvidia.enable or false;
     font = {
       name = cfg.fonts.monospace.name;
       size = cfg.fonts.sizes.terminal;

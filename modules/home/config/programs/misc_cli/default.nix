@@ -43,6 +43,7 @@
 
     programs.eza = {
       enable = config.my.roles.terminal.enable;
+      enableFishIntegration = false;
       icons = true;
       git = true;
     };

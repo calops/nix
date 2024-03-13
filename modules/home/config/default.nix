@@ -11,6 +11,7 @@
     };
     configDir = lib.mkOption {
       type = lib.types.str;
+      default = "/etc/nixos";
       description = "Location of the nix config directory (this repo)";
     };
   };
