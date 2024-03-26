@@ -18,6 +18,8 @@ in {
   config = lib.mkIf cfg.enable {
     wayland.windowManager.hyprland = {
       enable = true;
+      xwayland.enable = true;
+
       plugins = [
         pkgs.hyprlandPlugins.hy3
       ];
