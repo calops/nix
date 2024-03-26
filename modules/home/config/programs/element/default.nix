@@ -10,7 +10,7 @@
 
   # Electron doesn't play nice with the Wayland/NVidia combo
   pkg = pkgs.writeShellScriptBin "element-desktop" ''
-    NIXOS_OZONE_WL=1 ${lib.getExe pkgs.element-desktop} --use-gl=desktop
+    NIXOS_OZONE_WL=0 ${lib.getExe pkgs.element-desktop} --ozone-platform-hint=auto
   '';
 in
   with lib; {
