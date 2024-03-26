@@ -23,6 +23,11 @@
       package = pkgs.nixVersions.nix_2_17; # TODO: remove once OOS symlinks are fixed, broken as of 2.19
     };
 
+    boot.kernel.sysctl = {
+      "fs.inotify.max_user_watches" = 100000;
+      "fs.inotify.max_queued_events" = 100000;
+    };
+
     stylix.homeManagerIntegration.autoImport = false;
 
     services.udisks2.enable = true;

@@ -29,6 +29,9 @@ return {
 					"rust",
 					"toml",
 					"vim",
+					"regex",
+					"jsonc",
+					"markdown_inline",
 				},
 				indent = { enable = true },
 				highlight = {

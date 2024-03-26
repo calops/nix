@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  nixosConfig ? null,
   ...
 }: let
   palette = config.my.colors.palette;
@@ -19,7 +18,14 @@ in {
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.neovim = {
       enable = true;
-      package = pkgs.neovim-nightly;
+      package = pkgs.neovim-nightly.overrideAttrs (oldAttrs: {
+        nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [pkgs.makeWrapper];
+        postFixup = ''
+          ${oldAttrs.postFixup or ""}
+          # Needed for the Fugit2 plugin
+          wrapProgram $out/bin/nvim --prefix LD_LIBRARY_PATH : "${pkgs.lib.makeLibraryPath [pkgs.libgit2]}"
+        '';
+      });
       defaultEditor = true;
       extraPackages = with pkgs; [
         # Formatters

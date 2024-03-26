@@ -15,7 +15,7 @@ vim.o.undofile = true
 -- GUI
 vim.o.background = "dark"
 vim.o.cursorline = true
-vim.o.guicursor = "a:blinkon100"
+vim.o.guicursor = "a:blinkwait300-blinkoff300-blinkon300"
 vim.o.laststatus = 3
 vim.o.list = true
 vim.o.number = true
@@ -62,10 +62,17 @@ vim.o.mousescroll = "ver:6,hor:6"
 vim.o.smoothscroll = true
 
 -- Neovide configuration
+vim.o.guifont = "Iosevka Comfy:h10"
 vim.g.neovide_floating_blur_amount_x = 1.5
 vim.g.neovide_floating_blur_amount_y = 1.5
 vim.g.neovide_scroll_animation_length = 0.13
-vim.o.guifont = "Iosevka Comfy:h10"
+vim.g.neovide_floating_shadow = true
+vim.g.neovide_floating_z_height = 10
+vim.g.neovide_light_angle_degrees = 45
+vim.g.neovide_light_radius = 5
+vim.g.neovide_unlink_border_highlights = true
+vim.g.neovide_refresh_rate = 60
+vim.g.neovide_cursor_smooth_blink = true
 
 vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", numhl = "" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", numhl = "" })

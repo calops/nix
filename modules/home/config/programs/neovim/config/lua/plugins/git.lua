@@ -59,19 +59,20 @@ return {
 		},
 	},
 	{
-		"NeogitOrg/neogit",
-		dependencies = "nvim-lua/plenary.nvim",
-		opts = {
-			disable_builtin_notifications = true,
-			kind = "tab",
-			popup = { kind = "vsplit" },
-			commit_popup = { kind = "vsplit" },
-			commit = { kind = "vsplit" },
-			preview_buffer = { kind = "vsplit" },
-			integrations = {
-				telescope = true,
-				diffview = true,
+		"SuperBo/fugit2.nvim",
+		opts = {},
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+			"nvim-tree/nvim-web-devicons",
+			"nvim-lua/plenary.nvim",
+			{
+				"chrisgrieser/nvim-tinygit", -- optional: for Github PR view
+				dependencies = { "stevearc/dressing.nvim" },
 			},
+		},
+		cmd = { "Fugit2", "Fugit2Graph" },
+		keys = {
+			{ "<leader>F", mode = "n", "<cmd>Fugit2<cr>" },
 		},
 	},
 }

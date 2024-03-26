@@ -183,6 +183,9 @@ return {
 	-- Tests
 	{
 		"nvim-neotest/neotest",
+		dependencies = {
+			"nvim-neotest/nvim-nio",
+		},
 		config = function()
 			require("neotest").setup {
 				adapters = {
