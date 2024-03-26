@@ -49,6 +49,7 @@ return {
 					typescript = { "prettierd" },
 					json = { "prettierd" },
 					yaml = { "prettierd" },
+					html = { "prettierd" },
 
 					lua = { "stylua" },
 					nix = { "alejandra" },
