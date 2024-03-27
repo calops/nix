@@ -140,6 +140,8 @@ return {
 			override = function(_, library)
 				library.enabled = true
 				library.plugins = true
+				library.types = true
+				library.runtime = true
 			end,
 		},
 	},

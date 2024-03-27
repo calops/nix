@@ -14,18 +14,19 @@
     "rustfmt"
     "rust-analyzer"
   ];
+  nvimPackage = pkgs.symlinkJoin {
+    name = "neovim-with-ld-path";
+    paths = [pkgs.neovim-nightly];
+    nativeBuildInputs = [pkgs.makeWrapper];
+    postBuild = ''
+      wrapProgram $out/bin/nvim --prefix LD_LIBRARY_PATH : "${pkgs.lib.makeLibraryPath [pkgs.libgit2]}"
+    '';
+  };
 in {
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.neovim = {
       enable = true;
-      package = pkgs.neovim-nightly.overrideAttrs (oldAttrs: {
-        nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [pkgs.makeWrapper];
-        postFixup = ''
-          ${oldAttrs.postFixup or ""}
-          # Needed for the Fugit2 plugin
-          wrapProgram $out/bin/nvim --prefix LD_LIBRARY_PATH : "${pkgs.lib.makeLibraryPath [pkgs.libgit2]}"
-        '';
-      });
+      package = nvimPackage;
       defaultEditor = true;
       extraPackages = with pkgs; [
         # Formatters
@@ -57,6 +58,8 @@ in {
         pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
       ];
     };
+
+    home.packages = lib.lists.optional config.my.roles.graphical.enable pkgs.neovide;
 
     xdg.configFile = {
       # Raw symlink to the plugin manager lock file, so that it stays writeable
