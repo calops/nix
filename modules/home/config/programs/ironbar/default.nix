@@ -129,12 +129,11 @@
               })
             ];
           };
-
-        volume = {
-          on_mouse_enter = "${ironbarClient} set show-volume-slider true";
-          on_mouse_exit = "${ironbarClient} set show-volume-slider false";
-          type = "volume";
-        };
+        # volume = {
+        #   on_mouse_enter = "${ironbarClient} set show-volume-slider true";
+        #   on_mouse_exit = "${ironbarClient} set show-volume-slider false";
+        #   type = "volume";
+        # };
       in {
         name = "status";
         position = "left";
@@ -146,7 +145,7 @@
           workspaces
         ];
         end = [
-          volume
+          # volume
           clock
         ];
       };

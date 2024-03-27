@@ -19,7 +19,10 @@
     paths = [pkgs.neovim-nightly];
     nativeBuildInputs = [pkgs.makeWrapper];
     postBuild = ''
-      wrapProgram $out/bin/nvim --prefix LD_LIBRARY_PATH : "${pkgs.lib.makeLibraryPath [pkgs.libgit2]}"
+      wrapProgram $out/bin/nvim --prefix LD_LIBRARY_PATH : "${pkgs.lib.makeLibraryPath [
+        pkgs.libgit2
+        pkgs.gpgme
+      ]}"
     '';
   };
 in {

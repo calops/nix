@@ -15,6 +15,8 @@
   movefocus = "hy3:movefocus";
   movewindow = "hy3:movewindow";
 in {
+  imports = [inputs.hyprland-hyprlock.homeManagerModules.default];
+
   config = lib.mkIf cfg.enable {
     wayland.windowManager.hyprland = {
       enable = true;
@@ -126,7 +128,7 @@ in {
 
         bind = [
           "SUPER, return, exec, ${cfg.terminal}"
-          "SUPER, L, exec, ${lib.getExe pkgs.hyprlock}"
+          "SUPER, L, exec, hyprlock"
           "SUPER SHIFT, Q, killactive,"
           "SUPER, M, exit,"
           "SUPER, E, exec, firefox"
@@ -187,53 +189,42 @@ in {
         bindl = [
           ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
         ];
-
-        # "plugin:hyprfocus" = {
-        #   enabled = false;
-        #   keyboard_focus_animation = "flash";
-        #   mouse_focus_animation = "flash";
-        #
-        #   bezier = [
-        #     "bezIn, 0.5,0.0,1.0,0.5"
-        #     "bezOut, 0.0,0.5,0.5,1.0"
-        #   ];
-        #
-        #   flash = {
-        #     flash_opacity = 0.7;
-        #     in_speed = 1;
-        #     in_bezier = "bezIn";
-        #     out_speed = 3;
-        #     out_bezier = "bezOut";
-        #   };
-        # };
       };
     };
 
-    xdg.configFile."hypr/hyprlock.conf".text =
-      # hyprlang
-      ''
-        background {
-            path = screenshot
-            blur_passes = 3
-            blur_size = 7
+    programs.hyprlock = {
+      enable = true;
+      # package = inputs.hyprland-contrib.packages.${pkgs.system}.hyprlock.override {mesa = pkgs.mesa;};
+      backgrounds = [
+        {
+          path = "screenshot";
+          blur_passes = 3;
         }
-
-        input-field {
-            size = 300, 50
-            outline_thickness = 3
-            dots_size = 0.33 # Scale of input-field height, 0.2 - 0.8
-            dots_spacing = 0.15 # Scale of dots' absolute size, 0.0 - 1.0
-            dots_center = false
-            outer_color = rgb(${palette.crust})
-            inner_color = rgb(${palette.text})
-            font_color = rgb(${palette.base})
-            fade_on_empty = true
-            hide_input = false
-            position = 0, -20
-            halign = center
-            valign = center
+      ];
+      input-fields = [
+        {
+          size = {
+            width = 300;
+            height = 50;
+          };
+          position = {
+            x = 0;
+            y = -20;
+          };
+          outline_thickness = 3;
+          dots_size = 0.33;
+          dots_spacing = 0.15;
+          dots_center = false;
+          outer_color = "rgb(${palette.crust})";
+          inner_color = "rgb(${palette.text})";
+          font_color = "rgb(${palette.base})";
+          fade_on_empty = true;
+          hide_input = false;
+          halign = "center";
+          valign = "center";
         }
-      '';
+      ];
+    };
 
     xdg.configFile."hypr/hypridle.conf".text =
       # hyprlang
