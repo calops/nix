@@ -9,7 +9,7 @@
   palette = config.my.colors.palette.asGtkCss;
 in {
   imports = [inputs.anyrun.homeManagerModules.default];
-  config = lib.mkIf config.my.roles.graphical.enable {
+  config = lib.mkIf (config.my.roles.graphical.enable && !config.my.isDarwin) {
     programs.anyrun = {
       enable = true;
       package = package;

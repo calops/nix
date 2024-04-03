@@ -31,32 +31,33 @@ in {
       enable = true;
       package = nvimPackage;
       defaultEditor = true;
-      extraPackages = with pkgs; [
-        # Formatters
-        alejandra # Nix
-        black # Python
-        prettierd # Multi-language
-        shfmt
-        isort
-        stylua
+      extraPackages = with pkgs;
+        [
+          # Formatters
+          alejandra # Nix
+          black # Python
+          prettierd # Multi-language
+          shfmt
+          isort
+          stylua
 
-        # LSP
-        lua-language-server
-        my.logseqlsp
-        nixd
-        rustToolchain
+          # LSP
+          lua-language-server
+          my.logseqlsp
+          nixd
+          rustToolchain
 
-        # Tools
-        git
-        cmake
-        fzf
-        gcc
-        gnumake
-        nodejs
-        fswatch # File watcher utility, replacing libuv.fs_event for neovim 10.0
-        sqlite
-        vscode-extensions.vadimcn.vscode-lldb.adapter
-      ];
+          # Tools
+          git
+          cmake
+          fzf
+          gcc
+          gnumake
+          nodejs
+          fswatch # File watcher utility, replacing libuv.fs_event for neovim 10.0
+          sqlite
+        ]
+        ++ lib.lists.optional (! config.my.isDarwin) vscode-extensions.vadimcn.vscode-lldb.adapter;
       plugins = [
         pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
       ];
@@ -66,10 +67,14 @@ in {
 
     xdg.configFile = {
       # Raw symlink to the plugin manager lock file, so that it stays writeable
-      "nvim/lazy-lock.json".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/lazy-lock.json";
+      #"nvim/lazy-lock.json".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/lazy-lock.json";
       "nvim/lua/nix/palette.lua".text = "return ${lib.generators.toLua {} palette}";
       "nvim/lua/nix/tools.lua".text = ''
-        vim.g.sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.so'
+        vim.g.sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.${
+          if config.my.isDarwin
+          then "dylib"
+          else "so"
+        }'
 
         return {
           gcc = '${lib.getExe pkgs.gcc}';

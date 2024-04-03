@@ -13,7 +13,7 @@
 in {
   imports = [inputs.ags.homeManagerModules.default];
 
-  config = lib.mkIf config.my.roles.graphical.enable {
+  config = lib.mkIf (config.my.roles.graphical.enable && !config.my.isDarwin) {
     programs.ags = {
       enable = true;
       configDir = null;

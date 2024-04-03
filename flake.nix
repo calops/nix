@@ -9,6 +9,9 @@
     nur.url = "github:nix-community/NUR";
     devenv.url = "github:cachix/devenv";
     ags.url = "github:Aylur/ags";
+    darwin.url = "github:LnL7/nix-darwin";
+    darwin.inputs.nixpkgs.follows = "nixpkgs";
+    firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -38,7 +41,6 @@
   outputs = inputs: let
     commonModules = [
       {
-        my.stateVersion = "24.05";
         nix.settings = {
           experimental-features = [
             "flakes"
@@ -67,6 +69,7 @@
       ];
 
       systems.modules.nixos = commonModules ++ [inputs.stylix.nixosModules.stylix];
+      systems.modules.darwin = commonModules;
       homes.modules = commonModules ++ [inputs.stylix.homeManagerModules.stylix];
 
       outputs-builder = channels: {

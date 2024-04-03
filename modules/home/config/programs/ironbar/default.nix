@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: {
-  config = lib.mkIf config.my.roles.graphical.enable {
+  config = lib.mkIf (config.my.roles.graphical.enable && ! config.my.isDarwin) {
     services.ironbar = {
       enable = true;
       # TODO: remove the override once vertical tray is released

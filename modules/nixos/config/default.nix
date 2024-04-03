@@ -1,16 +1,6 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: {
-  options.my.stateVersion = lib.mkOption {
-    type = lib.types.str;
-    description = "NixOS state version";
-  };
-
+{pkgs, ...}: {
   config = {
-    system.stateVersion = config.my.stateVersion;
+    system.stateVersion = "24.05";
     hardware.enableAllFirmware = true;
 
     nix = {

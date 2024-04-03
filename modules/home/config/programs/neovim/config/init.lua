@@ -58,7 +58,7 @@ vim.o.splitright = true
 vim.o.mouse = "a"
 vim.o.mousemodel = "extend"
 vim.o.mousemoveevent = true
-vim.o.mousescroll = "ver:6,hor:6"
+vim.o.mousescroll = "ver:3,hor:3"
 vim.o.smoothscroll = true
 
 -- Neovide configuration

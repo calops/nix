@@ -17,7 +17,7 @@
 in {
   imports = [inputs.hyprland-hyprlock.homeManagerModules.default];
 
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.enable && !config.my.isDarwin) {
     wayland.windowManager.hyprland = {
       enable = true;
       xwayland.enable = true;

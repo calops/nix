@@ -11,7 +11,13 @@
         cat = "bat";
         hm = "home-manager";
         hs = "nh home switch";
-        ns = "nh os switch";
+        ns =
+          {
+            nixos = "nh home switch";
+            darwin = "darwin-rebuild --flake ~/nix switch";
+            standalone = "nh home switch";
+          }
+          ."${config.my.configType}";
         ga = "git add -v";
         gu = "git add -vu";
         gp = "git push";

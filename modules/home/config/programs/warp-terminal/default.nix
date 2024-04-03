@@ -7,8 +7,6 @@
   palette = config.my.colors.palette.withHashtag;
 in {
   config = lib.mkIf config.my.roles.graphical.enable {
-    home.packages = [pkgs.my.warp-terminal];
-
     xdg.dataFile."warp-terminal/themes/catppuccin.yml".text =
       # yaml
       ''

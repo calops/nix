@@ -5,13 +5,18 @@
   ...
 }: let
   addons = pkgs.nur.repos.rycee.firefox-addons;
+  package =
+    if config.my.isDarwin
+    then pkgs.firefox-beta-bin
+    else
+      pkgs.firefox-beta-bin.override {
+        nativeMessagingHosts = [pkgs.tridactyl-native];
+      };
 in {
   config = lib.mkIf config.my.roles.graphical.enable {
     programs.firefox = {
       enable = true;
-      package = pkgs.firefox-beta-bin.override {
-        nativeMessagingHosts = [pkgs.tridactyl-native];
-      };
+      package = package;
       profiles.default = {
         name = "default";
         id = 0;

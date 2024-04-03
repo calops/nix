@@ -182,9 +182,10 @@ in {
     home.packages = with pkgs;
       [
         wl-clipboard
-        google-chrome
         libnotify
+        slack
       ]
+      ++ (lib.lists.optional (!config.my.isDarwin) pkgs.google-chrome)
       ++ (
         if cfg.installAllFonts
         then lib.attrsets.mapAttrsToList (name: font: font.package) config.my.fonts
@@ -202,8 +203,8 @@ in {
       options.font = cfg.fonts.monospace.name;
     };
 
-    services.clipman.enable = true;
-    services.swayosd.enable = true;
+    services.clipman.enable = !config.my.isDarwin;
+    services.swayosd.enable = !config.my.isDarwin;
 
     stylix = {
       fonts = {

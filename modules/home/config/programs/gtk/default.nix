@@ -7,13 +7,13 @@
   config = lib.mkIf config.my.roles.graphical.enable {
     gtk = {
       enable = true;
-      iconTheme = {
+      iconTheme = lib.mkIf (!config.my.isDarwin) {
         name = "Papirus";
         package = pkgs.papirus-icon-theme;
       };
     };
 
-    qt = {
+    qt = lib.mkIf (!config.my.isDarwin) {
       enable = true;
       platformTheme = "gtk";
     };

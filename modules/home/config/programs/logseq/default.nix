@@ -16,7 +16,7 @@
     '';
   });
 in {
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.enable && !config.my.isDarwin) {
     programs.logseq = let
       customCss = pkgs.fetchurl {
         url = "https://logseq.catppuccin.com/ctp-mocha.css";
