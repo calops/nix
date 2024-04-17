@@ -150,32 +150,25 @@ return {
 			},
 		},
 		keys = {
-			{
-				"f",
-				mode = { "n", "x", "o" },
-				function() require("flash").jump() end,
-			},
+			{ "f", mode = { "n", "x", "o" }, function() require("flash").jump() end },
 		},
 	},
 	-- Improved yanking
 	{
 		"gbprod/yanky.nvim",
 		event = "BufRead",
-		dependencies = {
-			"kkharji/sqlite.lua",
-		},
-		opts = {
-			ring = {
-				storage = "sqlite",
-			},
-		},
+		dependencies = { "kkharji/sqlite.lua" },
+		opts = { ring = {
+			storage = "sqlite",
+			cancel_event = "move",
+		} },
 		config = function(_, opts)
 			require("yanky").setup(opts)
 			map {
-				["<C-y>"] = {
-					require("telescope").extensions.yank_history.yank_history,
-					"Yank history",
-				},
+				["<C-y>"] = { require("telescope").extensions.yank_history.yank_history, "Yank history" },
+				["<leader>y"] = { '"+y', "Copy to system clipboard", mode = { "n", "v", "x" } },
+				gp = { "<Plug>YankyPreviousEntry", "Previous yank" },
+				gn = { "<Plug>YankyNextEntry", "Next yank" },
 			}
 		end,
 	},

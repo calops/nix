@@ -77,6 +77,10 @@ in {
         type = my.types.palette;
         description = "Color palette";
       };
+      with0x = lib.mkOption {
+        type = my.types.palette;
+        description = "Color palette";
+      };
       asCss = lib.mkOption {
         type = lib.types.path;
         description = "Path to the CSS file";
@@ -92,11 +96,14 @@ in {
     my.colors.palette = rec {
       withHashtag = import ./${config.my.colors.scheme}/${config.my.colors.background}.nix;
       withoutHashtag = builtins.mapAttrs (name: value: builtins.substring 1 (-1) value) withHashtag;
+      with0x = builtins.mapAttrs (name: value: "0x${value}") withoutHashtag;
+
       asCss = pkgs.writeText "colors.css" ''
         :root {
           ${lib.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: value: "  --" + name + ": " + value + ";") withHashtag))}
         }
       '';
+
       asGtkCss =
         pkgs.writeText "colors.gtk.css"
         (lib.concatStringsSep "\n"

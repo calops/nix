@@ -87,6 +87,13 @@ return {
 					},
 				},
 			}
+			lspconfig.lexical.setup {
+				filetypes = { "elixir", "eelixir", "heex" },
+				cmd = { "lexical" },
+				root_dir = function(fname)
+					return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or vim.loop.os_homedir()
+				end,
+			}
 		end,
 	},
 	-- Rust-specific utilities and LSP configurations
@@ -114,7 +121,7 @@ return {
 						},
 						diagnostics = {
 							enable = true,
-							-- disabled = { "unresolved-method", "unresolved-field" },
+							disabled = { "unresolved-method", "unresolved-field" },
 							experimental = { enable = true },
 						},
 						assist = {

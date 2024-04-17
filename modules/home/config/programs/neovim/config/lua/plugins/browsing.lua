@@ -21,31 +21,16 @@ return {
 		lazy = true,
 		init = function()
 			map {
-				["<C-p>"] = {
-					function() require("telescope.builtin").find_files() end,
-					"Find files",
-				},
+				["<C-p>"] = { function() require("telescope.builtin").find_files() end, "Find files" },
 				["<leader>"] = {
 					["<Space>"] = {
 						function() require("telescope.builtin").grep_string() end,
 						"Grep string under cursor",
 					},
-					s = {
-						function() require("telescope.builtin").live_grep() end,
-						"Live grep",
-					},
-					b = {
-						function() require("telescope.builtin").buffers() end,
-						"Find buffer",
-					},
-					e = {
-						function() require("telescope.builtin").symbols() end,
-						"Select symbol",
-					},
-					R = {
-						function() require("telescope.builtin").resume() end,
-						"Resume selection",
-					},
+					s = { function() require("telescope.builtin").live_grep() end, "Live grep" },
+					b = { function() require("telescope.builtin").buffers() end, "Find buffer" },
+					e = { function() require("telescope.builtin").symbols() end, "Select symbol" },
+					R = { function() require("telescope.builtin").resume() end, "Resume selection" },
 				},
 			}
 		end,
@@ -79,7 +64,6 @@ return {
 			telescope.load_extension("fzf")
 			telescope.load_extension("notify")
 			telescope.load_extension("media_files")
-			telescope.load_extension("persisted")
 			telescope.load_extension("ast_grep")
 			telescope.load_extension("textcase")
 			telescope.load_extension("yank_history")

@@ -33,6 +33,8 @@ return {
 					end
 				end,
 			})
+
+			require("telescope").load_extension("persisted")
 		end,
 		opts = {
 			use_git_branch = true,

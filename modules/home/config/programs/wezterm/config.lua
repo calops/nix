@@ -8,6 +8,7 @@ return {
 		nix.font.name,
 		nix.font.symbols,
 	},
+	window_decorations = "RESIZE",
 	enable_wayland = true,
 	font_size = nix.font.size,
 	freetype_load_target = nix.font.hinting,

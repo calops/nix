@@ -1,8 +1,10 @@
 {
   config,
   lib,
+  pkgs,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.fish = {
       enable = true;
@@ -17,7 +19,7 @@
             darwin = "darwin-rebuild --flake ~/nix switch";
             standalone = "nh home switch";
           }
-          ."${config.my.configType}";
+          .${config.my.configType};
         ga = "git add -v";
         gu = "git add -vu";
         gp = "git push";
@@ -30,7 +32,6 @@
         cp = "xcp";
         df = "dysk";
         du = "dust";
-        bg = "batgrep";
         rrm = "rm -rf";
         sr = "steam-run";
         devinit = "nix flake init --template github:cachix/devenv";
@@ -57,5 +58,7 @@
         end
       '';
     };
+
+    home.packages = [ pkgs.oh-my-fish ];
   };
 }

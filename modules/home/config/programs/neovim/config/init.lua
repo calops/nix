@@ -1,3 +1,5 @@
+require("nix.tools")
+
 ---------- Settings
 -- Search
 vim.o.ignorecase = true
@@ -62,7 +64,7 @@ vim.o.mousescroll = "ver:3,hor:3"
 vim.o.smoothscroll = true
 
 -- Neovide configuration
-vim.o.guifont = "Iosevka Comfy:h10"
+vim.o.guifont = "Iosevka Comfy,Symbols Nerd Font Mono:h12:#h-normal"
 vim.g.neovide_floating_blur_amount_x = 1.5
 vim.g.neovide_floating_blur_amount_y = 1.5
 vim.g.neovide_scroll_animation_length = 0.13
@@ -73,6 +75,21 @@ vim.g.neovide_light_radius = 5
 vim.g.neovide_unlink_border_highlights = true
 vim.g.neovide_refresh_rate = 60
 vim.g.neovide_cursor_smooth_blink = true
+if vim.g.neovide == true then
+	vim.api.nvim_set_keymap(
+		"n",
+		"<C-+>",
+		":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>",
+		{ silent = true }
+	)
+	vim.api.nvim_set_keymap(
+		"n",
+		"<C-->",
+		":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>",
+		{ silent = true }
+	)
+	vim.api.nvim_set_keymap("n", "<C-0>", ":lua vim.g.neovide_scale_factor = 1<CR>", { silent = true })
+end
 
 vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", numhl = "" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", numhl = "" })
@@ -104,10 +121,14 @@ local function update_highlights(buf, diagnostics)
 	clear_highlights(buf)
 
 	for _, diagnostic in ipairs(diagnostics) do
-		vim.api.nvim_buf_set_extmark(buf, lines_ns, diagnostic.lnum, 0, {
-			line_hl_group = utils.diags_lines()[diagnostic.severity],
-			priority = 14 - diagnostic.severity,
-		})
+		local lnum = diagnostic.lnum
+		-- I have no idea why this check is necessary, but somehow sometimes the diagnostic is out of range
+		if lnum >= 0 and lnum < vim.api.nvim_buf_line_count(buf) then
+			vim.api.nvim_buf_set_extmark(buf, lines_ns, diagnostic.lnum, 0, {
+				line_hl_group = utils.diags_lines()[diagnostic.severity],
+				priority = 14 - diagnostic.severity,
+			})
+		end
 	end
 end
 

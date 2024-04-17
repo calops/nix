@@ -2,6 +2,7 @@
   pkgs,
   config,
   lib,
+  nixosConfig ? null,
   ...
 }: let
   cfg = config.my.roles.graphical;
@@ -9,9 +10,14 @@
   font = config.my.fonts.iosevka-comfy.name;
 
   # Electron doesn't play nice with the Wayland/NVidia combo
-  pkg = pkgs.writeShellScriptBin "element-desktop" ''
-    NIXOS_OZONE_WL=0 ${lib.getExe pkgs.element-desktop} --ozone-platform-hint=auto
-  '';
+  # FIXME: this removes desktop entries and probably other stuff, find a better way to wrap this
+  pkg =
+    if nixosConfig.my.roles.nvidia.enable or false
+    then
+      pkgs.writeShellScriptBin "element-desktop" ''
+        NIXOS_OZONE_WL=0 ${lib.getExe pkgs.element-desktop} --ozone-platform-hint=auto
+      ''
+    else pkgs.element-desktop;
 in
   with lib; {
     config = mkIf cfg.enable {

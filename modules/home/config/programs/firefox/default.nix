@@ -37,6 +37,13 @@ in {
           force = true;
         };
         userChrome = ''
+          .titlebar-buttonbox {
+            appearance: none !important;
+            margin-inline: 0 !important;
+            -moz-box-direction: reverse !important;
+            flex-direction: row-reverse !important;
+          }
+
           tabs {
             counter-reset: tab-counter;
           }

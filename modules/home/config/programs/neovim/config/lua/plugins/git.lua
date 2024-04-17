@@ -6,6 +6,10 @@ return {
 		"sindrets/diffview.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		cmd = { "DiffviewOpen", "DiffviewFileHistory" },
+		keys = {
+			{ "<leader>gv", "<cmd>DiffviewOpen<cr>", desc = "Open diff view" },
+			{ "<leader>gh", "<cmd>DiffviewFileHistory<cr>", desc = "Open file history" },
+		},
 		opts = {
 			enhanced_diff_hl = true,
 			use_icons = true,
@@ -72,7 +76,7 @@ return {
 		},
 		cmd = { "Fugit2", "Fugit2Graph" },
 		keys = {
-			{ "<leader>F", mode = "n", "<cmd>Fugit2<cr>" },
+			{ "<leader>gg", mode = "n", "<cmd>Fugit2<cr>", desc = "Git status" },
 		},
 	},
 }

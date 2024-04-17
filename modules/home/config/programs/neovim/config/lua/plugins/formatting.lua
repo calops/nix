@@ -52,7 +52,7 @@ return {
 					html = { "prettierd" },
 
 					lua = { "stylua" },
-					nix = { "alejandra" },
+					nix = { "nixfmt" },
 					python = { "isort", "black" },
 					sh = { "shfmt" },
 					sql = { "sqlfluff" },

@@ -1,45 +1,41 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   system.stateVersion = 4;
   services.nix-daemon.enable = true;
 
   nix = {
     optimise.automatic = true;
-    package = pkgs.nixVersions.nix_2_17; # TODO: remove once OOS symlinks are fixed, broken as of 2.21
+    # package = pkgs.nixVersions.nix_2_17; # TODO: remove once OOS symlinks are fixed, broken as of 2.21
     gc = {
       automatic = true;
-      interval = {Day = 7;};
+      interval = {
+        Day = 7;
+      };
       options = "--delete-older-than 7d";
     };
   };
 
-  environment.shells = [pkgs.fish];
+  environment.systemPackages = [ pkgs.raycast ];
+  environment.shells = [ pkgs.fish ];
   environment.loginShell = pkgs.fish;
+  programs.fish.enable = true;
+  homebrew.enable = true;
+  security.pam.enableSudoTouchIdAuth = true;
 
   system.defaults = {
     dock = {
       autohide = true;
       orientation = "right";
+      mru-spaces = false;
     };
 
     finder = {
       AppleShowAllExtensions = true;
-      _FXShowPosixPathInTitle = true;
       FXEnableExtensionChangeWarning = false;
     };
 
     NSGlobalDomain = {
       _HIHideMenuBar = true;
-    };
-  };
-
-  services.yabai = {
-    enable = true;
-    config = {
-      top_padding = 36;
-      bottom_padding = 10;
-      left_padding = 10;
-      right_padding = 10;
-      window_gap = 10;
     };
   };
 }

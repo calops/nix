@@ -83,6 +83,8 @@ return {
 					SatelliteDiagnosticWarn = { fg = colors.darken(palette.yellow, 0.5, palette.base) },
 					SatelliteDiagnosticInfo = { fg = colors.darken(palette.sky, 0.5, palette.base) },
 					SatelliteDiagnosticHint = { fg = colors.darken(palette.teal, 0.5, palette.base) },
+					SatelliteCursor = { fg = palette.mauve },
+					SatelliteBackground = { bg = palette.base, blend = 100 },
 
 					IblScope = { fg = palette.mauve },
 
@@ -148,8 +150,6 @@ return {
 					FlashLabel = { bg = palette.peach, fg = palette.base, style = { "bold" } },
 					FlashMatch = { bg = palette.lavender, fg = palette.base },
 					FlashBackdrop = { bg = nil, fg = palette.overlay0, style = { "nocombine" } },
-
-					SatelliteCursor = { fg = palette.mauve },
 
 					NoiceMini = { fg = palette.blue, bg = colors.darken(palette.blue, 0.33), blend = 0 },
 

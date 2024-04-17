@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.nix-index.enable = true;
 
@@ -27,6 +28,7 @@
       yq
       pastel
       nh
+      jaq
     ];
 
     programs.btop = {

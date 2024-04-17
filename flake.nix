@@ -38,27 +38,34 @@
     };
   };
 
-  outputs = inputs: let
-    commonModules = [
-      {
-        nix.settings = {
-          experimental-features = [
-            "flakes"
-            "nix-command"
-          ];
-          substituters = [
-            "https://cache.nixos.org"
-            "https://nix-community.cachix.org"
-          ];
-          trusted-public-keys = [
-            "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-          ];
-          trusted-users = ["root" "@wheel" "@sudo"];
-        };
-      }
-    ];
-  in
+  outputs =
+    inputs:
+    let
+      commonModules = [
+        {
+          nix.settings = {
+            experimental-features = [
+              "flakes"
+              "nix-command"
+            ];
+            substituters = [
+              "https://cache.nixos.org"
+              "https://nix-community.cachix.org"
+            ];
+            trusted-public-keys = [
+              "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+              "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+            ];
+            trusted-users = [
+              "root"
+              "@wheel"
+              "@sudo"
+              "@admin"
+            ];
+          };
+        }
+      ];
+    in
     inputs.snowfall-lib.mkFlake {
       inherit inputs;
       src = ./.;
@@ -68,12 +75,10 @@
         "nix-2.17.1" # Needed for out of store symlinks
       ];
 
-      systems.modules.nixos = commonModules ++ [inputs.stylix.nixosModules.stylix];
+      systems.modules.nixos = commonModules ++ [ inputs.stylix.nixosModules.stylix ];
       systems.modules.darwin = commonModules;
-      homes.modules = commonModules ++ [inputs.stylix.homeManagerModules.stylix];
+      homes.modules = commonModules ++ [ inputs.stylix.homeManagerModules.stylix ];
 
-      outputs-builder = channels: {
-        formatter = channels.nixpkgs.alejandra;
-      };
+      outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
     };
 }

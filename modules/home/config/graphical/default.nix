@@ -4,7 +4,8 @@
   nixosConfig ? null,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.my.roles.graphical;
   my.types = with lib; {
     font = types.submodule {
@@ -26,14 +27,21 @@
           description = "Monitor name";
         };
         position = mkOption {
-          type = types.enum ["left" "right" "above" "below" "center"];
+          type = types.enum [
+            "left"
+            "right"
+            "above"
+            "below"
+            "center"
+          ];
           default = "center";
           description = "Monitor position";
         };
       };
     };
   };
-in {
+in
+{
   options.my = {
     roles.graphical = {
       enable = lib.mkOption {
@@ -69,7 +77,12 @@ in {
           description = "Symbols font";
         };
         hinting = lib.mkOption {
-          type = lib.types.enum ["Normal" "Mono" "HorizontalLcd" "Light"];
+          type = lib.types.enum [
+            "Normal"
+            "Mono"
+            "HorizontalLcd"
+            "Light"
+          ];
           default = "Normal";
           description = "Font hinting strategy";
         };
@@ -103,7 +116,10 @@ in {
       };
       installAllFonts = lib.mkEnableOption "Install all fonts";
       terminal = lib.mkOption {
-        type = lib.types.enum ["kitty" "wezterm"];
+        type = lib.types.enum [
+          "kitty"
+          "wezterm"
+        ];
         default = "wezterm";
         description = "Terminal emulator";
       };
@@ -172,14 +188,13 @@ in {
         package = pkgs.terminus-nerdfont;
       };
       nerdfont-symbols = {
-        name = "Nerd Font Symbols";
-        package = pkgs.nerdfonts.override {
-          fonts = ["NerdFontsSymbolsOnly"];
-        };
+        name = "Symbols Nerd Font Mono";
+        package = pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; };
       };
     };
 
-    home.packages = with pkgs;
+    home.packages =
+      with pkgs;
       [
         wl-clipboard
         libnotify
@@ -187,14 +202,16 @@ in {
       ]
       ++ (lib.lists.optional (!config.my.isDarwin) pkgs.google-chrome)
       ++ (
-        if cfg.installAllFonts
-        then lib.attrsets.mapAttrsToList (name: font: font.package) config.my.fonts
+        if cfg.installAllFonts then
+          lib.attrsets.mapAttrsToList (name: font: font.package) config.my.fonts
         else
-          with cfg.fonts; [
+          with cfg.fonts;
+          [
             monospace.package
             serif.package
             sansSerif.package
             emoji.package
+            symbols.package
           ]
       );
     programs.mpv.enable = true;
