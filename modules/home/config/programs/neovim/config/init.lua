@@ -64,7 +64,7 @@ vim.o.mousescroll = "ver:3,hor:3"
 vim.o.smoothscroll = true
 
 -- Neovide configuration
-vim.o.guifont = "Iosevka Comfy,Symbols Nerd Font Mono:h12:#h-normal"
+-- vim.o.guifont = "Iosevka Comfy,Symbols Nerd Font Mono"
 vim.g.neovide_floating_blur_amount_x = 1.5
 vim.g.neovide_floating_blur_amount_y = 1.5
 vim.g.neovide_scroll_animation_length = 0.13

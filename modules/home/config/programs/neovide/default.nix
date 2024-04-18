@@ -5,8 +5,6 @@
   ...
 }:
 let
-  launchCmd = "neovide --frame=buttonless";
-
   darwinManifest =
     pkgs.writeText "Info.plist" # xml
       ''
@@ -17,7 +15,7 @@ let
             <string>English</string>
 
             <key>CFBundleExecutable</key>
-            <string>neovide.sh</string>
+            <string>neovide</string>
 
             <key>CFBundleIconFile</key>
             <string>neovide.icns</string>
@@ -44,13 +42,6 @@ let
         </dict></plist>
       '';
 
-  darwinWrapper =
-    pkgs.writeScript "neovide.sh" # sh
-      ''
-        #!/bin/sh
-        exec "${lib.getExe pkgs.neovide}" --no-fork --frame=buttonless
-      '';
-
   package =
     if config.my.isDarwin then
       pkgs.symlinkJoin {
@@ -61,7 +52,6 @@ let
           dst=$out/Applications/Neovide.app/Contents
           mkdir -p $dst/{MacOS,Resources}
           cp "$out/bin/neovide" "$dst/MacOS/neovide"
-          cp ${darwinWrapper} "$dst/MacOS/neovide.sh"
           cp ${darwinManifest} "$out/Applications/neovide.app/Contents/Info.plist"
 
           mkdir -p $out/Neovide.iconset
@@ -82,7 +72,7 @@ in
     xdg.desktopEntries.neovide = lib.mkIf (!config.my.isDarwin) {
       name = "Neovide";
       genericName = "Neovim GUI";
-      exec = "${launchCmd}";
+      exec = "neovide";
       terminal = false;
       categories = [
         "Application"
@@ -90,5 +80,49 @@ in
         "IDE"
       ];
     };
+
+    xdg.configFile."neovide/config.toml".source =
+      let
+        symbols = {
+          family = config.my.roles.graphical.fonts.symbols.name;
+          style = "Normal";
+        };
+      in
+      (pkgs.formats.toml { }).generate "config.toml" {
+        frame = "buttonless";
+        font = {
+          size = 12;
+          edging = "subpixelantialias";
+          hinting = "none";
+          normal = [
+            {
+              family = config.my.roles.graphical.fonts.monospace.name;
+              style = "Thin";
+            }
+            symbols
+          ];
+          bold = [
+            {
+              family = config.my.roles.graphical.fonts.monospace.name;
+              style = "SemiBold";
+            }
+            symbols
+          ];
+          italic = [
+            {
+              family = config.my.roles.graphical.fonts.monospace.name;
+              style = "Thin Italic";
+            }
+            symbols
+          ];
+          bold_italic = [
+            {
+              family = config.my.roles.graphical.fonts.monospace.name;
+              style = "SemiBold Italic";
+            }
+            symbols
+          ];
+        };
+      };
   };
 }
