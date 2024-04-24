@@ -3,17 +3,18 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   preview = pkgs.writeShellScript "preview.sh" ''
     set -euo pipefail
-
     if [ -d "$1" ]; then
-      eza --color=always --icons -lH --git $1
+      ${lib.getExe pkgs.eza} --color=always --icons -lH --git $1
     elif [ -f "$1" ]; then
-      bat -n $1
+      ${lib.getExe pkgs.bat} -n $1
     fi
   '';
-in {
+in
+{
   programs.fzf = {
     enable = config.my.roles.terminal.enable;
     defaultCommand = "fd --color=always";

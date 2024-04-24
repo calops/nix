@@ -63,6 +63,7 @@ in
           lua-language-server
           my.logseqlsp
           nixd
+          nil
           rustToolchain
 
           # Tools

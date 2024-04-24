@@ -78,7 +78,13 @@ return {
 
 			-- Installed by nix
 			local lspconfig = require("lspconfig")
-			lspconfig.nixd.setup {}
+			lspconfig.nixd.setup {
+				on_init = function(client, _)
+					-- Turn off semantic tokens until they're more consistent
+					client.server_capabilities.semanticTokensProvider = nil
+				end,
+			}
+			lspconfig.nil_ls.setup {}
 			lspconfig.lua_ls.setup {
 				settings = {
 					Lua = {

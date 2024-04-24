@@ -27,6 +27,7 @@ return {
 						function() require("telescope.builtin").grep_string() end,
 						"Grep string under cursor",
 					},
+					S = { function() require("telescope.builtin").grep_string { search = "" } end, "Fuzzy grep" },
 					s = { function() require("telescope.builtin").live_grep() end, "Live grep" },
 					b = { function() require("telescope.builtin").buffers() end, "Find buffer" },
 					e = { function() require("telescope.builtin").symbols() end, "Select symbol" },

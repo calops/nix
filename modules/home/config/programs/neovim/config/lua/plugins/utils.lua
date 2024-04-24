@@ -17,7 +17,7 @@ return {
 				"winsize",
 			}
 			map {
-				["<leader>S"] = { ":Telescope persisted<CR>", "Browse sessions" },
+				["<leader>P"] = { ":Telescope persisted<CR>", "Browse sessions" },
 			}
 			local group = vim.api.nvim_create_augroup("PersistedHooks", {})
 			local ignored_file_types = { "Trouble", "neo-tree", "noice" }
@@ -99,5 +99,10 @@ return {
 				},
 			}
 		end,
+	},
+	-- Direnv sync
+	{
+		"direnv/direnv.vim",
+		lazy = false,
 	},
 }

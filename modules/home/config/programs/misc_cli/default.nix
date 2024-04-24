@@ -29,6 +29,7 @@
       pastel
       nh
       jaq
+      comma
     ];
 
     programs.btop = {

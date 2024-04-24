@@ -51,6 +51,7 @@ return {
 					CursorLineSign = { link = "CursorLine" },
 					LineNr = { fg = palette.surface2 },
 					CursorLineNr = { fg = palette.lavender, bg = palette.surface0 },
+					ColorColumn = { bg = palette.mantle },
 
 					NormalFloat = { bg = palette.base },
 					FloatBorder = { fg = palette.mauve },

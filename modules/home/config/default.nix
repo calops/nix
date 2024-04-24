@@ -4,7 +4,8 @@
   nixosConfig ? null,
   darwinConfig ? null,
   ...
-}: {
+}:
+{
   options.my = {
     configDir = lib.mkOption {
       type = lib.types.str;
@@ -14,11 +15,12 @@
     configType = lib.mkOption {
       type = lib.types.str;
       default =
-        if config.my.isNixos
-        then "nixos"
-        else if config.my.isDarwin
-        then "darwin"
-        else "standalone";
+        if config.my.isNixos then
+          "nixos"
+        else if config.my.isDarwin then
+          "darwin"
+        else
+          "standalone";
     };
     isNixos = lib.mkOption {
       type = lib.types.bool;
@@ -39,7 +41,7 @@
 
     programs.gpg.enable = true;
     programs.dircolors.enable = true;
-    services.udiskie = lib.mkIf (! config.my.isDarwin) {
+    services.udiskie = lib.mkIf (!config.my.isDarwin) {
       enable = true;
       settings.program_options = {
         tray = false; # FIXME: tray icon isn't working on ironbar
