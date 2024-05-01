@@ -16,20 +16,11 @@ let
     "rustfmt"
     "rust-analyzer"
   ];
-  ld_library_path_var_name = (lib.optionalString config.my.isDarwin "DY") + "LD_LIBRARY_PATH";
+  ld_library_path_var_name = (lib.optionalString pkgs.stdenv.isDarwin "DY") + "LD_LIBRARY_PATH";
 
   nvimPackage = pkgs.symlinkJoin {
     name = "neovim-with-ld-path";
-    paths = [
-      (pkgs.neovim-nightly.overrideAttrs {
-        src = pkgs.fetchFromGitHub {
-          owner = "neovim";
-          repo = "neovim";
-          rev = "6525832";
-          sha256 = "sha256-qNpTZNbWdZo1QyjOC5AgR7Cidu7Hs6JeeVxmKAjjcV0=";
-        };
-      })
-    ];
+    paths = [ pkgs.neovim-nightly ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       wrapProgram $out/bin/nvim --prefix ${ld_library_path_var_name} : "${
@@ -75,8 +66,9 @@ in
           gnumake
           nodejs
           sqlite
+          tree-sitter
         ]
-        ++ lib.lists.optional (!config.my.isDarwin) vscode-extensions.vadimcn.vscode-lldb.adapter;
+        ++ lib.lists.optional (!pkgs.stdenv.isDarwin) vscode-extensions.vadimcn.vscode-lldb.adapter;
       plugins = [
         pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
       ];
@@ -89,7 +81,7 @@ in
       "nvim/lua/nix/tools.lua".text = # lua
         ''
           vim.g.sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.${
-            if config.my.isDarwin then "dylib" else "so"
+            if pkgs.stdenv.isDarwin then "dylib" else "so"
           }'
 
           return {

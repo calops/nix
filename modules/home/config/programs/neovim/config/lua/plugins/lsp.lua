@@ -26,20 +26,17 @@ return {
 					function()
 						---@diagnostic disable-next-line: inject-field
 						vim.b.inlay_hints_enabled = not vim.b.inlay_hints_enabled
-						vim.lsp.inlay_hint.enable(0, vim.b.inlay_hints_enabled or false)
+						vim.lsp.inlay_hint.enable(vim.b.inlay_hints_enabled or false)
 					end,
 					"Toggle inlay hints for buffer",
 				},
 			}
 
-			vim.api.nvim_create_autocmd(
-				"InsertEnter",
-				{ callback = function() vim.lsp.inlay_hint.enable(0, false) end }
-			)
+			vim.api.nvim_create_autocmd("InsertEnter", { callback = function() vim.lsp.inlay_hint.enable(false) end })
 
 			vim.api.nvim_create_autocmd(
 				"InsertLeave",
-				{ callback = function() vim.lsp.inlay_hint.enable(0, vim.b.inlay_hints_enabled or false) end }
+				{ callback = function() vim.lsp.inlay_hint.enable(vim.b.inlay_hints_enabled or false) end }
 			)
 
 			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
@@ -182,6 +179,45 @@ return {
 				markdown = true,
 			},
 		},
+	},
+	{
+		"CopilotC-Nvim/CopilotChat.nvim",
+		branch = "canary",
+		dependencies = {
+			{ "zbirenbaum/copilot.lua" },
+			{ "nvim-lua/plenary.nvim" },
+		},
+		opts = {
+			window = {
+				layout = "vertical",
+				width = 120,
+				height = 0.8,
+				relative = "editor",
+				border = "rounded",
+				zindex = 50,
+			},
+		},
+		init = function()
+			map({
+				["<leader>c"] = {
+					name = "copilot",
+					c = { require("CopilotChat").toggle, "Toggle Copilot Chat" },
+					b = {
+						function()
+							local actions = require("CopilotChat.actions")
+							actions.pick(actions.prompt_actions {
+								selection = require("CopilotChat.select").buffer,
+							})
+						end,
+						"Actions on buffer",
+					},
+				},
+			}, { mode = { "n", "v", "x" } })
+			require("core.utils").make_sidebar(
+				"copilot-chat",
+				function() return vim.fn.bufname() == "copilot-chat" and vim.fn.win_gettype() ~= "popup" end
+			)
+		end,
 	},
 	-- LSP within TS injections
 	{

@@ -99,22 +99,17 @@ vim.fn.sign_define("GitSignsAdd", { text = "▋", texthl = "GitSignsAdd", numhl 
 vim.fn.sign_define("GitSignsChange", { text = "▋", texthl = "GitSignsChange", numhl = "" })
 vim.fn.sign_define("GitSignsDelete", { text = "▋", texthl = "GitSignsDelete", numhl = "" })
 
-local group = vim.api.nvim_create_augroup("HelpHandler", {})
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
-	pattern = "*.txt",
-	group = group,
-	callback = function()
-		if vim.bo.buftype == "help" and vim.wo.winfixwidth == false then
-			vim.cmd([[wincmd L | vert resize 80 | set winfixwidth | wincmd =]])
-		end
-	end,
-})
+require("core.utils").make_sidebar("*.txt", function() return vim.bo.buftype == "help" end)
 
 -- Full line error highlights
 local utils = require("plugins.ui.utils")
 local lines_ns = vim.api.nvim_create_namespace("diag_lines")
 
-local function clear_highlights(buf) vim.api.nvim_buf_clear_namespace(buf, lines_ns, 0, -1) end
+local function clear_highlights(buf)
+	if vim.api.nvim_buf_is_valid(buf) then
+		vim.api.nvim_buf_clear_namespace(buf, lines_ns, 0, -1)
+	end
+end
 
 local function update_highlights(buf, diagnostics)
 	clear_highlights(buf)

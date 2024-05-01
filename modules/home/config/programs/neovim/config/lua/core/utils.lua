@@ -160,4 +160,21 @@ function module.debounce(func, delay)
 	return wrapped_fn, timer
 end
 
+local sidebar_group = vim.api.nvim_create_augroup("SidebarHandler", {})
+---Create a sidebar for a specific filetype
+---@param pattern string
+---@param condition fun(): boolean
+---@return nil
+function module.make_sidebar(pattern, condition)
+	vim.api.nvim_create_autocmd({ "BufEnter" }, {
+		pattern = pattern,
+		group = sidebar_group,
+		callback = function()
+			if condition() and vim.wo.winfixwidth == false then
+				vim.cmd([[wincmd L | vert resize 80 | set winfixwidth | set nonumber | wincmd =]])
+			end
+		end,
+	})
+end
+
 return module

@@ -77,6 +77,7 @@ return {
 						expr = true,
 						mode = { "n", "o" },
 					},
+					d = { ":DeleteDebugPrints<CR>", "Delete debug prints" },
 				},
 				["<leader>"] = {
 					p = {
@@ -99,8 +100,12 @@ return {
 	-- Edit filesystem as a buffer
 	{
 		"stevearc/oil.nvim",
+		keys = {
+			{ "<leader>o", "<cmd>Oil --float<cr>", "Edit filesystem as a buffer" },
+		},
+		cmd = "Oil",
 		opts = {
-			columns = { "icon", "permissions", "size", "mtime" },
+			columns = { "icon" },
 			view_options = {
 				show_hidden = true,
 			},

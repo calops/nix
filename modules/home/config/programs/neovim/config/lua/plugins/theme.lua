@@ -58,9 +58,25 @@ return {
 					TermFloatBorder = { fg = palette.red },
 
 					TelescopeBorder = { fg = palette.yellow },
-					TelescopePromptBorder = { fg = palette.peach },
 					TelescopePreviewBorder = { fg = palette.teal },
+					TelescopePromptBorder = { fg = palette.peach },
 					TelescopeResultsBorder = { fg = palette.green },
+
+					GlancePreviewMatch = { bg = colors.darken(palette.peach, 0.2, palette.base) },
+					GlanceListMatch = { fg = palette.peach },
+
+					Search = {
+						fg = palette.yellow,
+						bg = colors.darken(palette.yellow, 0.095, palette.base),
+						sp = palette.yellow,
+						style = { "bold", "underline" },
+					},
+					CurSearch = {
+						fg = palette.peach,
+						bg = colors.darken(palette.peach, 0.095, palette.base),
+						sp = palette.peach,
+						style = { "bold", "underdouble" },
+					},
 
 					InclineNormal = { fg = palette.base, bg = palette.sapphire, style = { "bold" } },
 					InclineNormalNC = { fg = palette.sapphire, bg = colors.darken(palette.sapphire, 0.33) },
@@ -68,6 +84,7 @@ return {
 					TreesitterContext = { bg = palette.base, style = { "italic" }, blend = 0 },
 					TreesitterContextSeparator = { fg = palette.surface1 },
 					TreesitterContextBottom = { bg = palette.base, sp = palette.surface1, style = { "underdashed" } },
+					TreesitterContextLineNumber = { link = "LineNr" },
 
 					DiagnosticUnderlineError = { sp = palette.red, style = { "undercurl" } },
 					DiagnosticUnderlineWarn = { sp = palette.yellow, style = { "undercurl" } },

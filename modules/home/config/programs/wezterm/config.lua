@@ -46,8 +46,8 @@ return {
 		},
 		{
 			key = "Tab",
-			mods = "CTRL|SHIFT",
-			action = act.SendKey { key = "Tab", mods = "CTRL|SHIFT" },
+			mods = "SHIFT|CTRL",
+			action = act.SendKey { key = "Tab", mods = "SHIFT|CTRL" },
 		},
 		{
 			key = "Enter",

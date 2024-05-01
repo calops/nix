@@ -16,7 +16,6 @@ return {
 			require("heirline").setup {
 				statuscolumn = require("plugins.ui.statuscolumn"),
 				statusline = require("plugins.ui.statusline"),
-				-- statusline = require('plugins.ui.statusline'),
 			}
 
 			local function new_tab()
@@ -30,8 +29,8 @@ return {
 			end
 
 			map {
-				["<C-g>"] = { new_tab, "Open current buffer in new tab" },
-				["<C-S-g>"] = { ":tabclose<CR>", "Close current tab" },
+				["<C-t>"] = { new_tab, "Open current buffer in new tab" },
+				["<C-S-t>"] = { ":tabclose<CR>", "Close current tab" },
 				["<C-Tab>"] = { ":tabnext<CR>", "View next tab" },
 				["<C-S-Tab>"] = { ":tabprevious<CR>", "View previous tab" },
 			}
@@ -44,18 +43,6 @@ return {
 		event = "VeryLazy",
 		config = true,
 	},
-	-- {
-	-- 	"rasulomaroff/reactive.nvim",
-	-- 	opts = {
-	-- 		configs = {
-	-- 			custom_preset = {
-	-- 				modes = {
-	-- 					i = { winhl = { CursorLine = { link = "ModeInsert" } } },
-	-- 				},
-	-- 			},
-	-- 		},
-	-- 	},
-	-- },
 	-- CMD line replacement and other UI niceties
 	{
 		"folke/noice.nvim",
