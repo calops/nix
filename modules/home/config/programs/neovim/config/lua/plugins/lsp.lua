@@ -47,11 +47,11 @@ local lsp_config_function = function()
 		end,
 	}
 
-	require("lsp-zero")
+	local lsp_zero = require("lsp-zero")
 	require("mason").setup { ui = { border = "rounded" } }
 	require("mason-lspconfig").setup {
 		automatic_installation = false,
-		-- handlers = { lsp_zero.default_setup },
+		handlers = { lsp_zero.default_setup },
 	}
 
 	local lspconfig = require("lspconfig")
@@ -69,13 +69,13 @@ local lsp_config_function = function()
 			},
 		},
 	}
+	lspconfig.nil_ls.setup {}
 	lspconfig.nixd.setup {
 		on_init = function(client, _)
 			-- Turn off semantic tokens until they're more consistent
 			client.server_capabilities.semanticTokensProvider = nil
 		end,
 	}
-	lspconfig.nil_ls.setup {}
 	lspconfig.lua_ls.setup {
 		settings = {
 			Lua = {
@@ -190,19 +190,19 @@ return {
 			},
 		},
 		init = function()
+			local function pick_with_selection(selection)
+				return function()
+					local actions = require("CopilotChat.actions")
+					actions.pick(actions.prompt_actions { selection = require("CopilotChat.select")[selection] })
+				end
+			end
 			map({
 				["<leader>c"] = {
 					name = "copilot",
 					c = { require("CopilotChat").toggle, "Toggle Copilot Chat" },
-					b = {
-						function()
-							local actions = require("CopilotChat.actions")
-							actions.pick(actions.prompt_actions {
-								selection = require("CopilotChat.select").buffer,
-							})
-						end,
-						"Actions on buffer",
-					},
+					b = { pick_with_selection("buffer"), "Actions on buffer" },
+					a = { pick_with_selection("buffers"), "Actions on all buffers" },
+					s = { pick_with_selection("selection"), "Actions on selection" },
 				},
 			}, { mode = { "n", "v", "x" } })
 			require("core.utils").make_sidebar(
