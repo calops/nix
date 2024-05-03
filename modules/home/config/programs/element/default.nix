@@ -48,7 +48,7 @@ in
                 roomlist-separator-color = "${palette.overlay0}";
                 timeline-background-color = "${palette.base}";
                 timeline-text-color = "${palette.text}";
-                secondary-content = "${palette.flamingo}";
+                secondary-content = "${palette.subtext0}";
                 tertiary-content = "${palette.coral}";
                 timeline-text-secondary-color = "${palette.subtext0}";
                 timeline-highlights-color = "${palette.mantle}";
