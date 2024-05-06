@@ -25,7 +25,7 @@ return {
 				["<leader>"] = {
 					["<Space>"] = {
 						function() require("telescope.builtin").grep_string() end,
-						"Grep string under cursor",
+						"Grep word under cursor",
 					},
 					S = { function() require("telescope.builtin").grep_string { search = "" } end, "Fuzzy grep" },
 					s = { function() require("telescope.builtin").live_grep() end, "Live grep" },
@@ -34,6 +34,18 @@ return {
 					R = { function() require("telescope.builtin").resume() end, "Resume selection" },
 				},
 			}
+			map({
+				["<leader>s"] = {
+					function()
+						vim.cmd('noau normal! "vy"')
+						local text = vim.fn.getreg("v")
+						vim.fn.setreg("v", {})
+						-- return #text > 0 and text or ""
+						require("telescope.builtin").grep_string { search = text }
+					end,
+					"Grep current selection",
+				},
+			}, { mode = { "x", "v" } })
 		end,
 		config = function()
 			require("notify")

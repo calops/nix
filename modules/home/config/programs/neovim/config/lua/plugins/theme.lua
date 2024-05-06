@@ -75,7 +75,7 @@ return {
 						fg = palette.peach,
 						bg = colors.darken(palette.peach, 0.095, palette.base),
 						sp = palette.peach,
-						style = { "bold", "underdouble" },
+						style = { "bold", "underline" },
 					},
 
 					InclineNormal = { fg = palette.base, bg = palette.sapphire, style = { "bold" } },

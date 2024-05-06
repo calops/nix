@@ -22,19 +22,18 @@ local lsp_init_function = function()
 	}
 
 	vim.api.nvim_create_autocmd("InsertEnter", { callback = function() vim.lsp.inlay_hint.enable(false) end })
-
 	vim.api.nvim_create_autocmd(
 		"InsertLeave",
 		{ callback = function() vim.lsp.inlay_hint.enable(vim.b.inlay_hints_enabled or false) end }
 	)
 
-	vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-	vim.lsp.handlers["textDocument/signatureHelp"] =
-		vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+	local handlers = vim.lsp.handlers
+	handlers["textDocument/hover"] = vim.lsp.with(handlers.hover, { border = "rounded" })
+	handlers["textDocument/signatureHelp"] = vim.lsp.with(handlers.signature_help, { border = "rounded" })
 end
 
 local lsp_config_function = function()
-	require("neoconf")
+	require("neoconf").setup {}
 	require("neodev").setup {
 		pathStrict = false,
 		-- Always load nvim plugins for lua_ls, this is a temporary hack
@@ -97,13 +96,13 @@ return {
 	{
 		"VonHeikemen/lsp-zero.nvim",
 		lazy = false,
-		priority = 50,
 		dependencies = {
 			"neovim/nvim-lspconfig",
 			"williamboman/mason-lspconfig.nvim",
 			"williamboman/mason.nvim",
 			"onsails/lspkind.nvim",
 			"folke/neodev.nvim",
+			"folke/neoconf.nvim",
 		},
 		init = lsp_init_function,
 		config = lsp_config_function,
@@ -202,7 +201,7 @@ return {
 					c = { require("CopilotChat").toggle, "Toggle Copilot Chat" },
 					b = { pick_with_selection("buffer"), "Actions on buffer" },
 					a = { pick_with_selection("buffers"), "Actions on all buffers" },
-					s = { pick_with_selection("selection"), "Actions on selection" },
+					s = { pick_with_selection("visual"), "Actions on selection" },
 				},
 			}, { mode = { "n", "v", "x" } })
 			require("core.utils").make_sidebar(

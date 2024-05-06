@@ -171,7 +171,7 @@ function module.make_sidebar(pattern, condition)
 		group = sidebar_group,
 		callback = function()
 			if condition() and vim.wo.winfixwidth == false then
-				vim.cmd([[wincmd L | vert resize 80 | set winfixwidth | set statuscolumn='' | wincmd =]])
+				vim.cmd([[wincmd L | vert resize 80 | set winfixwidth | set statuscolumn= | wincmd =]])
 			end
 		end,
 	})

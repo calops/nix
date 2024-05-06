@@ -103,7 +103,7 @@ return {
 		keys = {
 			{ "<leader>o", "<cmd>Oil --float<cr>", "Edit filesystem as a buffer" },
 		},
-		cmd = "Oil",
+		lazy = false,
 		opts = {
 			columns = { "icon" },
 			view_options = {

@@ -69,13 +69,6 @@ return {
 			highlights = { FloatBorder = { link = "TermFloatBorder" } },
 		},
 	},
-	-- Project-local configuration
-	{
-		"folke/neoconf.nvim",
-		lazy = false,
-		enabled = true,
-		config = true,
-	},
 	-- Auto close buffers
 	{
 		"chrisgrieser/nvim-early-retirement",
