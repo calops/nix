@@ -38,37 +38,34 @@ in
       enable = true;
       package = nvimPackage;
       defaultEditor = true;
-      extraPackages =
-        with pkgs;
-        [
-          # Formatters
-          alejandra # Nix
-          nixfmt-rfc-style # Nix
-          black # Python
-          prettierd # Multi-language
-          shfmt # Shell
-          isort # Python
-          stylua # Lua
+      extraPackages = [
+        # Formatters
+        pkgs.alejandra # Nix
+        pkgs.nixfmt-rfc-style # Nix
+        pkgs.black # Python
+        pkgs.prettierd # Multi-language
+        pkgs.shfmt # Shell
+        pkgs.isort # Python
+        pkgs.stylua # Lua
 
-          # LSP
-          lua-language-server
-          my.logseqlsp
-          nixd
-          nil
-          rustToolchain
+        # LSP
+        pkgs.lua-language-server
+        pkgs.my.logseqlsp
+        pkgs.nixd
+        pkgs.nil
+        rustToolchain
 
-          # Tools
-          cmake
-          fswatch # File watcher utility, replacing libuv.fs_event for neovim 10.0
-          fzf
-          gcc
-          git
-          gnumake
-          nodejs
-          sqlite
-          tree-sitter
-        ]
-        ++ lib.lists.optional (!pkgs.stdenv.isDarwin) vscode-extensions.vadimcn.vscode-lldb.adapter;
+        # Tools
+        pkgs.cmake
+        pkgs.fswatch # File watcher utility, replacing libuv.fs_event for neovim 10.0
+        pkgs.fzf
+        pkgs.gcc
+        pkgs.git
+        pkgs.gnumake
+        pkgs.nodejs
+        pkgs.sqlite
+        pkgs.tree-sitter
+      ] ++ lib.lists.optional (!pkgs.stdenv.isDarwin) pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter;
       plugins = [
         pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
       ];
@@ -76,22 +73,26 @@ in
 
     xdg.configFile = {
       # Raw symlink to the plugin manager lock file, so that it stays writeable
-      #"nvim/lazy-lock.json".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/lazy-lock.json";
-      "nvim/lua/nix/palette.lua".text = "return ${lib.generators.toLua { } palette}";
-      "nvim/lua/nix/tools.lua".text = # lua
+      "nvim/lazy-lock.json".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/lazy-lock.json";
+
+      "nvim/init.lua".text = # lua
         ''
+          package.path = package.path .. ";${config.home.homeDirectory}/.config/nvim/nix/?.lua"
+
+          vim.g.gcc_bin_path = '${lib.getExe pkgs.gcc}'
           vim.g.sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.${
             if pkgs.stdenv.isDarwin then "dylib" else "so"
           }'
 
-          return {
-            gcc = '${lib.getExe pkgs.gcc}';
-          }
+          require("config")
         '';
-      "nvim" = {
-        source = ./config;
-        recursive = true;
-      };
+
+      "nvim/nix/palette.lua".text = "return ${lib.generators.toLua { } palette}";
+
+      # Out of store symlink of whe whole configuration, for more agility when editing it
+      "nvim/lua".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/config/lua";
+
+      # Nixd LSP configuration
       "${config.my.configDir}/.nixd.json".text = builtins.toJSON {
         options = {
           enable = true;
@@ -108,7 +109,10 @@ in
           NVIM_WRAPPER=~/.nix-profile/bin/nvim
           STATE_DIR=~/.local/state/nix/
           STATE_FILE=$STATE_DIR/lazy-lock-checksum
-          LOCK_FILE=~/.config/nvim/lazy-lock.json
+          LOCK_FILE=$(readlink -f "~/.config/nvim/lazy-lock.json")
+
+          [ ! -f "$LOCK_FILE" ] && echo "No lock file found, skipping" && exit 0
+
           HASH=$(nix-hash --flat $LOCK_FILE)
 
           [ ! -d $STATE_DIR ] && mkdir -p $STATE_DIR

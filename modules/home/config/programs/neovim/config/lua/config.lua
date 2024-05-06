@@ -1,5 +1,3 @@
-require("nix.tools")
-
 ---------- Settings
 -- Search
 vim.o.ignorecase = true

@@ -8,10 +8,12 @@
 {
   options.my = {
     configDir = lib.mkOption {
-      type = lib.types.str;
-      default = "/etc/nixos";
+      type = lib.types.path;
+      apply = toString;
+      default = "${config.home.homeDirectory}/nix";
       description = "Location of the nix config directory (this repo)";
     };
+
     configType = lib.mkOption {
       type = lib.types.str;
       default =
@@ -22,11 +24,13 @@
         else
           "standalone";
     };
+
     isNixos = lib.mkOption {
       type = lib.types.bool;
       default = nixosConfig != null;
       readOnly = true;
     };
+
     isDarwin = lib.mkOption {
       type = lib.types.bool;
       default = darwinConfig != null;
