@@ -6,7 +6,7 @@ return {
 	-- TUI
 	{
 		"rebelot/heirline.nvim",
-		lazy = false,
+		event = "UIEnter",
 		config = function()
 			vim.o.signcolumn = "no"
 			vim.o.foldcolumn = "0"
@@ -51,7 +51,7 @@ return {
 			"rcarriga/nvim-notify",
 		},
 		enabled = true,
-		lazy = false,
+		event = "UIEnter",
 		init = function()
 			map {
 				["<leader><leader>"] = { ":noh<CR>", "Hide search highlights" },
@@ -150,7 +150,7 @@ return {
 	-- Notification handler
 	{
 		"rcarriga/nvim-notify",
-		lazy = false,
+		event = "UIEnter",
 		opts = {
 			top_down = true,
 			max_width = 100,

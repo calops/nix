@@ -167,30 +167,27 @@ return {
 			storage = "sqlite",
 			cancel_event = "move",
 		} },
-		config = function(_, opts)
-			require("yanky").setup(opts)
-			map {
-				["<C-y>"] = { require("telescope").extensions.yank_history.yank_history, "Yank history" },
-				["<leader>y"] = { '"+y', "Copy to system clipboard", mode = { "n", "v", "x" } },
-				gp = { "<Plug>YankyPreviousEntry", "Previous yank" },
-				gn = { "<Plug>YankyNextEntry", "Next yank" },
-			}
-		end,
+		keys = {
+			{
+				"<C-y>",
+				function() require("telescope").extensions.yank_history.yank_history() end,
+				desc = "Yank history",
+			},
+			{ "<leader>y", '"+y', "Copy to system clipboard", mode = { "n", "v", "x" } },
+			{ "gp", "<Plug>YankyPreviousEntry", "Previous yank" },
+			{ "gn", "<Plug>YankyNextEntry", "Next yank" },
+		},
 	},
 	-- Substitute operator
 	{
 		"gbprod/substitute.nvim",
 		lazy = true,
-		init = function()
-			map {
-				s = { require("substitute").operator, "Substitute" },
-				ss = { require("substitute").line, "Substitute line" },
-				S = { require("substitute").eol, "Substitute until end of line" },
-			}
-			map {
-				s = { require("substitute").visual, "Substitute", mode = "x" },
-			}
-		end,
+		keys = {
+			{ "s", function() require("substitute").operator() end, desc = "Substitute", mode = "n" },
+			{ "s", function() require("substitute").visual() end, desc = "Substitute", mode = "x" },
+			{ "ss", function() require("substitute").line() end, desc = "Substitute line" },
+			{ "S", function() require("substitute").eol() end, desc = "Substitute until end of line" },
+		},
 		opts = {
 			on_substitute = function() require("yanky.integration").substitute() end,
 		},

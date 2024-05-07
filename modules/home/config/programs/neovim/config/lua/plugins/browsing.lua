@@ -80,6 +80,7 @@ return {
 			telescope.load_extension("ast_grep")
 			telescope.load_extension("textcase")
 			telescope.load_extension("yank_history")
+			telescope.load_extension("persisted")
 
 			require("telescope-all-recent").setup {
 				default = { sorting = "frecency" },

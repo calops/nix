@@ -4,7 +4,7 @@ return {
 	-- Universal language parser
 	{
 		"nvim-treesitter/nvim-treesitter",
-		lazy = false,
+		event = "BufRead",
 		build = function() vim.cmd("TSUpdate") end,
 		dependencies = {
 			{ "nvim-treesitter/nvim-treesitter-textobjects" },
@@ -83,7 +83,10 @@ return {
 			}
 		end,
 	},
-	{ "JoosepAlviste/nvim-ts-context-commentstring" },
+	{
+		"JoosepAlviste/nvim-ts-context-commentstring",
+		event = "BufRead",
+	},
 	-- Show sticky context for off-screen scope beginnings
 	{
 		"nvim-treesitter/nvim-treesitter-context",
@@ -121,8 +124,8 @@ return {
 		},
 		init = function()
 			local function dot_repeatable(op)
-				require("syntax-tree-surfer")
 				return function()
+					require("syntax-tree-surfer")
 					vim.opt.opfunc = op
 					return "g@l"
 				end
@@ -194,6 +197,7 @@ return {
 	{
 		"folke/todo-comments.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
+		event = "VeryLazy",
 		opts = {
 			signs = false,
 		},

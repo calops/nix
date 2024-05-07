@@ -20,16 +20,6 @@ local lsp_init_function = function()
 			"Toggle inlay hints for buffer",
 		},
 	}
-
-	vim.api.nvim_create_autocmd("InsertEnter", { callback = function() vim.lsp.inlay_hint.enable(false) end })
-	vim.api.nvim_create_autocmd(
-		"InsertLeave",
-		{ callback = function() vim.lsp.inlay_hint.enable(vim.b.inlay_hints_enabled or false) end }
-	)
-
-	local handlers = vim.lsp.handlers
-	handlers["textDocument/hover"] = vim.lsp.with(handlers.hover, { border = "rounded" })
-	handlers["textDocument/signatureHelp"] = vim.lsp.with(handlers.signature_help, { border = "rounded" })
 end
 
 local lsp_config_function = function()
@@ -90,12 +80,22 @@ local lsp_config_function = function()
 			return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or vim.loop.os_homedir()
 		end,
 	}
+
+	vim.api.nvim_create_autocmd("InsertEnter", { callback = function() vim.lsp.inlay_hint.enable(false) end })
+	vim.api.nvim_create_autocmd(
+		"InsertLeave",
+		{ callback = function() vim.lsp.inlay_hint.enable(vim.b.inlay_hints_enabled or false) end }
+	)
+
+	local handlers = vim.lsp.handlers
+	handlers["textDocument/hover"] = vim.lsp.with(handlers.hover, { border = "rounded" })
+	handlers["textDocument/signatureHelp"] = vim.lsp.with(handlers.signature_help, { border = "rounded" })
 end
 
 return {
 	{
 		"VonHeikemen/lsp-zero.nvim",
-		lazy = false,
+		event = "BufRead",
 		dependencies = {
 			"neovim/nvim-lspconfig",
 			"williamboman/mason-lspconfig.nvim",
@@ -178,7 +178,14 @@ return {
 			{ "zbirenbaum/copilot.lua" },
 			{ "nvim-lua/plenary.nvim" },
 		},
+		lazy = true,
 		opts = {
+			question_header = "##   User ――――――――――――――――――――――",
+			answer_header = "##   Copilot ―――――――――――――――――――",
+			error_header = "##   Error ―――――――――――――――――――――",
+			separator = "",
+			show_folds = false,
+			context = "buffer",
 			window = {
 				layout = "vertical",
 				width = 120,
@@ -198,12 +205,15 @@ return {
 			map({
 				["<leader>c"] = {
 					name = "copilot",
-					c = { require("CopilotChat").toggle, "Toggle Copilot Chat" },
+					c = { function() require("CopilotChat").toggle() end, "Toggle Copilot Chat" },
 					b = { pick_with_selection("buffer"), "Actions on buffer" },
 					a = { pick_with_selection("buffers"), "Actions on all buffers" },
 					s = { pick_with_selection("visual"), "Actions on selection" },
 				},
 			}, { mode = { "n", "v", "x" } })
+		end,
+		config = function(opts)
+			require("CopilotChat").setup(opts)
 			require("core.utils").make_sidebar(
 				"copilot-chat",
 				function() return vim.fn.bufname() == "copilot-chat" and vim.fn.win_gettype() ~= "popup" end
@@ -213,6 +223,7 @@ return {
 	-- LSP within TS injections
 	{
 		"jmbuhr/otter.nvim",
+		cmd = "Otter",
 		init = function()
 			vim.api.nvim_create_user_command(
 				"Otter",
@@ -228,6 +239,7 @@ return {
 		dependencies = {
 			"nvim-neotest/nvim-nio",
 		},
+		cmd = "Neotest",
 		config = function()
 			require("neotest").setup {
 				adapters = {
