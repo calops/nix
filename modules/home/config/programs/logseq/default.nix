@@ -20,7 +20,7 @@ in {
     programs.logseq = let
       customCss = pkgs.fetchurl {
         url = "https://logseq.catppuccin.com/ctp-mocha.css";
-        hash = "sha256-YK5qt+o6QCbB/J+SLApMpHgj1zWxAxs18X8V0044FaQ=";
+        hash = "sha256-J8zX/X7lpPHaozkZYSF+ZrshDAZ2jILhCVFzljxvx0s=";
       };
     in {
       enable = true;
