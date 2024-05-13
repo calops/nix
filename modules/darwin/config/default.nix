@@ -5,7 +5,6 @@
 
   nix = {
     optimise.automatic = true;
-    # package = pkgs.nixVersions.nix_2_17; # TODO: remove once OOS symlinks are fixed, broken as of 2.21
     gc = {
       automatic = true;
       interval = {

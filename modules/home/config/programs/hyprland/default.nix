@@ -17,8 +17,6 @@ let
   movewindow = "hy3:movewindow";
 in
 {
-  imports = [ inputs.hyprland-hyprlock.homeManagerModules.default ];
-
   config = lib.mkIf (cfg.enable && !config.my.isDarwin) {
     wayland.windowManager.hyprland = {
       enable = true;
@@ -190,36 +188,37 @@ in
 
     programs.hyprlock = {
       enable = true;
-      # package = inputs.hyprland-contrib.packages.${pkgs.system}.hyprlock.override {mesa = pkgs.mesa;};
-      backgrounds = [
-        {
-          path = "screenshot";
-          blur_passes = 3;
-        }
-      ];
-      input-fields = [
-        {
-          size = {
-            width = 300;
-            height = 50;
-          };
-          position = {
-            x = 0;
-            y = -20;
-          };
-          outline_thickness = 3;
-          dots_size = 0.33;
-          dots_spacing = 0.15;
-          dots_center = false;
-          outer_color = "rgb(${palette.crust})";
-          inner_color = "rgb(${palette.text})";
-          font_color = "rgb(${palette.base})";
-          fade_on_empty = true;
-          hide_input = false;
-          halign = "center";
-          valign = "center";
-        }
-      ];
+      settings = {
+        background = [
+          {
+            path = "screenshot";
+            blur_passes = 3;
+          }
+        ];
+        input-field = [
+          {
+            size = {
+              width = 300;
+              height = 50;
+            };
+            position = {
+              x = 0;
+              y = -20;
+            };
+            outline_thickness = 3;
+            dots_size = 0.33;
+            dots_spacing = 0.15;
+            dots_center = false;
+            outer_color = "rgb(${palette.crust})";
+            inner_color = "rgb(${palette.text})";
+            font_color = "rgb(${palette.base})";
+            fade_on_empty = true;
+            hide_input = false;
+            halign = "center";
+            valign = "center";
+          }
+        ];
+      };
     };
 
     xdg.configFile."hypr/hypridle.conf".text =
@@ -231,11 +230,15 @@ in
         }
       '';
 
-    home.packages = with inputs.hyprland-contrib.packages.${pkgs.system}; [
-      grimblast # TODO: see if i keep this
-      hyprprop
-      scratchpad
-      pkgs.my.hyprfreeze
-    ];
+    home.packages =
+      let
+        hypr = inputs.hyprland-contrib.packages.${pkgs.system};
+      in
+      [
+        hypr.grimblast # TODO: see if I keep this
+        hypr.hyprprop
+        hypr.scratchpad
+        pkgs.my.hyprfreeze
+      ];
   };
 }

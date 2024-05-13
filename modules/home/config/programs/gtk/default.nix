@@ -16,7 +16,7 @@
 
     qt = lib.mkIf (!config.my.isDarwin) {
       enable = true;
-      platformTheme = "gtk";
+      platformTheme.name = "gtk";
     };
   };
 }

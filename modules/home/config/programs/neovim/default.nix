@@ -105,21 +105,21 @@ in
     home.activation.neovim =
       lib.home-manager.hm.dag.entryAfter [ "linkGeneration" ] # bash
         ''
-          NVIM_WRAPPER=~/.nix-profile/bin/nvim
-          STATE_DIR=~/.local/state/nix/
-          STATE_FILE=$STATE_DIR/lazy-lock-checksum
-          LOCK_FILE=$(readlink -f "~/.config/nvim/lazy-lock.json")
-
+          LOCK_FILE=$(readlink -f ~/.config/nvim/lazy-lock.json)
+          echo $LOCK_FILE
           [ ! -f "$LOCK_FILE" ] && echo "No lock file found, skipping" && exit 0
 
-          HASH=$(nix-hash --flat $LOCK_FILE)
+          STATE_DIR=~/.local/state/nix/
+          STATE_FILE=$STATE_DIR/lazy-lock-checksum
 
           [ ! -d $STATE_DIR ] && mkdir -p $STATE_DIR
           [ ! -f $STATE_FILE ] && touch $STATE_FILE
 
+          HASH=$(nix-hash --flat $LOCK_FILE)
+
           if [ "$(cat $STATE_FILE)" != "$HASH" ]; then
             echo "Syncing neovim plugins"
-            PATH="$PATH:${pkgs.git}/bin" $DRY_RUN_CMD $NVIM_WRAPPER --headless "+Lazy! restore" +qa
+            $DRY_RUN_CMD ${config.programs.neovim.finalPackage}/bin/nvim --headless "+Lazy! restore" +qa
             $DRY_RUN_CMD echo $HASH >$STATE_FILE
           else
             $VERBOSE_ECHO "Neovim plugins already synced, skipping"

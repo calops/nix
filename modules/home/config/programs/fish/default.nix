@@ -15,7 +15,7 @@
         hs = "nh home switch";
         ns =
           {
-            nixos = "nh home switch";
+            nixos = "nh os switch";
             darwin = "darwin-rebuild --flake ~/nix switch";
             standalone = "nh home switch";
           }

@@ -1,5 +1,6 @@
-{ ... }:
+{ pkgs, lib, ... }:
 {
+  nix.package = lib.mkForce pkgs.nixVersions.latest; # TODO: remove once snowfall is fixed
   nix.settings = {
     experimental-features = [
       "flakes"

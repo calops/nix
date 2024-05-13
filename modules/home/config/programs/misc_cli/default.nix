@@ -6,8 +6,6 @@
 }:
 {
   config = lib.mkIf config.my.roles.terminal.enable {
-    programs.nix-index.enable = true;
-
     home.packages = with pkgs; [
       megatools
       ast-grep
@@ -29,8 +27,9 @@
       pastel
       nh
       jaq
-      comma
     ];
+
+    programs.nix-index-database.comma.enable = true;
 
     programs.btop = {
       enable = config.my.roles.terminal.enable;
