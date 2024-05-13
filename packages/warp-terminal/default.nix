@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 pkgs.appimageTools.wrapType2 {
   name = "warp-terminal";
   src = pkgs.fetchurl {

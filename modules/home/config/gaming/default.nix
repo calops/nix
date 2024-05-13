@@ -4,9 +4,11 @@
   config,
   nixosConfig ? null,
   ...
-}: let
+}:
+let
   palette = config.my.colors.palette.withoutHashtag;
-in {
+in
+{
   options.my.roles.gaming.enable = lib.mkOption {
     default = nixosConfig.my.roles.gaming.enable or false;
     description = "Enable gaming-related packages and configuration";

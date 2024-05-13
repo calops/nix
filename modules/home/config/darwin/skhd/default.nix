@@ -3,17 +3,20 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   window = args: "yabai -m window --" + args;
   space = args: "yabai -m space --" + args;
 
-  mkSkhdrc = mappings:
+  mkSkhdrc =
+    mappings:
     lib.strings.concatStrings (
       lib.attrsets.mapAttrsToList (name: value: "${name}: ${value}\n") mappings
     );
-in {
+in
+{
   config = lib.mkIf config.my.isDarwin {
-    home.packages = [pkgs.skhd];
+    home.packages = [ pkgs.skhd ];
 
     xdg.configFile."skhd/skhdrc".text = mkSkhdrc {
       "cmd - return" = "wezterm cli spawn --new-window";

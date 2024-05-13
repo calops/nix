@@ -194,11 +194,10 @@ in
     };
 
     home.packages =
-      with pkgs;
       [
-        wl-clipboard
-        libnotify
-        slack
+        pkgs.wl-clipboard
+        pkgs.libnotify
+        pkgs.slack
       ]
       ++ (lib.lists.optional (!config.my.isDarwin) pkgs.google-chrome)
       ++ (
@@ -214,6 +213,7 @@ in
             symbols.package
           ]
       );
+
     programs.mpv.enable = true;
     programs.zathura = {
       enable = true;

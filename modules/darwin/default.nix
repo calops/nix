@@ -1,3 +1,7 @@
-{...}: {
-  imports = [../common/colors];
+{ ... }:
+{
+  imports = [
+    ../common/colors
+    ../common/nix.nix
+  ];
 }

@@ -9,9 +9,15 @@
     nur.url = "github:nix-community/NUR";
     devenv.url = "github:cachix/devenv";
     ags.url = "github:Aylur/ags";
-    darwin.url = "github:LnL7/nix-darwin";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
+    darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     fenix = {
       url = "github:nix-community/fenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -40,45 +46,11 @@
 
   outputs =
     inputs:
-    let
-      commonModules = [
-        {
-          nix.settings = {
-            experimental-features = [
-              "flakes"
-              "nix-command"
-            ];
-            substituters = [
-              "https://cache.nixos.org"
-              "https://nix-community.cachix.org"
-            ];
-            trusted-public-keys = [
-              "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-              "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-            ];
-            trusted-users = [
-              "root"
-              "@wheel"
-              "@sudo"
-              "@admin"
-            ];
-          };
-        }
-      ];
-    in
     inputs.snowfall-lib.mkFlake {
       inherit inputs;
       src = ./.;
       snowfall.namespace = "my";
       channels-config.allowUnfree = true;
-      channels-config.permittedInsecurePackages = [
-        "nix-2.17.1" # Needed for out of store symlinks
-      ];
-
-      systems.modules.nixos = commonModules ++ [ inputs.stylix.nixosModules.stylix ];
-      systems.modules.darwin = commonModules;
-      homes.modules = commonModules ++ [ inputs.stylix.homeManagerModules.stylix ];
-
       outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
     };
 }

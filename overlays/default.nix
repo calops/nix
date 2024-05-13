@@ -6,7 +6,8 @@
   darwin,
   firefox-darwin,
   ...
-}: self: super:
+}:
+self: super:
 {
   nur = import nur {
     pkgs = super;
@@ -17,4 +18,4 @@
 // (nixd.overlays.default self super)
 // (fenix.overlays.default self super)
 // (darwin.overlays.default self super)
-// (firefox-darwin.overlay self super)
+// (super.lib.optionalAttrs super.stdenv.isDarwin (firefox-darwin.overlay self super))

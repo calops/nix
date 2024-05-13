@@ -3,9 +3,10 @@
   config,
   nixosConfig ? null,
   ...
-}: let
+}:
+let
   cfg = config.my.roles.graphical;
-  lua = lib.generators.toLua {} {
+  lua = lib.generators.toLua { } {
     nvidia = nixosConfig.my.roles.nvidia.enable or false;
     font = {
       name = cfg.fonts.monospace.name;
@@ -16,7 +17,8 @@
       symbols = cfg.fonts.symbols.name;
     };
   };
-in {
+in
+{
   config = lib.mkIf (cfg.enable && cfg.terminal == "wezterm") {
     programs.wezterm = {
       enable = true;

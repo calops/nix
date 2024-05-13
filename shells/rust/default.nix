@@ -1,8 +1,4 @@
-{
-  inputs,
-  pkgs,
-  ...
-}:
+{ inputs, pkgs, ... }:
 inputs.devenv.lib.mkShell {
   inherit inputs pkgs;
   modules = [

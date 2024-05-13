@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 pkgs.buildGoModule rec {
   pname = "logseqlsp";
   version = "0.0.1-alpha6";

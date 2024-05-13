@@ -202,4 +202,18 @@ return {
 			}, { mode = { "n", "x", "o", "i" } })
 		end,
 	},
+	{
+		"gabrielpoca/replacer.nvim",
+		ft = "qf",
+		init = function()
+			-- Create binding only for qf filetype
+			vim.api.nvim_create_autocmd("BufRead", {
+				callback = function()
+					if vim.bo.filetype == "qf" then
+						vim.keymap.set("n", "i", function() require("replacer").run() end, { buffer = 0 })
+					end
+				end,
+			})
+		end,
+	},
 }

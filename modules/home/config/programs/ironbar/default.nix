@@ -3,8 +3,9 @@
   config,
   pkgs,
   ...
-}: {
-  config = lib.mkIf (config.my.roles.graphical.enable && ! config.my.isDarwin) {
+}:
+{
+  config = lib.mkIf (config.my.roles.graphical.enable && !config.my.isDarwin) {
     services.ironbar = {
       enable = true;
       # TODO: remove the override once vertical tray is released
@@ -18,141 +19,142 @@
       #   };
       #   cargoHash = "";
       # };
-      settings = let
-        ironbarClient = lib.getExe config.services.ironbar.package;
-        hyprctl = lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl";
+      settings =
+        let
+          ironbarClient = lib.getExe config.services.ironbar.package;
+          hyprctl = lib.getExe' config.wayland.windowManager.hyprland.package "hyprctl";
 
-        mkCustomWidget = class: opts:
-          {
-            type = "custom";
-            inherit class;
-          }
-          // opts;
+          mkCustomWidget =
+            class: opts:
+            {
+              type = "custom";
+              inherit class;
+            }
+            // opts;
 
-        mkSlider = class: opts:
-          {
-            type = "slider";
+          mkSlider =
+            class: opts:
+            {
+              type = "slider";
+              orientation = "vertical";
+              inherit class;
+            }
+            // opts;
+
+          mkHorizontalBox = class: widgets: {
+            type = "box";
+            orientation = "horizontal";
+            inherit class widgets;
+          };
+
+          mkVerticalBox = class: widgets: {
+            type = "box";
             orientation = "vertical";
-            inherit class;
-          }
-          // opts;
+            inherit class widgets;
+          };
 
-        mkHorizontalBox = class: widgets: {
-          type = "box";
-          orientation = "horizontal";
-          inherit class widgets;
-        };
+          mkLabel = class: label: {
+            type = "label";
+            inherit label class;
+          };
 
-        mkVerticalBox = class: widgets: {
-          type = "box";
-          orientation = "vertical";
-          inherit class widgets;
-        };
+          mkPopupButton = label: {
+            type = "button";
+            on_click = "popup:toggle";
+            inherit label;
+          };
 
-        mkLabel = class: label: {
-          type = "label";
-          inherit label class;
-        };
+          mkCmdButton = label: cmd: {
+            type = "button";
+            on_click = "!${cmd}";
+            inherit label;
+          };
 
-        mkPopupButton = label: {
-          type = "button";
-          on_click = "popup:toggle";
-          inherit label;
-        };
-
-        mkCmdButton = label: cmd: {
-          type = "button";
-          on_click = "!${cmd}";
-          inherit label;
-        };
-
-        notifications = mkCustomWidget "notifications" {
-          bar = [
-            (mkVerticalBox "notifications-button" [
-              (mkCmdButton "" "${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} -t")
-            ])
-          ];
-        };
-
-        clock = let
-          date = lib.getExe' pkgs.coreutils "date";
-        in
-          mkCustomWidget "clock" {
+          notifications = mkCustomWidget "notifications" {
             bar = [
-              (mkHorizontalBox "clock-button" [(mkPopupButton "{{${date} +'%H\n%M'}}")])
-            ];
-            popup = [
-              (mkHorizontalBox "clock-popup" [(mkLabel "date" "{{${date} +'%A, %d %B %Y'}}")])
+              (mkVerticalBox "notifications-button" [
+                (mkCmdButton "" "${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} -t")
+              ])
             ];
           };
 
-        workspaces = {
-          type = "workspaces";
-          on_scroll_up = "${hyprctl} dispatch workspace -1";
-          on_scroll_down = "${hyprctl} dispatch workspace +1";
-          name_map = {
-            "1" = "";
-            "2" = "";
-            "3" = "";
-            "4" = "";
-            "5" = "";
-            "6" = "";
-            "7" = "";
-            "8" = "";
-            "9" = "󰭹";
-            "10" = "";
-            "special:scratchpad" = "";
+          clock =
+            let
+              date = lib.getExe' pkgs.coreutils "date";
+            in
+            mkCustomWidget "clock" {
+              bar = [ (mkHorizontalBox "clock-button" [ (mkPopupButton "{{${date} +'%H\n%M'}}") ]) ];
+              popup = [ (mkHorizontalBox "clock-popup" [ (mkLabel "date" "{{${date} +'%A, %d %B %Y'}}") ]) ];
+            };
+
+          workspaces = {
+            type = "workspaces";
+            on_scroll_up = "${hyprctl} dispatch workspace -1";
+            on_scroll_down = "${hyprctl} dispatch workspace +1";
+            name_map = {
+              "1" = "";
+              "2" = "";
+              "3" = "";
+              "4" = "";
+              "5" = "";
+              "6" = "";
+              "7" = "";
+              "8" = "";
+              "9" = "󰭹";
+              "10" = "";
+              "special:scratchpad" = "";
+            };
           };
-        };
 
-        tray = {
-          type = "tray";
-          direction = "top_to_bottom";
-        };
+          tray = {
+            type = "tray";
+            direction = "top_to_bottom";
+          };
 
-        volume-slider = let
-          pamixer = lib.getExe pkgs.pamixer;
-          setVolume = pkgs.writeScript "setVolume" ''
-            ${pamixer} --set-volume $1
-            ${ironbarClient} set volume $1
-          '';
+          volume-slider =
+            let
+              pamixer = lib.getExe pkgs.pamixer;
+              setVolume = pkgs.writeScript "setVolume" ''
+                ${pamixer} --set-volume $1
+                ${ironbarClient} set volume $1
+              '';
+            in
+            mkCustomWidget "volume-slider" {
+              bar = [
+                (mkSlider "volume-slider" {
+                  show_if = "#show-volume-slider";
+                  show_label = false;
+                  length = 100;
+                  max = 100;
+                  value = "#volume";
+                  on_change = "!${setVolume} $0";
+                })
+              ];
+            };
         in
-          mkCustomWidget "volume-slider" {
-            bar = [
-              (mkSlider "volume-slider" {
-                show_if = "#show-volume-slider";
-                show_label = false;
-                length = 100;
-                max = 100;
-                value = "#volume";
-                on_change = "!${setVolume} $0";
-              })
-            ];
-          };
         # volume = {
         #   on_mouse_enter = "${ironbarClient} set show-volume-slider true";
         #   on_mouse_exit = "${ironbarClient} set show-volume-slider false";
         #   type = "volume";
         # };
-      in {
-        name = "status";
-        position = "left";
-        start = [
-          notifications
-          tray
-        ];
-        center = [
-          workspaces
-        ];
-        end = [
-          # volume
-          clock
-        ];
-      };
+        {
+          name = "status";
+          position = "left";
+          start = [
+            notifications
+            tray
+          ];
+          center = [ workspaces ];
+          end = [
+            # volume
+            clock
+          ];
+        };
 
-      style = let
-        palette = config.my.colors.palette.withHashtag;
-      in
+      style =
+        let
+          palette = config.my.colors.palette.withHashtag;
+        in
         # CSS
         ''
           * {

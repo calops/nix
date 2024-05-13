@@ -3,11 +3,13 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   palette = config.my.colors.palette.withoutHashtag;
-in {
+in
+{
   config = lib.mkIf config.my.isDarwin {
-    home.packages = [pkgs.sketchybar];
+    home.packages = [ pkgs.sketchybar ];
 
     xdg.configFile."sketchybar/sketchybarrc" = {
       text =
@@ -30,7 +32,7 @@ in {
           text = "${config.my.roles.graphical.fonts.monospace.name}",
           symbols = "${config.my.roles.graphical.fonts.symbols.name}",
         },
-        palette = ${lib.generators.toLua {} palette},
+        palette = ${lib.generators.toLua { } palette},
       }
     '';
 

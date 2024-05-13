@@ -3,12 +3,14 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.services.ironbar;
-in {
+in
+{
   options.services.ironbar = {
     enable = lib.mkEnableOption "Ironbar, a status bar for wayland compositors";
-    package = lib.mkPackageOption pkgs "ironbar" {};
+    package = lib.mkPackageOption pkgs "ironbar" { };
 
     systemdTarget = lib.mkOption {
       type = lib.types.str;
@@ -51,13 +53,13 @@ in {
       (lib.home-manager.hm.assertions.assertPlatform "services.ironbar" pkgs lib.platforms.linux)
     ];
 
-    home.packages = [cfg.package];
+    home.packages = [ cfg.package ];
 
     systemd.user.services.ironbar = {
       Unit = {
         Description = "Ironbar";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
 
       Service = {
@@ -67,7 +69,9 @@ in {
         KillMode = "mixed";
       };
 
-      Install = {WantedBy = [cfg.systemdTarget];};
+      Install = {
+        WantedBy = [ cfg.systemdTarget ];
+      };
     };
 
     xdg.configFile."ironbar/config.json" = lib.mkIf (cfg.settings != null) {

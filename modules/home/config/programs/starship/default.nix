@@ -1,21 +1,16 @@
-{
-  config,
-  lib,
-  ...
-}: let
+{ config, lib, ... }:
+let
   palette = config.my.colors.palette.withHashtag;
-  mkPill = {
-    color,
-    format,
-    ...
-  } @ args:
-    builtins.removeAttrs args ["color"]
+  mkPill =
+    { color, format, ... }@args:
+    builtins.removeAttrs args [ "color" ]
     // {
       format = lib.removeSuffix "\n" ''
         [](fg:${color} bg:${palette.base})[${format}](fg:${palette.base} bg:${color})[ ](bg:${palette.base} fg:${color})
       '';
     };
-in {
+in
+{
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.starship = {
       enable = config.my.roles.terminal.enable;

@@ -3,13 +3,15 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.services.swaynotificationcenter;
-in {
+in
+{
   options.services.swaynotificationcenter = {
     enable = lib.mkEnableOption "Sway notification center, a notification daemon for Wayland";
 
-    package = lib.mkPackageOption pkgs "swaynotificationcenter" {};
+    package = lib.mkPackageOption pkgs "swaynotificationcenter" { };
 
     systemdTarget = lib.mkOption {
       type = lib.types.str;
@@ -49,16 +51,18 @@ in {
 
   config = lib.mkIf cfg.enable {
     assertions = [
-      (lib.home-manager.hm.assertions.assertPlatform "services.swaynotificationcenter" pkgs lib.platforms.linux)
+      (lib.home-manager.hm.assertions.assertPlatform "services.swaynotificationcenter" pkgs
+        lib.platforms.linux
+      )
     ];
 
-    home.packages = [cfg.package];
+    home.packages = [ cfg.package ];
 
     systemd.user.services.swaynotificationcenter = {
       Unit = {
         Description = "Sway notification center";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
 
       Service = {
@@ -68,7 +72,7 @@ in {
         KillMode = "mixed";
       };
 
-      Install.WantedBy = [cfg.systemdTarget];
+      Install.WantedBy = [ cfg.systemdTarget ];
     };
 
     xdg.configFile."swaync/config.json" = lib.mkIf (cfg.settings != null) {

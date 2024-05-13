@@ -60,10 +60,10 @@ return {
 					mappings = {
 						i = {
 							["<esc>"] = require("telescope.actions").close,
-							["<C-q>"] = require("trouble.providers.telescope").open_with_trouble,
+							-- ["<C-q>"] = require("trouble.providers.telescope").open_with_trouble,
 						},
 						n = {
-							["<C-q>"] = require("trouble.providers.telescope").open_with_trouble,
+							-- ["<C-q>"] = require("trouble.providers.telescope").open_with_trouble,
 						},
 					},
 				},

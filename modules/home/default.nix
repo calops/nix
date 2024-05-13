@@ -1,5 +1,7 @@
-{nixosConfig ? null, ...}: {
+{ inputs, ... }:
+{
   imports = [
     ../common
+    inputs.stylix.homeManagerModules.stylix
   ];
 }

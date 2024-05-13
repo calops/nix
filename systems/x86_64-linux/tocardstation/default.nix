@@ -1,11 +1,6 @@
+{ config, pkgs, ... }:
 {
-  config,
-  pkgs,
-  ...
-}: {
-  imports = [
-    ./hardware.nix
-  ];
+  imports = [ ./hardware.nix ];
 
   time.timeZone = "Europe/Paris";
 
@@ -19,12 +14,15 @@
   };
 
   boot.initrd.luks.devices.rootDrive.device = "/dev/disk/by-uuid/ab146bd7-2e99-4aa7-a115-040df4acc43d";
-  boot.supportedFilesystems = ["ntfs"];
+  boot.supportedFilesystems = [ "ntfs" ];
 
   networking = {
     hostName = "tocardstation";
     networkmanager.enable = true;
-    nameservers = ["1.1.1.1" "9.9.9.9"];
+    nameservers = [
+      "1.1.1.1"
+      "9.9.9.9"
+    ];
   };
 
   i18n = {
@@ -47,7 +45,10 @@
   users.users.calops = {
     isNormalUser = true;
     description = "Rémi Labeyrie";
-    extraGroups = ["networkmanager" "wheel"];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
     shell = pkgs.fish;
   };
 

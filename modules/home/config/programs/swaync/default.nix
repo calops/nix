@@ -3,10 +3,12 @@
   pkgs,
   config,
   ...
-}: let
+}:
+let
   palette = config.my.colors.palette.withHashtag;
-in {
-  config = lib.mkIf (config.my.roles.graphical.enable && ! config.my.isDarwin) {
+in
+{
+  config = lib.mkIf (config.my.roles.graphical.enable && !config.my.isDarwin) {
     services.swaynotificationcenter = {
       enable = true;
 

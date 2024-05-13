@@ -3,9 +3,11 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   palette = config.my.colors.palette.withHashtag;
-in {
+in
+{
   config = lib.mkIf config.my.roles.graphical.enable {
     xdg.dataFile."warp-terminal/themes/catppuccin.yml".text =
       # yaml

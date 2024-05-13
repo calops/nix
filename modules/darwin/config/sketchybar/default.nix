@@ -12,11 +12,12 @@
 #   blur_radius=20
 #   notch_width=0
 # )
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   services.sketchybar = {
     enable = false;
-    extraPackages = [pkgs.my.sbarlua];
+    extraPackages = [ pkgs.my.sbarlua ];
   };
 
-  environment.systemPackages = [pkgs.sketchybar-app-font];
+  environment.systemPackages = [ pkgs.sketchybar-app-font ];
 }

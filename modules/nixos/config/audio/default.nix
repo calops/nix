@@ -1,8 +1,5 @@
+{ lib, config, ... }:
 {
-  lib,
-  config,
-  ...
-}: {
   options.my.roles.audio.enable = lib.mkEnableOption "Enable audio";
 
   config = lib.mkIf config.my.roles.audio.enable {

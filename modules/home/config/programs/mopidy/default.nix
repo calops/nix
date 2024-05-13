@@ -3,11 +3,13 @@
   pkgs,
   config,
   ...
-}: {
+}:
+{
   config = lib.mkIf config.my.roles.audio.enable {
     services.mopidy = {
       enable = true;
-      extensionPackages = with pkgs;
+      extensionPackages =
+        with pkgs;
         [
           mopidy-mpris
           mopidy-ytmusic

@@ -237,6 +237,8 @@ local tabs = {
 					end
 				end
 
+				table.insert(icons, { provider = " " })
+
 				local diag_pills = {}
 				local first = true
 				for i, count in ipairs(diag_count) do

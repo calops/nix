@@ -7,5 +7,5 @@
   my.configDir = "/home/calops/nix";
   my.roles.terminal.enable = true;
 
-  programs.git.extraConfig.safe.directory = ["/home/docker"];
+  programs.git.extraConfig.safe.directory = [ "/home/docker" ];
 }

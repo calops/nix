@@ -1,13 +1,10 @@
+{ lib, config, ... }:
 {
-  lib,
-  config,
-  ...
-}: {
   options.my.roles.nvidia.enable = lib.mkEnableOption "Nvidia support";
 
   config = lib.mkIf config.my.roles.nvidia.enable {
-    services.xserver.videoDrivers = ["nvidia"];
-    boot.kernelParams = ["nvidia.NVreg_PreserveVideoMemoryAllocations=1"];
+    services.xserver.videoDrivers = [ "nvidia" ];
+    boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
 
     hardware.nvidia = {
       modesetting.enable = true; # Enable modesetting driver

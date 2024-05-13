@@ -40,7 +40,6 @@ in
       defaultEditor = true;
       extraPackages = [
         # Formatters
-        pkgs.alejandra # Nix
         pkgs.nixfmt-rfc-style # Nix
         pkgs.black # Python
         pkgs.prettierd # Multi-language

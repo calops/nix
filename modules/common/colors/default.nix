@@ -3,8 +3,10 @@
   config,
   pkgs,
   ...
-}: let
-  mkColorOption = name:
+}:
+let
+  mkColorOption =
+    name:
     lib.mkOption {
       type = lib.types.str;
       description = "Color for " + name + " hue";
@@ -50,20 +52,22 @@
   ] (name: mkColorOption name);
 
   my.types = {
-    palette = lib.types.submodule {
-      options = hues;
-    };
+    palette = lib.types.submodule { options = hues; };
   };
-in {
+in
+{
   options.my.colors = {
     scheme = lib.mkOption {
-      type = lib.types.enum ["radiant"];
+      type = lib.types.enum [ "radiant" ];
       default = "radiant";
       description = "Colorscheme for relevant apps";
     };
 
     background = lib.mkOption {
-      type = lib.types.enum ["light" "dark"];
+      type = lib.types.enum [
+        "light"
+        "dark"
+      ];
       default = "dark";
       description = "Background color";
     };
@@ -100,17 +104,23 @@ in {
 
       asCss = pkgs.writeText "colors.css" ''
         :root {
-          ${lib.concatStringsSep "\n" (builtins.attrValues (builtins.mapAttrs (name: value: "  --" + name + ": " + value + ";") withHashtag))}
+          ${
+            lib.concatStringsSep "\n" (
+              builtins.attrValues (
+                builtins.mapAttrs (name: value: "  --" + name + ": " + value + ";") withHashtag
+              )
+            )
+          }
         }
       '';
 
-      asGtkCss =
-        pkgs.writeText "colors.gtk.css"
-        (lib.concatStringsSep "\n"
-          (builtins.attrValues
-            (builtins.mapAttrs
-              (name: value: "@define-color " + name + " " + value + ";")
-              withHashtag)));
+      asGtkCss = pkgs.writeText "colors.gtk.css" (
+        lib.concatStringsSep "\n" (
+          builtins.attrValues (
+            builtins.mapAttrs (name: value: "@define-color " + name + " " + value + ";") withHashtag
+          )
+        )
+      );
     };
   };
 }

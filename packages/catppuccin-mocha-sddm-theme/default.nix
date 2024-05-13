@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 pkgs.stdenv.mkDerivation {
   name = "catppuccin-mocha-sddm-theme";
   src = pkgs.fetchFromGitHub {

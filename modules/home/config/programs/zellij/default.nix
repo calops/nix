@@ -1,8 +1,5 @@
+{ config, lib, ... }:
 {
-  config,
-  lib,
-  ...
-}: {
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.zellij = {
       enable = true;

@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   options.my.roles.gaming.enable = lib.mkEnableOption "Enable gaming configuration";
 
   config = lib.mkIf config.my.roles.gaming.enable {
@@ -15,8 +16,8 @@
     };
 
     hardware.opengl = {
-      extraPackages = [pkgs.mangohud];
-      extraPackages32 = [pkgs.mangohud];
+      extraPackages = [ pkgs.mangohud ];
+      extraPackages32 = [ pkgs.mangohud ];
     };
   };
 }

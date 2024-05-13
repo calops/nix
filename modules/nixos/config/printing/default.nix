@@ -1,8 +1,5 @@
+{ lib, config, ... }:
 {
-  lib,
-  config,
-  ...
-}: {
   options.my.roles.printing.enable = lib.mkEnableOption "Printing";
 
   config = lib.mkIf config.my.roles.printing.enable {

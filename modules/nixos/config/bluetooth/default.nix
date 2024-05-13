@@ -1,8 +1,5 @@
+{ lib, config, ... }:
 {
-  lib,
-  config,
-  ...
-}: {
   options.my.roles.bluetooth.enable = lib.mkEnableOption "Bluetooth support";
 
   config = lib.mkIf config.my.roles.bluetooth.enable {

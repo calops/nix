@@ -1,7 +1,9 @@
-{config, ...}: let
+{ config, ... }:
+let
   cfg = config.my.roles.graphical;
   palette = config.my.colors.palette;
-in {
+in
+{
   programs.kitty = {
     enable = cfg.enable && cfg.terminal == "kitty";
     settings = {

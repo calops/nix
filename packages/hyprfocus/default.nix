@@ -1,4 +1,4 @@
-{pkgs, ...}:
+{ pkgs, ... }:
 pkgs.stdenv.mkDerivation {
   name = "hyprfocus";
   pname = "hyprfocus";
@@ -11,8 +11,8 @@ pkgs.stdenv.mkDerivation {
     hash = "sha256-JuUNQXUetKIUGGwzEA5dQmKtpFvYSZzG/IV373aKd6U=";
   };
 
-  nativeBuildInputs = [pkgs.pkg-config];
-  buildInputs = [pkgs.hyprland] ++ pkgs.hyprland.buildInputs;
+  nativeBuildInputs = [ pkgs.pkg-config ];
+  buildInputs = [ pkgs.hyprland ] ++ pkgs.hyprland.buildInputs;
 
   installPhase = ''
     OUT="$out/lib"

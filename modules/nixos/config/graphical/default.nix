@@ -1,8 +1,5 @@
+{ lib, config, ... }:
 {
-  lib,
-  config,
-  ...
-}: {
   options.my.roles.graphical.enable = lib.mkEnableOption "Graphical environment";
 
   config = lib.mkIf config.my.roles.graphical.enable {
@@ -28,6 +25,6 @@
       driSupport32Bit = true;
     };
 
-    security.pam.services.swaylock = {};
+    security.pam.services.swaylock = { };
   };
 }

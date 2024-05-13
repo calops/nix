@@ -4,14 +4,16 @@
   pkgs,
   inputs,
   ...
-}: let
+}:
+let
   system = "x86_64-linux";
   deps = with pkgs; [
     sassc
     bun
   ];
-in {
-  imports = [inputs.ags.homeManagerModules.default];
+in
+{
+  imports = [ inputs.ags.homeManagerModules.default ];
 
   config = lib.mkIf (config.my.roles.graphical.enable && !config.my.isDarwin) {
     programs.ags = {
@@ -28,7 +30,6 @@ in {
       ];
     };
 
-    xdg.configFile."ags".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/config/programs/ags/config";
+    xdg.configFile."ags".source = config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/config/programs/ags/config";
   };
 }

@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, lib, ... }:
+{
   config = {
     system.stateVersion = "24.05";
     hardware.enableAllFirmware = true;
@@ -16,6 +17,12 @@
     boot.kernel.sysctl = {
       "fs.inotify.max_user_watches" = 100000;
       "fs.inotify.max_queued_events" = 100000;
+    };
+
+    console = {
+      font = "ter-124b";
+      keyMap = lib.mkDefault "fr";
+      packages = [ pkgs.terminus_font ];
     };
 
     stylix.homeManagerIntegration.autoImport = false;

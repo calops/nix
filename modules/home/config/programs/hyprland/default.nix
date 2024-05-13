@@ -4,7 +4,8 @@
   inputs,
   config,
   ...
-}: let
+}:
+let
   cfg = config.my.roles.graphical;
   palette = config.my.colors.palette.withoutHashtag;
   monitors = rec {
@@ -14,17 +15,16 @@
   layout = "hy3";
   movefocus = "hy3:movefocus";
   movewindow = "hy3:movewindow";
-in {
-  imports = [inputs.hyprland-hyprlock.homeManagerModules.default];
+in
+{
+  imports = [ inputs.hyprland-hyprlock.homeManagerModules.default ];
 
   config = lib.mkIf (cfg.enable && !config.my.isDarwin) {
     wayland.windowManager.hyprland = {
       enable = true;
       xwayland.enable = true;
 
-      plugins = [
-        pkgs.hyprlandPlugins.hy3
-      ];
+      plugins = [ pkgs.hyprlandPlugins.hy3 ];
 
       settings = {
         monitor = ",preferred,auto,1";
@@ -102,9 +102,7 @@ in {
 
         animations = {
           enabled = true;
-          bezier = [
-            "in-out, .65, -0.01, 0, .95"
-          ];
+          bezier = [ "in-out, .65, -0.01, 0, .95" ];
           animation = [
             "windows, 1, 7, default"
             "windowsOut, 1, 7, default, popin 80%"
@@ -186,9 +184,7 @@ in {
           ", XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
         ];
 
-        bindl = [
-          ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
-        ];
+        bindl = [ ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle" ];
       };
     };
 

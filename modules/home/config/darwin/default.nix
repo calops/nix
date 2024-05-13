@@ -1,3 +1,7 @@
-{pkgs, ...}: {
-  home.packages = [pkgs.darwin-rebuild pkgs.darwin-option];
+{ pkgs, ... }:
+{
+  home.packages = [
+    pkgs.darwin-rebuild
+    pkgs.darwin-option
+  ];
 }

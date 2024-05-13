@@ -121,6 +121,7 @@ return {
 			"STSSelectParentNode",
 			"STSSelectChildNode",
 			"STSSwapOrHold",
+			"STSSelectCurrentNode",
 		},
 		init = function()
 			local function dot_repeatable(op)
@@ -183,11 +184,6 @@ return {
 			}, { mode = "x" })
 		end,
 		config = true,
-	},
-	-- Yuck support
-	{
-		"elkowar/yuck.vim",
-		ft = "yuck",
 	},
 	{
 		"calops/hmts.nvim",
