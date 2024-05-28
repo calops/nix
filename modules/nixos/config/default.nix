@@ -35,5 +35,12 @@
       enable = true;
       enableSSHSupport = true;
     };
+
+    # Support for dynamic linking in NixOS
+    programs.nix-ld.enable = true;
+    environment.sessionVariables = {
+      NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [ ];
+      NIX_LD = lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
+    };
   };
 }

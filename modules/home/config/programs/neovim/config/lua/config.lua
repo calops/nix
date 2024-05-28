@@ -72,20 +72,11 @@ vim.g.neovide_light_radius = 5
 vim.g.neovide_unlink_border_highlights = true
 vim.g.neovide_refresh_rate = 60
 vim.g.neovide_cursor_smooth_blink = true
+
 if vim.g.neovide == true then
-	vim.api.nvim_set_keymap(
-		"n",
-		"<C-+>",
-		":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1<CR>",
-		{ silent = true }
-	)
-	vim.api.nvim_set_keymap(
-		"n",
-		"<C-->",
-		":lua vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1<CR>",
-		{ silent = true }
-	)
-	vim.api.nvim_set_keymap("n", "<C-0>", ":lua vim.g.neovide_scale_factor = 1<CR>", { silent = true })
+	vim.keymap.set("n", "<C-+>", function() vim.g.neovide_scale_factor = vim.g.neovide_scale_factor + 0.1 end)
+	vim.keymap.set("n", "<C-->", function() vim.g.neovide_scale_factor = vim.g.neovide_scale_factor - 0.1 end)
+	vim.keymap.set("n", "<C-0>", function() vim.g.neovide_scale_factor = 1 end)
 end
 
 vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", numhl = "" })
