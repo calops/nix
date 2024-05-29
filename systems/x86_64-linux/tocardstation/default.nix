@@ -13,6 +13,8 @@
     bluetooth.enable = true;
   };
 
+  virtualisation.docker.enable = true;
+
   boot.initrd.luks.devices.rootDrive.device = "/dev/disk/by-uuid/ab146bd7-2e99-4aa7-a115-040df4acc43d";
   boot.supportedFilesystems = [ "ntfs" ];
 
@@ -48,6 +50,7 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "docker"
     ];
     shell = pkgs.fish;
   };
