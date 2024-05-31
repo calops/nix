@@ -40,11 +40,8 @@ return {
 			}
 		end,
 		opts = {
-			preview_config = {
-				border = "rounded",
-			},
+			preview_config = { border = "rounded" },
 			_signs_staged_enable = true,
-			_extmark_signs = false,
 		},
 	},
 	-- Git commands

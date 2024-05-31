@@ -78,14 +78,6 @@ return {
 	{
 		"folke/trouble.nvim",
 		cmd = "Trouble",
-		init = function()
-			map {
-				["<leader>t"] = {
-					function() require("trouble").toggle() end,
-					"Toggle diagnostics window",
-				},
-			}
-		end,
-		config = true,
+		keys = { { "<leader>t", "<cmd>Trouble diagnostics toggle<cr>", desc = "Toggle diagnostics window" } },
 	},
 }
