@@ -130,7 +130,7 @@ return {
 					UfoVirtText = { fg = palette.base, bg = palette.teal, style = { "bold" } },
 					UfoVirtTextPill = { fg = palette.teal },
 					UfoFoldedBg = { bg = colors.darken(palette.teal, 0.33) },
-					Folded = { bg = palette.base },
+					Folded = { bg = palette.base, style = { "italic" } },
 
 					GitSignsAdd = { fg = palette.green },
 					GitSignsChange = { fg = palette.peach },

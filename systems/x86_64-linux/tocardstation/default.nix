@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 {
   imports = [ ./hardware.nix ];
 
@@ -11,6 +11,7 @@
     audio.enable = true;
     printing.enable = true;
     bluetooth.enable = true;
+    monitoring.enable = true;
   };
 
   virtualisation.docker.enable = true;

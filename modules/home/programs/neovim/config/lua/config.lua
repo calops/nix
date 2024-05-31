@@ -27,7 +27,7 @@ vim.o.winblend = 0
 vim.o.wrap = false
 vim.opt.fillchars = {
 	eob = " ",
-	fold = " ",
+	fold = "⋅",
 	foldopen = "󰅀",
 	foldclose = "󰅂",
 	foldsep = " ",
@@ -60,6 +60,12 @@ vim.o.mousemodel = "extend"
 vim.o.mousemoveevent = true
 vim.o.mousescroll = "ver:2,hor:2"
 vim.o.smoothscroll = true
+
+-- Folds
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.o.foldtext = ""
+vim.o.foldlevel = 99
 
 -- Neovide configuration
 vim.g.neovide_floating_blur_amount_x = 1.5
