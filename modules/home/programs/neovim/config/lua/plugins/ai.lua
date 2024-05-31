@@ -69,7 +69,6 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 		init = function()
 			local function pick_with_selection(selection)
 				return function()
-					require("CopilotChat")
 					local actions = require("CopilotChat.actions")
 					actions.pick(actions.prompt_actions { selection = require("CopilotChat.select")[selection] })
 				end
@@ -84,33 +83,12 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 				},
 			}, { mode = { "n", "v", "x" } })
 		end,
-		config = function(opts)
-			require("CopilotChat").setup(opts.opts) -- FIXME: upstream bug in lazy.nvim
+		config = function(_, opts)
+			require("CopilotChat").setup(opts)
 			require("core.utils").make_sidebar(
 				"copilot-chat",
 				function() return vim.fn.bufname() == "copilot-chat" and vim.fn.win_gettype() ~= "popup" end
 			)
-		end,
-	},
-	{
-		"supermaven-inc/supermaven-nvim",
-		enabled = false, -- Bugged for now
-		opts = {
-			keymaps = {
-				accept_suggestion = "<M-CR>",
-				clear_suggestion = "<C-]>",
-			},
-		},
-	},
-	{
-		"Exafunction/codeium.vim",
-		enabled = false, -- Bugged for now
-		event = "VeryLazy",
-		config = function()
-			vim.g.codeium_disable_bindings = 1
-			map {
-				["<M-CR>"] = { "call codeium#Accept()", "Accept suggestion", mode = "i" },
-			}
 		end,
 	},
 }
