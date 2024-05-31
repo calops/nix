@@ -6,7 +6,7 @@
 }:
 let
   palette = config.my.colors.palette;
-  nvimDir = "${config.my.configDir}/modules/home/config/programs/neovim";
+  nvimDir = "${config.my.configDir}/modules/home/programs/neovim";
 
   rustToolchain = pkgs.fenix.complete.withComponents [
     "cargo"
