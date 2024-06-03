@@ -214,7 +214,16 @@ in
           ]
       );
 
-    programs.mpv.enable = true;
+    programs.mpv = {
+      enable = true;
+      scripts = [
+        pkgs.mpvScripts.sponsorblock
+        pkgs.mpvScripts.thumbfast
+        pkgs.mpvScripts.mpv-webm
+        pkgs.mpvScripts.uosc
+      ];
+    };
+
     programs.zathura = {
       enable = true;
       options.font = cfg.fonts.monospace.name;
