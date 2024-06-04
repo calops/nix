@@ -40,7 +40,7 @@
 
   config = {
     programs.home-manager.enable = true;
-    home.stateVersion = "24.05";
+    home.stateVersion = "24.11";
     home.sessionVariables.FLAKE = config.my.configDir;
 
     programs.gpg.enable = true;

@@ -24,18 +24,6 @@ end
 
 local lsp_config_function = function()
 	require("neoconf").setup {}
-	require("neodev").setup {
-		pathStrict = false,
-		-- Always load nvim plugins for lua_ls, this is a temporary hack
-		-- FIXME: this hurts performance, should be fixed upstream
-		override = function(_, library)
-			library.enabled = true
-			library.plugins = true
-			library.types = true
-			library.runtime = true
-		end,
-	}
-
 	local lsp_zero = require("lsp-zero")
 	require("mason").setup { ui = { border = "rounded" } }
 	require("mason-lspconfig").setup {
@@ -76,9 +64,7 @@ local lsp_config_function = function()
 	lspconfig.lexical.setup {
 		filetypes = { "elixir", "eelixir", "heex" },
 		cmd = { "lexical" },
-		root_dir = function(fname)
-			return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or vim.loop.os_homedir()
-		end,
+		root_dir = function(fname) return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or nil end,
 	}
 
 	vim.api.nvim_create_autocmd("InsertEnter", { callback = function() vim.lsp.inlay_hint.enable(false) end })
@@ -101,12 +87,17 @@ return {
 			"williamboman/mason-lspconfig.nvim",
 			"williamboman/mason.nvim",
 			"onsails/lspkind.nvim",
-			"folke/neodev.nvim",
 			"folke/neoconf.nvim",
 		},
 		init = lsp_init_function,
 		config = lsp_config_function,
 	},
+	{
+		"folke/lazydev.nvim",
+		ft = "lua",
+		opts = {},
+	},
+	{ "Bilal2453/luvit-meta", lazy = true },
 	-- Rust-specific utilities and LSP configurations
 	{
 		"mrcjkb/rustaceanvim",

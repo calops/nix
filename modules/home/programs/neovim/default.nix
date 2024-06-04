@@ -20,7 +20,7 @@ let
 
   nvimPackage = pkgs.symlinkJoin {
     name = "neovim-with-ld-path";
-    paths = [ pkgs.neovim-nightly ];
+    paths = [ pkgs.neovim ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       wrapProgram $out/bin/nvim --prefix ${ld_library_path_var_name} : "${

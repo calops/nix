@@ -34,6 +34,7 @@ return {
 					{ name = "nerdfont" },
 					{ name = "emoji" },
 					{ name = "otter" },
+					{ name = "lazydev", group_index = 0 },
 				}, {
 					{ name = "buffer" },
 					{ name = "cmp_yanky" },

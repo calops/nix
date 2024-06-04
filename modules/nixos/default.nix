@@ -8,10 +8,10 @@
   imports = [
     ../common
     inputs.stylix.nixosModules.stylix
-  ] ++ lib.snowfall.get-non-default-nix-files ./.;
+  ] ++ lib.snowfall.fs.get-non-default-nix-files ./.;
 
   config = {
-    system.stateVersion = "24.05";
+    system.stateVersion = "24.11";
     hardware.enableAllFirmware = true;
 
     nix = {
@@ -48,9 +48,5 @@
 
     # Support for dynamic linking in NixOS
     programs.nix-ld.enable = true;
-    environment.sessionVariables = {
-      NIX_LD_LIBRARY_PATH = lib.makeLibraryPath [ ];
-      NIX_LD = lib.fileContents "${pkgs.stdenv.cc}/nix-support/dynamic-linker";
-    };
   };
 }

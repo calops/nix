@@ -14,7 +14,7 @@ self: super:
     nurpkgs = super;
   };
 }
-// (neovim-nightly-overlay.overlay self super)
+// (neovim-nightly-overlay.overlays.default self super)
 // (nixd.overlays.default self super)
 // (fenix.overlays.default self super)
 // (darwin.overlays.default self super)

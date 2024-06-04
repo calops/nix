@@ -8,17 +8,6 @@
   config = lib.mkIf (config.my.roles.graphical.enable && !config.my.isDarwin) {
     services.ironbar = {
       enable = true;
-      # TODO: remove the override once vertical tray is released
-      # package = pkgs.ironbar.overrideAttrs {
-      #   version = "0.15.0";
-      #   src = pkgs.fetchFromGitHub {
-      #     owner = "calops";
-      #     repo = "ironbar";
-      #     rev = "180a5205b9eb316e4b2916ae2ed0b2198912b9cd";
-      #     hash = "sha256-T5aQ/lnW7wlIDpg7QEb32eYswAFSndFM+kfRk8uNHwQ=";
-      #   };
-      #   cargoHash = "";
-      # };
       settings =
         let
           ironbarClient = lib.getExe config.services.ironbar.package;

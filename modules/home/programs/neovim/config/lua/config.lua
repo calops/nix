@@ -11,6 +11,7 @@ vim.o.concealcursor = "nc"
 vim.o.textwidth = 120
 vim.o.virtualedit = "block"
 vim.o.undofile = true
+vim.o.exrc = true
 
 -- GUI
 vim.o.background = "dark"
