@@ -57,5 +57,20 @@
       frequency = "weekly";
       options = "--delete-older-than 30d";
     };
+
+    xdg.mimeApps = {
+      enable = true;
+      defaultApplications =
+        let
+          firefox = "firefox-beta.desktop";
+        in
+        {
+          "text/html" = firefox;
+          "x-scheme-handler/http" = firefox;
+          "x-scheme-handler/https" = firefox;
+          "x-scheme-handler/about" = firefox;
+          "x-scheme-handler/unknown" = firefox;
+        };
+    };
   };
 }

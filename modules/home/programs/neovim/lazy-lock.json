@@ -66,7 +66,6 @@
   "replacer.nvim": { "branch": "master", "commit": "32e1713230844fa52f7f0598c59295de3c90dc95" },
   "ron.vim": { "branch": "master", "commit": "f749e543975a82e8dd9a6e7df9600a1c098ae800" },
   "rustaceanvim": { "branch": "master", "commit": "27d7cb31284a427d5fa590bdff15625e845117d5" },
-  "satellite.nvim": { "branch": "main", "commit": "40eb89743e3439c66192abfc31eb3280622a5d3c" },
   "sqlite.lua": { "branch": "master", "commit": "d0ffd703b56d090d213b497ed4eb840495f14a11" },
   "substitute.nvim": { "branch": "main", "commit": "8b93e792747520b6490237b5b32963e256fbde24" },
   "syntax-tree-surfer": { "branch": "master", "commit": "732ea6d0f868bcccd2f526be73afa46997d5a2fb" },
