@@ -102,10 +102,10 @@ return {
 
 			local diag = signs.diagnostics[vim.v.lnum]
 			if diag ~= nil then
-				self.diagsign = diag_utils.map[diag]
-				self.hl = self.diagsign.hl
+				self.severity = diag
+				self.hl = diag_utils.sign_hl(self.severity)
 			else
-				self.diagsign = nil
+				self.severity = nil
 			end
 
 			local git_status = signs.git[vim.v.lnum]
@@ -115,18 +115,20 @@ return {
 				self.gitsign = nil
 			end
 		end,
+
 		-- LSP diagnostics
 		{
 			provider = function(self)
-				if self.diagsign ~= nil then
-					return self.diagsign.sign .. " "
+				if self.severity ~= nil then
+					return diag_utils.sign(self.severity) .. " "
 				else
 					return "  "
 				end
 			end,
 			condition = function() return vim.v.virtnum == 0 end,
-			hl = function(self) return self.diagsign and self.diagsign.hl or nil end,
+			hl = function(self) return self.severity and diag_utils.sign_hl(self.severity) or nil end,
 		},
+
 		-- Line number
 		{
 			provider = function()
@@ -137,6 +139,7 @@ return {
 				return "%=" .. num
 			end,
 		},
+
 		-- Git chunks
 		{
 			condition = require("heirline.conditions").is_git_repo,

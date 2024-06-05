@@ -1,29 +1,28 @@
 require("core.utils")
 
 local cached_highlights = CachedDict:new(function(key)
-	return vim.api.nvim_get_hl(0, { name = key, link = false }) ---@type Highlight
+	return vim.api.nvim_get_hl(0, { name = key, link = false }) ---@type MyHighlight
 end)
 
----@alias Color string
+---@alias MyColor string
 
----@class Highlight
----@field fg Color
----@field bg Color
-local Highlight = {}
+---@class MyHighlight
+---@field fg MyColor
+---@field bg MyColor
 
----@param color Color
+---@param color MyColor
 ---@param amount number
----@param bg Color | nil
----@return Color
+---@param bg MyColor | nil
+---@return MyColor
 local function darken_color(color, amount, bg) return require("catppuccin.utils.colors").darken(color, amount, bg) end
 
----@param color Color
+---@param color MyColor
 ---@param amount number
----@param bg Color | nil
----@return Color
-local function brighten_color(color, amount, bg) return require("catppuccin.utils.colors").brighten(color, amount, bg) end
+---@param bg MyColor | nil
+---@return MyColor
+local function lighten_color(color, amount, bg) return require("catppuccin.utils.colors").lighten(color, amount, bg) end
 
----@return table<string, Color>
+---@return table<string, MyColor>
 local function get_palette() return require("catppuccin.palettes").get_palette() end
 
 ---@param x number
@@ -43,10 +42,10 @@ end
 ---@return number
 local function cuberoot(x) return math.pow(x, 0.333333) end
 
----@param background Color
----@return Color
+---@param background MyColor
+---@return MyColor
 local function compute_visible_foreground(background)
-	local dec = tonumber(background, 16)
+	local dec = tonumber(background, 16) or error("Invalid color: " .. background)
 	local b = correct_channel(math.fmod(dec, 256) / 255)
 	local g = correct_channel(math.fmod((dec - b) / 256, 256) / 255)
 	local r = correct_channel(math.floor(dec / 65536) / 255)
@@ -68,7 +67,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 return {
 	hl = cached_highlights,
 	darken = darken_color,
-	brighten = brighten_color,
+	brighten = lighten_color,
 	palette = get_palette,
 	compute_visible_foreground = compute_visible_foreground,
 }

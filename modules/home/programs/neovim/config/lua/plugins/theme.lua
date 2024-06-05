@@ -10,11 +10,7 @@ return {
 			term_colors = true,
 			integrations = {
 				telescope = true,
-				neotree = {
-					enabled = true,
-					show_root = true,
-					transparent_panel = false,
-				},
+				neotree = true,
 				indent_blankline = {
 					enabled = false,
 					colored_indent_levels = false,
@@ -24,6 +20,7 @@ return {
 				notify = true,
 				mini = true,
 				native_lsp = {
+					enabled = true,
 					inlay_hints = {
 						background = false,
 					},
@@ -46,11 +43,6 @@ return {
 					WarnSign = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.095, palette.base) },
 					InfoSign = { fg = palette.sky, bg = colors.darken(palette.sky, 0.095, palette.base) },
 					HintSign = { fg = palette.teal, bg = colors.darken(palette.teal, 0.095, palette.base) },
-
-					ErrorLine = { bg = colors.darken(palette.red, 0.095, palette.base) },
-					WarnLine = { bg = colors.darken(palette.yellow, 0.095, palette.base) },
-					InfoLine = { bg = colors.darken(palette.sky, 0.095, palette.base) },
-					HintLine = { bg = colors.darken(palette.teal, 0.095, palette.base) },
 
 					CursorLine = { bg = palette.surface0 },
 					CursorLineSign = { link = "CursorLine" },
@@ -102,12 +94,13 @@ return {
 					DiagnosticLineInfo = { bg = colors.darken(palette.sky, 0.095, palette.base) },
 					DiagnosticLineHint = { bg = colors.darken(palette.teal, 0.095, palette.base) },
 
-					SatelliteDiagnosticError = { fg = colors.darken(palette.red, 0.5, palette.base) },
-					SatelliteDiagnosticWarn = { fg = colors.darken(palette.yellow, 0.5, palette.base) },
-					SatelliteDiagnosticInfo = { fg = colors.darken(palette.sky, 0.5, palette.base) },
-					SatelliteDiagnosticHint = { fg = colors.darken(palette.teal, 0.5, palette.base) },
-					SatelliteCursor = { fg = palette.mauve },
-					SatelliteBackground = { bg = palette.base, blend = 100 },
+					DiagnosticSignError = { fg = palette.red, bg = colors.darken(palette.red, 0.095, palette.base) },
+					DiagnosticSignWarn = {
+						fg = palette.yellow,
+						bg = colors.darken(palette.yellow, 0.095, palette.base),
+					},
+					DiagnosticSignInfo = { fg = palette.sky, bg = colors.darken(palette.sky, 0.095, palette.base) },
+					DiagnosticSignHint = { fg = palette.teal, bg = colors.darken(palette.teal, 0.095, palette.base) },
 
 					IblScope = { fg = palette.mauve },
 
@@ -174,7 +167,7 @@ return {
 					FlashMatch = { bg = palette.lavender, fg = palette.base },
 					FlashBackdrop = { bg = nil, fg = palette.overlay0, style = { "nocombine" } },
 
-					NoiceMini = { fg = palette.blue, bg = colors.darken(palette.blue, 0.33), blend = 0 },
+					NoiceMini = { fg = palette.blue, bg = nil, blend = 100 },
 
 					-- Syntax
 					["@variable.parameter"] = { fg = palette.text, style = { "nocombine" } },

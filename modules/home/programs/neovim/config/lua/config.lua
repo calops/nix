@@ -101,10 +101,10 @@ vim.diagnostic.config {
 			[vim.diagnostic.severity.HINT] = " ",
 		},
 		linehl = {
-			[vim.diagnostic.severity.ERROR] = "ErrorLine",
-			[vim.diagnostic.severity.WARN] = "WarningLine",
-			[vim.diagnostic.severity.INFO] = "InfoLine",
-			[vim.diagnostic.severity.HINT] = "HintLine",
+			[vim.diagnostic.severity.ERROR] = "DiagnosticLineError",
+			[vim.diagnostic.severity.WARN] = "DiagnosticLineWarn",
+			[vim.diagnostic.severity.INFO] = "DiagnosticLineInfo",
+			[vim.diagnostic.severity.HINT] = "DiagnosticLineHint",
 		},
 		numhl = {
 			[vim.diagnostic.severity.ERROR] = "DiagnosticSignError",

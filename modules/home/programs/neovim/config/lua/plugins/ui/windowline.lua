@@ -1,6 +1,6 @@
 return {
 	"b0o/incline.nvim",
-	enabled = not vim.g.started_by_firenvim,
+	enabled = not vim.g["started_by_firenvim"],
 	event = "UIEnter",
 	config = function()
 		local function format_color(color) return string.format("#%x", color) end
@@ -8,12 +8,12 @@ return {
 		local incline = require("incline")
 		local colors = require("core.colors")
 		local utils = require("plugins.ui.utils")
+		local diag = require("core.diagnostics")
 
 		local col_inactive = format_color(colors.hl.InclineNormalNC.bg)
 		local col_active = format_color(colors.hl.InclineNormal.bg)
 		local col_base = format_color(colors.hl.Normal.bg)
 		local col_modified = format_color(colors.hl.CustomTablineModifiedIcon.fg)
-		local diags = utils.diags_sorted()
 
 		incline.setup {
 			render = function(props)
@@ -23,7 +23,7 @@ return {
 				local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), filename_modifier)
 					or "[no name]"
 				local modified = vim.api.nvim_get_option_value("modified", { buf = props.buf })
-				local extension = filename:match("^.+%.(.+)$")
+				local extension = string.match(filename, "^.+%.(.+)$")
 				local icon, icon_fg_color =
 					require("nvim-web-devicons").get_icon_colors(filename, extension, { default = true })
 
@@ -47,15 +47,16 @@ return {
 				local diag_counts = utils.diag_count_for_buffer(props.buf)
 				local prev_color = color
 
-				for i, count in ipairs(diag_counts) do
+				for severity, count in ipairs(diag_counts) do
 					if count > 0 then
-						table.insert(result, { "", guifg = prev_color, guibg = format_color(diags[i].colors.bg) })
+						local hl = diag.sign_hl(severity)
+						table.insert(result, { "", guifg = prev_color, guibg = format_color(hl.bg) })
 						table.insert(result, {
-							" " .. diags[i].sign .. count,
-							guifg = format_color(diags[i].colors.fg),
-							guibg = format_color(diags[i].colors.bg),
+							" " .. diag.sign(severity) .. count,
+							guifg = format_color(hl.fg),
+							guibg = format_color(hl.bg),
 						})
-						prev_color = format_color(diags[i].colors.bg)
+						prev_color = format_color(hl.bg)
 					end
 				end
 
@@ -70,11 +71,14 @@ return {
 
 				return result
 			end,
+
 			hide = { cursorline = true },
+
 			ignore = {
 				unlisted_buffers = false,
 				buftypes = function(_, buftype) return buftype ~= "" and buftype ~= "help" end,
 			},
+
 			window = {
 				padding = 0,
 				placement = { horizontal = "center", vertical = "bottom" },

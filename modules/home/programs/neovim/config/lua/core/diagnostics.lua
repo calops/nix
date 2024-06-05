@@ -1,6 +1,4 @@
-local signs = require("core.symbols").signs
-local hl = require("core.colors").hl
-local core_utils = require("core.utils")
+local colors = require("core.colors")
 
 local severities = {
 	vim.diagnostic.severity.ERROR,
@@ -9,31 +7,7 @@ local severities = {
 	vim.diagnostic.severity.HINT,
 }
 
-local map = core_utils.lazy_init(
-	function()
-		return {
-			[vim.diagnostic.severity.ERROR] = {
-				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.ERROR],
-				hl = hl.ErrorSign,
-			},
-			[vim.diagnostic.severity.WARN] = {
-				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.WARN],
-				hl = hl.WarnSign,
-			},
-			[vim.diagnostic.severity.INFO] = {
-				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.INFO],
-				hl = hl.InfoSign,
-			},
-			[vim.diagnostic.severity.HINT] = {
-				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.HINT],
-				hl = hl.HintSign,
-			},
-		}
-	end,
-	true
-)
-
---- Calls the given callback for each severity.
+--- Calls the given callback for each diagnostic severity.
 --- @param callback fun(severity: number)
 local function for_each_severity(callback)
 	for _, severity in ipairs(severities) do
@@ -41,7 +15,18 @@ local function for_each_severity(callback)
 	end
 end
 
+--- @return string
+local function sign(severity) return vim.diagnostic.config().signs.text[severity] end
+
+-- TODO: types
+local function sign_hl(severity) return colors.hl[vim.diagnostic.config().signs.numhl[severity]] end
+
+-- TODO: types
+local function line_hl(severity) return colors.hl[vim.diagnostic.config().signs.linehl[severity]] end
+
 return {
 	for_each_severity = for_each_severity,
-	map = map,
+	sign = sign,
+	sign_hl = sign_hl,
+	line_hl = line_hl,
 }

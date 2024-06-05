@@ -179,9 +179,6 @@ map {
 
 local tabs = {
 	init = function(self) self.tabpages = vim.api.nvim_list_tabpages() end,
-	static = {
-		diags = utils.diags_sorted(),
-	},
 	{
 		condition = function(self) return not vim.tbl_isempty(self.tabpages) end,
 		flexible = 1,
@@ -239,17 +236,18 @@ local tabs = {
 
 				table.insert(icons, { provider = " " })
 
+				local diags = require("core.diagnostics")
 				local diag_pills = {}
 				local first = true
-				for i, count in ipairs(diag_count) do
+				for severity, count in ipairs(diag_count) do
 					if count > 0 then
 						if first then
 							table.insert(diag_pills, { provider = " " })
 							first = false
 						end
 						table.insert(diag_pills, {
-							provider = self.diags[i].sign,
-							hl = { fg = compute_icon_color(string.format("#%x", self.diags[i].colors.fg)) },
+							provider = diags.sign(severity),
+							hl = { fg = compute_icon_color(string.format("#%x", diags.sign_hl(severity).fg)) },
 						})
 					end
 				end
@@ -297,7 +295,9 @@ local lsp = {
 		self.active_clients = vim.lsp.get_clients()
 		return not vim.tbl_isempty(self.active_clients)
 	end,
+
 	update = { "LspAttach", "LspDetach", "BufEnter", "DiagnosticChanged" },
+
 	init = function(self)
 		local servers = {}
 		local active_clients = map_to_names(self.active_clients)
@@ -317,8 +317,8 @@ local lsp = {
 			local diag_count = vim.diagnostic.get(nil, { severity = severity })
 			if #diag_count > 0 then
 				table.insert(diagnostics, {
-					provider = " " .. core_diagnostics.map[severity].sign .. #diag_count,
-					hl = core_diagnostics.map[severity].hl,
+					provider = " " .. core_diagnostics.sign(severity) .. #diag_count,
+					hl = core_diagnostics.sign_hl(severity),
 				})
 			end
 		end)

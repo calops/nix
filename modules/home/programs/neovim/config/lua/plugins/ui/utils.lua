@@ -1,56 +1,6 @@
-local module = {}
-
 local colors = require("core.colors")
-local symbols = require("core.symbols")
 
-module._diags_data = nil
-function module.diags()
-	if not module._diags_data then
-		module._diags_data = {
-			error = {
-				severity = 1,
-				colors = colors.hl.DiagnosticVirtualTextError,
-				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.ERROR],
-			},
-			warn = {
-				severity = 2,
-				colors = colors.hl.DiagnosticVirtualTextWarn,
-				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.WARN],
-			},
-			info = {
-				severity = 3,
-				colors = colors.hl.DiagnosticVirtualTextInfo,
-				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.INFO],
-			},
-			hint = {
-				severity = 4,
-				colors = colors.hl.DiagnosticVirtualTextHint,
-				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.HINT],
-			},
-		}
-	end
-	return module._diags_data
-end
-
-function module.diags_sorted()
-	return {
-		module.diags().error,
-		module.diags().warn,
-		module.diags().info,
-		module.diags().hint,
-	}
-end
-
-function module.diags_lines()
-	return {
-		"DiagnosticLineError",
-		"DiagnosticLineWarn",
-		"DiagnosticLineInfo",
-		"DiagnosticLineHint",
-	}
-end
-
-module.separators = {
+local separators = {
 	left = "",
 	left_lite = "",
 	right = "",
@@ -65,9 +15,8 @@ local function fmt(color)
 	end
 end
 
-function module.build_pill(left, center, right, key, opts)
+local function build_pill(left, center, right, key, opts)
 	key = key or "provider"
-	local sep = module.separators
 	local result = {
 		insert = function(self, item)
 			if opts then
@@ -98,7 +47,7 @@ function module.build_pill(left, center, right, key, opts)
 		if not item.condition or item.condition() then
 			local lite = item.lite and i > 1
 			result:insert {
-				[key] = lite and sep.left_lite or sep.left,
+				[key] = lite and separators.left_lite or separators.left,
 				hl = {
 					fg = lite and colors.palette().base or bg(item.hl),
 					bg = bg(prev_color),
@@ -109,24 +58,24 @@ function module.build_pill(left, center, right, key, opts)
 		end
 	end
 
-	result:insert { [key] = sep.left, hl = { fg = bg(center.hl), bg = bg(prev_color) } }
+	result:insert { [key] = separators.left, hl = { fg = bg(center.hl), bg = bg(prev_color) } }
 	result:insert(center)
 	prev_color = center.hl
 
 	for _, item in ipairs(right) do
 		if not item.condition or item:condition() then
-			result:insert { [key] = sep.right, hl = { fg = bg(prev_color), bg = bg(item.hl) } }
+			result:insert { [key] = separators.right, hl = { fg = bg(prev_color), bg = bg(item.hl) } }
 			result:insert(item)
 			prev_color = item.hl
 		end
 	end
 
-	result:insert { [key] = sep.right, hl = { fg = bg(prev_color), bg = bg(colors.hl.Normal) } }
+	result:insert { [key] = separators.right, hl = { fg = bg(prev_color), bg = bg(colors.hl.Normal) } }
 
 	return result.content
 end
 
-function module.diag_count_for_buffer(bufnr, diag_count)
+local function diag_count_for_buffer(bufnr, diag_count)
 	if not diag_count then
 		diag_count = { 0, 0, 0, 0 }
 	end
@@ -138,7 +87,7 @@ function module.diag_count_for_buffer(bufnr, diag_count)
 	return diag_count
 end
 
-function module.make_tablist(tab_component)
+local function make_tablist(tab_component)
 	return {
 		init = function(self)
 			local tabpages = vim.api.nvim_list_tabpages()
@@ -167,29 +116,8 @@ function module.make_tablist(tab_component)
 	}
 end
 
-function module.get_hl_group(hl)
-	local group_name = "AutoGroup_"
-	if hl.fg then
-		group_name = group_name .. "_fg" .. fmt(hl.fg):gsub("#", "")
-	end
-	if hl.bg then
-		group_name = group_name .. "_bg" .. fmt(hl.bg):gsub("#", "")
-	end
-	if hl.sp then
-		group_name = group_name .. "_sp" .. fmt(hl.sp):gsub("#", "")
-	end
-	if hl.style then
-		for _, style in ipairs(hl.style) do
-			group_name = group_name .. "_" .. style
-		end
-	end
-	if vim.fn.hlexists(group_name) then
-		require("catppuccin.lib.highlighter").syntax {
-			[group_name] = hl,
-		}
-	end
-
-	return group_name
-end
-
-return module
+return {
+	build_pill = build_pill,
+	diag_count_for_buffer = diag_count_for_buffer,
+	make_tablist = make_tablist,
+}

@@ -1,20 +1,13 @@
 local module = {}
 
-module.map = function(mappings, opts) return require("which-key").register(mappings, opts) end
-
-module.reverse_table = function(table)
-	for i = 1, math.floor(#table / 2), 1 do
-		table[i], table[#table - i + 1] = table[#table - i + 1], table[i]
-	end
-	return table
-end
+local function map(mappings, opts) return require("which-key").register(mappings, opts) end
 
 ---Helper function to help write constructors
 ---@generic T: table
 ---@param class table
 ---@param default T
 ---@return T
-module.new_object = function(class, default)
+local function new_object(class, default)
 	default = default or {}
 	setmetatable(default, class)
 	class.__index = class
@@ -54,7 +47,7 @@ end
 ---@param reset_on_colorscheme_change boolean | nil
 ---@return T
 -- TODO: find a way to have a proper generic class here
-module.lazy_init = function(init, reset_on_colorscheme_change)
+local function lazy_init(init, reset_on_colorscheme_change)
 	local obj = {
 		_cache = {},
 	}
@@ -80,7 +73,7 @@ end
 ---@param path string
 ---@param on_event fun(filename: string, events: string[], handle: uv_fs_event_t)
 ---@param flags table
-function module.watch_file(path, on_event, flags)
+local function watch_file(path, on_event, flags)
 	local handle = vim.uv.new_fs_event()
 	assert(handle, "Failed to create fs_event handle")
 
@@ -107,14 +100,14 @@ function module.watch_file(path, on_event, flags)
 	return handle
 end
 
----@class Command
+---@class MyCommand
 ---@field cmd string[]
 ---@field callback fun(lines: string[])
 ---@field ignore_errors boolean | nil
 
----@param commands Command[]
+---@param commands MyCommand[]
 ---@param finally fun() | nil
-function module.chain_system_commands(commands, finally)
+local function chain_system_commands(commands, finally)
 	vim.system(commands[1].cmd, {}, function(result)
 		if result.code ~= 0 and not commands[1].ignore_errors then
 			vim.notify(
@@ -136,7 +129,7 @@ end
 ---@param func fun(...)
 ---@param delay number | nil
 ---@return fun(...), uv_timer_t
-function module.debounce(func, delay)
+local function debounce(func, delay)
 	delay = delay or 50
 	local timer = vim.uv.new_timer()
 	assert(timer, "Failed to create timer")
@@ -165,7 +158,7 @@ local sidebar_group = vim.api.nvim_create_augroup("SidebarHandler", {})
 ---@param pattern string
 ---@param condition fun(): boolean
 ---@return nil
-function module.make_sidebar(pattern, condition)
+local function make_sidebar(pattern, condition)
 	vim.api.nvim_create_autocmd({ "BufEnter" }, {
 		pattern = pattern,
 		group = sidebar_group,
@@ -181,4 +174,12 @@ function module.make_sidebar(pattern, condition)
 	})
 end
 
-return module
+return {
+	map = map,
+	lazy_init = lazy_init,
+	debounce = debounce,
+	chained_system_commands = chain_system_commands,
+	new_object = new_object,
+	watch_file = watch_file,
+	make_sidebar = make_sidebar,
+}

@@ -266,18 +266,4 @@ return {
 			}
 		end,
 	},
-	-- Scrollbar with git signs and diagnostics
-	{
-		"lewis6991/satellite.nvim",
-		event = "VeryLazy",
-		opts = {
-			winblend = 0,
-			handlers = {
-				cursor = {
-					enable = true,
-					symbols = { "🭶", "🭷", "🭸", "🭹", "🭺", "🭻" },
-				},
-			},
-		},
-	},
 }
