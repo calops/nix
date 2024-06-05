@@ -29,7 +29,6 @@ return {
 			require("lsp_lines").setup()
 
 			vim.diagnostic.config {
-				signs = true,
 				severity_sort = true,
 				virtual_lines = false,
 			}

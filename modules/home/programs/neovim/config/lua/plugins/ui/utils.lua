@@ -10,22 +10,22 @@ function module.diags()
 			error = {
 				severity = 1,
 				colors = colors.hl.DiagnosticVirtualTextError,
-				sign = symbols.signs.DiagnosticSignError,
+				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.ERROR],
 			},
 			warn = {
 				severity = 2,
 				colors = colors.hl.DiagnosticVirtualTextWarn,
-				sign = symbols.signs.DiagnosticSignWarn,
+				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.WARN],
 			},
 			info = {
 				severity = 3,
 				colors = colors.hl.DiagnosticVirtualTextInfo,
-				sign = symbols.signs.DiagnosticSignInfo,
+				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.INFO],
 			},
 			hint = {
 				severity = 4,
 				colors = colors.hl.DiagnosticVirtualTextHint,
-				sign = symbols.signs.DiagnosticSignHint,
+				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.HINT],
 			},
 		}
 	end

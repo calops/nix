@@ -47,6 +47,11 @@ return {
 					InfoSign = { fg = palette.sky, bg = colors.darken(palette.sky, 0.095, palette.base) },
 					HintSign = { fg = palette.teal, bg = colors.darken(palette.teal, 0.095, palette.base) },
 
+					ErrorLine = { bg = colors.darken(palette.red, 0.095, palette.base) },
+					WarnLine = { bg = colors.darken(palette.yellow, 0.095, palette.base) },
+					InfoLine = { bg = colors.darken(palette.sky, 0.095, palette.base) },
+					HintLine = { bg = colors.darken(palette.teal, 0.095, palette.base) },
+
 					CursorLine = { bg = palette.surface0 },
 					CursorLineSign = { link = "CursorLine" },
 					LineNr = { fg = palette.surface2 },

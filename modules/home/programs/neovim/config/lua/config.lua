@@ -92,46 +92,34 @@ if vim.g.neovide == true then
 	vim.keymap.set("n", "<C-0>", function() set_scale(1.0) end)
 end
 
-vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", numhl = "" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", numhl = "" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", numhl = "" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint", numhl = "" })
+vim.diagnostic.config {
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = " ",
+			[vim.diagnostic.severity.WARN] = " ",
+			[vim.diagnostic.severity.INFO] = " ",
+			[vim.diagnostic.severity.HINT] = " ",
+		},
+		linehl = {
+			[vim.diagnostic.severity.ERROR] = "ErrorLine",
+			[vim.diagnostic.severity.WARN] = "WarningLine",
+			[vim.diagnostic.severity.INFO] = "InfoLine",
+			[vim.diagnostic.severity.HINT] = "HintLine",
+		},
+		numhl = {
+			[vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+			[vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+			[vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+			[vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+		},
+	},
+}
 
 vim.fn.sign_define("GitSignsAdd", { text = "▋", texthl = "GitSignsAdd", numhl = "" })
 vim.fn.sign_define("GitSignsChange", { text = "▋", texthl = "GitSignsChange", numhl = "" })
 vim.fn.sign_define("GitSignsDelete", { text = "▋", texthl = "GitSignsDelete", numhl = "" })
 
 require("core.utils").make_sidebar("*.txt", function() return vim.bo.buftype == "help" end)
-
--- Full line error highlights
-local utils = require("plugins.ui.utils")
-local lines_ns = vim.api.nvim_create_namespace("diag_lines")
-
-local function clear_highlights(buf)
-	if vim.api.nvim_buf_is_valid(buf) then
-		vim.api.nvim_buf_clear_namespace(buf, lines_ns, 0, -1)
-	end
-end
-
-local function update_highlights(buf, diagnostics)
-	clear_highlights(buf)
-
-	for _, diagnostic in ipairs(diagnostics) do
-		local lnum = diagnostic.lnum
-		-- I have no idea why this check is necessary, but somehow sometimes the diagnostic is out of range
-		if lnum >= 0 and lnum < vim.api.nvim_buf_line_count(buf) then
-			vim.api.nvim_buf_set_extmark(buf, lines_ns, diagnostic.lnum, 0, {
-				line_hl_group = utils.diags_lines()[diagnostic.severity],
-				priority = 14 - diagnostic.severity,
-			})
-		end
-	end
-end
-
-vim.diagnostic.handlers.diagnostic_lines = {
-	show = function(_, bufnr, diagnostics, _) update_highlights(bufnr, diagnostics) end,
-	hide = function(_, bufnr) clear_highlights(bufnr) end,
-}
 
 require("lazy").setup("plugins", {
 	ui = { border = "rounded" },

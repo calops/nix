@@ -13,19 +13,19 @@ local map = core_utils.lazy_init(
 	function()
 		return {
 			[vim.diagnostic.severity.ERROR] = {
-				sign = signs.DiagnosticSignError,
+				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.ERROR],
 				hl = hl.ErrorSign,
 			},
 			[vim.diagnostic.severity.WARN] = {
-				sign = signs.DiagnosticSignWarn,
+				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.WARN],
 				hl = hl.WarnSign,
 			},
 			[vim.diagnostic.severity.INFO] = {
-				sign = signs.DiagnosticSignInfo,
+				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.INFO],
 				hl = hl.InfoSign,
 			},
 			[vim.diagnostic.severity.HINT] = {
-				sign = signs.DiagnosticSignHint,
+				sign = vim.diagnostic.config().signs.text[vim.diagnostic.severity.HINT],
 				hl = hl.HintSign,
 			},
 		}
