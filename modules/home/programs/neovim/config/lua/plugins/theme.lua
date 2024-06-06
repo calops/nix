@@ -168,6 +168,11 @@ return {
 					FlashBackdrop = { bg = nil, fg = palette.overlay0, style = { "nocombine" } },
 
 					NoiceMini = { fg = palette.blue, bg = nil, blend = 100 },
+					NoiceCmdlineIcon = { fg = palette.teal },
+					NoiceCmdlinePopupTitle = { link = "NoiceCmdlineIcon" },
+					NoiceCmdlinePopupBorder = { link = "NoiceCmdlineIcon" },
+					NoiceCmdlineIconSearch = { fg = palette.yellow },
+					NoiceCmdlinePopupBorderSearch = { link = "NoiceCmdlineIconSearch" },
 
 					-- Syntax
 					["@variable.parameter"] = { fg = palette.text, style = { "nocombine" } },

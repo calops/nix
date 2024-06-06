@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   nixosConfig ? null,
   darwinConfig ? null,
   ...
@@ -58,7 +59,7 @@
       options = "--delete-older-than 30d";
     };
 
-    xdg.mimeApps = {
+    xdg.mimeApps = lib.mkIf (!pkgs.stdenv.isDarwin) {
       enable = true;
       defaultApplications =
         let
