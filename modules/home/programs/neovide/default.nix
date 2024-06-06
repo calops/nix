@@ -93,7 +93,7 @@ in
         font = {
           size = 12;
           edging = "subpixelantialias";
-          hinting = "none";
+          hinting = "full";
           normal = [
             {
               family = config.my.roles.graphical.fonts.monospace.name;
