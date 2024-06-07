@@ -1,5 +1,6 @@
 {
   nur,
+  myNixpkgs,
   neovim-nightly-overlay,
   nixd,
   fenix,
@@ -13,6 +14,8 @@ self: super:
     pkgs = super;
     nurpkgs = super;
   };
+
+  toUpstream = import myNixpkgs { inherit (super) system config; };
 }
 // (neovim-nightly-overlay.overlays.default self super)
 // (nixd.overlays.default self super)

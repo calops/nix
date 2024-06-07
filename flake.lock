@@ -748,6 +748,21 @@
         "type": "github"
       }
     },
+    "myNixpkgs": {
+      "locked": {
+        "lastModified": 1717665191,
+        "narHash": "sha256-lUiPw3fUsOToyhx3HE7uDReCPu+llC0TUC6hOHPuSWM=",
+        "owner": "calops",
+        "repo": "nixpkgs",
+        "rev": "1523ad99b8791bcd0d7b67382369a120efa83627",
+        "type": "github"
+      },
+      "original": {
+        "owner": "calops",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "neovim-nightly-overlay": {
       "inputs": {
         "flake-compat": "flake-compat_3",
@@ -1176,6 +1191,7 @@
         "firefox-darwin": "firefox-darwin",
         "home-manager": "home-manager",
         "hyprland-contrib": "hyprland-contrib",
+        "myNixpkgs": "myNixpkgs",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nix-index-database": "nix-index-database",
         "nixd": "nixd",
