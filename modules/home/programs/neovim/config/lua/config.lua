@@ -16,7 +16,7 @@ vim.o.exrc = true
 -- GUI
 vim.o.background = "dark"
 vim.o.cursorline = true
-vim.o.guicursor = "a:blinkwait300-blinkoff300-blinkon300"
+vim.o.guicursor = "i:ver35,a:blinkwait300-blinkoff300-blinkon300"
 vim.o.laststatus = 3
 vim.o.list = true
 vim.o.number = true

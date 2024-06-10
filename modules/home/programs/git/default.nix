@@ -56,74 +56,69 @@ in
         "typings"
       ];
       extraConfig = {
+        color.ui = "auto";
+        core.whitespace = "-trailing-space";
+        grep.extendedRegexp = true;
+        log.abbrevCommit = true;
+        mergetool.prompt = true;
+        pull.rebase = "true";
+        tag.sort = "version:refname";
+
         diff = {
+          tool = "difftastic";
           renames = true;
           mnemonicPrefix = true;
           colorMoved = "default";
         };
-        core = {
-          whitespace = "-trailing-space";
+
+        difftool = {
+          prompt = false;
+          difftastic.cmd = "${lib.getExe pkgs.difftastic} $LOCAL $REMOTE";
         };
-        color.ui = "auto";
-        grep.extendedRegexp = true;
-        log.abbrevCommit = true;
+
         merge = {
           tool = "vimdiff";
           log = true;
           conflictstyle = "diff3";
         };
-        mergetool.prompt = true;
-        difftool.prompt = false;
-        diff.tool = "vimdiff";
+
         rerere = {
           enabled = true;
           autoUpdate = true;
         };
+
         status = {
           submoduleSummary = true;
           showUntrackedFiles = "all";
         };
-        tag.sort = "version:refname";
-        pull.rebase = "true";
+
         push = {
           autoSetupRemote = true;
           default = "upstream";
         };
+
+        delta.catppuccin = {
+          dark = true;
+          true-color = "always";
+          commit-decoration-style = "omit";
+          file-decoration-style = "omit";
+          file-style = "bold yellow";
+          hunk-header-style = "omit";
+          line-numbers = true;
+          line-numbers-left-format = "┃:{nm:^5}";
+          line-numbers-left-style = "#45475a";
+          line-numbers-right-format = "┃{np:^5}";
+          line-numbers-right-style = "#45475a";
+          line-numbers-minus-style = "${palette.red} #302330";
+          line-numbers-plus-style = "${palette.green} #2b3436";
+          line-numbers-zero-style = "#45475a";
+          minus-emph-style = "syntax #5b435b";
+          minus-style = "syntax #302330";
+          plus-emph-style = "syntax #475659";
+          plus-style = "syntax #2b3436";
+          syntax-theme = "catppuccin";
+        };
       };
-      includes = [
-        {
-          path =
-            pkgs.writeText "delta.gitconfig"
-              # gitconfig
-              ''
-                [delta "catppuccin"]
-                  dark = true
-                  true-color = always
-
-                  commit-decoration-style = omit;
-                  file-decoration-style = omit;
-                  file-style = bold yellow;
-                  hunk-header-style = omit
-
-                  line-numbers = true
-                  line-numbers-left-format = "┃:{nm:^5}"
-                  line-numbers-left-style = "#45475a"
-                  line-numbers-right-format = "┃{np:^5}"
-                  line-numbers-right-style = "#45475a"
-                  line-numbers-minus-style = "${palette.red}" "#302330"
-                  line-numbers-plus-style = "${palette.green}" "#2b3436"
-                  line-numbers-zero-style = "#45475a"
-
-                  minus-emph-style = syntax "#5b435b"
-                  minus-style = syntax "#302330"
-
-                  plus-emph-style = syntax "#475659"
-                  plus-style = syntax "#2b3436"
-
-                  syntax-theme = catppuccin
-              '';
-        }
-      ];
     };
   };
 }
