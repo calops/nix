@@ -118,7 +118,7 @@ local function chain_system_commands(commands, finally)
 			commands[1].callback(vim.split(result.stdout, "\n", { trimempty = true }))
 
 			if #commands > 1 then
-				module.chain_system_commands(vim.list_slice(commands, 2, #commands), finally)
+				chain_system_commands(vim.list_slice(commands, 2, #commands), finally)
 			elseif finally then
 				finally()
 			end
