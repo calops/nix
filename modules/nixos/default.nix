@@ -32,6 +32,7 @@
       font = "ter-124b";
       keyMap = lib.mkDefault "fr";
       packages = [ pkgs.terminus_font ];
+      earlySetup = true;
     };
 
     stylix.homeManagerIntegration.autoImport = false;
