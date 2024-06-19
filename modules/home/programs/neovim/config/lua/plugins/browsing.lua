@@ -67,11 +67,6 @@ return {
 						},
 					},
 				},
-				extensions = {
-					ast_grep = {
-						command = { "sg", "--json=stream", "-p" },
-					},
-				},
 			}
 
 			telescope.load_extension("fzf")
@@ -81,6 +76,7 @@ return {
 			telescope.load_extension("textcase")
 			telescope.load_extension("yank_history")
 			telescope.load_extension("persisted")
+			telescope.load_extension("ast_grep")
 
 			require("telescope-all-recent").setup {
 				default = { sorting = "frecency" },

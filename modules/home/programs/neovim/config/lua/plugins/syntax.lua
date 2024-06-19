@@ -165,7 +165,7 @@ return {
 					end,
 					"Insert below top-level node",
 				},
-				["gh"] = { "<CMD>STSSwapOrHold<CR>", "Hold or swap with held node" },
+				["<leader>h"] = { "<CMD>STSSwapOrHold<CR>", "Hold or swap with held node" },
 				["<Cr>"] = { "<CMD>STSSelectCurrentNode<CR>", "Select current node" },
 			}
 
@@ -180,7 +180,7 @@ return {
 				["<C-Right>"] = { "<CMD>STSSelectNextSiblingNode<CR>", "Select next sibling" },
 				["<Cr>"] = { "<CMD>STSSelectParentNode<CR>", "Select parent node" },
 				["<S-Cr>"] = { "<CMD>STSSelectChildNode<CR>", "Select child node" },
-				["gh"] = { "<CMD>STSSwapOrHold<CR>", "Hold or swap with held node" },
+				["<leader>h"] = { "<CMD>STSSwapOrHold<CR>", "Hold or swap with held node" },
 			}, { mode = "x" })
 		end,
 		config = true,

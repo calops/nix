@@ -44,6 +44,14 @@ return {
 			_signs_staged_enable = true,
 		},
 	},
+	-- Git chunk textobjects and utilities
+	-- TODO: compare with gitsigns and remove one of them
+	{
+		"echasnovski/mini.diff",
+		event = "BufRead",
+		cmd = "Git",
+		opts = {},
+	},
 	-- Git commands
 	{
 		"tpope/vim-fugitive",

@@ -10,8 +10,10 @@ in
 {
   config = lib.mkIf (config.my.roles.graphical.enable && !config.my.isDarwin) {
     home.packages = [ pkgs.grim ];
+
     services.flameshot = {
       enable = true;
+
       package = pkgs.flameshot.overrideAttrs (oldAttrs: {
         src = pkgs.fetchFromGitHub {
           owner = "flameshot-org";
@@ -25,6 +27,7 @@ in
         ];
         buildInputs = oldAttrs.buildInputs ++ [ pkgs.libsForQt5.kguiaddons ];
       });
+
       settings = {
         General = {
           disabledTrayIcon = true;

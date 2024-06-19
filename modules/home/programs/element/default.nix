@@ -1,3 +1,5 @@
+# This isn't in a flat element.nix file because the automatic import from Snowfall somehow results in an
+# infinite recursion. No idea why.
 {
   pkgs,
   config,
@@ -12,7 +14,7 @@ let
 
   # Electron doesn't play nice with the Wayland/NVidia combo
   # FIXME: this removes desktop entries and probably other stuff, find a better way to wrap this
-  pkg =
+  elementPkg =
     if nixosConfig.my.roles.nvidia.enable or false then
       pkgs.writeShellScriptBin "element-desktop" ''
         NIXOS_OZONE_WL=0 ${lib.getExe pkgs.element-desktop} --ozone-platform-hint=auto
@@ -20,10 +22,9 @@ let
     else
       pkgs.element-desktop;
 in
-with lib;
 {
-  config = mkIf cfg.enable {
-    home.packages = [ pkg ];
+  config = lib.mkIf cfg.enable {
+    home.packages = [ elementPkg ];
 
     xdg.configFile."Element/config.json".text = builtins.toJSON {
       setting_defaults = {
@@ -76,6 +77,7 @@ with lib;
             };
           }
         ];
+
         use_system_theme = false;
         default_theme = "custom-Radiant";
         useSystemFont = true;
@@ -86,6 +88,7 @@ with lib;
       systemFont = font;
       default_theme = "custom-Radiant";
       show_labs_settings = true;
+
       features = {
         feature_spotlight = true;
         feature_video_rooms = true;

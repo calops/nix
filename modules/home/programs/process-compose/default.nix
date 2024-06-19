@@ -1,3 +1,5 @@
+# This isn't in a flat process-compose.nix file because the automatic import from Snowfall somehow results in an
+# infinite recursion. No idea why.
 {
   lib,
   pkgs,
