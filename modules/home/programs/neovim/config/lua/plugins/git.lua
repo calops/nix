@@ -41,7 +41,6 @@ return {
 		end,
 		opts = {
 			preview_config = { border = "rounded" },
-			_signs_staged_enable = true,
 		},
 	},
 	-- Git chunk textobjects and utilities
