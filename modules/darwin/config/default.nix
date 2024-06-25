@@ -1,40 +1,65 @@
-{ pkgs, ... }:
 {
-  system.stateVersion = 4;
-  services.nix-daemon.enable = true;
+  pkgs,
+  inputs,
+  config,
+  lib,
+  ...
+}:
+{
+  imports = [ inputs.nh-darwin.nixDarwinModules.prebuiltin ];
 
-  nix = {
-    optimise.automatic = true;
-    gc = {
-      automatic = true;
-      interval = {
-        Day = 7;
-      };
-      options = "--delete-older-than 7d";
+  options = {
+    my.configDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      apply = toString;
+      description = "Location of the nix config directory (this repo)";
     };
   };
 
-  environment.systemPackages = [ pkgs.raycast ];
-  environment.shells = [ pkgs.fish ];
-  environment.loginShell = pkgs.fish;
-  programs.fish.enable = true;
-  homebrew.enable = true;
-  security.pam.enableSudoTouchIdAuth = true;
+  config = {
+    system.stateVersion = 4;
+    services.nix-daemon.enable = true;
 
-  system.defaults = {
-    dock = {
-      autohide = true;
-      orientation = "right";
-      mru-spaces = false;
+    nix = {
+      optimise.automatic = true;
+      gc = {
+        # automatic = true;
+        interval = {
+          Day = 7;
+        };
+        options = "--delete-older-than 7d";
+      };
     };
 
-    finder = {
-      AppleShowAllExtensions = true;
-      FXEnableExtensionChangeWarning = false;
+    environment.systemPackages = [ pkgs.raycast ];
+    environment.shells = [ pkgs.fish ];
+    environment.loginShell = pkgs.fish;
+    programs.fish.enable = true;
+    homebrew.enable = true;
+    security.pam.enableSudoTouchIdAuth = true;
+
+    programs.nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 4d --keep 3";
+      flake = config.my.configDir;
     };
 
-    NSGlobalDomain = {
-      _HIHideMenuBar = true;
+    system.defaults = {
+      dock = {
+        autohide = true;
+        orientation = "right";
+        mru-spaces = false;
+      };
+
+      finder = {
+        AppleShowAllExtensions = true;
+        FXEnableExtensionChangeWarning = false;
+      };
+
+      NSGlobalDomain = {
+        _HIHideMenuBar = true;
+      };
     };
   };
 }

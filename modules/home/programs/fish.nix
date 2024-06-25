@@ -16,7 +16,7 @@
         ns =
           {
             nixos = "nh os switch";
-            darwin = "darwin-rebuild --flake ~/nix switch";
+            darwin = "nh os switch";
             standalone = "nh home switch";
           }
           .${config.my.configType};
@@ -42,6 +42,7 @@
         ll = "ls -lH --time-style=long-iso";
         la = "ll -a";
         lt = "ll -T";
+        nh = lib.mkIf pkgs.stdenv.isDarwin "nh-darwin";
       };
       functions = {
         dev = ''nix develop --impure "$HOME/nix#$argv[1]" $argv[2..-1] --command "$SHELL"'';

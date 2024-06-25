@@ -11,7 +11,8 @@
     configDir = lib.mkOption {
       type = lib.types.path;
       apply = toString;
-      default = "${config.home.homeDirectory}/nix";
+      default =
+        nixosConfig.my.configDir or darwinConfig.my.configDir or "${config.home.homeDirectory}/nix";
       description = "Location of the nix config directory (this repo)";
     };
 
@@ -51,6 +52,11 @@
       settings.program_options = {
         tray = false; # FIXME: tray icon isn't working on ironbar
       };
+    };
+
+    programs.nh = {
+      enable = true;
+      flake = config.my.configDir;
     };
 
     nix.gc = {

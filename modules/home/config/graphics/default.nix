@@ -215,7 +215,7 @@ in
       );
 
     programs.mpv = {
-      enable = true;
+      enable = pkgs.stdenv.isLinux;
       scripts = [
         pkgs.mpvScripts.sponsorblock
         pkgs.mpvScripts.thumbfast

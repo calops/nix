@@ -155,12 +155,25 @@ return {
 		"nvim-neotest/neotest",
 		dependencies = {
 			"nvim-neotest/nvim-nio",
+			"jfpedroza/neotest-elixir",
 		},
 		cmd = "Neotest",
+		init = function()
+			map {
+				["<space>t"] = {
+					name = "tests",
+					t = { function() require("neotest").run.run() end, "Run closest test" },
+					f = { function() require("neotest").run.run(vim.fn.expand("%")) end, "Run all tests in file" },
+					s = { function() require("neotest").summary.toggle() end, "Toggle summary" },
+					o = { function() require("neotest").output_panel.toggle() end, "Toggle output" },
+				},
+			}
+		end,
 		config = function()
 			require("neotest").setup {
 				adapters = {
 					require("rustaceanvim.neotest"),
+					require("neotest-elixir"),
 				},
 			}
 		end,

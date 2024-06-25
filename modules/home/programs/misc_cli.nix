@@ -25,7 +25,6 @@
       unrar
       yq
       pastel
-      nh
       jaq
     ];
 

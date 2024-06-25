@@ -2,13 +2,23 @@
   inputs,
   lib,
   pkgs,
+  config,
   ...
 }:
 {
   imports = [
     ../common
     inputs.stylix.nixosModules.stylix
+    inputs.nh-darwin.nixosModules.default
   ] ++ lib.snowfall.fs.get-non-default-nix-files ./.;
+
+  options = {
+    my.configDir = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      apply = toString;
+      description = "Location of the nix config directory (this repo)";
+    };
+  };
 
   config = {
     system.stateVersion = "24.11";
@@ -17,7 +27,7 @@
     nix = {
       optimise.automatic = true;
       gc = {
-        automatic = true;
+        # automatic = true;
         dates = "weekly";
         options = "--delete-older-than 30d";
       };
@@ -45,6 +55,13 @@
     programs.gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
+    };
+
+    programs.nh = {
+      enable = true;
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 4d --keep 3";
+      flake = config.my.configDir;
     };
 
     # Support for dynamic linking in NixOS

@@ -12,6 +12,8 @@
     devenv.url = "github:cachix/devenv";
     ags.url = "github:Aylur/ags";
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
+    nh-darwin.url = "github:ToyVo/nh-darwin";
+
     darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";

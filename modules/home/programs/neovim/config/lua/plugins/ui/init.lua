@@ -51,7 +51,7 @@ return {
 			"rcarriga/nvim-notify",
 		},
 		enabled = true,
-		event = "UIEnter",
+		lazy = false,
 		init = function()
 			map {
 				["<leader><leader>"] = { ":noh<CR>", "Hide search highlights" },
