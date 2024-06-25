@@ -73,9 +73,9 @@ local lsp_config_function = function()
 		{ callback = function() vim.lsp.inlay_hint.enable(vim.b.inlay_hints_enabled or false) end }
 	)
 
-	local handlers = vim.lsp.handlers
-	handlers["textDocument/hover"] = vim.lsp.with(handlers.hover, { border = "rounded" })
-	handlers["textDocument/signatureHelp"] = vim.lsp.with(handlers.signature_help, { border = "rounded" })
+	-- local handlers = vim.lsp.handlers
+	-- handlers["textDocument/hover"] = vim.lsp.with(handlers.hover, { border = "rounded" })
+	-- handlers["textDocument/signatureHelp"] = vim.lsp.with(handlers.signature_help, { border = "rounded" })
 end
 
 return {
