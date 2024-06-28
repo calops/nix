@@ -15,6 +15,7 @@ let
   layout = "hy3";
   movefocus = "hy3:movefocus";
   movewindow = "hy3:movewindow";
+  lockCommand = "${lib.getExe pkgs.grim} -o ${monitors.primary} /tmp/screenshot.png && hyprlock";
 in
 {
   config = lib.mkIf (cfg.enable && !config.my.isDarwin) {
@@ -25,7 +26,10 @@ in
       plugins = [ pkgs.hyprlandPlugins.hy3 ];
 
       settings = {
-        monitor = ",preferred,auto,1";
+        monitor = [
+          "Unknown-1,disable" # TODO: remove once kernel bug that creates phantom monitors is fixed
+          ",preferred,auto,1"
+        ];
         workspace = [
           "1,monitor:${monitors.primary}"
           "3,monitor:${monitors.primary}"
@@ -75,6 +79,7 @@ in
           kb_options = "grp:alt_shift_toggle";
 
           follow_mouse = 1;
+
           float_switch_override_focus = 0;
           touchpad = {
             natural_scroll = true;
@@ -124,7 +129,7 @@ in
 
         bind = [
           "SUPER, return, exec, ${cfg.terminal}"
-          "SUPER, L, exec, hyprlock"
+          "SUPER, L, exec, ${lockCommand}"
           "SUPER SHIFT, Q, killactive,"
           "SUPER, M, exit,"
           "SUPER, E, exec, firefox"
@@ -191,7 +196,7 @@ in
       settings = {
         background = [
           {
-            path = "screenshot";
+            path = "/tmp/screenshot.png";
             blur_passes = 3;
           }
         ];

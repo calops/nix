@@ -10,7 +10,7 @@ let
   # TODO: remove once nixpkgs fixes the ozone setting for electron 27
   logseqPkg = pkgs.logseq.overrideAttrs (oldAttrs: {
     postFixup = ''
-      makeWrapper ${pkgs.electron_27}/bin/electron $out/bin/${oldAttrs.pname} \
+      makeWrapper ${pkgs.electron_29}/bin/electron $out/bin/${oldAttrs.pname} \
         --add-flags $out/share/${oldAttrs.pname}/resources/app \
         --add-flags "--use-gl=desktop" \
         --prefix LD_LIBRARY_PATH : "${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}"

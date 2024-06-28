@@ -19,11 +19,7 @@
     };
 
     # Misc
-    hardware.opengl = {
-      enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
-    };
+    hardware.graphics.enable = true;
 
     security.pam.services.swaylock = { };
   };

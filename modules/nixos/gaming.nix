@@ -15,7 +15,7 @@
       remotePlay.openFirewall = true;
     };
 
-    hardware.opengl = {
+    hardware.graphics = {
       extraPackages = [ pkgs.mangohud ];
       extraPackages32 = [ pkgs.mangohud ];
     };

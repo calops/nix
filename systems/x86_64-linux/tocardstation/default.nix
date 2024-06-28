@@ -4,6 +4,7 @@
 
   time.timeZone = "Europe/Paris";
 
+  my.configDir = "/home/calops/nix";
   my.roles = {
     graphical.enable = true;
     nvidia.enable = true;
