@@ -14,6 +14,7 @@ return {
 			"davidsierradz/cmp-conventionalcommits",
 			"chrisgrieser/cmp-nerdfont",
 			"chrisgrieser/cmp_yanky",
+			"onsails/lspkind.nvim",
 		},
 		config = function()
 			local cmp = require("cmp")

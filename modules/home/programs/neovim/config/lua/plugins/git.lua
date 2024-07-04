@@ -71,7 +71,6 @@ return {
 		opts = {},
 		dependencies = {
 			"MunifTanjim/nui.nvim",
-			"nvim-tree/nvim-web-devicons",
 			"nvim-lua/plenary.nvim",
 			{
 				"chrisgrieser/nvim-tinygit", -- optional: for Github PR view

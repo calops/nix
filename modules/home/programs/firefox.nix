@@ -21,16 +21,16 @@ in
         name = "default";
         id = 0;
         isDefault = true;
-        extensions = with addons; [
-          ublock-origin
-          onepassword-password-manager
-          bitwarden
-          tridactyl
-          reddit-enhancement-suite
-          sidebery
-          stylus
-          sponsorblock
-          firenvim
+        extensions = [
+          addons.ublock-origin
+          addons.onepassword-password-manager
+          addons.bitwarden
+          addons.tridactyl
+          addons.reddit-enhancement-suite
+          addons.sidebery
+          addons.stylus
+          addons.sponsorblock
+          addons.firenvim
         ];
         search = {
           default = "Google";

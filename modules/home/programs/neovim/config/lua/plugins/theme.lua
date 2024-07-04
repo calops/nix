@@ -167,7 +167,7 @@ return {
 					FlashMatch = { bg = palette.lavender, fg = palette.base },
 					FlashBackdrop = { bg = nil, fg = palette.overlay0, style = { "nocombine" } },
 
-					NoiceMini = { fg = palette.blue, bg = nil, blend = 100 },
+					NoiceMini = { fg = palette.blue, bg = nil, blend = 50 },
 					NoiceCmdlineIcon = { fg = palette.teal },
 					NoiceCmdlinePopupTitle = { link = "NoiceCmdlineIcon" },
 					NoiceCmdlinePopupBorder = { link = "NoiceCmdlineIcon" },

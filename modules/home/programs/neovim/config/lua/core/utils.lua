@@ -178,7 +178,7 @@ return {
 	map = map,
 	lazy_init = lazy_init,
 	debounce = debounce,
-	chained_system_commands = chain_system_commands,
+	chain_system_commands = chain_system_commands,
 	new_object = new_object,
 	watch_file = watch_file,
 	make_sidebar = make_sidebar,

@@ -188,12 +188,11 @@ local tabs = {
 		condition = function(self) return not vim.tbl_isempty(self.tabpages) end,
 		utils.make_tablist {
 			init = function(self)
-				local devicons = require("nvim-web-devicons")
 				local function compute_icon_color(color)
 					if self.is_active then
 						return color
 					end
-					return colors.darken(color, 0.4, string.format("#%x", colors.hl.CustomTablinePillIcon.bg))
+					return colors.darken(color, 0.4, colors.hl.CustomTablinePillIcon.bg)
 				end
 
 				local icons = {}
@@ -204,13 +203,16 @@ local tabs = {
 				for _, win in ipairs(self.wins) do
 					local buffer = vim.api.nvim_win_get_buf(win)
 					local buffer_name = vim.api.nvim_buf_get_name(buffer) or ""
-					local file_name = buffer_name:match("^.+/(.+)$")
-					if file_name then
-						local icon, icon_color = devicons.get_icon_color(file_name, file_name:match("^.+%.(.+)$"))
-						if icon and icon_color then
+					local file_name = vim.fs.basename(buffer_name)
+					local filetype = vim.api.nvim_get_option_value("filetype", { buf = buffer })
+					local buftype = vim.api.nvim_get_option_value("buftype", { buf = buffer })
+
+					if filetype and buftype ~= "nofile" then
+						local icon, icon_hl = require("mini.icons").get("filetype", filetype)
+						if icon and icon_hl then
 							table.insert(icons, {
 								provider = icon .. " ",
-								hl = { fg = compute_icon_color(icon_color) },
+								hl = { fg = compute_icon_color(colors.hl[icon_hl].fg or colors.hl.Normal.fg) },
 							})
 						end
 					end
@@ -229,9 +231,7 @@ local tabs = {
 						self.pill_color = colors.hl.CustomTablinePillIcon
 					end
 
-					if vim.api.nvim_get_option_value("modified", { buf = buffer }) then
-						modified = true
-					end
+					modified = modified or vim.api.nvim_get_option_value("modified", { buf = buffer })
 				end
 
 				table.insert(icons, { provider = " " })

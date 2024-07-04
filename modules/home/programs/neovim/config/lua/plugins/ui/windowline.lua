@@ -22,10 +22,10 @@ return {
 					or ":."
 				local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), filename_modifier)
 					or "[no name]"
+				local filetype = vim.api.nvim_get_option_value("filetype", { buf = props.buf })
 				local modified = vim.api.nvim_get_option_value("modified", { buf = props.buf })
-				local extension = string.match(filename, "^.+%.(.+)$")
-				local icon, icon_fg_color =
-					require("nvim-web-devicons").get_icon_colors(filename, extension, { default = true })
+				local icon, icon_hl = require("mini.icons").get("filetype", filetype)
+				local icon_fg_color = format_color(colors.hl[icon_hl].fg)
 
 				local icon_color = {
 					fg = icon_fg_color,

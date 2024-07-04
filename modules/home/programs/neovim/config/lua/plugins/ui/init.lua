@@ -46,10 +46,6 @@ return {
 	-- CMD line replacement and other UI niceties
 	{
 		"folke/noice.nvim",
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"rcarriga/nvim-notify",
-		},
 		enabled = true,
 		lazy = false,
 		init = function()
@@ -59,13 +55,6 @@ return {
 			}
 		end,
 		opts = {
-			lsp = {
-				override = {
-					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-					["vim.lsp.util.stylize_markdown"] = true,
-					["cmp.entry.get_documentation"] = true,
-				},
-			},
 			presets = {
 				bottom_search = false,
 				command_palette = true,
@@ -89,30 +78,6 @@ return {
 				view_warn = "notify",
 				view_search = "virtualtext",
 				view_history = "messages",
-			},
-		},
-	},
-	-- IDE panels
-	{
-		"ldelossa/nvim-ide",
-		cmd = "Workspace",
-		init = function()
-			map {
-				["<leader>w"] = {
-					name = "ide",
-					l = { ":Workspace LeftPanelToggle<CR>", "Toggle git panels" },
-					r = { ":Workspace RightPanelToggle<CR>", "Toggle IDE panels" },
-				},
-			}
-		end,
-		opts = {
-			workspaces = {
-				auto_open = "none",
-			},
-			panel_sizes = {
-				left = 60,
-				right = 60,
-				bottom = 15,
 			},
 		},
 	},
