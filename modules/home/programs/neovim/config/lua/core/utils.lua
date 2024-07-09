@@ -1,5 +1,3 @@
-local module = {}
-
 local function map(mappings, opts) return require("which-key").register(mappings, opts) end
 
 ---Helper function to help write constructors
@@ -72,31 +70,19 @@ end
 
 ---@param path string
 ---@param on_event fun(filename: string, events: string[], handle: uv_fs_event_t)
----@param flags table
+---@param flags? table
 local function watch_file(path, on_event, flags)
-	local handle = vim.uv.new_fs_event()
-	assert(handle, "Failed to create fs_event handle")
+	local handle = assert(vim.uv.new_fs_event(), "Failed to create fs_event handle")
 
-	local fs_flags = {
-		watch_entry = false, -- true = when dir, watch dir inode, not dir content
-		stat = false, -- true = don't use inotify/kqueue but periodic check, not implemented
-		recursive = false, -- true = watch dirs inside dirs
-	}
-	vim.tbl_extend("force", fs_flags, flags)
-
-	-- Possibly a bug in neodev, false mismatch
-	---@diagnostic disable-next-line: param-type-mismatch
-	local function unwatch() handle:stop() end
-	local function callback(err, filename, events)
+	handle:start(path, flags or {}, function(err, filename, events)
 		if err then
 			error("Error in fs_event: " .. err)
-			unwatch()
+			handle:stop()
 		else
 			on_event(filename, events, handle)
 		end
-	end
+	end)
 
-	handle:start(path, fs_flags, callback)
 	return handle
 end
 
@@ -114,6 +100,9 @@ local function chain_system_commands(commands, finally)
 				"Error in system command: " .. vim.inspect(commands[1].cmd) .. "\n" .. result.stderr,
 				vim.log.levels.ERROR
 			)
+			if finally then
+				finally()
+			end
 		else
 			commands[1].callback(vim.split(result.stdout, "\n", { trimempty = true }))
 
@@ -127,51 +116,34 @@ local function chain_system_commands(commands, finally)
 end
 
 ---@param func fun(...)
----@param delay number | nil
+---@param delay? number
 ---@return fun(...), uv_timer_t
 local function debounce(func, delay)
 	delay = delay or 50
 	local timer = vim.uv.new_timer()
-	assert(timer, "Failed to create timer")
 
-	local argv, argc
 	local wrapped_fn = function(...)
-		argv = argv or { ... }
-		argc = argc or select("#", ...)
+		local argv = { ... }
+		local argc = select("#", ...)
 
-		timer:start(delay, 0, function()
-			pcall(
-				vim.schedule_wrap(function(...)
-					func(...)
-					timer:stop()
-				end),
-				unpack(argv, 1, argc)
-			)
-		end)
+		timer:start(delay, 0, function() pcall(vim.schedule_wrap(func), unpack(argv, 1, argc)) end)
 	end
 
 	return wrapped_fn, timer
 end
 
-local sidebar_group = vim.api.nvim_create_augroup("SidebarHandler", {})
----Create a sidebar for a specific filetype
----@param pattern string
----@param condition fun(): boolean
----@return nil
-local function make_sidebar(pattern, condition)
-	vim.api.nvim_create_autocmd({ "BufEnter" }, {
-		pattern = pattern,
-		group = sidebar_group,
-		callback = function()
-			if condition() and vim.wo.winfixwidth == false then
-				vim.wo.statuscolumn = ""
-				vim.wo.number = false
-				vim.wo.foldcolumn = "0"
-				vim.wo.signcolumn = "no"
-				vim.cmd([[wincmd L | vert resize 80 | set winfixwidth | wincmd =]])
-			end
-		end,
-	})
+---Run a function for all buffers, and aggregate the results
+---@generic T
+---@param func fun(bufnr: number): T
+---@return T[]
+local function for_all_buffers(func)
+	local ret = {}
+
+	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+		table.insert(ret, 0, func(bufnr))
+	end
+
+	return ret
 end
 
 return {
@@ -181,5 +153,5 @@ return {
 	chain_system_commands = chain_system_commands,
 	new_object = new_object,
 	watch_file = watch_file,
-	make_sidebar = make_sidebar,
+	for_all_buffers = for_all_buffers,
 }

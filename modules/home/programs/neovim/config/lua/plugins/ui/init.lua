@@ -6,13 +6,14 @@ return {
 	-- TUI
 	{
 		"rebelot/heirline.nvim",
-		event = "UIEnter",
+		lazy = false,
 		config = function()
 			vim.o.signcolumn = "no"
 			vim.o.foldcolumn = "0"
 			vim.go.laststatus = 3
 			vim.go.showtabline = 0
 
+			require("gitsigns") -- Dependency
 			require("heirline").setup {
 				statuscolumn = require("plugins.ui.statuscolumn"),
 				statusline = require("plugins.ui.statusline"),
@@ -230,5 +231,21 @@ return {
 				highlighters = vim.tbl_extend("force", highlighters, palette_patterns),
 			}
 		end,
+	},
+	{
+		"folke/edgy.nvim",
+		event = "VeryLazy",
+		opts = {
+			animate = { enabled = false },
+			options = { right = { size = 80 } },
+			bottom = {
+				"Trouble",
+				{ ft = "qf", title = "QuickFix" },
+			},
+			right = {
+				"copilot-chat",
+				{ ft = "help", filter = function(buf) return vim.bo[buf].buftype == "help" end },
+			},
+		},
 	},
 }

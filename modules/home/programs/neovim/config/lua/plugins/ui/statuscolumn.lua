@@ -69,10 +69,17 @@ vim.api.nvim_create_autocmd("DiagnosticChanged", {
 	callback = function(args) update_cached_diagnostics(args.buf, args.data.diagnostics) end,
 })
 
-vim.api.nvim_create_autocmd("User", {
-	pattern = "GitSignsUpdate",
-	callback = function(args) update_cached_git_signs(args.buf) end,
-})
+-- vim.api.nvim_create_autocmd("User", {
+-- 	pattern = "GitSignsUpdate",
+-- 	callback = function(args) update_cached_git_signs(args.buf) end,
+-- })
+--
+-- vim.api.nvim_create_autocmd("User", {
+-- 	pattern = "GitStatusUpdated",
+-- 	callback = function() core_utils.for_all_buffers(update_cached_git_signs) end,
+-- })
+
+local gitsigns_namespace = nil
 
 return {
 	{
@@ -114,6 +121,10 @@ return {
 			else
 				self.gitsign = nil
 			end
+
+			if not gitsigns_namespace then
+				gitsigns_namespace = vim.api.nvim_get_namespaces().gitsigns_signs_
+			end
 		end,
 
 		-- LSP diagnostics
@@ -142,15 +153,36 @@ return {
 
 		-- Git chunks
 		{
-			condition = require("heirline.conditions").is_git_repo,
+			init = function(self)
+				if gitsigns_namespace then
+					local extmarks = vim.api.nvim_buf_get_extmarks(
+						0,
+						gitsigns_namespace,
+						{ vim.v.lnum - 1, 0 },
+						{ vim.v.lnum - 1, -1 },
+						{ details = true }
+					)
+					if extmarks and extmarks[1] then
+						self.extmark = extmarks[1][4]
+					else
+						self.extmark = nil
+					end
+				end
+			end,
 			provider = function(self)
-				if self.gitsign then
-					return self.gitsign.text
+				if self.extmark then
+					return self.extmark.sign_text
 				else
 					return "  "
 				end
 			end,
-			hl = function(self) return self.gitsign and self.gitsign.hl or nil end,
+			hl = function(self)
+				if self.extmark then
+					return self.extmark.sign_hl_group
+				else
+					return nil
+				end
+			end,
 			on_click = {
 				name = "git_sign_callback",
 				callback = function(_, _, _, button)

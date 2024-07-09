@@ -41,15 +41,16 @@ return {
 		end,
 		opts = {
 			preview_config = { border = "rounded" },
+			signs = {
+				add = { text = "┃" },
+				change = { text = "┃" },
+				delete = { text = "╏" },
+				topdelete = { text = "╏" },
+				changedelete = { text = "╏" },
+				untracked = { text = "┋" },
+			},
 		},
-	},
-	-- Git chunk textobjects and utilities
-	-- TODO: compare with gitsigns and remove one of them
-	{
-		"echasnovski/mini.diff",
-		event = "BufRead",
-		cmd = "Git",
-		opts = {},
+		config = function(_, opts) require("gitsigns").setup(opts) end,
 	},
 	-- Git commands
 	{

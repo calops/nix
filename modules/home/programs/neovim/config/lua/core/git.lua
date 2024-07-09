@@ -105,6 +105,8 @@ local status_map = {
 GitStatus.update = core_utils.debounce(
 	---@param self GitStatus
 	function(self)
+		self:stop_watching_git_dir()
+
 		if self.is_git_repo then
 			local stash_file = io.open(self.git_dir .. "/logs/refs/stash", "r")
 			if stash_file ~= nil then
@@ -151,26 +153,33 @@ GitStatus.update = core_utils.debounce(
 						end
 					end,
 				},
-			}, function() self:redraw() end)
+			}, function()
+				self:redraw()
+				self:watch_git_dir()
+			end)
 		end
-	end
+	end,
+	200
 )
 
--- TODO: better granularity when updating only one file
-function GitStatus:watch_git_files()
+function GitStatus:watch_git_dir()
+	self:stop_watching_git_dir()
+
+	if self.is_git_repo then
+		self._watch_handles = {
+			core_utils.watch_file(self.git_dir, function(_, _, _) self:update() end),
+		}
+	end
+end
+
+function GitStatus:stop_watching_git_dir()
 	for _, handle in ipairs(self._watch_handles) do
-		---@diagnostic disable-next-line: param-type-mismatch
 		handle:stop()
 		if not handle:is_closing() then
 			handle:close()
 		end
 	end
 	self._watch_handles = {}
-	if self.is_git_repo then
-		self._watch_handles = {
-			core_utils.watch_file(self.root_dir, function(_, _, _) self:update() end, { recursive = true }),
-		}
-	end
 end
 
 GitStatus.init = core_utils.debounce(
@@ -187,8 +196,8 @@ GitStatus.init = core_utils.debounce(
 				callback = function(lines)
 					if #lines == 2 then
 						self.is_git_repo = true
-						self.git_dir = lines[1]
 						self.root_dir = lines[2]
+						self.git_dir = self.root_dir .. "/" .. lines[1]
 					else
 						self.is_git_repo = false
 					end
@@ -196,7 +205,6 @@ GitStatus.init = core_utils.debounce(
 			},
 		}, function()
 			if old_root_dir ~= self.root_dir then
-				self:watch_git_files()
 				self:update()
 			end
 		end)

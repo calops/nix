@@ -83,12 +83,5 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 				},
 			}, { mode = { "n", "v", "x" } })
 		end,
-		config = function(_, opts)
-			require("CopilotChat").setup(opts)
-			require("core.utils").make_sidebar(
-				"copilot-chat",
-				function() return vim.fn.bufname() == "copilot-chat" and vim.fn.win_gettype() ~= "popup" end
-			)
-		end,
 	},
 }

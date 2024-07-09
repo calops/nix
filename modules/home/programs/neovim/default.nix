@@ -24,6 +24,7 @@ let
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       wrapProgram $out/bin/nvim --prefix ${ld_library_path_var_name} : "${
+        # These are both required for the `fugit2` plugin
         pkgs.lib.makeLibraryPath [
           pkgs.libgit2
           pkgs.gpgme

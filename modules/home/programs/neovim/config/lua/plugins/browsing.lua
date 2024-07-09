@@ -1,4 +1,5 @@
 local map = require("core.utils").map
+
 return {
 	-- Fuzzy finder
 	{
@@ -78,6 +79,7 @@ return {
 			telescope.load_extension("persisted")
 			telescope.load_extension("ast_grep")
 
+			---@diagnostic disable-next-line: missing-fields
 			require("telescope-all-recent").setup {
 				default = { sorting = "frecency" },
 				pickers = {

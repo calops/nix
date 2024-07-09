@@ -54,6 +54,7 @@ vim.o.tabstop = 4
 -- Splits
 vim.o.splitbelow = true
 vim.o.splitright = true
+vim.o.splitkeep = "screen"
 
 -- Mouse
 vim.o.mouse = "a"
@@ -115,11 +116,11 @@ vim.diagnostic.config {
 	},
 }
 
-vim.fn.sign_define("GitSignsAdd", { text = "▋", texthl = "GitSignsAdd", numhl = "" })
-vim.fn.sign_define("GitSignsChange", { text = "▋", texthl = "GitSignsChange", numhl = "" })
-vim.fn.sign_define("GitSignsDelete", { text = "▋", texthl = "GitSignsDelete", numhl = "" })
-
-require("core.utils").make_sidebar("*.txt", function() return vim.bo.buftype == "help" end)
+require("core.symbols").define_signs {
+	GitSignsAdd = { text = "▋", texthl = "GitSignsAdd", numhl = "" },
+	GitSignsChange = { text = "▋", texthl = "GitSignsChange", numhl = "" },
+	GitSignsDelete = { text = "▋", texthl = "GitSignsDelete", numhl = "" },
+}
 
 require("lazy").setup("plugins", {
 	ui = { border = "rounded" },
