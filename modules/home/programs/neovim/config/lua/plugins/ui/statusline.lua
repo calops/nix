@@ -105,7 +105,11 @@ local cwd = {
 }
 
 local git = {
-	update = { "User", pattern = "GitStatusUpdated" },
+	update = {
+		"User",
+		pattern = "GitStatusUpdated",
+		callback = vim.schedule_wrap(function() vim.cmd.redrawstatus() end),
+	},
 	condition = function() return git_utils.status.is_git_repo end,
 	init = function(self)
 		self[1] = self:new(
