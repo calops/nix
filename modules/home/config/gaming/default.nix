@@ -18,6 +18,8 @@ in
     home.packages = [
       pkgs.discord
       pkgs.gamehub
+      pkgs.protonup-qt
+      pkgs.lutris
     ];
 
     programs.mangohud = {

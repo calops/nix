@@ -33,22 +33,23 @@ return {
 				local colors = require("core.colors")
 				local palette = colors.palette()
 
+				-- stylua: ignore
 				return {
 					Error = { fg = palette.red },
 					Warning = { fg = palette.yellow },
 					Info = { fg = palette.sky },
 					Hint = { fg = palette.teal },
 
-					ErrorSign = { fg = palette.red, bg = colors.darken(palette.red, 0.095, palette.base) },
+					ErrorSign = { fg = palette.red,    bg = colors.darken(palette.red, 0.095, palette.base) },
 					WarnSign = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.095, palette.base) },
-					InfoSign = { fg = palette.sky, bg = colors.darken(palette.sky, 0.095, palette.base) },
-					HintSign = { fg = palette.teal, bg = colors.darken(palette.teal, 0.095, palette.base) },
+					InfoSign = { fg = palette.sky,    bg = colors.darken(palette.sky, 0.095, palette.base) },
+					HintSign = { fg = palette.teal,   bg = colors.darken(palette.teal, 0.095, palette.base) },
 
-					CursorLine = { bg = palette.surface0 },
+					CursorLine = { bg   = palette.surface0 },
 					CursorLineSign = { link = "CursorLine" },
-					LineNr = { fg = palette.surface2 },
-					CursorLineNr = { fg = palette.lavender, bg = palette.surface0 },
-					ColorColumn = { bg = palette.mantle },
+					LineNr = { fg   = palette.surface2 },
+					CursorLineNr = { fg   = palette.lavender, bg = palette.surface0 },
+					ColorColumn = { bg   = palette.mantle },
 
 					NormalFloat = { bg = palette.base },
 					FloatBorder = { fg = palette.mauve },
@@ -62,18 +63,8 @@ return {
 					GlancePreviewMatch = { bg = colors.darken(palette.peach, 0.2, palette.base) },
 					GlanceListMatch = { fg = palette.peach },
 
-					Search = {
-						fg = palette.yellow,
-						bg = colors.darken(palette.yellow, 0.095, palette.base),
-						sp = palette.yellow,
-						style = { "bold", "underline" },
-					},
-					CurSearch = {
-						fg = palette.peach,
-						bg = colors.darken(palette.peach, 0.095, palette.base),
-						sp = palette.peach,
-						style = { "bold", "underline" },
-					},
+					Search = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.095, palette.base), sp = palette.yellow, style = { "bold", "underline" } },
+					CurSearch = { fg = palette.peach, bg = colors.darken(palette.peach, 0.095, palette.base), sp = palette.peach, style = { "bold", "underline" } },
 
 					InclineNormal = { fg = palette.base, bg = palette.sapphire, style = { "bold" } },
 					InclineNormalNC = { fg = palette.sapphire, bg = colors.darken(palette.sapphire, 0.33) },
@@ -95,10 +86,7 @@ return {
 					DiagnosticLineHint = { bg = colors.darken(palette.teal, 0.095, palette.base) },
 
 					DiagnosticSignError = { fg = palette.red, bg = colors.darken(palette.red, 0.095, palette.base) },
-					DiagnosticSignWarn = {
-						fg = palette.yellow,
-						bg = colors.darken(palette.yellow, 0.095, palette.base),
-					},
+					DiagnosticSignWarn = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.095, palette.base) },
 					DiagnosticSignInfo = { fg = palette.sky, bg = colors.darken(palette.sky, 0.095, palette.base) },
 					DiagnosticSignHint = { fg = palette.teal, bg = colors.darken(palette.teal, 0.095, palette.base) },
 
@@ -148,11 +136,7 @@ return {
 					CustomTablineModifiedIcon = { fg = palette.peach, bg = colors.darken(palette.peach, 0.33) },
 					CustomTablineNumber = { style = { "bold" } },
 					CustomTablineLsp = { fg = palette.base, bg = palette.green },
-					CustomTablineLspActive = {
-						fg = palette.green,
-						bg = colors.darken(palette.green, 0.33),
-						style = { "bold" },
-					},
+					CustomTablineLspActive = { fg = palette.green, bg = colors.darken(palette.green, 0.33), style = { "bold" } },
 					CustomTablineLspInactive = { fg = palette.text, bg = colors.darken(palette.green, 0.33) },
 					CustomTablineCwd = { fg = palette.yellow, bg = colors.darken(palette.yellow, 0.33) },
 					CustomTablineCwdIcon = { fg = palette.base, bg = palette.yellow },

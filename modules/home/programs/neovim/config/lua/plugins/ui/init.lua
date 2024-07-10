@@ -197,12 +197,12 @@ return {
 				return {
 					pattern = function(bufnr)
 						if vim.api.nvim_buf_get_name(bufnr):match("theme.lua$") then
-							return "()[^	 ].*() = {.*palette.*}"
+							return "()[^	 ]*() += {.*palette.*}"
 						end
 						return nil
 					end,
 					group = function(_, _, data)
-						local group, body = data.full_match:match("([^{]*) = ({.*})$")
+						local group, body = data.full_match:match("([^{ ]*) += ({.*})$")
 						group = group:gsub('[]"[]+', "")
 						local group_name = "HiPatternsGroup_" .. group
 						local group_def = loadstring([[

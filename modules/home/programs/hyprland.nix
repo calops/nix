@@ -47,8 +47,8 @@ in
           #(lib.getExe pkgs.hyprpaper)
           (lib.getExe pkgs.hypridle)
           (lib.getExe pkgs.firefox)
-          "element-desktop"
           (lib.getExe pkgs.discord)
+          "element-desktop"
         ];
 
         windowrulev2 = [
