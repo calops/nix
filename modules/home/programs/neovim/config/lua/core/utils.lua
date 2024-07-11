@@ -145,6 +145,44 @@ local function for_all_buffers(func)
 
 	return ret
 end
+---
+---@generic T
+---@param list [T]
+local function empty_list(list)
+	-- Fastest way to empty a list in lua
+	local count = #list
+	for i = 0, count do
+		list[i] = nil
+	end
+end
+
+---@generic T
+---@class DynamicList<T>: [T]
+DynamicList = {}
+
+---@generic T
+---@class DynamicListOpts<T>
+---@diagnostic disable-next-line: undefined-doc-name
+---@field update_fn fun(list: DynamicList<T>, args: any)
+---@field event? string
+---@field pattern? string
+DynamicListOpts = {}
+
+---@generic T
+---@param opts DynamicListOpts
+---@return DynamicList<T>
+function DynamicList:new(opts)
+	local list = {}
+
+	if opts.event then
+		vim.api.nvim_create_autocmd(opts.event, {
+			pattern = opts.pattern,
+			callback = function(args) opts.update_fn(list, args) end,
+		})
+	end
+
+	return list
+end
 
 return {
 	map = map,
