@@ -48,7 +48,7 @@
     programs.gpg.enable = true;
     programs.dircolors.enable = true;
 
-    services.network-manager-applet.enable = true;
+    services.network-manager-applet.enable = pkgs.stdenv.isLinux;
     services.udiskie = lib.mkIf (!config.my.isDarwin) {
       enable = true;
       settings.program_options = {

@@ -10,6 +10,7 @@
     ../common
     inputs.stylix.nixosModules.stylix
     inputs.nh-darwin.nixosModules.default
+    inputs.madness.nixosModules.default
   ] ++ lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options = {
@@ -65,6 +66,6 @@
     };
 
     # Support for dynamic linking in NixOS
-    programs.nix-ld.enable = true;
+    # programs.nix-ld.enable = true;
   };
 }

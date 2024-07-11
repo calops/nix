@@ -13,6 +13,7 @@
     ags.url = "github:Aylur/ags";
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
     nh-darwin.url = "github:ToyVo/nh-darwin";
+    madness.url = "github:antithesishq/madness";
 
     darwin = {
       url = "github:LnL7/nix-darwin";

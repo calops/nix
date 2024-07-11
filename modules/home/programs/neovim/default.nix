@@ -16,28 +16,12 @@ let
     "rustfmt"
     "rust-analyzer"
   ];
-  ld_library_path_var_name = (lib.optionalString pkgs.stdenv.isDarwin "DY") + "LD_LIBRARY_PATH";
-
-  nvimPackage = pkgs.symlinkJoin {
-    name = "neovim-with-ld-path";
-    paths = [ pkgs.neovim ];
-    nativeBuildInputs = [ pkgs.makeWrapper ];
-    postBuild = ''
-      wrapProgram $out/bin/nvim --prefix ${ld_library_path_var_name} : "${
-        # These are both required for the `fugit2` plugin
-        pkgs.lib.makeLibraryPath [
-          pkgs.libgit2
-          pkgs.gpgme
-        ]
-      }"
-    '';
-  };
 in
 {
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.neovim = {
       enable = true;
-      package = nvimPackage;
+      # package = nvimPackage;
       defaultEditor = true;
       extraPackages = [
         # Formatters

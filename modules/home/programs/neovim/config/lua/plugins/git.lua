@@ -66,20 +66,4 @@ return {
 			enable_builtin = true,
 		},
 	},
-	{
-		"SuperBo/fugit2.nvim",
-		opts = {},
-		dependencies = {
-			"MunifTanjim/nui.nvim",
-			"nvim-lua/plenary.nvim",
-			{
-				"chrisgrieser/nvim-tinygit", -- optional: for Github PR view
-				dependencies = { "stevearc/dressing.nvim" },
-			},
-		},
-		cmd = { "Fugit2", "Fugit2Graph" },
-		keys = {
-			{ "<leader>gg", mode = "n", "<cmd>Fugit2<cr>", desc = "Git status" },
-		},
-	},
 }
