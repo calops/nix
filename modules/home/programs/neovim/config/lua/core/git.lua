@@ -226,35 +226,36 @@ local git_status = GitStatus:new()
 local gitsigns_namespace = nil
 
 ---@type Extmark[][]
-local buffer_signs = DynamicList:new {
-	event = "User",
+local buffer_signs = {}
+
+local function set_git_signs_for_buffer(bufnr)
+	if not gitsigns_namespace then
+		gitsigns_namespace = vim.api.nvim_get_namespaces().gitsigns_signs_
+	end
+
+	local extmarks = vim.api.nvim_buf_get_extmarks(bufnr, gitsigns_namespace, { 0, 0 }, { -1, -1 }, { details = true })
+
+	if extmarks then
+		local res = {}
+		for _, extmark in ipairs(extmarks) do
+			local lnum = extmark[2]
+			local details = extmark[4]
+			res[lnum + 1] = details
+		end
+		buffer_signs[bufnr] = res
+	else
+		buffer_signs[bufnr] = nil
+	end
+end
+
+vim.api.nvim_create_autocmd("User", {
 	pattern = "GitSignsUpdate",
-	update_fn = function(buffers, args)
-		if not gitsigns_namespace then
-			gitsigns_namespace = vim.api.nvim_get_namespaces().gitsigns_signs_
-		end
+	callback = function(args) set_git_signs_for_buffer(args.buf) end,
+})
 
-		local extmarks = vim.api.nvim_buf_get_extmarks(
-			args.buf,
-			gitsigns_namespace,
-			{ 0, 0 },
-			{ -1, -1 },
-			{ details = true }
-		)
-
-		if extmarks then
-			local res = {}
-			for _, extmark in ipairs(extmarks) do
-				local lnum = extmark[2]
-				local details = extmark[4]
-				res[lnum + 1] = details
-			end
-			buffers[args.buf] = res
-		else
-			buffers[args.buf] = nil
-		end
-	end,
-}
+vim.api.nvim_create_autocmd("BufRead", {
+	callback = function(args) set_git_signs_for_buffer(args.buf) end,
+})
 
 vim.api.nvim_create_autocmd({ "UIEnter", "DirChanged" }, {
 	callback = function() git_status:init() end,

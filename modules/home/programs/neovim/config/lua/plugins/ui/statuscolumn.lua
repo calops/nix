@@ -1,65 +1,12 @@
-local core_utils = require("core.utils")
 local color_utils = require("core.colors")
 local git_utils = require("core.git")
 local diag_utils = require("core.diagnostics")
-
----@class Signs
----@field diagnostics table<integer, integer>
----@field git table<integer, string>
-local Signs = {}
-
-function Signs:new()
-	return core_utils.new_object(self, {
-		diagnostics = {},
-		git = {},
-	})
-end
-
----@class CachedSigns
----@field buffers table<integer, Signs>
-local CachedSigns = {}
-
----@return CachedSigns
-function CachedSigns:new()
-	return core_utils.new_object(self, {
-		buffers = {},
-	})
-end
-
----@param bufnr integer
----@return Signs
-function CachedSigns:get(bufnr)
-	if not self[bufnr] then
-		self[bufnr] = Signs:new()
-	end
-	return self[bufnr]
-end
-
-local cached_signs = CachedSigns:new()
-
----@param bufnr integer
----@param diagnostics table
-local function update_cached_diagnostics(bufnr, diagnostics)
-	local signs = cached_signs:get(bufnr)
-
-	signs.diagnostics = {}
-
-	for _, diag in ipairs(diagnostics) do
-		local current_severity = signs.diagnostics[diag.lnum + 1] or 4
-		signs.diagnostics[diag.lnum + 1] = math.min(current_severity, diag.severity)
-	end
-end
-
-vim.api.nvim_create_autocmd("DiagnosticChanged", {
-	callback = function(args) update_cached_diagnostics(args.buf, args.data.diagnostics) end,
-})
-
-local gitsigns_namespace = nil
 
 return {
 	{
 		init = function(self)
 			self.bufnr = vim.fn.bufnr()
+			self.severity = (diag_utils.buffer_diags[self.bufnr] or {})[vim.v.lnum]
 
 			if require("heirline.conditions").is_active() and vim.v.lnum == vim.api.nvim_win_get_cursor(0)[1] then
 				self.hl = color_utils.hl:load("CursorLineNr")
@@ -67,18 +14,8 @@ return {
 				self.hl = color_utils.hl.LineNr
 			end
 
-			local signs = cached_signs:get(self.bufnr)
-			local diag = signs.diagnostics[vim.v.lnum]
-
-			if diag ~= nil then
-				self.severity = diag
+			if self.severity then
 				self.hl = diag_utils.sign_hl(self.severity)
-			else
-				self.severity = nil
-			end
-
-			if not gitsigns_namespace then
-				gitsigns_namespace = vim.api.nvim_get_namespaces().gitsigns_signs_
 			end
 
 			if vim.v.virtnum ~= 0 then

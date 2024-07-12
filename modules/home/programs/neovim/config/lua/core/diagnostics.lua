@@ -24,9 +24,26 @@ local function sign_hl(severity) return colors.hl[vim.diagnostic.config().signs.
 -- TODO: types
 local function line_hl(severity) return colors.hl[vim.diagnostic.config().signs.linehl[severity]] end
 
+---@type integer[][]
+local buffer_diags = DynamicList:new {
+	event = "DiagnosticChanged",
+	update_fn = function(buffers, args)
+		local diagnostics = args.data.diagnostics
+		local diags = {}
+
+		for _, diag in ipairs(diagnostics) do
+			local current_severity = diags[diag.lnum + 1] or 4
+			diags[diag.lnum + 1] = math.min(current_severity, diag.severity)
+		end
+
+		buffers[args.buf] = diags
+	end,
+}
+
 return {
 	for_each_severity = for_each_severity,
 	sign = sign,
 	sign_hl = sign_hl,
 	line_hl = line_hl,
+	buffer_diags = buffer_diags,
 }

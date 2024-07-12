@@ -147,16 +147,6 @@ local function for_all_buffers(func)
 
 	return ret
 end
----
----@generic T
----@param list [T]
-local function empty_list(list)
-	-- Fastest way to empty a list in lua
-	local count = #list
-	for i = 0, count do
-		list[i] = nil
-	end
-end
 
 ---@generic T
 ---@class DynamicList<T>: [T]
