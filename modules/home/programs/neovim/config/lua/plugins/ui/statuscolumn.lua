@@ -62,7 +62,7 @@ return {
 			self.bufnr = vim.fn.bufnr()
 
 			if require("heirline.conditions").is_active() and vim.v.lnum == vim.api.nvim_win_get_cursor(0)[1] then
-				self.hl = color_utils.hl.CursorLineNr
+				self.hl = color_utils.hl:load("CursorLineNr")
 			else
 				self.hl = color_utils.hl.LineNr
 			end

@@ -63,5 +63,7 @@ in
       frame_timing=1
       frametime_color=${palette.sand}
     '';
+
+    xdg.desktopEntries."Steam Linux Runtime 3.0 (sniper).desktop".noDisplay = true;
   };
 }
