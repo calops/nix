@@ -60,7 +60,6 @@ return {
 		ft = "lua",
 		opts = {},
 	},
-	-- { "Bilal2453/luvit-meta", lazy = true }, TODO: find out why this was there
 	-- Rust-specific utilities and LSP configurations
 	{
 		"mrcjkb/rustaceanvim",
