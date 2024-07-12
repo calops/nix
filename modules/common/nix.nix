@@ -1,6 +1,6 @@
 { pkgs, lib, ... }:
 {
-  nix.package = lib.mkForce pkgs.nixVersions.latest;
+  nix.package = lib.mkForce pkgs.lix;
   nix.settings = {
     experimental-features = [
       "flakes"

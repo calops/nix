@@ -253,8 +253,13 @@ vim.api.nvim_create_autocmd("User", {
 	callback = function(args) set_git_signs_for_buffer(args.buf) end,
 })
 
-vim.api.nvim_create_autocmd("BufRead", {
-	callback = function(args) set_git_signs_for_buffer(args.buf) end,
+vim.api.nvim_create_autocmd("User", {
+	pattern = "GitStatusUpdated",
+	callback = function()
+		for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+			set_git_signs_for_buffer(bufnr)
+		end
+	end,
 })
 
 vim.api.nvim_create_autocmd({ "UIEnter", "DirChanged" }, {
