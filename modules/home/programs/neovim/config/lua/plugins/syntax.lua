@@ -1,5 +1,3 @@
-local map = require("core.utils").map
-
 return {
 	-- Universal language parser
 	{
@@ -9,16 +7,15 @@ return {
 		dependencies = {
 			{ "nvim-treesitter/nvim-treesitter-textobjects" },
 		},
-		init = function()
-			map {
-				["<leader>T"] = { ":Inspect<CR>", "Show highlighting groups and captures" },
-			}
-		end,
+		keys = {
+			{ "<leader>T", ":Inspect<CR>", desc = "Show highlighting groups and captures" },
+		},
 		config = function()
 			if vim.gcc_bin_path ~= nil then
 				require("nvim-treesitter.install").compilers = { vim.g.gcc_bin_path }
 			end
 
+			---@diagnostic disable-next-line: missing-fields
 			require("nvim-treesitter.configs").setup {
 				auto_install = true,
 				ensure_installed = {
@@ -123,8 +120,9 @@ return {
 			"STSSwapOrHold",
 			"STSSelectCurrentNode",
 		},
-		init = function()
-			local function dot_repeatable(op)
+		keys = function()
+			--- Dot repeatable
+			local function dr(op)
 				return function()
 					require("syntax-tree-surfer")
 					vim.opt.opfunc = op
@@ -132,20 +130,15 @@ return {
 				end
 			end
 
-			map {
-				["<M-Up>"] = { dot_repeatable("v:lua.STSSwapUpNormal_Dot"), "Swap node upwards", expr = true },
-				["<M-Down>"] = { dot_repeatable("v:lua.STSSwapDownNormal_Dot"), "Swap node downwards", expr = true },
-				["<M-Left>"] = {
-					dot_repeatable("v:lua.STSSwapCurrentNodePrevNormal_Dot"),
-					"Swap with previous node",
-					expr = true,
-				},
-				["<M-Right>"] = {
-					dot_repeatable("v:lua.STSSwapCurrentNodeNextNormal_Dot"),
-					"Swap with next node",
-					expr = true,
-				},
-				["gO"] = {
+			-- stylua: ignore
+			return {
+				{ "<M-Up>", dr("v:lua.STSSwapUpNormal_Dot"), desc = "Swap node upwards", expr = true },
+				{ "<M-Down>", dr("v:lua.STSSwapDownNormal_Dot"), desc = "Swap node downwards", expr = true },
+				{ "<M-Left>", dr("v:lua.STSSwapCurrentNodePrevNormal_Dot"), desc = "Swap with previous node", expr = true },
+				{ "<M-Right>", dr("v:lua.STSSwapCurrentNodeNextNormal_Dot"), desc = "Swap with next node", expr = true },
+				{ "<Cr>", ":STSSelectCurrentNode<CR>", desc = "Select current node" },
+				{
+					"gO",
 					function()
 						require("syntax-tree-surfer").go_to_top_node_and_execute_commands(false, {
 							"normal! O",
@@ -153,9 +146,10 @@ return {
 							"startinsert",
 						})
 					end,
-					"Insert above top-level node",
+					desc = "Insert above top-level node",
 				},
-				["go"] = {
+				{
+					"go",
 					function()
 						require("syntax-tree-surfer").go_to_top_node_and_execute_commands(true, {
 							"normal! o",
@@ -163,25 +157,20 @@ return {
 							"startinsert",
 						})
 					end,
-					"Insert below top-level node",
+					desc = "Insert below top-level node",
 				},
-				["<leader>h"] = { "<CMD>STSSwapOrHold<CR>", "Hold or swap with held node" },
-				["<Cr>"] = { "<CMD>STSSelectCurrentNode<CR>", "Select current node" },
+				-- FIXME: bug in which-keys, simplify when fixed
+				{ "<M-Up>", "<CMD>STSSwapPrevVisual<CR>", desc = "Swap with previous node" , mode = "x" },
+				{ "<M-Down>", "<CMD>STSSwapNextVisual<CR>", desc = "Swap with next node" , mode = "x" },
+				{ "<M-Left>", "<CMD>STSSwapPrevVisual<CR>", desc = "Swap with previous node" , mode = "x" },
+				{ "<M-Right>", "<CMD>STSSwapNextVisual<CR>", desc = "Swap with next node" , mode = "x" },
+				{ "<C-Up>", "<CMD>STSSelectPrevSiblingNode<CR>", desc = "Select previous sibling" , mode = "x" },
+				{ "<C-Down>", "<CMD>STSSelectNextSiblingNode<CR>", desc = "Select next sibling" , mode = "x" },
+				{ "<C-Left>", "<CMD>STSSelectPrevSiblingNode<CR>", desc = "Select previous sibling" , mode = "x" },
+				{ "<C-Right>", "<CMD>STSSelectNextSiblingNode<CR>", desc = "Select next sibling" , mode = "x" },
+				{ "<Cr>", "<CMD>STSSelectParentNode<CR>", desc = "Select parent node" , mode = "x" },
+				{ "<S-Cr>", "<CMD>STSSelectChildNode<CR>", desc = "Select child node" , mode = "x" },
 			}
-
-			map({
-				["<M-Up>"] = { "<CMD>STSSwapPrevVisual<CR>", "Swap with previous node" },
-				["<M-Down>"] = { "<CMD>STSSwapNextVisual<CR>", "Swap with next node" },
-				["<M-Left>"] = { "<CMD>STSSwapPrevVisual<CR>", "Swap with previous node" },
-				["<M-Right>"] = { "<CMD>STSSwapNextVisual<CR>", "Swap with next node" },
-				["<C-Up>"] = { "<CMD>STSSelectPrevSiblingNode<CR>", "Select previous sibling" },
-				["<C-Down>"] = { "<CMD>STSSelectNextSiblingNode<CR>", "Select next sibling" },
-				["<C-Left>"] = { "<CMD>STSSelectPrevSiblingNode<CR>", "Select previous sibling" },
-				["<C-Right>"] = { "<CMD>STSSelectNextSiblingNode<CR>", "Select next sibling" },
-				["<Cr>"] = { "<CMD>STSSelectParentNode<CR>", "Select parent node" },
-				["<S-Cr>"] = { "<CMD>STSSelectChildNode<CR>", "Select child node" },
-				["<leader>h"] = { "<CMD>STSSwapOrHold<CR>", "Hold or swap with held node" },
-			}, { mode = "x" })
 		end,
 		config = true,
 	},

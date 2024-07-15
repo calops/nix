@@ -66,22 +66,27 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 				},
 			},
 		},
-		init = function()
+		keys = function()
 			local function pick_with_selection(selection)
 				return function()
 					local actions = require("CopilotChat.actions")
 					actions.pick(actions.prompt_actions { selection = require("CopilotChat.select")[selection] })
 				end
 			end
-			map({
-				["<leader>c"] = {
-					name = "copilot",
-					c = { function() require("CopilotChat").toggle() end, "Toggle Copilot Chat" },
-					b = { pick_with_selection("buffer"), "Actions on buffer" },
-					a = { pick_with_selection("buffers"), "Actions on all buffers" },
-					s = { pick_with_selection("visual"), "Actions on selection" },
+			require("core.utils").map {
+				{ "<leader>c", group = "copilot", icon = "" },
+			}
+			return {
+				{
+					"<leader>cc",
+					function() require("CopilotChat").toggle() end,
+					desc = "Toggle Copilot Chat",
+					mode = { "n", "x" },
 				},
-			}, { mode = { "n", "v", "x" } })
+				{ "<leader>cb", pick_with_selection("buffer"), desc = "Actions on buffer", mode = { "n", "x" } },
+				{ "<leader>ca", pick_with_selection("buffers"), desc = "Actions on all buffers", mode = { "n", "x" } },
+				{ "<leader>cs", pick_with_selection("visual"), desc = "Actions on selection", mode = { "n", "x" } },
+			}
 		end,
 	},
 }

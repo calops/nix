@@ -26,19 +26,15 @@ return {
 	{
 		"lewis6991/gitsigns.nvim",
 		event = "BufRead",
-		init = function()
-			map {
-				["<leader>g"] = {
-					name = "git",
-					s = { function() require("gitsigns").stage_hunk() end, "Stage hunk" },
-					u = { function() require("gitsigns").undo_stage_hunk() end, 'Undo "stage hunk"' },
-					r = { function() require("gitsigns").reset_hunk() end, "Reset hunk" },
-					n = { function() require("gitsigns").next_hunk() end, "Next hunk" },
-					N = { function() require("gitsigns").prev_hunk() end, "Previous hunk" },
-					p = { function() require("gitsigns").preview_hunk_inline() end, "Preview hunk" },
-				},
-			}
-		end,
+		keys = {
+			{ "<leader>gs", function() require("gitsigns").stage_hunk() end, desc = "Stage hunk" },
+			{ "<leader>gu", function() require("gitsigns").undo_stage_hunk() end, desc = 'Undo "stage hunk"' },
+			{ "<leader>gr", function() require("gitsigns").reset_hunk() end, desc = "Reset hunk" },
+			{ "<leader>gn", function() require("gitsigns").next_hunk() end, desc = "Next hunk" },
+			{ "<leader>gN", function() require("gitsigns").prev_hunk() end, desc = "Previous hunk" },
+			{ "<leader>gp", function() require("gitsigns").preview_hunk_inline() end, desc = "Preview hunk" },
+		},
+		init = function() map { "<leader>g", group = "git", icon = "" } end,
 		opts = {
 			preview_config = { border = "rounded" },
 			signs = {

@@ -1,24 +1,11 @@
-local core_utils = require("core.utils")
 local colors = require("core.colors")
-local map = core_utils.map
 
 return {
 	-- TUI
 	{
 		"rebelot/heirline.nvim",
 		lazy = false,
-		config = function()
-			vim.o.signcolumn = "no"
-			vim.o.foldcolumn = "0"
-			vim.go.laststatus = 3
-			vim.go.showtabline = 0
-
-			require("gitsigns") -- Dependency
-			require("heirline").setup {
-				statuscolumn = require("plugins.ui.statuscolumn"),
-				statusline = require("plugins.ui.statusline"),
-			}
-
+		keys = function()
 			local function new_tab()
 				local view = vim.fn.winsaveview()
 				vim.cmd.tabedit("%")
@@ -29,11 +16,23 @@ return {
 				end
 			end
 
-			map {
-				["<C-t>"] = { new_tab, "Open current buffer in new tab" },
-				["<C-S-t>"] = { ":tabclose<CR>", "Close current tab" },
-				["<C-Tab>"] = { ":tabnext<CR>", "View next tab" },
-				["<C-S-Tab>"] = { ":tabprevious<CR>", "View previous tab" },
+			return {
+				{ "<C-t>", new_tab, desc = "Open current buffer in new tab" },
+				{ "<C-S-t>", ":tabclose<CR>", desc = "Close current tab" },
+				{ "<C-Tab>", ":tabnext<CR>", desc = "View next tab" },
+				{ "<C-S-Tab>", ":tabprevious<CR>", desc = "View previous tab" },
+			}
+		end,
+		config = function()
+			vim.o.signcolumn = "no"
+			vim.o.foldcolumn = "0"
+			vim.go.laststatus = 3
+			vim.go.showtabline = 0
+
+			require("gitsigns") -- Dependency
+			require("heirline").setup {
+				statuscolumn = require("plugins.ui.statuscolumn"),
+				statusline = require("plugins.ui.statusline"),
 			}
 		end,
 	},
@@ -49,12 +48,10 @@ return {
 		"folke/noice.nvim",
 		enabled = true,
 		lazy = false,
-		init = function()
-			map {
-				["<leader><leader>"] = { ":noh<CR>", "Hide search highlights" },
-				["<leader>k"] = { ":Noice dismiss<CR>", "Dismiss notifications" },
-			}
-		end,
+		keys = {
+			{ "<leader><leader>", ":noh<CR>", desc = "Hide search highlights" },
+			{ "<leader>k", ":Noice dismiss<CR>", desc = "Dismiss notifications" },
+		},
 		opts = {
 			presets = {
 				bottom_search = false,
@@ -130,11 +127,7 @@ return {
 			vim.o.timeoutlen = 150
 		end,
 		opts = {
-			window = {
-				border = "rounded",
-				position = "bottom",
-				margin = { 10, 10, 2, 10 },
-			},
+			preset = "helix",
 		},
 	},
 	{

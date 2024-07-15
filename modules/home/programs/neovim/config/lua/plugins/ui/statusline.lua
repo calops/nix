@@ -166,7 +166,8 @@ vim.api.nvim_create_autocmd({ "TabClosed" }, {
 })
 
 map {
-	["<leader>;"] = {
+	{
+		"<leader>;",
 		function()
 			local tabpage = vim.api.nvim_get_current_tabpage()
 			vim.ui.input({ prompt = "Tab name: " }, function(input)
@@ -177,7 +178,7 @@ map {
 				serialize_tab_names_for_session()
 			end)
 		end,
-		"Set tab name",
+		desc = "Set tab name",
 	},
 }
 

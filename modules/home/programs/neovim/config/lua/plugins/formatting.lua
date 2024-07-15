@@ -1,10 +1,11 @@
-local map = require("core.utils").map
-
 return {
 	{
 		"stevearc/conform.nvim",
 		event = { "BufRead" },
-		cmd = { "ConformInfo" },
+		cmd = { "ConformInfo", "Format" },
+		keys = {
+			{ "<space>f", ":Format<cr>", desc = "Format code", mode = { "n", "x" } },
+		},
 		init = function()
 			vim.api.nvim_create_user_command("Format", function(args)
 				local range = nil
@@ -37,10 +38,6 @@ return {
 			end, {
 				desc = "Re-enable autoformat-on-save",
 			})
-
-			map {
-				["<space>f"] = { ":Format<cr>", "Format code", mode = { "n", "x" } },
-			}
 		end,
 		opts = function()
 			return {

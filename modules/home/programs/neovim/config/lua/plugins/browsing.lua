@@ -20,34 +20,34 @@ return {
 		},
 		cmd = "Telescope",
 		lazy = true,
-		init = function()
-			map {
-				["<C-p>"] = { function() require("telescope.builtin").find_files() end, "Find files" },
-				["<leader>"] = {
-					["<Space>"] = {
-						function() require("telescope.builtin").grep_string() end,
-						"Grep word under cursor",
-					},
-					S = { function() require("telescope.builtin").grep_string { search = "" } end, "Fuzzy grep" },
-					s = { function() require("telescope.builtin").live_grep() end, "Live grep" },
-					b = { function() require("telescope.builtin").buffers() end, "Find buffer" },
-					e = { function() require("telescope.builtin").symbols() end, "Select symbol" },
-					R = { function() require("telescope.builtin").resume() end, "Resume selection" },
-				},
-			}
-			map({
-				["<leader>s"] = {
-					function()
-						vim.cmd('noau normal! "vy"')
-						local text = vim.fn.getreg("v")
-						vim.fn.setreg("v", {})
-						-- return #text > 0 and text or ""
-						require("telescope.builtin").grep_string { search = text }
-					end,
-					"Grep current selection",
-				},
-			}, { mode = { "x", "v" } })
-		end,
+		keys = {
+			{ "<C-p>", function() require("telescope.builtin").find_files() end, desc = "Find files" },
+			{
+				"<leader><Space>",
+				function() require("telescope.builtin").grep_string() end,
+				desc = "Grep word under cursor",
+			},
+			{
+				"<leader>S",
+				function() require("telescope.builtin").grep_string { search = "" } end,
+				desc = "Fuzzy grep",
+			},
+			{ "<leader>s", function() require("telescope.builtin").live_grep() end, desc = "Live grep" },
+			{ "<leader>b", function() require("telescope.builtin").buffers() end, desc = "Find buffer" },
+			{ "<leader>e", function() require("telescope.builtin").symbols() end, desc = "Select symbol" },
+			{ "<leader>R", function() require("telescope.builtin").resume() end, desc = "Resume selection" },
+			{
+				"<leader>s",
+				function()
+					vim.cmd('noau normal! "vy"')
+					local text = vim.fn.getreg("v")
+					vim.fn.setreg("v", {})
+					require("telescope.builtin").grep_string { search = text }
+				end,
+				desc = "Grep current selection",
+				mode = { "x", "v" },
+			},
+		},
 		config = function()
 			require("notify")
 			local telescope = require("telescope")
@@ -98,16 +98,12 @@ return {
 			"MunifTanjim/nui.nvim",
 		},
 		cmd = "Neotree",
-		init = function()
-			map {
-				["<leader>n"] = {
-					name = "file tree",
-					n = { ":Neotree toggle reveal_force_cwd<cr>", "Toggle file browser" },
-					g = { ":Neotree toggle git_status<cr>", "Show git status" },
-					b = { ":Neotree toggle buffers<cr>", "Show open buffers" },
-				},
-			}
-		end,
+		keys = {
+			{ "<leader>nn", ":Neotree toggle reveal_force_cwd<cr>", desc = "Toggle file browser" },
+			{ "<leader>ng", ":Neotree toggle git_status<cr>", desc = "Show git status" },
+			{ "<leader>nb", ":Neotree toggle buffers<cr>", desc = "Show open buffers" },
+		},
+		init = function() map { "<leader>n", group = "file tree", icon = "" } end,
 		opts = {
 			popup_border_style = "rounded",
 			filesystem = {

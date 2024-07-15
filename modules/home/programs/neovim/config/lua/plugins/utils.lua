@@ -1,10 +1,11 @@
-local map = require("core.utils").map
-
 return {
 	-- Session management
 	{
 		"olimorris/persisted.nvim",
 		lazy = false,
+		keys = {
+			{ "<leader>P", ":Telescope persisted<CR>", desc = "Browse sessions" },
+		},
 		init = function()
 			vim.opt.sessionoptions = {
 				"buffers",
@@ -15,9 +16,6 @@ return {
 				"tabpages",
 				"winpos",
 				"winsize",
-			}
-			map {
-				["<leader>P"] = { ":Telescope persisted<CR>", "Browse sessions" },
 			}
 			local group = vim.api.nvim_create_augroup("PersistedHooks", {})
 			local ignored_file_types = { "Trouble", "neo-tree", "noice" }
@@ -52,15 +50,14 @@ return {
 		"akinsho/toggleterm.nvim",
 		name = "toggleterm",
 		cmd = "ToggleTerm",
-		init = function()
-			map {
-				["<C-f>"] = {
-					function() require("toggleterm").toggle() end,
-					"Toggle floating terminal",
-					mode = { "n", "t" },
-				},
-			}
-		end,
+		keys = {
+			{
+				"<C-f>",
+				function() require("toggleterm").toggle() end,
+				desc = "Toggle floating terminal",
+				mode = { "n", "t" },
+			},
+		},
 		opts = {
 			direction = "float",
 			float_opts = { border = "rounded" },

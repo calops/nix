@@ -49,6 +49,7 @@ in
         pkgs.nodejs
         pkgs.sqlite
         pkgs.tree-sitter
+        pkgs.luarocks
       ] ++ lib.lists.optional (!pkgs.stdenv.isDarwin) pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter;
       plugins = [
         pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim

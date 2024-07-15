@@ -18,14 +18,9 @@ return {
 	{
 		"Wansmer/treesj",
 		lazy = true,
-		init = function()
-			map {
-				["gs"] = {
-					function() require("treesj").toggle() end,
-					"Toggle split",
-				},
-			}
-		end,
+		keys = {
+			{ "gs", function() require("treesj").toggle() end, desc = "Toggle split" },
+		},
 		opts = {
 			max_join_length = 300,
 		},
@@ -56,42 +51,44 @@ return {
 	{
 		"andrewferrier/debugprint.nvim",
 		lazy = true,
-		init = function()
-			local debugprint = function(opts)
+		keys = function()
+			local dp = function(opts)
 				return function() return require("debugprint").debugprint(opts) end
 			end
 			map {
-				["<leader>p"] = {
-					name = "debug print",
-					p = { debugprint(), "Add debug print below", expr = true },
-					P = { debugprint { above = true }, "Add debug print above", expr = true },
-					v = {
-						debugprint { variable = true },
-						"Add variable debug print below",
-						expr = true,
-						mode = { "n", "o" },
-					},
-					V = {
-						debugprint { variable = true, above = true },
-						"Add variable debug print above",
-						expr = true,
-						mode = { "n", "o" },
-					},
-					d = { ":DeleteDebugPrints<CR>", "Delete debug prints" },
+				{ "<leader>p", group = "debug print", icon = "" },
+			}
+			return {
+				{ "<leader>pp", dp(), desc = "Add debug print below", expr = true },
+				{ "<leader>pP", dp { above = true }, desc = "Add debug print above", expr = true },
+				{
+					"<leader>pv",
+					dp { variable = true },
+					desc = "Add variable debug print below",
+					expr = true,
+					mode = { "n", "o" },
 				},
-				["<leader>"] = {
-					p = {
-						debugprint { variable = true },
-						"Add variable debug print below",
-						expr = true,
-						mode = { "x" },
-					},
-					P = {
-						debugprint { variable = true, above = true },
-						"Add variable debug print above",
-						expr = true,
-						mode = { "x" },
-					},
+				{
+					"<leader>pV",
+					dp { variable = true, above = true },
+					desc = "Add variable debug print above",
+					expr = true,
+					mode = { "n", "o" },
+				},
+				{ "<leader>pd", ":DeleteDebugPrints<CR>", desc = "Delete debug prints" },
+				{
+					"<leader>p",
+					dp { variable = true },
+					desc = "Add variable debug print below",
+					expr = true,
+					mode = { "x" },
+				},
+				{
+					"<leader>P",
+					dp { variable = true, above = true },
+					desc = "Add variable debug print above",
+					expr = true,
+					mode = { "x" },
 				},
 			}
 		end,
@@ -101,7 +98,7 @@ return {
 	{
 		"stevearc/oil.nvim",
 		keys = {
-			{ "<leader>o", "<cmd>Oil --float<cr>", "Edit filesystem as a buffer" },
+			{ "<leader>o", "<cmd>Oil --float<cr>", desc = "Edit filesystem as a buffer" },
 		},
 		lazy = false,
 		opts = {
@@ -155,7 +152,7 @@ return {
 			},
 		},
 		keys = {
-			{ "f", mode = { "n", "x", "o" }, function() require("flash").jump() end },
+			{ "f", function() require("flash").jump() end, desc = "Jump to target", mode = { "n", "x", "o" } },
 		},
 	},
 	-- Improved yanking
@@ -173,9 +170,9 @@ return {
 				function() require("telescope").extensions.yank_history.yank_history() end,
 				desc = "Yank history",
 			},
-			{ "<leader>y", '"+y', "Copy to system clipboard", mode = { "n", "v", "x" } },
-			{ "gp", "<Plug>YankyPreviousEntry", "Previous yank" },
-			{ "gn", "<Plug>YankyNextEntry", "Next yank" },
+			{ "<leader>y", '"+y', desc = "Copy to system clipboard", mode = { "n", "v", "x" } },
+			{ "gp", "<Plug>YankyPreviousEntry", desc = "Previous yank" },
+			{ "gn", "<Plug>YankyNextEntry", desc = "Next yank" },
 		},
 	},
 	-- Substitute operator
@@ -183,7 +180,7 @@ return {
 		"gbprod/substitute.nvim",
 		lazy = true,
 		keys = {
-			{ "s", function() require("substitute").operator() end, desc = "Substitute", mode = "n" },
+			{ "s", function() require("substitute").operator() end, desc = "Substitute" },
 			{ "s", function() require("substitute").visual() end, desc = "Substitute", mode = "x" },
 			{ "ss", function() require("substitute").line() end, desc = "Substitute line" },
 			{ "S", function() require("substitute").eol() end, desc = "Substitute until end of line" },
@@ -195,12 +192,11 @@ return {
 	-- More convenient word motions
 	{
 		"chrisgrieser/nvim-spider",
-		init = function()
-			map({
-				["<C-Left>"] = { "<cmd>lua require('spider').motion('b')<cr>", "Move backwards word-wise" },
-				["<C-Right>"] = { "<cmd>lua require('spider').motion('w')<cr>", "Move forwards word-wise" },
-			}, { mode = { "n", "x", "o", "i" } })
-		end,
+		keys = {
+			mode = { "n", "x", "o", "i" },
+			{ "<C-Left>", function() require("spider").motion("b") end, desc = "Move backwards word-wise" },
+			{ "<C-Right>", function() require("spider").motion("w") end, desc = "Move forwards word-wise" },
+		},
 	},
 	{
 		"gabrielpoca/replacer.nvim",
@@ -208,9 +204,9 @@ return {
 		init = function()
 			-- Create binding only for qf filetype
 			vim.api.nvim_create_autocmd("BufRead", {
-				callback = function()
+				callback = function(args)
 					if vim.bo.filetype == "qf" then
-						vim.keymap.set("n", "i", function() require("replacer").run() end, { buffer = 0 })
+						map { "i", function() require("replacer").run() end, buffer = args.buf }
 					end
 				end,
 			})

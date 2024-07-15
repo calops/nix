@@ -1,4 +1,4 @@
-local function map(mappings, opts) return require("which-key").register(mappings, opts) end
+local function map(...) return require("which-key").add(...) end
 
 ---Helper function to help write constructors
 ---@generic T: table

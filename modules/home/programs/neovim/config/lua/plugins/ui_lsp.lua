@@ -4,27 +4,22 @@ return {
 	{
 		url = "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
 		event = "LspAttach",
-		init = function()
-			local function toggle_virtual_lines()
-				local is_enabled = vim.diagnostic.config().virtual_lines
+		keys = {
+			{
+				"<leader>m",
+				function()
+					require("lsp_lines")
+					local is_enabled = vim.diagnostic.config().virtual_lines
 
-				vim.diagnostic.config {
-					virtual_lines = (not is_enabled) and { highlight_whole_line = false },
-					virtual_text = is_enabled,
-					severity_sort = true,
-				}
-			end
-
-			map {
-				["<leader>m"] = {
-					function()
-						require("lsp_lines")
-						toggle_virtual_lines()
-					end,
-					"Toggle full inline diagnostics",
-				},
-			}
-		end,
+					vim.diagnostic.config {
+						virtual_lines = (not is_enabled) and { highlight_whole_line = false },
+						virtual_text = is_enabled,
+						severity_sort = true,
+					}
+				end,
+				desc = "Toggle full inline diagnostics",
+			},
+		},
 		config = function()
 			require("lsp_lines").setup()
 
@@ -38,16 +33,12 @@ return {
 	{
 		"dnlhc/glance.nvim",
 		cmd = "Glance",
-		init = function()
-			map {
-				g = {
-					d = { "<CMD>Glance definitions<CR>", "Peek definition(s)" },
-					r = { "<CMD>Glance references<CR>", "Peek references" },
-					D = { "<CMD>Glance type_definitions<CR>", "Peek declarations" },
-					i = { "<CMD>Glance implementations<CR>", "Peek implementations" },
-				},
-			}
-		end,
+		keys = {
+			{ "gd", "<CMD>Glance definitions<CR>", desc = "Peek definition(s)" },
+			{ "gr", "<CMD>Glance references<CR>", desc = "Peek references" },
+			{ "gD", "<CMD>Glance type_definitions<CR>", desc = "Peek declarations" },
+			{ "gi", "<CMD>Glance implementations<CR>", desc = "Peek implementations" },
+		},
 		opts = function()
 			local actions = require("glance").actions
 			return {
