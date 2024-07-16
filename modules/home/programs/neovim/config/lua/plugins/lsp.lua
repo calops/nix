@@ -31,7 +31,9 @@ return {
 			require("mason").setup { ui = { border = "rounded" } }
 			require("mason-lspconfig").setup {
 				automatic_installation = false,
-				handlers = { function(server_name) require("lspconfig")[server_name].setup {} end },
+				handlers = {
+					function(server_name) require("lspconfig")[server_name].setup {} end,
+				},
 			}
 
 			local lspconfig = require("lspconfig")
@@ -42,6 +44,11 @@ return {
 					-- Turn off semantic tokens until they're more consistent
 					client.server_capabilities.semanticTokensProvider = nil
 				end,
+			}
+			lspconfig.lexical.setup {
+				filetypes = { "elixir", "eelixir", "heex" },
+				cmd = { "lexical" },
+				root_dir = function(fname) return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or nil end,
 			}
 
 			vim.api.nvim_create_autocmd("InsertEnter", { callback = function() vim.lsp.inlay_hint.enable(false) end })

@@ -5,14 +5,7 @@ return {
 	{
 		"echasnovski/mini.comment",
 		event = "VeryLazy",
-		opts = {
-			options = {
-				custom_commentstring = function()
-					return require("ts_context_commentstring.internal").calculate_commentstring()
-						or vim.bo.commentstring
-				end,
-			},
-		},
+		opts = {},
 	},
 	-- Split/join
 	{
@@ -21,9 +14,7 @@ return {
 		keys = {
 			{ "gs", function() require("treesj").toggle() end, desc = "Toggle split" },
 		},
-		opts = {
-			max_join_length = 300,
-		},
+		opts = { max_join_length = 300 },
 		config = true,
 	},
 	-- Automatically adjust indentation settings depending on the file
@@ -145,11 +136,7 @@ return {
 				mode = "fuzzy",
 				incremental = true,
 			},
-			modes = {
-				char = {
-					enabled = false,
-				},
-			},
+			modes = { char = { enabled = false } },
 		},
 		keys = {
 			{ "f", function() require("flash").jump() end, desc = "Jump to target", mode = { "n", "x", "o" } },
@@ -158,7 +145,6 @@ return {
 	-- Improved yanking
 	{
 		"gbprod/yanky.nvim",
-		event = "BufRead",
 		dependencies = { "kkharji/sqlite.lua" },
 		opts = { ring = {
 			storage = "sqlite",

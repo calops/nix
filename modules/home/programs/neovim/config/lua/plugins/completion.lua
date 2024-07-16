@@ -2,7 +2,7 @@ return {
 	-- Auto-completion
 	{
 		"hrsh7th/nvim-cmp",
-		event = "BufRead",
+		event = "InsertEnter",
 		dependencies = {
 			"hrsh7th/cmp-nvim-lua",
 			"hrsh7th/cmp-nvim-lsp",
@@ -40,6 +40,7 @@ return {
 					{ name = "buffer" },
 					{ name = "cmp_yanky" },
 				}),
+				---@diagnostic disable-next-line: missing-fields
 				formatting = {
 					format = require("lspkind").cmp_format(),
 				},

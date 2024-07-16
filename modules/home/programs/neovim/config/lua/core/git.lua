@@ -231,6 +231,9 @@ local buffer_signs = {}
 local function set_git_signs_for_buffer(bufnr)
 	if not gitsigns_namespace then
 		gitsigns_namespace = vim.api.nvim_get_namespaces().gitsigns_signs_
+		if not gitsigns_namespace then
+			return
+		end
 	end
 
 	local extmarks = vim.api.nvim_buf_get_extmarks(bufnr, gitsigns_namespace, { 0, 0 }, { -1, -1 }, { details = true })

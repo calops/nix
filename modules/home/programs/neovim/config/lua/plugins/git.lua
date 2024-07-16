@@ -62,4 +62,33 @@ return {
 			enable_builtin = true,
 		},
 	},
+	{
+		"ruifm/gitlinker.nvim",
+		dependencies = "nvim-lua/plenary.nvim",
+		opts = { mappings = nil },
+		keys = function()
+			return {
+				{
+					"<leader>gy",
+					function() require("gitlinker").get_buf_range_url("n") end,
+					desc = "Yank git line URL",
+				},
+				{
+					"<leader>gy",
+					function() require("gitlinker").get_buf_range_url("x") end,
+					desc = "Yank git lines URL",
+					mode = "x",
+				},
+				{
+					"<leader>go",
+					function()
+						require("gitlinker").get_repo_url {
+							action_callback = require("gitlinker.actions").open_in_browser,
+						}
+					end,
+					desc = "Yank git line URL",
+				},
+			}
+		end,
+	},
 }

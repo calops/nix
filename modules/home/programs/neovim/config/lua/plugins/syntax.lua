@@ -80,10 +80,6 @@ return {
 			}
 		end,
 	},
-	{
-		"JoosepAlviste/nvim-ts-context-commentstring",
-		event = "BufRead",
-	},
 	-- Show sticky context for off-screen scope beginnings
 	{
 		"nvim-treesitter/nvim-treesitter-context",
