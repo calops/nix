@@ -32,6 +32,7 @@
 
     programs.btop = {
       enable = config.my.roles.terminal.enable;
+      package = pkgs.btop.override { cudaSupport = true; };
       settings = {
         theme_background = false;
       };
