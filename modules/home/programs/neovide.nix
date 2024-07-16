@@ -28,9 +28,9 @@
         };
       in
       (pkgs.formats.toml { }).generate "config.toml" {
-        frame = "buttonless";
+        frame = if pkgs.stdenv.isDarwin then "buttonless" else "none";
         font = {
-          size = 12;
+          size = config.my.roles.graphical.fonts.sizes.terminal;
           edging = "subpixelantialias";
           hinting = "full";
           normal = [

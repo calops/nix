@@ -64,6 +64,9 @@ in
       frametime_color=${palette.sand}
     '';
 
-    xdg.desktopEntries."Steam Linux Runtime 3.0 (sniper).desktop".noDisplay = true;
+    xdg.desktopEntries."Steam Linux Runtime 3.0 (sniper).desktop" = {
+      name = "Steam Linux Runtime 3.0 (sniper)";
+      noDisplay = true;
+    };
   };
 }

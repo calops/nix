@@ -119,7 +119,7 @@ in
           preserve_split = true;
           force_split = 2;
         };
-        master.new_is_master = false;
+        master.new_status = "master";
         gestures.workspace_swipe = true;
 
         misc = {
