@@ -86,7 +86,7 @@ return {
 							action_callback = require("gitlinker.actions").open_in_browser,
 						}
 					end,
-					desc = "Yank git line URL",
+					desc = "Open git repo in browser",
 				},
 			}
 		end,
