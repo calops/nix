@@ -21,6 +21,8 @@ return {
 			if vim.v.virtnum ~= 0 then
 				self.hl = color_utils.hl.LineNr
 			end
+
+			self.line_bg = self.hl.bg
 		end,
 
 		-- LSP diagnostics
@@ -38,7 +40,9 @@ return {
 		{
 			init = function(self) self.extmark = (git_utils.buffer_signs[self.bufnr] or {})[vim.v.lnum] end,
 			provider = function(self) return self.extmark and self.extmark.sign_text or "  " end,
-			hl = function(self) return self.extmark and self.extmark.sign_hl_group or nil end,
+			hl = function(self)
+				return self.extmark and { fg = color_utils.hl[self.extmark.sign_hl_group].fg, bg = self.line_bg } or nil
+			end,
 			on_click = {
 				name = "git_sign_callback",
 				callback = function(_, _, _, button)

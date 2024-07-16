@@ -30,7 +30,10 @@ function CachedDict:new(cacher)
 			if key == "reset" then
 				return function() table._cache = {} end
 			elseif key == "load" then
-				return function(hls, group) hls._cache[group] = cacher(group) end
+				return function(hls, group)
+					hls._cache[group] = cacher(group)
+					return hls._cache[group]
+				end
 			end
 			if not table._cache[key] then
 				table._cache[key] = cacher(key)

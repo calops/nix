@@ -221,6 +221,7 @@ local git_status = GitStatus:new()
 ---@class Extmark
 ---@field sign_text string
 ---@field sign_hl string
+---@field sign_hl_group string
 
 ---@type integer
 local gitsigns_namespace = nil
