@@ -20,6 +20,8 @@ in
       "ctrl+tab" = "no_op";
       "ctrl+shift+tab" = "no_op";
       "ctrl+shift+g" = "no_op";
+      "ctrl+t" = "no_op";
+      "ctrl+shift+t" = "no_op";
     };
   };
 }

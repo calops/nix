@@ -1,4 +1,3 @@
-local map = require("core.utils").map
 return {
 	-- Show rich inline diagnostics
 	{
@@ -9,6 +8,7 @@ return {
 				"<leader>m",
 				function()
 					require("lsp_lines")
+					---@diagnostic disable-next-line: undefined-field
 					local is_enabled = vim.diagnostic.config().virtual_lines
 
 					vim.diagnostic.config {
@@ -53,7 +53,7 @@ return {
 					list = {
 						["<C-v>"] = actions.jump_vsplit,
 						["<C-x>"] = actions.jump_split,
-						["<C-g>"] = actions.jump_tab,
+						["<C-t>"] = actions.jump_tab,
 					},
 				},
 			}
