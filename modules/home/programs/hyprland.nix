@@ -197,7 +197,7 @@ in
         background = [
           {
             path = "/tmp/screenshot.png";
-            blur_passes = 3;
+            blur_passes = 1;
           }
         ];
         input-field = [
