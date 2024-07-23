@@ -2,7 +2,7 @@ local utils = require("plugins.ui.utils")
 local colors = require("core.colors")
 local core_diagnostics = require("core.diagnostics")
 local git_utils = require("core.git")
-local map = require("core.utils").map
+local core_utils = require("core.utils")
 
 local function map_to_names(client_list)
 	return vim.tbl_map(function(client) return client.name end, client_list)
@@ -153,19 +153,15 @@ local function deserialize_tab_names_from_session()
 	end
 end
 
-vim.api.nvim_create_autocmd({ "SessionLoadPost" }, {
-	callback = deserialize_tab_names_from_session,
-})
+core_utils.aucmd("SessionLoadPost", deserialize_tab_names_from_session)
 
-vim.api.nvim_create_autocmd({ "TabClosed" }, {
-	callback = function(data)
-		local tabpage = tonumber(data.file)
-		table.remove(tab_names, tabpage)
-		serialize_tab_names_for_session()
-	end,
-})
+core_utils.aucmd("TabClosed", function(data)
+	local tabpage = tonumber(data.file)
+	table.remove(tab_names, tabpage)
+	serialize_tab_names_for_session()
+end)
 
-map {
+core_utils.map {
 	{
 		"<leader>;",
 		function()

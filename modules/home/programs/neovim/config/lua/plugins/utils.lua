@@ -1,3 +1,5 @@
+local utils = require("core.utils")
+
 return {
 	-- Session management
 	{
@@ -19,18 +21,15 @@ return {
 			}
 			local group = vim.api.nvim_create_augroup("PersistedHooks", {})
 			local ignored_file_types = { "Trouble", "neo-tree", "noice" }
-			vim.api.nvim_create_autocmd({ "User" }, {
-				pattern = "PersistedSavePre",
-				group = group,
-				callback = function()
-					for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-						local file_type = vim.api.nvim_get_option_value("filetype", { buf = buf })
-						if vim.tbl_contains(ignored_file_types, file_type) then
-							vim.api.nvim_command("silent! bwipeout! " .. buf)
-						end
+
+			utils.user_aucmd("PersistedSavePre", function()
+				for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+					local file_type = vim.api.nvim_get_option_value("filetype", { buf = buf })
+					if vim.tbl_contains(ignored_file_types, file_type) then
+						vim.api.nvim_command("silent! bwipeout! " .. buf)
 					end
-				end,
-			})
+				end
+			end, { group = group })
 		end,
 		opts = {
 			use_git_branch = true,

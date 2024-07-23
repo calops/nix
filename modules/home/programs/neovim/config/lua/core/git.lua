@@ -259,9 +259,9 @@ local update_git_signs_for_buffers = core_utils.debounce(function()
 	end
 end)
 
-vim.api.nvim_create_autocmd("User", { pattern = "GitSignsUpdate", callback = update_git_signs_for_buffers })
-vim.api.nvim_create_autocmd("User", { pattern = "GitStatusUpdated", callback = update_git_signs_for_buffers })
-vim.api.nvim_create_autocmd({ "UIEnter", "DirChanged" }, { callback = function() git_status:init() end })
+core_utils.user_aucmd("GitSignsUpdate", update_git_signs_for_buffers)
+core_utils.user_aucmd("GitStatusUpdated", update_git_signs_for_buffers)
+core_utils.aucmd({ "UIEnter", "DirChanged" }, function() git_status:init() end)
 
 return {
 	signs = git_signs,

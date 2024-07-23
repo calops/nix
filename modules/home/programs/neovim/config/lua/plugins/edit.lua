@@ -1,4 +1,4 @@
-local map = require("core.utils").map
+local utils = require("core.utils")
 
 return {
 	-- Comment commands
@@ -46,7 +46,7 @@ return {
 			local dp = function(opts)
 				return function() return require("debugprint").debugprint(opts) end
 			end
-			map {
+			utils.map {
 				{ "<leader>p", group = "debug print", icon = "" },
 			}
 			return {
@@ -189,13 +189,14 @@ return {
 		ft = "qf",
 		init = function()
 			-- Create binding only for qf filetype
-			vim.api.nvim_create_autocmd("BufRead", {
-				callback = function(args)
+
+			utils.aucmd("BufRead", function(args)
+				if vim.bo.filetype == "qf" then
 					if vim.bo.filetype == "qf" then
-						map { "i", function() require("replacer").run() end, buffer = args.buf }
+						utils.map { "i", function() require("replacer").run() end, buffer = args.buf }
 					end
-				end,
-			})
+				end
+			end)
 		end,
 	},
 }

@@ -1,5 +1,23 @@
 local function map(...) return require("which-key").add(...) end
 
+--- Create an autocmd
+--- @param events string | string[]
+--- @param callback fun(...)
+--- @param opts? table
+local function aucmd(events, callback, opts)
+	opts = vim.tbl_extend("force", { callback = callback }, opts or {})
+	vim.api.nvim_create_autocmd(events, opts)
+end
+
+--- Create a User autocmd
+--- @param pattern string
+--- @param callback fun(...)
+--- @param opts? table
+local function user_aucmd(pattern, callback, opts)
+	opts = vim.tbl_extend("force", { pattern = pattern, callback = callback }, opts or {})
+	vim.api.nvim_create_autocmd("User", opts)
+end
+
 ---Helper function to help write constructors
 ---@generic T: table
 ---@param class table
@@ -170,10 +188,7 @@ function DynamicList:new(opts)
 	local list = {}
 
 	if opts.event then
-		vim.api.nvim_create_autocmd(opts.event, {
-			pattern = opts.pattern,
-			callback = function(args) opts.update_fn(list, args) end,
-		})
+		aucmd(opts.event, function(args) opts.update_fn(list, args) end, { pattern = opts.pattern })
 	end
 
 	return list
@@ -187,4 +202,6 @@ return {
 	new_object = new_object,
 	watch_file = watch_file,
 	for_all_buffers = for_all_buffers,
+	aucmd = aucmd,
+	user_aucmd = user_aucmd,
 }

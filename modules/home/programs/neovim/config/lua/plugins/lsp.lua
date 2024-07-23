@@ -1,4 +1,4 @@
-local map = require("core.utils").map
+local utils = require("core.utils")
 
 return {
 	{
@@ -51,13 +51,10 @@ return {
 				root_dir = function(fname) return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or nil end,
 			}
 
-			vim.api.nvim_create_autocmd("InsertEnter", { callback = function() vim.lsp.inlay_hint.enable(false) end })
-			vim.api.nvim_create_autocmd(
-				"InsertLeave",
-				{ callback = function() vim.lsp.inlay_hint.enable(vim.b.inlay_hints_enabled or false) end }
-			)
+			utils.aucmd("InsertEnter", function() vim.lsp.inlay_hint.enable(false) end)
+			utils.aucmd("InsertLeave", function() vim.lsp.inlay_hint.enable(vim.b.inlay_hints_enabled or false) end)
 
-			map {
+			utils.map {
 				{ "<leader>r", group = "refactor", icon = "" },
 			}
 		end,
@@ -77,7 +74,7 @@ return {
 				server = {
 					standalone = false,
 					on_attach = function(_, bufnr)
-						map {
+						utils.map {
 							{
 								"K",
 								function() vim.cmd(":RustLsp hover range<CR>") end,
@@ -118,7 +115,7 @@ return {
 				},
 			}
 
-			map {
+			utils.map {
 				{ "<leader>t", group = "tests", icon = "" },
 			}
 		end,
