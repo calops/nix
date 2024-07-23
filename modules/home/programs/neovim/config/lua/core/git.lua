@@ -252,23 +252,16 @@ local function set_git_signs_for_buffer(bufnr)
 	end
 end
 
-vim.api.nvim_create_autocmd("User", {
-	pattern = "GitSignsUpdate",
-	callback = function(args) set_git_signs_for_buffer(args.buf) end,
-})
+-- Always update all buffers because gitsigns events are inconsistent
+local update_git_signs_for_buffers = core_utils.debounce(function()
+	for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
+		set_git_signs_for_buffer(bufnr)
+	end
+end)
 
-vim.api.nvim_create_autocmd("User", {
-	pattern = "GitStatusUpdated",
-	callback = function()
-		for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
-			set_git_signs_for_buffer(bufnr)
-		end
-	end,
-})
-
-vim.api.nvim_create_autocmd({ "UIEnter", "DirChanged" }, {
-	callback = function() git_status:init() end,
-})
+vim.api.nvim_create_autocmd("User", { pattern = "GitSignsUpdate", callback = update_git_signs_for_buffers })
+vim.api.nvim_create_autocmd("User", { pattern = "GitStatusUpdated", callback = update_git_signs_for_buffers })
+vim.api.nvim_create_autocmd({ "UIEnter", "DirChanged" }, { callback = function() git_status:init() end })
 
 return {
 	signs = git_signs,
