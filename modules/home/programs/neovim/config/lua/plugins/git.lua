@@ -91,4 +91,11 @@ return {
 			}
 		end,
 	},
+	{
+		"topaxi/gh-actions.nvim",
+		keys = {
+			{ "<leader>ga", "<cmd>GhActions<cr>", desc = "Open Github Actions" },
+		},
+		opts = {},
+	},
 }

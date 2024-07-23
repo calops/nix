@@ -18,22 +18,10 @@ return {
 			---@diagnostic disable-next-line: missing-fields
 			require("nvim-treesitter.configs").setup {
 				auto_install = true,
-				ensure_installed = {
-					"bash",
-					"fish",
-					"json",
-					"lua",
-					"markdown",
-					"nix",
-					"python",
-					"rust",
-					"toml",
-					"vim",
-					"regex",
-					"jsonc",
-					"markdown_inline",
-				},
+				ensure_installed = { "json", "markdown", "markdown_inline", "regex" },
 				indent = { enable = true },
+				matchup = { enable = true },
+				playground = { enable = true },
 				highlight = {
 					enable = true,
 					additional_vim_regex_highlighting = false,
@@ -59,19 +47,7 @@ return {
 						},
 					},
 					swap = { enable = true },
-					lsp_interop = {
-						enable = true,
-						border = "rounded",
-						peek_definition_code = {
-							["<leader>df"] = "@function.outer",
-							["<leader>dF"] = "@class.outer",
-						},
-					},
 				},
-				matchup = {
-					enable = true,
-				},
-				playground = { enable = true },
 				query_linter = {
 					enable = true,
 					use_virtual_text = true,

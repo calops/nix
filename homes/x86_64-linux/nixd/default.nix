@@ -1,5 +1,1 @@
-{
-  home = {
-    username = "nixd";
-  };
-}
+{ home.username = "nixd"; }
