@@ -48,11 +48,11 @@
     programs.gpg.enable = true;
     programs.dircolors.enable = true;
 
-    services.network-manager-applet.enable = pkgs.stdenv.isLinux;
+    services.network-manager-applet.enable = false; # FIXME: tray icon isn't working on ironbar
     services.udiskie = lib.mkIf (!config.my.isDarwin) {
       enable = true;
       settings.program_options = {
-        tray = true; # FIXME: tray icon isn't working on ironbar
+        tray = false; # FIXME: tray icon isn't working on ironbar
       };
     };
 
