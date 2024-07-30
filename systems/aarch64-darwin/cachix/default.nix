@@ -1,4 +1,4 @@
 { ... }:
 {
-  my.configDir = "TODO";
+  my.configDir = null;
 }
