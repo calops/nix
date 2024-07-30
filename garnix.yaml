@@ -1,6 +1,8 @@
 builds:
     exclude:
         - devShell.*
+        - nixosConfigurations.cachix-linux
+        - darwinConfigurations.cachix-darwin
     include:
         - packages.x86-64-linux.*
         - packages.aarch64-darwin.*
