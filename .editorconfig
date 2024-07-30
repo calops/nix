@@ -11,5 +11,8 @@ insert_final_newline = true
 indent_style = space
 indent_size = 2
 
+[*.yaml]
+indent_style = space
+
 [package.json]
 indent_style = space
