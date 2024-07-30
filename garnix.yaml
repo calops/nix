@@ -1,7 +1,8 @@
 builds:
     exclude:
-        - "devShell.*"
+        - devShell.*
     include:
-        - "defaultPackage.*"
+        - defaultPackage.*
         - homeConfigurations.*
         - nixosConfigurations.*
+        - darwinConfigurations.*
