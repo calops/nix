@@ -2,7 +2,7 @@ name: "Upload to Cachix"
 on:
     push:
 jobs:
-    tests:
+    cachix:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -18,5 +18,5 @@ jobs:
 
             - uses: DeterminateSystems/magic-nix-cache-action@v2
 
-            - run: nixos-rebuild build -f ".#nixosConfigurations.cachix"
-            - run: nixos-rebuild build -f ".#darwinConfigurations.cachix"
+            - run: nix build .#nixosConfigurations.cachix.config.system.build.toplevel
+            - run: nix build .#darwinConfigurations.cachix.config.system.build.toplevel
