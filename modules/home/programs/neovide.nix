@@ -6,7 +6,7 @@
 }:
 {
   config = lib.mkIf config.my.roles.graphical.enable {
-    home.packages = [ pkgs.neovide ];
+    home.packages = [ pkgs.my.neovide ];
 
     xdg.desktopEntries.neovide = lib.mkIf (!pkgs.stdenv.isDarwin) {
       name = "Neovide";
