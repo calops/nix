@@ -15,7 +15,6 @@ return {
 			{ "gs", function() require("treesj").toggle() end, desc = "Toggle split" },
 		},
 		opts = { max_join_length = 300 },
-		config = true,
 	},
 	-- Automatically adjust indentation settings depending on the file
 	{

@@ -61,10 +61,10 @@ return {
 					mappings = {
 						i = {
 							["<esc>"] = require("telescope.actions").close,
-							["<C-t>"] = function() require("trouble.sources.telescope").open() end,
+							["<C-T>"] = function() require("trouble.sources.telescope").open() end,
 						},
 						n = {
-							["<C-t>"] = function() require("trouble.sources.telescope").open() end,
+							["<C-T>"] = function() require("trouble.sources.telescope").open() end,
 						},
 					},
 				},
