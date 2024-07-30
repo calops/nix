@@ -21,7 +21,6 @@ in
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.neovim = {
       enable = true;
-      # package = nvimPackage;
       defaultEditor = true;
       extraPackages = [
         # Formatters
