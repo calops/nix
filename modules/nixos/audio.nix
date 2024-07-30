@@ -3,7 +3,6 @@
   options.my.roles.audio.enable = lib.mkEnableOption "Enable audio";
 
   config = lib.mkIf config.my.roles.audio.enable {
-    sound.enable = true;
     services.pipewire = {
       enable = true;
       alsa.enable = true;
