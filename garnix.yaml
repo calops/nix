@@ -1,0 +1,8 @@
+builds:
+    exclude:
+        - "devShell.*"
+    include:
+        - "*.x86_64-linux.*"
+        - "defaultPackage.*"
+        - homeConfigurations.*
+        - nixosConfigurations.*
