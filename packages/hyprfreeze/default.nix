@@ -14,4 +14,6 @@ pkgs.stdenv.mkDerivation {
     mkdir -p $OUT
     cp -r $src/hyprfreeze $OUT
   '';
+
+  meta.platforms = [ "x86_64-linux" ];
 }

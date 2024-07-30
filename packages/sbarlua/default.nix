@@ -25,4 +25,9 @@ pkgs.stdenv.mkDerivation {
     install -Dm755 ./bin/sketchybar.so $out/lib/sketchybar.so
     runHook postInstall
   '';
+
+  meta.platforms = [
+    "x86_64-darwin"
+    "aarch64-darwin"
+  ];
 }
