@@ -18,5 +18,4 @@ jobs:
 
             - uses: DeterminateSystems/magic-nix-cache-action@v2
 
-            - run: nix build .#nixosConfigurations.cachix.config.system.build.toplevel
-            - run: nix build .#darwinConfigurations.cachix.config.system.build.toplevel
+            - run: nix build .#homeConfigurations.cachix@cachix.activationPackage --dry-run --json

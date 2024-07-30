@@ -1,4 +1,4 @@
 { ... }:
 {
-  my.configDir = null;
+  my.configDir = "/";
 }

@@ -18,6 +18,7 @@
     my.configDir = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
       apply = toString;
+      default = null;
       description = "Location of the nix config directory (this repo)";
     };
   };
