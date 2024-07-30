@@ -1,2 +1,5 @@
 # nix
-Personal flake for a bunch of utilities
+
+[![built with garnix](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Fcalops%2Fnix%3Fbranch%3Dmain)](https://garnix.io)
+
+Personal flake for home-manager and nixos configuration.
