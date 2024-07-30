@@ -8,7 +8,7 @@ let
   palette = config.my.colors.palette.withoutHashtag;
 in
 {
-  config = lib.mkIf config.my.isDarwin {
+  config = lib.mkIf pkgs.stdenv.isDarwin {
     home.packages = [ pkgs.sketchybar ];
 
     xdg.configFile."sketchybar/sketchybarrc" = {

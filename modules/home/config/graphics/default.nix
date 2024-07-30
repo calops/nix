@@ -199,7 +199,7 @@ in
         pkgs.libnotify
         pkgs.slack
       ]
-      ++ (lib.lists.optional (!config.my.isDarwin) pkgs.google-chrome)
+      ++ (lib.lists.optional (!pkgs.stdenv.isDarwin) pkgs.google-chrome)
       ++ (
         if cfg.installAllFonts then
           lib.attrsets.mapAttrsToList (name: font: font.package) config.my.fonts
@@ -229,8 +229,8 @@ in
       options.font = cfg.fonts.monospace.name;
     };
 
-    services.clipman.enable = !config.my.isDarwin;
-    services.swayosd.enable = !config.my.isDarwin;
+    services.clipman.enable = !pkgs.stdenv.isDarwin;
+    services.swayosd.enable = !pkgs.stdenv.isDarwin;
 
     stylix = {
       fonts = {

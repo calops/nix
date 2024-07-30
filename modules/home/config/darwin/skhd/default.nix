@@ -1,9 +1,4 @@
-{
-  lib,
-  config,
-  pkgs,
-  ...
-}:
+{ lib, pkgs, ... }:
 let
   window = args: "yabai -m window --" + args;
   space = args: "yabai -m space --" + args;
@@ -15,7 +10,7 @@ let
     );
 in
 {
-  config = lib.mkIf config.my.isDarwin {
+  config = lib.mkIf pkgs.stdenv.isDarwin {
     home.packages = [ pkgs.skhd ];
 
     xdg.configFile."skhd/skhdrc".text = mkSkhdrc {

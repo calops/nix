@@ -18,7 +18,7 @@ let
   lockCommand = "${lib.getExe pkgs.grim} -o ${monitors.primary} /tmp/screenshot.png && hyprlock";
 in
 {
-  config = lib.mkIf (cfg.enable && !config.my.isDarwin) {
+  config = lib.mkIf (cfg.enable && !pkgs.stdenv.isDarwin) {
     wayland.windowManager.hyprland = {
       enable = true;
       xwayland.enable = true;

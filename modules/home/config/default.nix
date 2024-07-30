@@ -49,7 +49,7 @@
     programs.dircolors.enable = true;
 
     services.network-manager-applet.enable = false; # FIXME: tray icon isn't working on ironbar
-    services.udiskie = lib.mkIf (!config.my.isDarwin) {
+    services.udiskie = lib.mkIf (!pkgs.stdenv.isDarwin) {
       enable = true;
       settings.program_options = {
         tray = false; # FIXME: tray icon isn't working on ironbar

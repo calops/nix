@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf (config.my.roles.graphical.enable && !config.my.isDarwin) {
+  config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     services.ironbar = {
       enable = true;
       settings =

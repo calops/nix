@@ -5,7 +5,7 @@
   ...
 }:
 {
-  config = lib.mkIf (config.my.roles.terminal.enable && !config.my.isDarwin) {
+  config = lib.mkIf (config.my.roles.terminal.enable && !pkgs.stdenv.isDarwin) {
     home.packages = [ pkgs.podman ];
 
     xdg.configFile."containers/registries.conf".text =

@@ -18,7 +18,7 @@ let
   });
 in
 {
-  config = lib.mkIf (cfg.enable && !config.my.isDarwin) {
+  config = lib.mkIf (cfg.enable && !pkgs.stdenv.isDarwin) {
     programs.logseq =
       let
         customCss = pkgs.fetchurl {

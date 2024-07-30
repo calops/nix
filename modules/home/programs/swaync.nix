@@ -8,7 +8,7 @@ let
   palette = config.my.colors.palette.withHashtag;
 in
 {
-  config = lib.mkIf (config.my.roles.graphical.enable && !config.my.isDarwin) {
+  config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     services.swaynotificationcenter = {
       enable = true;
 
