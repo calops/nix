@@ -14,7 +14,7 @@ jobs:
                   name: calops
                   authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
             - uses: DeterminateSystems/magic-nix-cache-action@v7
-            - run: nix build .#homeConfigurations.cachix@cachix-linux.activationPackage --dry-run --json
+            - run: nix build .#nixosConfigurations.tocardstation.config.system.build.toplevel
 
     build-darwin:
         runs-on: macos-latest
@@ -28,4 +28,4 @@ jobs:
                   name: calops
                   authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
             - uses: DeterminateSystems/magic-nix-cache-action@v7
-            - run: nix build .#homeConfigurations.cachix@cachix-darwin.activationPackage --dry-run --json
+            - run: nix build .#darwinConfigurations.rlabeyrie-sonio.config.system.build.toplevel
