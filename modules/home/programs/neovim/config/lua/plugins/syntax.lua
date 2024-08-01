@@ -159,4 +159,8 @@ return {
 			signs = false,
 		},
 	},
+	{
+		"OXY2DEV/markview.nvim",
+		ft = "markdown",
+	},
 }

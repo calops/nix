@@ -48,6 +48,7 @@ in
           (lib.getExe pkgs.hypridle)
           (lib.getExe pkgs.firefox)
           (lib.getExe pkgs.discord)
+          (lib.getExe pkgs.pyprland)
           "element-desktop"
         ];
 
@@ -175,6 +176,7 @@ in
           "SUPER SHIFT, 17, movetoworkspacesilent, 8"
           "SUPER SHIFT, 18, movetoworkspacesilent, 9"
           "SUPER SHIFT, 19, movetoworkspacesilent, 10"
+          "SUPER, T, exec, pypr toggle term"
         ];
 
         bindm = [
@@ -235,6 +237,19 @@ in
         }
       '';
 
+    xdg.configFile."hypr/pyprland.toml".source = pkgs.writers.writeTOML "pyprland.toml" {
+      pyprland.plugins = [ "scratchpads" ];
+
+      scratchpads.term = {
+        animation = "fromTop";
+        command = "${cfg.terminal} --class=kitty-scratchpad --directory=~";
+        class = "kitty-scratchpad";
+        size = "75% 50%";
+        max_size = "1920px 100%";
+        margin = 50;
+      };
+    };
+
     home.packages =
       let
         hypr = inputs.hyprland-contrib.packages.${pkgs.system};
@@ -244,6 +259,7 @@ in
         hypr.hyprprop
         hypr.scratchpad
         pkgs.my.hyprfreeze
+        pkgs.pyprland
       ];
   };
 }
