@@ -1,0 +1,27 @@
+{
+	"lspconfig": {
+		"vtsls": {
+			"typescript.inlayHints.enumMemberValues.enabled": true,
+			"typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+			"typescript.inlayHints.parameterNames.enabled": "all",
+			"typescript.inlayHints.parameterTypes.enabled": true,
+			"typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+			"typescript.inlayHints.variableTypes.enabled": true
+		},
+		"nil_ls": {
+			"nix.flake.autoArchive": true
+		},
+		"lua_ls": {
+			"Lua.format.enable": false,
+			"Lua.hint.enable": true
+		},
+		"rust-analyzer": {
+			"semanticHighlighting.punctuation.enable": true,
+			"semanticHighlighting.punctuation.macro.bang": true,
+			"diagnostics.enable": true,
+			"diagnostics.experimental.enable": true,
+			"assist.emitMustUse": true,
+			"procMacro.enable": true
+		}
+	}
+}
