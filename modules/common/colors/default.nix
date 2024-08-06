@@ -117,7 +117,7 @@ in
       asGtkCss = pkgs.writeText "colors.gtk.css" (
         lib.concatStringsSep "\n" (
           builtins.attrValues (
-            builtins.mapAttrs (name: value: "@define-color " + name + " " + value + ";") withHashtag
+            builtins.mapAttrs (name: value: "@define-color palette-" + name + " " + value + ";") withHashtag
           )
         )
       );

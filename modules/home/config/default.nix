@@ -10,7 +10,6 @@
   options.my = {
     configDir = lib.mkOption {
       type = lib.types.path;
-      apply = toString;
       default =
         nixosConfig.my.configDir or darwinConfig.my.configDir or "${config.home.homeDirectory}/nix";
       description = "Location of the nix config directory (this repo)";

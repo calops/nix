@@ -198,4 +198,18 @@ return {
 			end)
 		end,
 	},
+	-- Structural search/replace
+	{
+		"cshuaimin/ssr.nvim",
+		event = "VeryLazy",
+		keys = {
+			{
+				"<leader>rs",
+				function() require("ssr").open() end,
+				mode = { "n", "x" },
+				desc = "Structural search/replace",
+			},
+		},
+		opts = {},
+	},
 }

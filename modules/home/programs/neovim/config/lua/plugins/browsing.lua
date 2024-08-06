@@ -9,14 +9,8 @@ return {
 			"nvim-telescope/telescope-media-files.nvim",
 			"nvim-telescope/telescope-symbols.nvim",
 			"Marskey/telescope-sg",
-			{
-				"nvim-telescope/telescope-fzf-native.nvim",
-				build = "make",
-			},
-			{
-				"prochri/telescope-all-recent.nvim",
-				dependencies = { "kkharji/sqlite.lua" },
-			},
+			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+			{ "prochri/telescope-all-recent.nvim", dependencies = { "kkharji/sqlite.lua" } },
 		},
 		cmd = "Telescope",
 		lazy = true,
@@ -73,7 +67,6 @@ return {
 			telescope.load_extension("fzf")
 			telescope.load_extension("notify")
 			telescope.load_extension("media_files")
-			telescope.load_extension("ast_grep")
 			telescope.load_extension("textcase")
 			telescope.load_extension("yank_history")
 			telescope.load_extension("persisted")

@@ -39,7 +39,7 @@ in
 
           box#main {
             border-radius: 10px;
-            background-color: @mantle;
+            background-color: @palette-mantle;
           }
 
           box#plugin {

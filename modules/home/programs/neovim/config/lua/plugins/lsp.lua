@@ -27,7 +27,14 @@ return {
 			{ "<leader>rf", vim.lsp.buf.format, desc = "Format code" },
 		},
 		config = function()
-			require("neoconf").setup {}
+			require("neoconf").setup {
+				plugins = {
+					jsonls = {
+						enabled = true,
+						configured_servers_only = false,
+					},
+				},
+			}
 			require("mason").setup { ui = { border = "rounded" } }
 			require("mason-lspconfig").setup {
 				automatic_installation = false,

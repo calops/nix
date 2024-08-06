@@ -78,17 +78,17 @@ in
       "nvim/lua".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/config/lua";
 
       # Nixd LSP configuration
-      "${config.my.configDir}/.nixd.json".text =
+      "${config.my.configDir}/.neoconf.json".text =
         let
           flake = ''builtins.getFlake "${config.my.configDir}"'';
         in
         builtins.toJSON {
-          nixpkgs.expr = ''import (${flake}).inputs.nixpkgs {}'';
-          # formatting.command = [ "${lib.getExe pkgs.nixfmt-rfc-style}" ];
-          options = {
-            nixos.expr = ''(${flake}).nixosConfigurations.tocardstation.options'';
-            homeManager.expr = ''(${flake}).homeConfigurations."calops@tocardstation".options'';
-            # target.installable = ".#nixosConfigurations.tocardstation.options";
+          lspconfig.nixd.nixd = {
+            nixpkgs.expr = ''import (${flake}).inputs.nixpkgs {}'';
+            options = {
+              nixos.expr = ''(${flake}).nixosConfigurations.tocardstation.options'';
+              homeManager.expr = ''(${flake}).homeConfigurations."calops@tocardstation".options'';
+            };
           };
         };
     };

@@ -67,6 +67,11 @@
             ];
           };
 
+          clipboard = {
+            type = "clipboard";
+            icon = "󰅍";
+          };
+
           clock =
             let
               date = lib.getExe' pkgs.coreutils "date";
@@ -92,6 +97,7 @@
               "9" = "󰭹";
               "10" = "";
               "special:scratchpad" = "";
+              "special:scratch_term" = "";
             };
           };
 
@@ -120,6 +126,7 @@
                 })
               ];
             };
+
           volume = {
             format = "{icon}";
             on_mouse_enter = "${ironbarClient} set show-volume-slider true";
@@ -132,6 +139,7 @@
           position = "left";
           start = [
             notifications
+            clipboard
             tray
           ];
           center = [ workspaces ];
@@ -208,6 +216,19 @@
             background: ${palette.base};
           }
           .notifications label {
+            font-size: 20px;
+            margin-left: -0.4em;
+          }
+
+          /* Clipboard */
+          .clipboard {
+            min-width: 24px;
+            min-height: 35px;
+            border-radius: 50px;
+            margin-top: 5px;
+            background: ${palette.base};
+          }
+          .clipboard label {
             font-size: 20px;
             margin-left: -0.4em;
           }
