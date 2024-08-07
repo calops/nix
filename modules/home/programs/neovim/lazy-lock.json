@@ -61,7 +61,7 @@
   "persisted.nvim": { "branch": "main", "commit": "4df3f8a03690add1bc2f9a79b31e1c43f5e0dd05" },
   "playground": { "branch": "master", "commit": "ba48c6a62a280eefb7c85725b0915e021a1a0749" },
   "plenary.nvim": { "branch": "master", "commit": "a3e3bc82a3f95c5ed0d7201546d5d2c19b20d683" },
-  "replacer.nvim": { "branch": "master", "commit": "32e1713230844fa52f7f0598c59295de3c90dc95" },
+  "quicker.nvim": { "branch": "master", "commit": "9c50140518acecaf73a4fc4e3fc94fd82981c2f7" },
   "ron.vim": { "branch": "master", "commit": "f749e543975a82e8dd9a6e7df9600a1c098ae800" },
   "rustaceanvim": { "branch": "master", "commit": "193f1d7925a61a066f7aa7d5d75f0cfe17dc0a9e" },
   "sqlite.lua": { "branch": "master", "commit": "d0ffd703b56d090d213b497ed4eb840495f14a11" },

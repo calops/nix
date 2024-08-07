@@ -183,20 +183,24 @@ return {
 			{ "<C-Right>", function() require("spider").motion("w") end, desc = "Move forwards word-wise" },
 		},
 	},
+	-- Better and editable quickfix
 	{
-		"gabrielpoca/replacer.nvim",
-		ft = "qf",
-		init = function()
-			-- Create binding only for qf filetype
-
-			utils.aucmd("BufRead", function(args)
-				if vim.bo.filetype == "qf" then
-					if vim.bo.filetype == "qf" then
-						utils.map { "i", function() require("replacer").run() end, buffer = args.buf }
-					end
-				end
-			end)
-		end,
+		"stevearc/quicker.nvim",
+		event = "VeryLazy",
+		opts = {
+			keys = {
+				{
+					">",
+					function() require("quicker").expand { before = 2, after = 2, add_to_existing = true } end,
+					desc = "Expand quickfix context",
+				},
+				{
+					"<",
+					function() require("quicker").collapse() end,
+					desc = "Collapse quickfix context",
+				},
+			},
+		},
 	},
 	-- Structural search/replace
 	{
