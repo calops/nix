@@ -59,17 +59,24 @@
             inherit label;
           };
 
-          notifications = mkCustomWidget "notifications" {
-            bar = [
-              (mkVerticalBox "notifications-button" [
-                (mkCmdButton "" "${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} -t")
-              ])
-            ];
-          };
-
           clipboard = {
             type = "clipboard";
             icon = "󰅍";
+          };
+
+          notifications = (
+            mkVerticalBox "notifications-button" [
+              (mkCmdButton "" "${lib.getExe' pkgs.swaynotificationcenter "swaync-client"} -t")
+            ]
+          );
+
+          customTray = mkCustomWidget "custom-tray" {
+            bar = [
+              (mkVerticalBox "custom-tray-box" [
+                notifications
+                clipboard
+              ])
+            ];
           };
 
           clock =
@@ -138,8 +145,7 @@
           name = "status";
           position = "left";
           start = [
-            notifications
-            clipboard
+            customTray
             tray
           ];
           center = [ workspaces ];
@@ -209,28 +215,33 @@
           }
 
           /* Notifications */
-          .notifications button {
-            min-width: 24px;
-            min-height: 35px;
+          .notifications-button button {
             border-radius: 50px;
-            background: ${palette.base};
+            min-height: 25px;
+            padding: 0;
+            background: ${palette.surface0};
           }
-          .notifications label {
-            font-size: 20px;
+          .notifications-button label {
             margin-left: -0.4em;
           }
 
           /* Clipboard */
           .clipboard {
-            min-width: 24px;
-            min-height: 35px;
             border-radius: 50px;
-            margin-top: 5px;
-            background: ${palette.base};
+            min-height: 25px;
+            padding: 0;
+            margin: 4px 0 0 0;
+            background: ${palette.surface0};
           }
           .clipboard label {
-            font-size: 20px;
-            margin-left: -0.4em;
+            margin-left: -0.3em;
+          }
+
+          /* Custom Tray */
+          .custom-tray {
+            padding: 10px;
+            border-radius: 50px;
+            background: ${palette.base};
           }
 
           /* Tray */
