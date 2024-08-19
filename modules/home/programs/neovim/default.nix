@@ -93,7 +93,7 @@ in
         };
     };
 
-    stylix.targets.vim.enable = false;
+    stylix.targets.neovim.enable = false;
 
     home.activation.neovim =
       lib.home-manager.hm.dag.entryAfter [ "linkGeneration" ] # bash

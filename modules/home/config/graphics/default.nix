@@ -245,7 +245,7 @@ in
         emoji = cfg.fonts.emoji;
       };
       cursor = {
-        name = "Catppuccin-Mocha-Peach-Cursors";
+        name = "catppuccin-mocha-peach-cursors";
         size = 32;
         package = pkgs.catppuccin-cursors.mochaPeach;
       };
