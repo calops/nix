@@ -225,6 +225,7 @@ return {
 			}
 		end,
 	},
+	-- Create sidebars and docks
 	{
 		"folke/edgy.nvim",
 		event = "VeryLazy",
