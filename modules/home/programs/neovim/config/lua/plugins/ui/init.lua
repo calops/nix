@@ -247,6 +247,7 @@ return {
 	},
 	{
 		"calops/virtsign.nvim",
+		enable = false,
 		event = "VeryLazy",
 		dev = true,
 	},

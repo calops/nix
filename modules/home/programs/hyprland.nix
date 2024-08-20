@@ -198,8 +198,8 @@ in
       settings = {
         background = [
           {
-            path = "/tmp/screenshot.png";
-            blur_passes = 1;
+            path = "screenshot";
+            blur_passes = 2;
           }
         ];
         input-field = [
@@ -207,10 +207,6 @@ in
             size = {
               width = 300;
               height = 50;
-            };
-            position = {
-              x = 0;
-              y = -20;
             };
             outline_thickness = 3;
             dots_size = 0.33;
@@ -233,7 +229,7 @@ in
       ''
         listener {
             timeout = 900 # 15 minutes
-            on-timeout = hyprlock
+            on-timeout = ${lockCommand}
         }
       '';
 
