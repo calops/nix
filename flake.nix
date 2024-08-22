@@ -2,7 +2,7 @@
   description = "Home-manager configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/e4e19575c80a9226331f95781db0061b5c516141"; # nixos-unstable before rust update
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     myNixpkgs.url = "github:calops/nixpkgs";
 
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
@@ -75,6 +75,7 @@
       src = ./.;
       snowfall.namespace = "my";
       channels-config.allowUnfree = true;
+      channels-config.permittedInsecurePackages = [ "jitsi-meet-1.0.8043" ];
       outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
     };
 }
