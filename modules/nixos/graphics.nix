@@ -18,8 +18,6 @@
       desktopManager.gnome.enable = true;
     };
 
-    services.desktopManager.cosmic.enable = false; # There to be tested from time to time
-
     # Misc
     hardware.graphics.enable = true;
 

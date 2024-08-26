@@ -67,10 +67,6 @@
     lix.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.90.0.tar.gz";
     lix.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Cosmic desktop environment
-    nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
-    nixos-cosmic.inputs.nixpkgs.follows = "nixpkgs";
-
     # Vencord settings module (discord mod)
     nixcord.url = "github:kaylorben/nixcord";
   };
@@ -80,13 +76,11 @@
       https://nix-community.cachix.org
       https://calops.cachix.org
       https://cache.garnix.io
-      https://cosmic.cachix.org
     '';
     extra-trusted-public-keys = ''
       nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
       calops.cachix.org-1:6RTG80il2oS2ECFeG2QubG+mvD9OJc1s6Lm9JGAFcM0=
       cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g=
-      cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE=
     '';
   };
 

@@ -12,7 +12,6 @@
     inputs.nh-darwin.nixosModules.default
     inputs.madness.nixosModules.madness
     inputs.lix.nixosModules.default
-    inputs.nixos-cosmic.nixosModules.default
   ] ++ lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options = {
