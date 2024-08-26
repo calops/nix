@@ -3,6 +3,7 @@
   lib,
   inputs,
   config,
+  nixosConfig ? null,
   ...
 }:
 let
@@ -26,10 +27,21 @@ in
       plugins = [ pkgs.hyprlandPlugins.hy3 ];
 
       settings = {
+        env = lib.mkIf (nixosConfig.my.roles.nvidia.enable or false) [
+          "LIBVA_DRIVER_NAME,nvidia"
+          "GBM_BACKEND,nvidia-drm"
+          "NVD_BACKEND,direct"
+          "ELECTRON_OZONE_PLATFORM_HINT,auto"
+          "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+        ];
+
+        cursor.no_hardware_cursors = true;
+
         monitor = [
           "Unknown-1,disable" # TODO: remove once kernel bug that creates phantom monitors is fixed
           ",preferred,auto,1"
         ];
+
         workspace = [
           "1,monitor:${monitors.primary}"
           "3,monitor:${monitors.primary}"

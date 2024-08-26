@@ -8,9 +8,9 @@ let
   addons = pkgs.nur.repos.rycee.firefox-addons;
   package =
     if pkgs.stdenv.isDarwin then
-      pkgs.firefox-beta-bin
+      pkgs.firefox-beta
     else
-      pkgs.firefox-beta-bin.override { nativeMessagingHosts = [ pkgs.tridactyl-native ]; };
+      pkgs.firefox-beta.override { nativeMessagingHosts = [ pkgs.tridactyl-native ]; };
 in
 {
   config = lib.mkIf config.my.roles.graphical.enable {
