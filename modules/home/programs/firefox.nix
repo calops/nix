@@ -8,7 +8,7 @@ let
   addons = pkgs.nur.repos.rycee.firefox-addons;
   package =
     if pkgs.stdenv.isDarwin then
-      pkgs.firefox-beta
+      pkgs.firefox-beta-bin
     else
       pkgs.firefox-beta.override { nativeMessagingHosts = [ pkgs.tridactyl-native ]; };
 in
