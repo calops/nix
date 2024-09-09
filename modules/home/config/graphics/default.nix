@@ -155,6 +155,10 @@ in
         name = "Iosevka Comfy";
         package = pkgs.iosevka-comfy.comfy;
       };
+      iosevka = {
+        name = "Iosevka";
+        package = pkgs.iosevka;
+      };
       luculent = {
         name = "Luculent";
         package = pkgs.luculent;

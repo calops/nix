@@ -5,12 +5,13 @@ local act = wezterm.action
 return {
 	term = "wezterm",
 	font = wezterm.font_with_fallback {
-		nix.font.name,
+		"Iosevka",
 		nix.font.symbols,
 	},
+	front_end = "WebGpu",
+	font_size = nix.font.size,
 	window_decorations = "RESIZE",
 	enable_wayland = true,
-	font_size = nix.font.size,
 	freetype_load_target = nix.font.hinting,
 	cell_width = nix.font.cell_width,
 	line_height = nix.font.cell_height,

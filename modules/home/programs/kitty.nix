@@ -1,7 +1,6 @@
 { config, ... }:
 let
   cfg = config.my.roles.graphical;
-  palette = config.my.colors.palette;
 in
 {
   programs.kitty = {
@@ -9,9 +8,9 @@ in
     settings = {
       font_size = cfg.fonts.sizes.terminal;
       font_family = cfg.fonts.monospace.name;
-      bold_font = "${cfg.fonts.monospace.name} Bold";
-      italic_font = "${cfg.fonts.monospace.name} Italic";
-      bold_italic_font = "${cfg.fonts.monospace.name} Bold Italic";
+      # bold_font = "${cfg.fonts.monospace.name} Bold";
+      # italic_font = "${cfg.fonts.monospace.name} Italic";
+      # bold_italic_font = "${cfg.fonts.monospace.name} Bold Italic";
       undercurl_style = "thick-sparse";
       "modify_font underline_position" = "+2";
       "modify_font underline_thickness" = "2px";

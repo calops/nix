@@ -10,7 +10,7 @@ let
     if pkgs.stdenv.isDarwin then
       pkgs.firefox-beta-bin
     else
-      pkgs.firefox-beta.override { nativeMessagingHosts = [ pkgs.tridactyl-native ]; };
+      pkgs.firefox-beta-bin.override { nativeMessagingHosts = [ pkgs.tridactyl-native ]; };
 in
 {
   config = lib.mkIf config.my.roles.graphical.enable {

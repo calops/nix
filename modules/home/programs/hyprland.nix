@@ -59,7 +59,7 @@ in
           #(lib.getExe pkgs.hyprpaper)
           (lib.getExe pkgs.hypridle)
           (lib.getExe pkgs.firefox)
-          (lib.getExe pkgs.discord)
+          "discord"
           (lib.getExe pkgs.pyprland)
           "element-desktop"
         ];
