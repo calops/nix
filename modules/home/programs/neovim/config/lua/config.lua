@@ -1,3 +1,5 @@
+vim.loader.enable()
+
 ---------- Settings
 -- Search
 vim.o.ignorecase = true
