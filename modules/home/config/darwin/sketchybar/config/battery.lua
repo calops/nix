@@ -54,7 +54,7 @@ local function battery_update()
 		local color = "0xff" .. palette.text
 		local charging, levels = true, battery_levels.charging
 
-		if string.find(batt_info, "discharging") then
+		if batt_info:find("discharging") then
 			charging, levels = false, battery_levels.discharging
 		end
 
@@ -70,7 +70,7 @@ local function battery_update()
 
 		battery:set {
 			icon = { string = icon, color = color },
-			label = { string = charge .. "%" },
+			label = { string = (charge or "") .. "%" },
 		}
 	end)
 end
