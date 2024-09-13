@@ -66,8 +66,10 @@ return {
 		"ruifm/gitlinker.nvim",
 		dependencies = "nvim-lua/plenary.nvim",
 		opts = { mappings = nil },
-		keys = function()
-			return {
+		init = function()
+			-- No idea why this is necessary but the following doesn't set the mapping for modes x and v if using the
+			-- `keys` field in init
+			map {
 				{
 					"<leader>gy",
 					function() require("gitlinker").get_buf_range_url("n") end,
@@ -75,21 +77,23 @@ return {
 				},
 				{
 					"<leader>gy",
-					function() require("gitlinker").get_buf_range_url("x") end,
+					function() require("gitlinker").get_buf_range_url("v") end,
 					desc = "Yank git lines URL",
-					mode = "x",
-				},
-				{
-					"<leader>go",
-					function()
-						require("gitlinker").get_repo_url {
-							action_callback = require("gitlinker.actions").open_in_browser,
-						}
-					end,
-					desc = "Open git repo in browser",
+					mode = { "x", "v" },
 				},
 			}
 		end,
+		keys = {
+			{
+				"<leader>go",
+				function()
+					require("gitlinker").get_repo_url {
+						action_callback = require("gitlinker.actions").open_in_browser,
+					}
+				end,
+				desc = "Open git repo in browser",
+			},
+		},
 	},
 	{
 		"topaxi/gh-actions.nvim",
