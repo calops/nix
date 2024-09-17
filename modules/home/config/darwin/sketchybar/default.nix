@@ -4,9 +4,6 @@
   lib,
   ...
 }:
-let
-  palette = config.my.colors.palette.withoutHashtag;
-in
 {
   config = lib.mkIf pkgs.stdenv.isDarwin {
     home.packages = [ pkgs.sketchybar ];
@@ -32,7 +29,7 @@ in
           text = "${config.my.roles.graphical.fonts.monospace.name}",
           symbols = "${config.my.roles.graphical.fonts.symbols.name}",
         },
-        palette = ${lib.generators.toLua { } palette},
+        palette = ${lib.my.asLua config.my.colors.palette.withoutHashtag},
       }
     '';
 

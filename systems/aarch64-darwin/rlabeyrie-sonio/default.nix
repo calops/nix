@@ -20,6 +20,12 @@
           no_quarantine = true;
         };
       }
+      {
+        name = "grishka/grishka/neardrop";
+        args = {
+          no_quarantine = true;
+        };
+      }
     ];
 
     masApps = {

@@ -66,7 +66,7 @@ require("date")
 require("battery")
 -- require("cpu")
 -- require("memory")
--- require("volume")
+require("volume")
 
 sbar.end_config()
 sbar.event_loop()

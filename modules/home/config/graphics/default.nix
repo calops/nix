@@ -203,7 +203,10 @@ in
         pkgs.libnotify
         pkgs.slack
       ]
-      ++ (lib.lists.optional (!pkgs.stdenv.isDarwin) pkgs.google-chrome)
+      ++ (lib.lists.optionals (!pkgs.stdenv.isDarwin) [
+        pkgs.google-chrome
+        pkgs.rquickshare
+      ])
       ++ (
         if cfg.installAllFonts then
           lib.attrsets.mapAttrsToList (name: font: font.package) config.my.fonts

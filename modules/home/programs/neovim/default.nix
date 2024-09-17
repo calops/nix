@@ -5,7 +5,6 @@
   ...
 }:
 let
-  palette = config.my.colors.palette;
   nvimDir = "${config.my.configDir}/modules/home/programs/neovim";
 
   rustToolchain = pkgs.fenix.complete.withComponents [
@@ -72,7 +71,7 @@ in
           require("config")
         '';
 
-      "nvim/nix/palette.lua".text = "return ${lib.generators.toLua { } palette}";
+      "nvim/nix/palette.lua".text = ''return ${lib.my.asLua config.my.colors.palette.withHashtag}'';
 
       # Out of store symlink of whe whole configuration, for more agility when editing it
       "nvim/lua".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/config/lua";
