@@ -15,6 +15,8 @@
     #monitoring.enable = true;
   };
 
+  hardware.xpadneo.enable = true;
+
   programs.coolercontrol.enable = true;
 
   virtualisation.docker.enable = true;

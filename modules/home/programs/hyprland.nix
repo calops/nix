@@ -210,7 +210,7 @@ in
       settings = {
         background = [
           {
-            path = "screenshot";
+            path = "/tmp/screenshot.png";
             blur_passes = 2;
           }
         ];
