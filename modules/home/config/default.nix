@@ -57,7 +57,7 @@
 
     programs.nh = {
       enable = true;
-      flake = config.my.configDir;
+      home.flake = config.my.configDir;
     };
 
     nix.gc = {
