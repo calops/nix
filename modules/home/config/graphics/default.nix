@@ -53,7 +53,7 @@ in
       fonts = {
         monospace = lib.mkOption {
           type = my.types.font;
-          default = config.my.fonts.iosevka; # wait until comfy is fixed
+          default = config.my.fonts.iosevka-comfy; # wait until comfy is fixed
           description = "Monospace font";
         };
         serif = lib.mkOption {
