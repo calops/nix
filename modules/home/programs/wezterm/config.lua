@@ -5,7 +5,7 @@ local act = wezterm.action
 return {
 	term = "wezterm",
 	font = wezterm.font_with_fallback {
-		"Iosevka",
+		"Iosevka Comfy",
 		nix.font.symbols,
 	},
 	front_end = "WebGpu",
