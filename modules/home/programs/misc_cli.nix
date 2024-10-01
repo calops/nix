@@ -26,6 +26,7 @@
       yq
       pastel
       jaq
+      devenv
     ];
 
     programs.nix-index-database.comma.enable = true;

@@ -36,6 +36,7 @@ in
         pushf = "push --force-with-lease";
         mom = "merge origin/main --no-edit";
         pum = "pull upstream main";
+        pom = "pull origin main --no-rebase";
         dv = ''! args=$@; shift $#; nvim -c "DiffviewOpen $args"'';
         db = ''! args=$@; shift $#; nvim -c "DiffviewOpen $(git merge-base --fork-point main)"'';
       };

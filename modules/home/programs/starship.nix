@@ -16,7 +16,6 @@ in
       enable = config.my.roles.terminal.enable;
       settings = {
         rust.symbol = " ";
-        nodejs.symbol = " ";
         python.symbol = " ";
         git_branch.symbol = "󰘬 ";
 
@@ -60,6 +59,12 @@ in
           symbol = "󰸏 ";
           color = palette.sand;
           format = ''$symbol($profile)(\($region\))(\[$duration\])'';
+        };
+
+        nodejs = mkPill {
+          symbol = " ";
+          color = palette.green;
+          format = ''$symbol$version'';
         };
       };
     };
