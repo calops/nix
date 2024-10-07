@@ -60,6 +60,10 @@ return {
 					TelescopePromptBorder = { fg = palette.peach },
 					TelescopeResultsBorder = { fg = palette.green },
 
+					BlinkCmpMenu = { link = "NormalFloat" },
+					BlinkCmpMenuBorder = { link = "FloatBorder" },
+					BlinkCmpDocBorder = { fg = palette.green },
+
 					GlancePreviewMatch = { bg = colors.darken(palette.peach, 0.2, palette.base) },
 					GlanceListMatch = { fg = palette.peach },
 

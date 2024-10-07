@@ -22,7 +22,7 @@ in
         elixir = mkPill {
           symbol = " ";
           color = palette.purple;
-          format = ''$symbol($version \(OTP $otp_version\))'';
+          format = ''$symbol($version  $otp_version)'';
         };
 
         lua = mkPill {
@@ -34,7 +34,7 @@ in
         nix_shell = mkPill {
           symbol = " ";
           color = palette.navy;
-          format = ''$symbol$state( \($name\))'';
+          format = ''$symbol($name)'';
           heuristic = true;
         };
 

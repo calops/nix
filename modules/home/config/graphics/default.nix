@@ -223,11 +223,12 @@ in
 
     programs.mpv = {
       enable = pkgs.stdenv.isLinux;
+      # FIXME: this mess
       scripts = [
-        pkgs.mpvScripts.sponsorblock
-        pkgs.mpvScripts.thumbfast
-        pkgs.mpvScripts.mpv-webm
-        pkgs.mpvScripts.uosc
+        # pkgs.mpvScripts.sponsorblock
+        # pkgs.mpvScripts.thumbfast
+        # pkgs.mpvScripts.mpv-webm
+        # pkgs.mpvScripts.uosc
       ];
     };
 
