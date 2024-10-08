@@ -8,7 +8,12 @@ let
   addons = pkgs.nur.repos.rycee.firefox-addons;
   package =
     if pkgs.stdenv.isDarwin then
-      pkgs.firefox-beta-bin
+      pkgs.firefox-beta-bin.overrideAttrs {
+        nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+        postInstall = ''
+          wrapProgram $out/Applications/Firefox.app/Contents/MacOS/firefox --set MOZ_LEGACY_PROFILES 1
+        '';
+      }
     else
       pkgs.firefox-beta-bin.override { nativeMessagingHosts = [ pkgs.tridactyl-native ]; };
 in
@@ -120,7 +125,7 @@ in
         autocmd TriStart .* source_quiet ${config.xdg.configHome}/tridactyl/tridactylrc
       '';
 
-    home.sessionVariables = {
+    home.sessionVariables = lib.mkIf pkgs.stdenv.isLinux {
       MOZ_ENABLE_WAYLAND = 1;
     };
   };

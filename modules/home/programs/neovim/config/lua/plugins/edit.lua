@@ -159,6 +159,22 @@ return {
 			{ "gp", "<Plug>YankyPreviousEntry", desc = "Previous yank" },
 			{ "gn", "<Plug>YankyNextEntry", desc = "Next yank" },
 		},
+		init = function()
+			-- Remove trailing whitespace from visual block yanks
+			vim.api.nvim_create_autocmd("TextYankPost", {
+				callback = function()
+					local event = vim.v.event
+					if event.regtype:sub(1, 1) ~= "" or not event.visual then
+						return
+					end
+					local content = {}
+					for _, line in ipairs(event.regcontents) do
+						table.insert(content, vim.fn.trim(line, "", 2))
+					end
+					vim.fn.setreg(event.regname, content)
+				end,
+			})
+		end,
 	},
 	-- Substitute operator
 	{

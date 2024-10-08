@@ -58,7 +58,7 @@ in
         exec-once = [
           #(lib.getExe pkgs.hyprpaper)
           (lib.getExe pkgs.hypridle)
-          (lib.getExe pkgs.firefox)
+          (lib.getExe config.programs.firefox.package)
           "discord"
           (lib.getExe pkgs.pyprland)
           "element-desktop"
