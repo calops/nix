@@ -11,10 +11,7 @@ return {
 			integrations = {
 				telescope = true,
 				neotree = true,
-				indent_blankline = {
-					enabled = false,
-					colored_indent_levels = false,
-				},
+				indent_blankline = { enabled = false },
 				cmp = true,
 				gitsigns = true,
 				notify = true,

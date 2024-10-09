@@ -129,7 +129,6 @@ return {
 	-- Move around
 	{
 		"folke/flash.nvim",
-		event = "VeryLazy",
 		opts = {
 			search = {
 				mode = "fuzzy",

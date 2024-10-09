@@ -28,6 +28,7 @@ vim.o.shortmess = "c"
 vim.o.termguicolors = true
 vim.o.winblend = 0
 vim.o.wrap = true
+vim.o.hidden = true
 vim.opt.fillchars = {
 	eob = " ",
 	fold = "⋅",

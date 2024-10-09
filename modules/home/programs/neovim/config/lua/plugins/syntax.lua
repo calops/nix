@@ -59,7 +59,7 @@ return {
 	-- Show sticky context for off-screen scope beginnings
 	{
 		"nvim-treesitter/nvim-treesitter-context",
-		event = "BufRead",
+		event = "VeryLazy",
 		opts = {
 			enable = true,
 			max_lines = 5,
@@ -73,11 +73,6 @@ return {
 	{
 		"nvim-treesitter/playground",
 		cmd = "TSPlaygroundToggle",
-	},
-	-- RON syntax plugin
-	{
-		"ron-rs/ron.vim",
-		ft = "ron",
 	},
 	-- Syntax-aware text objects and motions
 	{

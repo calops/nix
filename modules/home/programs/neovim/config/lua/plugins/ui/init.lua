@@ -46,7 +46,6 @@ return {
 	-- CMD line replacement and other UI niceties
 	{
 		"folke/noice.nvim",
-		enabled = true,
 		lazy = false,
 		keys = {
 			{ "<leader><leader>", ":noh<CR>", desc = "Hide search highlights" },
@@ -248,7 +247,7 @@ return {
 	},
 	{
 		"calops/virtsign.nvim",
-		enable = false,
+		enabled = false,
 		event = "VeryLazy",
 		dev = true,
 	},

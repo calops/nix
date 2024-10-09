@@ -47,7 +47,6 @@ return {
 	-- Floating terminal window
 	{
 		"akinsho/toggleterm.nvim",
-		name = "toggleterm",
 		cmd = "ToggleTerm",
 		keys = {
 			{
@@ -58,18 +57,25 @@ return {
 			},
 		},
 		opts = {
-			direction = "float",
+			direction = "vertical",
+			size = function() return vim.o.columns * 0.3 end,
 			float_opts = { border = "rounded" },
-			highlights = { FloatBorder = { link = "TermFloatBorder" } },
+			highlights = {
+				FloatBorder = { link = "TermFloatBorder" },
+				Normal = { link = "Normal" },
+			},
+			persist_mode = false,
+			on_open = function(term)
+				vim.wo[term.window].foldmethod = "manual"
+				vim.wo[term.window].statuscolumn = ""
+			end,
 		},
 	},
 	-- Auto close buffers
 	{
 		"chrisgrieser/nvim-early-retirement",
 		event = "VeryLazy",
-		opts = {
-			retirementAgeMins = 10,
-		},
+		opts = { retirementAgeMins = 10 },
 	},
 	{
 		"glacambre/firenvim",

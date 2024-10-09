@@ -1,9 +1,6 @@
-local map = require("core.utils").map
-
 return {
 	{
 		"zbirenbaum/copilot.lua",
-		enabled = true,
 		event = "VeryLazy",
 		opts = {
 			suggestion = {
