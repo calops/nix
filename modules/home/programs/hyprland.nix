@@ -152,7 +152,7 @@ in
           "SUPER SHIFT, F, togglefloating,"
           "SUPER, space, exec, anyrun"
           "SUPER, P, exec, hyprfreeze -a" # Pause active program
-          "SUPER, backspace, togglesplit,"
+          "SUPER, backspace, hy3:makegroup, opposite, ephemeral"
           "SUPER, R, exec, flameshot gui"
           "SUPERSHIFT, delete, exec, scratchpad"
           "SUPER, delete, exec, scratchpad -g"
