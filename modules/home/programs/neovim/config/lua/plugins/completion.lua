@@ -10,22 +10,28 @@ return {
 			trigger = { signature_help = { enabled = true } },
 			keymap = {
 				accept = "<Cr>",
-				select_prev = { "<S-Tab>", "<Up>", "<C-j>" },
-				select_next = { "<Tab>", "<Down>", "<C-k>" },
+				select_prev = { "<S-Tab>", "<Up>" },
+				select_next = { "<Tab>", "<Down>" },
+				scroll_documentation_down = "<C-j>",
+				scroll_documentation_up = "<C-k>",
 			},
 			windows = {
-				autocomplete = { border = "rounded" },
+				autocomplete = {
+					border = "rounded",
+					max_height = 15,
+				},
 				signature_help = { border = "rounded" },
 				documentation = {
 					border = "rounded",
-					auto_show_delay_ms = 100,
+					auto_show_delay_ms = 50,
+					max_width = 80,
 				},
 			},
 		},
 	},
 	-- Only used for cmdline completion, TODO: remove whonce blink supports this (contribute myself?)
 	{
-		"hrsh7th/nvim-cmp",
+		"iguanacucumber/magazine.nvim",
 		event = "VeryLazy",
 		dependencies = "hrsh7th/cmp-cmdline",
 		config = function()
