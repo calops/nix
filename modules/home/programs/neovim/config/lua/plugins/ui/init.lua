@@ -58,9 +58,7 @@ return {
 				long_message_to_split = true,
 				lsp_doc_border = true,
 			},
-			views = {
-				messages = { backend = "popup" },
-			},
+			views = { messages = { backend = "popup" } },
 			popupmenu = { enabled = true, backend = "nui" },
 			routes = {
 				{
@@ -76,6 +74,7 @@ return {
 				view_search = "virtualtext",
 				view_history = "messages",
 			},
+			lsp = { signature = { enabled = false } },
 		},
 	},
 	-- Better select dialog

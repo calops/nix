@@ -18,7 +18,7 @@ return {
 		incline.setup {
 			render = function(props)
 				local buftype = vim.bo[props.buf].buftype
-				local filename_modifier = vim.bo[props.buf].buftype == "help" and ":t" or ":."
+				local filename_modifier = buftype == "help" and ":t" or ":."
 				local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), filename_modifier)
 					or "[no name]"
 				local filetype = vim.bo[props.buf].filetype

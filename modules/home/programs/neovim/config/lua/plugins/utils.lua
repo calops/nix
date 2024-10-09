@@ -50,13 +50,19 @@ return {
 		cmd = "ToggleTerm",
 		keys = {
 			{
-				"<C-f>",
+				"<C-g>",
 				function() require("toggleterm").toggle(1, 0, "", "vertical") end,
 				desc = "Toggle floating terminal",
 				mode = { "n", "t" },
 			},
 			{
-				"<C-g>",
+				"<C-f>",
+				function() require("toggleterm").toggle(1, 0, "", "float") end,
+				desc = "Toggle floating terminal",
+				mode = { "n", "t" },
+			},
+			{
+				"<C-S-g>",
 				function() require("toggleterm").toggle(1, 0, "", "tab") end,
 				desc = "Open floating terminal",
 				mode = { "n", "t" },
@@ -64,8 +70,12 @@ return {
 		},
 		opts = {
 			direction = "vertical",
+			float_opts = { border = "rounded" },
 			size = function() return vim.o.columns * 0.3 end,
-			highlights = { Normal = { link = "Normal" } },
+			highlights = {
+				Normal = { link = "Normal" },
+				FloatBorder = { link = "TermFloatBorder" },
+			},
 			persist_mode = false,
 			on_open = function(term)
 				vim.wo[term.window].foldmethod = "manual"
