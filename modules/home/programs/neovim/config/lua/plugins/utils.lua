@@ -59,11 +59,7 @@ return {
 		opts = {
 			direction = "vertical",
 			size = function() return vim.o.columns * 0.3 end,
-			float_opts = { border = "rounded" },
-			highlights = {
-				FloatBorder = { link = "TermFloatBorder" },
-				Normal = { link = "Normal" },
-			},
+			highlights = { Normal = { link = "Normal" } },
 			persist_mode = false,
 			on_open = function(term)
 				vim.wo[term.window].foldmethod = "manual"
