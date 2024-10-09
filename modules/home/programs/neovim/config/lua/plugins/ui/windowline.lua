@@ -17,14 +17,20 @@ return {
 
 		incline.setup {
 			render = function(props)
-				local filename_modifier = vim.api.nvim_get_option_value("buftype", { buf = props.buf }) == "help"
-						and ":t"
-					or ":."
+				local buftype = vim.bo[props.buf].buftype
+				local filename_modifier = vim.bo[props.buf].buftype == "help" and ":t" or ":."
 				local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), filename_modifier)
 					or "[no name]"
-				local filetype = vim.api.nvim_get_option_value("filetype", { buf = props.buf })
-				local modified = vim.api.nvim_get_option_value("modified", { buf = props.buf })
+				local filetype = vim.bo[props.buf].filetype
+				local modified = vim.bo[props.buf].modified
 				local icon, icon_hl = require("mini.icons").get("filetype", filetype)
+
+				if buftype == "terminal" then
+					filename = vim.b[props.buf].term_title
+					icon = ""
+					icon_hl = "TermFloatBorder"
+				end
+
 				local icon_fg_color = format_color(colors.hl[icon_hl].fg)
 
 				local icon_color = {
@@ -76,7 +82,7 @@ return {
 
 			ignore = {
 				unlisted_buffers = false,
-				buftypes = function(_, buftype) return buftype ~= "" and buftype ~= "help" end,
+				buftypes = function(_, buftype) return buftype ~= "" and buftype ~= "help" and buftype ~= "terminal" end,
 			},
 
 			window = {

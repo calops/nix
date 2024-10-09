@@ -51,8 +51,14 @@ return {
 		keys = {
 			{
 				"<C-f>",
-				function() require("toggleterm").toggle() end,
+				function() require("toggleterm").toggle(1, 0, "", "vertical") end,
 				desc = "Toggle floating terminal",
+				mode = { "n", "t" },
+			},
+			{
+				"<C-g>",
+				function() require("toggleterm").toggle(1, 0, "", "tab") end,
+				desc = "Open floating terminal",
 				mode = { "n", "t" },
 			},
 		},
