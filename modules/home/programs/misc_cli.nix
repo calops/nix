@@ -15,7 +15,6 @@
       fclones
       fd
       rargs
-      ripgrep
       rm-improved
       sshfs
       xcp
@@ -62,6 +61,17 @@
     programs.zoxide = {
       enable = config.my.roles.terminal.enable;
       enableFishIntegration = true;
+    };
+
+    programs.ripgrep = {
+      enable = true;
+      package = pkgs.symlinkJoin {
+        name = "ripgrep-custom";
+        paths = [ pkgs.ripgrep-all ];
+        postBuild = ''
+          ln -s $out/bin/rga $out/bin/rg
+        '';
+      };
     };
   };
 }
