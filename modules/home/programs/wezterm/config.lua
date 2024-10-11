@@ -1,3 +1,5 @@
+---@diagnostic disable: undefined-field
+
 local nix = require("nix")
 local wezterm = require("wezterm")
 local act = wezterm.action

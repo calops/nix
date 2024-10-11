@@ -69,7 +69,16 @@ return {
 	{
 		"folke/lazydev.nvim",
 		ft = "lua",
-		opts = {},
+		dependencies = {
+			"justinsgithub/wezterm-types",
+			"Bilal2453/luvit-meta",
+		},
+		opts = {
+			library = {
+				{ path = "luvit-meta/library", words = { "vim%.uv" } },
+				{ path = "wezterm-types", mods = { "wezterm" } },
+			},
+		},
 	},
 	-- Rust-specific utilities and LSP configurations
 	{
