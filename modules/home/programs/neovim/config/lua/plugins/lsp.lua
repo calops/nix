@@ -13,7 +13,6 @@ return {
 			{ "K", vim.lsp.buf.hover, desc = "Show documentation" },
 			{ "H", function() vim.diagnostic.open_float { border = "rounded" } end, desc = "Show diagnostics" },
 			{ "<C-k>", vim.lsp.buf.signature_help, desc = "Interactive signature help" },
-			{ "<leader>a", vim.lsp.buf.code_action, desc = "Interactive list of code actions", mode = { "n", "v" } },
 			{
 				"<leader>i",
 				function()
@@ -65,6 +64,30 @@ return {
 				{ "<leader>r", group = "refactor", icon = "" },
 			}
 		end,
+	},
+	{
+		"rachartier/tiny-code-action.nvim",
+		dependencies = {
+			{ "nvim-lua/plenary.nvim" },
+			{ "nvim-telescope/telescope.nvim" },
+		},
+		keys = {
+			{
+				"<leader>a",
+				function() require("tiny-code-action").code_action() end,
+				desc = "Interactive list of code actions",
+			},
+		},
+		event = "LspAttach",
+		opts = {
+			backend = "vim", -- FIXME: delta is not rendering correctly
+			backend_opts = {
+				delta = {
+					header_lines_to_remove = 4,
+					args = { "--features", "nosidebyside" },
+				},
+			},
+		},
 	},
 	{
 		"folke/lazydev.nvim",

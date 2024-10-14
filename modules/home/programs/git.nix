@@ -15,10 +15,12 @@ in
       userName = "Rémi Labeyrie";
       userEmail = "calops@tocards.net";
       lfs.enable = true;
+
       signing = {
         signByDefault = true;
         key = "1FAB C23C 7766 D833 7C4D  C502 5357 919C 06FD 9147";
       };
+
       delta = {
         enable = true;
         options = {
@@ -27,6 +29,7 @@ in
           features = "catppuccin";
         };
       };
+
       aliases = {
         st = "status";
         ci = "commit";
@@ -40,6 +43,7 @@ in
         dv = ''! args=$@; shift $#; nvim -c "DiffviewOpen $args"'';
         db = ''! args=$@; shift $#; nvim -c "DiffviewOpen $(git merge-base --fork-point main)"'';
       };
+
       ignores = [
         ".aws"
         ".direnv"
@@ -56,6 +60,7 @@ in
         "tmp"
         "typings"
       ];
+
       extraConfig = {
         color.ui = "auto";
         core.whitespace = "-trailing-space";
@@ -118,6 +123,10 @@ in
           plus-emph-style = "syntax #475659";
           plus-style = "syntax #2b3436";
           syntax-theme = "catppuccin";
+        };
+
+        delta.nosidebyside = {
+          side-by-side = false;
         };
       };
     };
