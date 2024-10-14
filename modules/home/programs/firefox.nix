@@ -22,77 +22,85 @@ in
     programs.firefox = {
       enable = true;
       package = package;
-      profiles.default = {
-        name = "default";
-        id = 0;
-        isDefault = true;
-        extensions = [
-          addons.ublock-origin
-          addons.onepassword-password-manager
-          addons.bitwarden
-          addons.tridactyl
-          addons.reddit-enhancement-suite
-          addons.sidebery
-          addons.stylus
-          addons.sponsorblock
-          addons.firenvim
-        ];
-        search = {
-          default = "Google";
-          force = true;
-        };
-        userChrome =
-          # css
-          ''
-            .titlebar-buttonbox {
-              appearance: none !important;
-              margin-inline: 0 !important;
-              -moz-box-direction: reverse !important;
-              flex-direction: row-reverse !important;
-            }
-
-            tabs {
-              counter-reset: tab-counter;
-            }
-
-            #sidebar-header {
-              display: none;
-            }
-
-            #nav-bar {
-              box-shadow: 0 0 16px black !important;
-              z-index: 1;
-            }
-
-            #urlbar {
-              z-index: 2 !important;
-            }
-
-            @-moz-document url("chrome://browser/content/browser.xhtml"){
-              #browser {
-                overflow: hidden;
+      profiles = rec {
+        default = {
+          name = "default";
+          id = 0;
+          isDefault = true;
+          extensions = [
+            addons.ublock-origin
+            addons.onepassword-password-manager
+            addons.bitwarden
+            addons.tridactyl
+            addons.reddit-enhancement-suite
+            addons.sidebery
+            addons.stylus
+            addons.sponsorblock
+            addons.firenvim
+          ];
+          search = {
+            default = "Google";
+            force = true;
+          };
+          userChrome =
+            # css
+            ''
+              .titlebar-buttonbox {
+                appearance: none !important;
+                margin-inline: 0 !important;
+                -moz-box-direction: reverse !important;
+                flex-direction: row-reverse !important;
               }
 
-              #sidebar-splitter {
-                width: 1px !important;
+              tabs {
+                counter-reset: tab-counter;
               }
 
-              #sidebar-box {
-                box-shadow: 0 0 16px black;
-                position: relative;
+              #sidebar-header {
+                display: none;
+              }
+
+              #nav-bar {
+                box-shadow: 0 0 16px black !important;
                 z-index: 1;
               }
-            }
 
-            /* Default state: Set initial height to enable animation */
-            #main-window #titlebar { height: 3em !important; }
-            #main-window[uidensity="touch"] #titlebar { height: 3.35em !important; }
-            #main-window[uidensity="compact"] #titlebar { height: 2.7em !important; }
-            /* Hidden state: Hide native tabs strip */
-            #main-window[titlepreface*="[Sidebery]"] #titlebar { height: 0 !important; }
-            /* Hidden state: Fix z-index of active pinned tabs */
-            #main-window[titlepreface*="[Sidebery]"] #tabbrowser-tabs { z-index: 0 !important; }
-          '';
+              #urlbar {
+                z-index: 2 !important;
+              }
+
+              @-moz-document url("chrome://browser/content/browser.xhtml"){
+                #browser {
+                  overflow: hidden;
+                }
+
+                #sidebar-splitter {
+                  width: 1px !important;
+                }
+
+                #sidebar-box {
+                  box-shadow: 0 0 16px black;
+                  position: relative;
+                  z-index: 1;
+                }
+              }
+
+              /* Default state: Set initial height to enable animation */
+              #main-window #titlebar { height: 3em !important; }
+              #main-window[uidensity="touch"] #titlebar { height: 3.35em !important; }
+              #main-window[uidensity="compact"] #titlebar { height: 2.7em !important; }
+              /* Hidden state: Hide native tabs strip */
+              #main-window[titlepreface*="[Sidebery]"] #titlebar { height: 0 !important; }
+              /* Hidden state: Fix z-index of active pinned tabs */
+              #main-window[titlepreface*="[Sidebery]"] #tabbrowser-tabs { z-index: 0 !important; }
+            '';
+        };
+
+        gw = default // {
+          name = "gw";
+          id = 1;
+          isDefault = false;
+        };
       };
     };
 
