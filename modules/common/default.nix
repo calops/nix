@@ -18,8 +18,8 @@
       {
         enable = true;
         image = pkgs.fetchurl {
-          url = "https://user-images.githubusercontent.com/4097716/247954752-8c7f3db1-e6a3-4f77-9cc4-262b3d929c36.png";
-          sha256 = "sha256-O2AIOKMIgNwZ1/wEZyoVWiby6+FLrNWn9kiSw9rsOAI=";
+          url = "https://github.com/zhichaoh/catppuccin-wallpapers/blob/main/waves/wavy_lines_v02_5120x2880.png?raw=true";
+          hash = "sha256-aTl04D/3ei0BqRg0zx+0TGufarWSXdKIlDxqOY+Iqyw=";
         };
         autoEnable = true;
         polarity = config.my.colors.background;

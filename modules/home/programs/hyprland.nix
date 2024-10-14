@@ -24,7 +24,10 @@ in
       enable = true;
       xwayland.enable = true;
 
-      plugins = [ pkgs.hyprlandPlugins.hy3 ];
+      plugins = [
+        pkgs.hyprlandPlugins.hy3
+        pkgs.hyprlandPlugins.hypr-dynamic-cursors
+      ];
 
       settings = {
         env = lib.mkIf (nixosConfig.my.roles.nvidia.enable or false) [
@@ -33,6 +36,8 @@ in
           "NVD_BACKEND,direct"
           "ELECTRON_OZONE_PLATFORM_HINT,auto"
           "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+          "HYPRCURSOR_THEME,catppuccin-mocha-peach-cursors"
+          "HYPRCURSOR_SIZE,32"
         ];
 
         cursor.no_hardware_cursors = true;
@@ -56,11 +61,10 @@ in
         ];
 
         exec-once = [
-          #(lib.getExe pkgs.hyprpaper)
           (lib.getExe pkgs.hypridle)
           (lib.getExe config.programs.firefox.package)
-          "discord"
           (lib.getExe pkgs.pyprland)
+          "discord"
           "element-desktop"
         ];
 
@@ -236,17 +240,33 @@ in
       };
     };
 
-    xdg.configFile."hypr/hypridle.conf".text =
-      # hyprlang
-      ''
-        listener {
-            timeout = 900 # 15 minutes
-            on-timeout = ${lockCommand}
-        }
-      '';
+    services.hypridle = {
+      enable = true;
+      settings = {
+        general = {
+          after_sleep_cmd = "hyprctl dispatch dpms on";
+          ignore_dbus_inhibit = false;
+          lock_cmd = lockCommand;
+        };
+
+        listener = [
+          {
+            timeout = 900;
+            on-timeout = lockCommand;
+          }
+          {
+            timeout = 1200;
+            on-timeout = "hyprctl dispatch dpms off";
+            on-resume = "hyprctl dispatch dpms on";
+          }
+        ];
+      };
+    };
 
     xdg.configFile."hypr/pyprland.toml".source = pkgs.writers.writeTOML "pyprland.toml" {
-      pyprland.plugins = [ "scratchpads" ];
+      pyprland.plugins = [
+        "scratchpads"
+      ];
 
       scratchpads.term = {
         animation = "fromTop";
@@ -268,6 +288,7 @@ in
         hypr.scratchpad
         pkgs.my.hyprfreeze
         pkgs.pyprland
+        pkgs.catppuccin-cursors.mochaPeach
       ];
   };
 }
