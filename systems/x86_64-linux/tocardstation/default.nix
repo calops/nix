@@ -1,7 +1,8 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 {
   imports = [ ./hardware.nix ];
 
+  networking.hostName = "tocardstation";
   time.timeZone = "Europe/Paris";
 
   my.configDir = "/home/calops/nix";
@@ -14,12 +15,6 @@
     bluetooth.enable = true;
     #monitoring.enable = true;
   };
-
-  hardware.xpadneo.enable = true;
-
-  programs.coolercontrol.enable = true;
-
-  virtualisation.docker.enable = true;
 
   boot.initrd.luks.devices.rootDrive.device = "/dev/disk/by-uuid/ab146bd7-2e99-4aa7-a115-040df4acc43d";
   boot.supportedFilesystems = [ "ntfs" ];
@@ -38,32 +33,6 @@
       fsType = "ntfs";
     };
   };
-
-  networking = {
-    hostName = "tocardstation";
-    networkmanager.enable = true;
-    nameservers = [
-      "1.1.1.1"
-      "9.9.9.9"
-    ];
-  };
-
-  i18n = {
-    defaultLocale = "en_US.UTF-8";
-    extraLocaleSettings = {
-      LC_ADDRESS = "fr_FR.UTF-8";
-      LC_IDENTIFICATION = "fr_FR.UTF-8";
-      LC_MEASUREMENT = "fr_FR.UTF-8";
-      LC_MONETARY = "fr_FR.UTF-8";
-      LC_NAME = "fr_FR.UTF-8";
-      LC_NUMERIC = "fr_FR.UTF-8";
-      LC_PAPER = "fr_FR.UTF-8";
-      LC_TELEPHONE = "fr_FR.UTF-8";
-      LC_TIME = "fr_FR.UTF-8";
-    };
-  };
-
-  security.rtkit.enable = true;
 
   users.users.calops = {
     isNormalUser = true;

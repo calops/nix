@@ -26,6 +26,9 @@
   config = {
     system.stateVersion = "24.11";
     hardware.enableAllFirmware = true;
+    security.rtkit.enable = true;
+    virtualisation.docker.enable = true;
+    stylix.homeManagerIntegration.autoImport = false;
 
     nix = {
       optimise.automatic = true;
@@ -48,7 +51,28 @@
       earlySetup = true;
     };
 
-    stylix.homeManagerIntegration.autoImport = false;
+    networking = {
+      networkmanager.enable = true;
+      nameservers = [
+        "1.1.1.1"
+        "9.9.9.9"
+      ];
+    };
+
+    i18n = {
+      defaultLocale = "en_US.UTF-8";
+      extraLocaleSettings = {
+        LC_ADDRESS = "fr_FR.UTF-8";
+        LC_IDENTIFICATION = "fr_FR.UTF-8";
+        LC_MEASUREMENT = "fr_FR.UTF-8";
+        LC_MONETARY = "fr_FR.UTF-8";
+        LC_NAME = "fr_FR.UTF-8";
+        LC_NUMERIC = "fr_FR.UTF-8";
+        LC_PAPER = "fr_FR.UTF-8";
+        LC_TELEPHONE = "fr_FR.UTF-8";
+        LC_TIME = "fr_FR.UTF-8";
+      };
+    };
 
     services.udisks2.enable = true;
     services.openssh.enable = true;

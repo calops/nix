@@ -9,6 +9,7 @@
 
   config = lib.mkIf config.my.roles.gaming.enable {
     programs.gamemode.enable = true;
+    programs.coolercontrol.enable = true;
 
     programs.steam = {
       enable = true;
@@ -19,5 +20,7 @@
       extraPackages = [ pkgs.mangohud ];
       extraPackages32 = [ pkgs.mangohud ];
     };
+
+    hardware.xpadneo.enable = true; # Xbox One controller driver
   };
 }
