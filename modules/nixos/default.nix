@@ -9,7 +9,6 @@
   imports = [
     ../common
     inputs.stylix.nixosModules.stylix
-    inputs.nh-darwin.nixosModules.default
     inputs.madness.nixosModules.madness
     # inputs.lix.nixosModules.default
   ] ++ lib.snowfall.fs.get-non-default-nix-files ./.;
@@ -88,7 +87,7 @@
       enable = true;
       clean.enable = true;
       clean.extraArgs = "--keep-since 4d --keep 3";
-      os.flake = config.my.configDir;
+      flake = config.my.configDir;
     };
   };
 }
