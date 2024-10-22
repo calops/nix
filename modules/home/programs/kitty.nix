@@ -8,10 +8,10 @@ in
     settings = {
       font_size = cfg.fonts.sizes.terminal;
       font_family = cfg.fonts.monospace.name;
-      # bold_font = "${cfg.fonts.monospace.name} Bold";
-      # italic_font = "${cfg.fonts.monospace.name} Italic";
-      # bold_italic_font = "${cfg.fonts.monospace.name} Bold Italic";
       undercurl_style = "thick-sparse";
+      # TODO: uncomment when next release is out
+      # cursor_trail = 3;
+
       "modify_font underline_position" = "+2";
       "modify_font underline_thickness" = "2px";
     };

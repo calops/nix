@@ -42,7 +42,7 @@
         ll = "ls -lH --time-style=long-iso";
         la = "ll -a";
         lt = "ll -T";
-        nh = "nh_darwin";
+        nh = lib.mkIf pkgs.stdenv.isDarwin "nh_darwin";
       };
       functions = {
         dev = ''nix develop --impure "$HOME/nix#$argv[1]" $argv[2..-1] --command "$SHELL"'';
