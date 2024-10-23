@@ -63,15 +63,6 @@
       enableFishIntegration = true;
     };
 
-    programs.ripgrep = {
-      enable = true;
-      package = pkgs.symlinkJoin {
-        name = "ripgrep-custom";
-        paths = [ pkgs.ripgrep-all ];
-        postBuild = ''
-          ln -s $out/bin/rga $out/bin/rg
-        '';
-      };
-    };
+    programs.ripgrep.enable = true;
   };
 }
