@@ -55,7 +55,7 @@
       };
     };
 
-    programs.nh = {
+    programs.nh = lib.mkIf (config.my.configType == "standalone") {
       enable = true;
       flake = config.my.configDir;
     };

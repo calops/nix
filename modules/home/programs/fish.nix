@@ -8,6 +8,7 @@
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.fish = {
       enable = true;
+
       shellAbbrs = {
         nv = "nvim";
         cat = "bat";
@@ -36,6 +37,7 @@
         sr = "steam-run";
         devinit = "nix flake init --template github:cachix/devenv";
       };
+
       shellAliases = {
         copy = "xclip -selection clipboard";
         ls = "eza";
@@ -44,6 +46,7 @@
         lt = "ll -T";
         nh = lib.mkIf pkgs.stdenv.isDarwin "nh_darwin";
       };
+
       functions = {
         dev = ''nix develop --impure "$HOME/nix#$argv[1]" $argv[2..-1] --command "$SHELL"'';
         run = ''nix run nixpkgs#"$argv[1]" -- $argv[2..-1]'';
@@ -51,6 +54,7 @@
         runi = ''nix run --impure nixpkgs#"$argv[1]" -- $argv[2..-1]'';
         gc = ''git commit -m "$argv"'';
       };
+
       interactiveShellInit = ''
         set fish_greeting
 
