@@ -11,7 +11,7 @@ let
   configFile =
     pkgs.writeText "settings.yaml" # yaml
       ''
-        theme: Catppuccin Mocha
+        theme: Custom Style
         sort:
           by: NAME
           isReversed: false

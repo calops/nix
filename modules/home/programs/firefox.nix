@@ -15,7 +15,12 @@ let
         # '';
       }
     else
-      pkgs.firefox-beta-bin.override { nativeMessagingHosts = [ pkgs.tridactyl-native ]; };
+      pkgs.firefox-beta-bin.override {
+        nativeMessagingHosts = [
+          pkgs.tridactyl-native
+          pkgs.vdhcoapp
+        ];
+      };
 in
 {
   config = lib.mkIf config.my.roles.graphical.enable {
@@ -136,5 +141,7 @@ in
     home.sessionVariables = lib.mkIf pkgs.stdenv.isLinux {
       MOZ_ENABLE_WAYLAND = 1;
     };
+
+    home.packages = [ pkgs.vdhcoapp ];
   };
 }

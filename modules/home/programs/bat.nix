@@ -12,7 +12,7 @@
         theme = "catppuccin";
         pager = "--RAW-CONTROL-CHARS --quit-if-one-screen --mouse";
         style = "plain";
-        color = "always";
+        color = "auto";
         italic-text = "always";
       };
       extraPackages = with pkgs.bat-extras; [
