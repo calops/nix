@@ -28,6 +28,7 @@
     security.rtkit.enable = true;
     virtualisation.docker.enable = true;
     stylix.homeManagerIntegration.autoImport = false;
+    home-manager.backupFileExtension = "hm-backup";
 
     nix = {
       optimise.automatic = true;

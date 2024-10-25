@@ -42,6 +42,7 @@ in
             addons.stylus
             addons.sponsorblock
             addons.firenvim
+            addons.video-downloadhelper
           ];
           search = {
             default = "Google";
