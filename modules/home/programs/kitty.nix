@@ -1,19 +1,26 @@
-{ config, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 let
   cfg = config.my.roles.graphical;
 in
 {
   programs.kitty = {
     enable = cfg.enable && cfg.terminal == "kitty";
+    package = pkgs.kitty-nightly;
     settings = {
       font_size = cfg.fonts.sizes.terminal;
       font_family = cfg.fonts.monospace.name;
       undercurl_style = "thick-sparse";
-      # TODO: uncomment when next release is out
-      # cursor_trail = 3;
+      cursor_trail = 3;
+      hide_window_decorations = "titlebar-only";
+      cursor_blink_interval = "-1 ease-in-out";
 
       "modify_font underline_position" = "+2";
       "modify_font underline_thickness" = "2px";
+      "modify_font cell_width" = "${toString (cfg.fonts.sizes.terminalCell.width * 100)}%";
     };
     keybindings = {
       "ctrl+tab" = "no_op";

@@ -142,7 +142,5 @@ in
     home.sessionVariables = lib.mkIf pkgs.stdenv.isLinux {
       MOZ_ENABLE_WAYLAND = 1;
     };
-
-    home.packages = [ pkgs.vdhcoapp ];
   };
 }

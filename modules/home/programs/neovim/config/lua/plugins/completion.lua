@@ -19,7 +19,7 @@ return {
 				autocomplete = {
 					border = "rounded",
 					max_height = 15,
-					preselect = false,
+					selection = "manual",
 				},
 				signature_help = { border = "rounded" },
 				documentation = {

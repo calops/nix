@@ -7,6 +7,7 @@
   darwin,
   firefox-darwin,
   devenv,
+  nightly-tools,
   ...
 }:
 self: super:
@@ -23,4 +24,5 @@ self: super:
 // (fenix.overlays.default self super)
 // (darwin.overlays.default self super)
 // (devenv.overlays.default self super)
+// (nightly-tools.overlays.default self super)
 // (super.lib.optionalAttrs super.stdenv.isDarwin (firefox-darwin.overlay self super))

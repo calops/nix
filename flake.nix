@@ -5,6 +5,9 @@
     # Upstream nixpkgs
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    # Nightly versions of various packages
+    nightly-tools.url = "github:calops/nightly-tools";
+
     # Personal fork of nixpkgs
     myNixpkgs.url = "github:calops/nixpkgs";
 

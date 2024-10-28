@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   my.roles.terminal.enable = true;
   my.roles.graphical = {
@@ -6,6 +6,7 @@
     fonts.sizes.terminal = 12;
     installAllFonts = true;
   };
+  programs.kitty.enable = lib.mkForce true;
 
   programs.fish.plugins = [
     {

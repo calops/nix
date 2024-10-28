@@ -44,7 +44,6 @@
         ll = "ls -lH --time-style=long-iso";
         la = "ll -a";
         lt = "ll -T";
-        nh = lib.mkIf pkgs.stdenv.isDarwin "nh_darwin";
       };
 
       functions = {
