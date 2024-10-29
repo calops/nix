@@ -9,7 +9,7 @@ in
 {
   programs.kitty = {
     enable = cfg.enable && cfg.terminal == "kitty";
-    package = pkgs.kitty-nightly;
+    package = pkgs.nightly.kitty;
     settings = {
       font_size = cfg.fonts.sizes.terminal;
       font_family = cfg.fonts.monospace.name;

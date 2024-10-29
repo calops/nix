@@ -27,7 +27,7 @@ return {
 
 		-- LSP diagnostics
 		{
-			provider = function(self) return (self.severity and diag_utils.sign(self.severity) .. " " or "  ") end,
+			provider = function(self) return (self.severity and diag_utils.sign(self.severity) or "  ") end,
 			condition = function() return vim.v.virtnum == 0 end,
 		},
 
