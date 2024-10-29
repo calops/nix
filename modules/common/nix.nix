@@ -14,6 +14,7 @@
       "https://devenv.cachix.org"
       "https://calops.cachix.org"
       "https://cache.garnix.io"
+      "https://nightly-tools.cachix.org"
     ];
 
     extra-trusted-public-keys = [
@@ -23,6 +24,7 @@
       "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
       "calops.cachix.org-1:6RTG80il2oS2ECFeG2QubG+mvD9OJc1s6Lm9JGAFcM0="
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "nightly-tools.cachix.org-1:UDM6zVPkMMG1F5s59vD4Je9WJA0SjGPI5P2V+dhZo8Y="
     ];
 
     trusted-users = [
