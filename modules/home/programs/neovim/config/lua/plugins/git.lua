@@ -103,5 +103,8 @@ return {
 		},
 		opts = {},
 	},
-	{ "andrewradev/linediff.vim" },
+	{
+		"andrewradev/linediff.vim",
+		cmd = { "Linediff" },
+	},
 }
