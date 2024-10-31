@@ -8,12 +8,6 @@
     # Nightly versions of various packages
     nightly-tools.url = "github:calops/nightly-tools";
 
-    # Personal fork of nixpkgs
-    myNixpkgs.url = "github:calops/nixpkgs";
-
-    # Neovim nightly packages, cached in nix-community cachix
-    neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-
     # Nix language server
     nixd.url = "github:nix-community/nixd";
 

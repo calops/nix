@@ -21,6 +21,7 @@ in
     programs.neovim = {
       enable = true;
       defaultEditor = true;
+      package = pkgs.nightly.neovim;
       extraPackages = [
         # Formatters
         pkgs.nixfmt-rfc-style # Nix
