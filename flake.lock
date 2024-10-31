@@ -1465,6 +1465,22 @@
         "type": "github"
       }
     },
+    "kitty": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1730349458,
+        "narHash": "sha256-HgjTxlLptYquenkhbmxyx4mn/ooOPedynFZlbb6tnVw=",
+        "owner": "kovidgoyal",
+        "repo": "kitty",
+        "rev": "15b5a9cfbd2057c6a74ff5ae9374ebdb34c5fe32",
+        "type": "github"
+      },
+      "original": {
+        "owner": "kovidgoyal",
+        "repo": "kitty",
+        "type": "github"
+      }
+    },
     "libgit2": {
       "flake": false,
       "locked": {
@@ -1609,14 +1625,15 @@
     "nightly-tools": {
       "inputs": {
         "flake-parts": "flake-parts_9",
+        "kitty": "kitty",
         "nixpkgs": "nixpkgs_14"
       },
       "locked": {
-        "lastModified": 1730126180,
-        "narHash": "sha256-tXqe7gShQo6wlEljaQKonsxh5o8t5Fb5l1ISIPXV4Zs=",
+        "lastModified": 1730375052,
+        "narHash": "sha256-JkVztzaMea/tdt2qFqYWv+CSzMgR7TkA25Jh55joOs0=",
         "owner": "calops",
         "repo": "nightly-tools",
-        "rev": "4bb94ebff4f08a699c6838492a391d21f2698523",
+        "rev": "0c9e26f5f2d5b01f9dbe3a1cf7302f6fb2bef18a",
         "type": "github"
       },
       "original": {
@@ -2030,11 +2047,11 @@
     },
     "nixpkgs_14": {
       "locked": {
-        "lastModified": 1729880355,
-        "narHash": "sha256-RP+OQ6koQQLX5nw0NmcDrzvGL8HDLnyXt/jHhL1jwjM=",
+        "lastModified": 1730200266,
+        "narHash": "sha256-l253w0XMT8nWHGXuXqyiIC/bMvh1VRszGXgdpQlfhvU=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "18536bf04cd71abd345f9579158841376fdd0c5a",
+        "rev": "807e9154dcb16384b1b765ebe9cd2bba2ac287fd",
         "type": "github"
       },
       "original": {
