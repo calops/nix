@@ -9,7 +9,6 @@
   config = lib.mkIf config.my.roles.graphical.enable {
     programs.neovide = {
       enable = true;
-      # FIXME: no idea why i can't use the nightly overlay here
       package = inputs.nightly-tools.packages.${pkgs.system}.neovide;
       settings =
         let

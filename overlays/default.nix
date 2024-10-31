@@ -5,7 +5,6 @@
   darwin,
   firefox-darwin,
   devenv,
-  nightly-tools,
   ...
 }:
 self: super:
@@ -14,8 +13,6 @@ self: super:
     pkgs = super;
     nurpkgs = super;
   };
-
-  nightly = nightly-tools.overlays.default self super;
 }
 // (nixd.overlays.default self super)
 // (fenix.overlays.default self super)
