@@ -51,15 +51,7 @@
       earlySetup = true;
     };
 
-    networking = {
-      networkmanager.enable = true;
-      nameservers = lib.mkForce [
-        "1.1.1.1"
-        "9.9.9.9"
-        "2606:4700:4700::1111"
-        "2606:4700:4700::1001"
-      ];
-    };
+    networking.networkmanager.enable = true;
 
     i18n = {
       defaultLocale = "en_US.UTF-8";

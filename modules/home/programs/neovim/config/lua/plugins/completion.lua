@@ -5,9 +5,21 @@ return {
 		event = "VeryLazy",
 		dependencies = "rafamadriz/friendly-snippets",
 		build = "cargo build --release",
+
+		---@module 'blink.cmp'
+		---@type blink.cmp.Config
 		opts = {
 			highlight = { use_nvim_cmp_as_default = true },
 			trigger = { signature_help = { enabled = true } },
+			sources = {
+				completion = {
+					enabled_providers = { "lsp", "path", "snippets", "buffer", "lazydev" },
+				},
+				providers = {
+					lsp = { fallback_for = { "lazydev" } },
+					lazydev = { name = "LazyDev", module = "lazydev.integrations.blink" },
+				},
+			},
 			keymap = {
 				accept = "<Cr>",
 				select_prev = { "<S-Tab>", "<Up>" },

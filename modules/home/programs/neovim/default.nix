@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 let
@@ -21,7 +22,7 @@ in
     programs.neovim = {
       enable = true;
       defaultEditor = true;
-      package = pkgs.nightly.neovim;
+      package = inputs.nightly-tools.packages.${pkgs.system}.neovim;
       extraPackages = [
         # Formatters
         pkgs.nixfmt-rfc-style # Nix
