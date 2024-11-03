@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 {
@@ -25,7 +26,7 @@
       yq
       pastel
       jaq
-      devenv
+      inputs.devenv.packages.${pkgs.system}.devenv
     ];
 
     programs.nix-index-database.comma.enable = true;

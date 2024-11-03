@@ -35,7 +35,7 @@ in
         # LSP
         pkgs.lua-language-server
         pkgs.my.logseqlsp
-        pkgs.nixd
+        inputs.nightly-tools.packages.${pkgs.system}.nixd
         pkgs.nil
         rustToolchain
 

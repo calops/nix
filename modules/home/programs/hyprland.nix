@@ -63,7 +63,7 @@ in
         exec-once = [
           (lib.getExe pkgs.hypridle)
           (lib.getExe config.programs.firefox.package)
-          (lib.getExe pkgs.pyprland)
+          # (lib.getExe pkgs.pyprland)
           "discord"
           "element-desktop"
         ];
@@ -287,7 +287,7 @@ in
         hypr.hyprprop
         hypr.scratchpad
         pkgs.my.hyprfreeze
-        pkgs.pyprland
+        # pkgs.pyprland
         pkgs.catppuccin-cursors.mochaPeach
       ];
   };

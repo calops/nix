@@ -8,9 +8,6 @@
     # Nightly versions of various packages
     nightly-tools.url = "github:calops/nightly-tools";
 
-    # Nix language server
-    nixd.url = "github:nix-community/nixd";
-
     # Theming framework for nixos and home-manager
     stylix.url = "github:danth/stylix";
 

@@ -16,7 +16,6 @@ in
 
   config = lib.mkIf config.my.roles.gaming.enable {
     home.packages = [
-      pkgs.gamehub
       pkgs.protonup-qt
       pkgs.lutris
     ];
