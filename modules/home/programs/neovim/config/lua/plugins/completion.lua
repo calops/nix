@@ -22,12 +22,12 @@ return {
 				---@diagnostic disable-next-line: assign-type-mismatch
 				preset = "default",
 				["<Cr>"] = { "accept", "fallback" },
-				["<S-Tab>"] = { "select_prev" },
-				["<Tab>"] = { "select_next" },
-				["<Up>"] = { "select_prev" },
-				["<Down>"] = { "select_next" },
-				["<C-j>"] = { "scroll_documentation_down" },
-				["<C-k>"] = { "scroll_documentation_up" },
+				["<S-Tab>"] = { "select_prev", "fallback" },
+				["<Tab>"] = { "select_next", "fallback" },
+				["<Up>"] = { "select_prev", "fallback" },
+				["<Down>"] = { "select_next", "fallback" },
+				["<C-j>"] = { "scroll_documentation_down", "fallback" },
+				["<C-k>"] = { "scroll_documentation_up", "fallback" },
 			},
 			windows = {
 				autocomplete = {
