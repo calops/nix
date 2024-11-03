@@ -131,7 +131,6 @@ return {
 		event = "VeryLazy",
 		config = function()
 			local hipatterns = require("mini.hipatterns")
-			local palette = colors.palette()
 			local palette_patterns = {}
 			local palette_highlights = {}
 
