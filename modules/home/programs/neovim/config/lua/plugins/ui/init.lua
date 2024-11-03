@@ -1,4 +1,5 @@
 local colors = require("core.colors")
+local palette = colors.palette()
 
 return {
 	-- TUI
@@ -88,22 +89,19 @@ return {
 	},
 	-- Context-aware indentation lines
 	{
-		"lukas-reineke/indent-blankline.nvim",
-		event = "BufRead",
-		main = "ibl",
+		"shellRaining/hlchunk.nvim",
+		event = { "BufReadPre", "BufNewFile" },
 		opts = {
-			indent = {
-				char = "▎",
-				tab_char = "▎",
-			},
-			scope = {
-				show_start = false,
-				show_end = false,
-				include = {
-					node_type = {
-						lua = { "table_constructor" },
-						nix = { "attrset_expression", "list_expression" },
-					},
+			indent = { enable = true },
+			chunk = {
+				enable = true,
+				delay = 10,
+				duration = 100,
+				textobject = "ic",
+				chars = { right_arrow = "▶" },
+				style = {
+					colors.darken(palette.mauve, 0.7),
+					palette.red,
 				},
 			},
 		},

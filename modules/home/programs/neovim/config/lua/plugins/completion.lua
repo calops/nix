@@ -12,20 +12,22 @@ return {
 			highlight = { use_nvim_cmp_as_default = true },
 			trigger = { signature_help = { enabled = true } },
 			sources = {
-				completion = {
-					enabled_providers = { "lsp", "path", "snippets", "buffer", "lazydev" },
-				},
+				completion = { enabled_providers = { "lsp", "path", "snippets", "buffer", "lazydev" } },
 				providers = {
 					lsp = { fallback_for = { "lazydev" } },
 					lazydev = { name = "LazyDev", module = "lazydev.integrations.blink" },
 				},
 			},
 			keymap = {
-				accept = "<Cr>",
-				select_prev = { "<S-Tab>", "<Up>" },
-				select_next = { "<Tab>", "<Down>" },
-				scroll_documentation_down = "<C-j>",
-				scroll_documentation_up = "<C-k>",
+				---@diagnostic disable-next-line: assign-type-mismatch
+				preset = "default",
+				["<Cr>"] = { "accept", "fallback" },
+				["<S-Tab>"] = { "select_prev" },
+				["<Tab>"] = { "select_next" },
+				["<Up>"] = { "select_prev" },
+				["<Down>"] = { "select_next" },
+				["<C-j>"] = { "scroll_documentation_down" },
+				["<C-k>"] = { "scroll_documentation_up" },
 			},
 			windows = {
 				autocomplete = {
