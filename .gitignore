@@ -1,3 +1,4 @@
 .nixd.json
 .luarc.json
 node_modules
+.devenv

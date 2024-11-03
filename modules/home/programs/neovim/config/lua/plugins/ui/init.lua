@@ -94,9 +94,9 @@ return {
 		opts = {
 			indent = { enable = true },
 			chunk = {
+				animate = false,
 				enable = true,
 				delay = 10,
-				duration = 100,
 				textobject = "ic",
 				chars = { right_arrow = "▶" },
 				style = {

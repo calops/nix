@@ -1,6 +1,6 @@
 name: "Build configurations"
 on:
-    push:
+    workflow_dispatch:
 jobs:
     build-linux:
         runs-on: ubuntu-latest
