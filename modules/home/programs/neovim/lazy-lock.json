@@ -20,6 +20,7 @@
   "heirline.nvim": { "branch": "master", "commit": "7a79753c1a42c3f52e89a6c42429e7f871e560cd" },
   "hlchunk.nvim": { "branch": "main", "commit": "ba6e2347177fec8ec6af4ae26d11a468c9e0ca72" },
   "incline.nvim": { "branch": "main", "commit": "16fc9c073e3ea4175b66ad94375df6d73fc114c0" },
+  "indent-blankline.nvim": { "branch": "master", "commit": "04e44b09ee3ff189c69ab082edac1ef7ae2e256c" },
   "lazydev.nvim": { "branch": "main", "commit": "d5800897d9180cea800023f2429bce0a94ed6064" },
   "linediff.vim": { "branch": "main", "commit": "ddae71ef5f94775d101c1c70032ebe8799f32745" },
   "lsp_lines.nvim": { "branch": "main", "commit": "7d9e2748b61bff6ebba6e30adbc7173ccf21c055" },

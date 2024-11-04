@@ -95,6 +95,7 @@ return {
 	-- Context-aware indentation lines
 	{
 		"shellRaining/hlchunk.nvim",
+		enabled = true,
 		event = { "BufReadPre", "BufNewFile" },
 		opts = {
 			indent = { enable = true },
@@ -107,6 +108,28 @@ return {
 				style = {
 					colors.darken(palette.mauve, 0.7),
 					palette.red,
+				},
+			},
+		},
+	},
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		enabled = false,
+		event = "BufRead",
+		main = "ibl",
+		opts = {
+			indent = {
+				-- char = "▎",
+				tab_char = "▎",
+			},
+			scope = {
+				show_start = false,
+				show_end = false,
+				include = {
+					node_type = {
+						lua = { "table_constructor" },
+						nix = { "attrset_expression", "list_expression" },
+					},
 				},
 			},
 		},

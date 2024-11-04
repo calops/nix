@@ -10,13 +10,14 @@
       };
     };
 
-    xdg.configFile."zellij/layouts/default.kdl".text = ''
-      layout {
-        pane borderless=true
-        pane size=1 borderless=true {
-            plugin location="zellij:compact-bar"
+    xdg.configFile."zellij/layouts/default.kdl".text = # kdl
+      ''
+        layout {
+          pane borderless=true
+          pane size=1 borderless=true {
+              plugin location="zellij:compact-bar"
+          }
         }
-      }
-    '';
+      '';
   };
 }
