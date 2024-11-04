@@ -55,11 +55,17 @@ return {
 		opts = {
 			presets = {
 				bottom_search = false,
-				command_palette = true,
-				long_message_to_split = true,
 				lsp_doc_border = true,
 			},
-			views = { messages = { backend = "popup" } },
+			views = {
+				messages = { backend = "popup" },
+				hover = {
+					border = {
+						style = "rounded",
+					},
+					position = { row = 2, col = 2 },
+				},
+			},
 			popupmenu = { enabled = true, backend = "nui" },
 			routes = {
 				{
@@ -75,7 +81,13 @@ return {
 				view_search = "virtualtext",
 				view_history = "messages",
 			},
-			lsp = { signature = { enabled = false } },
+			lsp = {
+				override = {
+					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+					["vim.lsp.util.stylize_markdown"] = true,
+				},
+				signature = { enabled = false }, -- Handled by blink
+			},
 		},
 	},
 	-- Better select dialog
@@ -94,9 +106,9 @@ return {
 		opts = {
 			indent = { enable = true },
 			chunk = {
-				animate = false,
 				enable = true,
 				delay = 10,
+				duration = 0,
 				textobject = "ic",
 				chars = { right_arrow = "▶" },
 				style = {

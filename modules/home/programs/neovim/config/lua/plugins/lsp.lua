@@ -10,7 +10,7 @@ return {
 			"folke/neoconf.nvim",
 		},
 		keys = {
-			{ "K", vim.lsp.buf.hover, desc = "Show documentation" },
+			{ "K", require("noice.lsp").hover, desc = "Show documentation" },
 			{ "H", function() vim.diagnostic.open_float { border = "rounded" } end, desc = "Show diagnostics" },
 			{ "<C-k>", vim.lsp.buf.signature_help, desc = "Interactive signature help" },
 			{
