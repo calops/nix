@@ -56,16 +56,9 @@ return {
 			presets = {
 				bottom_search = false,
 				lsp_doc_border = true,
+				command_palette = true,
 			},
-			views = {
-				messages = { backend = "popup" },
-				hover = {
-					border = {
-						style = "rounded",
-					},
-					position = { row = 2, col = 2 },
-				},
-			},
+			views = { messages = { backend = "popup" } },
 			popupmenu = { enabled = true, backend = "nui" },
 			routes = {
 				{
