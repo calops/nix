@@ -34,7 +34,6 @@
 
     environment.systemPackages = [ pkgs.raycast ];
     environment.shells = [ pkgs.fish ];
-    environment.loginShell = pkgs.fish;
     programs.fish.enable = true;
     homebrew.enable = true;
     security.pam.enableSudoTouchIdAuth = true;

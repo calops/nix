@@ -248,7 +248,7 @@ local tabs = {
 						end
 						table.insert(diag_pills, {
 							provider = diags.sign(severity),
-							hl = { fg = compute_icon_color(string.format("#%x", diags.sign_hl(severity).fg)) },
+							hl = { fg = compute_icon_color(string.format("#%06x", diags.sign_hl(severity).fg)) },
 						})
 					end
 				end

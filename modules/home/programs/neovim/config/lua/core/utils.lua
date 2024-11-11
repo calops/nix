@@ -53,9 +53,11 @@ function CachedDict:new(cacher)
 					return hls._cache[group]
 				end
 			end
+
 			if not table._cache[key] then
 				table._cache[key] = cacher(key)
 			end
+
 			return table._cache[key]
 		end,
 	})

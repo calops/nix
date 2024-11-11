@@ -7,9 +7,10 @@ return {
 		init = function(self)
 			self.bufnr = vim.fn.bufnr()
 			self.severity = (diag_utils.buffer_diags[self.bufnr] or {})[vim.v.lnum]
+			local is_cursor_line = vim.v.lnum == vim.api.nvim_win_get_cursor(0)[1]
 
-			if require("heirline.conditions").is_active() and vim.v.lnum == vim.api.nvim_win_get_cursor(0)[1] then
-				self.hl = color_utils.hl:load("CursorLineNr")
+			if require("heirline.conditions").is_active() and is_cursor_line then
+				self.hl = color_utils.hl.CursorLineNr
 			else
 				self.hl = color_utils.hl.LineNr
 			end
@@ -18,7 +19,7 @@ return {
 				self.hl = diag_utils.sign_hl(self.severity)
 			end
 
-			if vim.v.virtnum ~= 0 then
+			if vim.v.virtnum ~= 0 and not is_cursor_line then
 				self.hl = color_utils.hl.LineNr
 			end
 

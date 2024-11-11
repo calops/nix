@@ -9,7 +9,11 @@ let
 in
 {
   config = lib.mkIf config.my.roles.terminal.enable {
-    home.packages = [ pkgs.git-crypt ];
+    home.packages = [
+      pkgs.git-crypt
+      pkgs.lazygit
+    ];
+
     programs.git = {
       enable = true;
       userName = "Rémi Labeyrie";

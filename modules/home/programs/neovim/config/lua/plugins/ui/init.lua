@@ -1,5 +1,5 @@
+local utils = require("core.utils")
 local colors = require("core.colors")
-local palette = colors.palette()
 
 return {
 	-- TUI
@@ -50,7 +50,6 @@ return {
 		lazy = false,
 		keys = {
 			{ "<leader><leader>", ":noh<CR>", desc = "Hide search highlights" },
-			{ "<leader>k", ":Noice dismiss<CR>", desc = "Dismiss notifications" },
 		},
 		opts = {
 			presets = {
@@ -94,32 +93,14 @@ return {
 	},
 	-- Context-aware indentation lines
 	{
-		"shellRaining/hlchunk.nvim",
-		enabled = true,
-		event = { "BufReadPre", "BufNewFile" },
-		opts = {
-			indent = { enable = true },
-			chunk = {
-				enable = true,
-				delay = 10,
-				duration = 0,
-				textobject = "ic",
-				chars = { right_arrow = "▶" },
-				style = {
-					colors.darken(palette.mauve, 0.7),
-					palette.red,
-				},
-			},
-		},
-	},
-	{
 		"lukas-reineke/indent-blankline.nvim",
-		enabled = false,
+		commit = "e7a4442e055ec953311e77791546238d1eaae507", -- FIXME: unpin once solved upstream
+		enabled = true,
 		event = "BufRead",
 		main = "ibl",
 		opts = {
 			indent = {
-				-- char = "▎",
+				char = "▎",
 				tab_char = "▎",
 			},
 			scope = {
@@ -134,14 +115,67 @@ return {
 			},
 		},
 	},
-	-- Notification handler
 	{
-		"rcarriga/nvim-notify",
-		event = "UIEnter",
+		"shellRaining/hlchunk.nvim",
+		enabled = false,
+		event = { "BufReadPre", "BufNewFile" },
 		opts = {
-			top_down = true,
-			max_width = 100,
+			indent = { enable = true },
+			chunk = {
+				enable = true,
+				delay = 10,
+				duration = 0,
+				textobject = "ic",
+				chars = { right_arrow = "▶" },
+				style = {
+					colors.darken(colors.palette().mauve, 0.7),
+					colors.palette().red,
+				},
+			},
 		},
+	},
+	-- Notification handler, and various utilities
+	{
+		"folke/snacks.nvim",
+		priority = 1000,
+		lazy = false,
+		opts = {
+			notifier = {
+				timeout = 5000,
+				sort = { "added" },
+			},
+			styles = { notification = { wo = { wrap = true } } },
+		},
+		keys = {
+			{ "<leader>k", function() Snacks.notifier.hide() end, desc = "Dismiss notifications" },
+			{ "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+			{ "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
+			{ "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git Blame Line" },
+		},
+		init = function()
+			require("core.utils").user_aucmd("VeryLazy", function()
+				_G.dd = function(...) Snacks.debug.inspect(...) end
+				_G.bt = function() Snacks.debug.backtrace() end
+				vim.print = _G.dd
+
+				-- Create some toggle mappings
+				Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
+				Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
+				Snacks.toggle.option("relativenumber", { name = "Relative Number" }):map("<leader>uL")
+				Snacks.toggle.diagnostics():map("<leader>ud")
+				Snacks.toggle.line_number():map("<leader>ul")
+				Snacks.toggle
+					.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 })
+					:map("<leader>uc")
+				Snacks.toggle.treesitter():map("<leader>uT")
+				Snacks.toggle
+					.option("background", { off = "light", on = "dark", name = "Dark Background" })
+					:map("<leader>ub")
+				Snacks.toggle.inlay_hints():map("<leader>uh")
+
+				utils.map { { "<leader>u", name = "Toggles" } }
+			end)
+		end,
 	},
 	-- Keymaps cheat sheet and tooltips
 	{
@@ -162,7 +196,7 @@ return {
 			local palette_patterns = {}
 			local palette_highlights = {}
 
-			for name, color in pairs(palette) do
+			for name, color in pairs(colors.palette()) do
 				palette_patterns[name] = {
 					pattern = "%f[%w]palette[.]()" .. name .. "()%f[%W]",
 					group = "",
@@ -192,7 +226,7 @@ return {
 							.. func
 							.. "_"
 							.. ratio:gsub("%.", "_")
-						base_color = palette[base_color]
+						base_color = colors.palette()[base_color]
 						if vim.fn.hlexists(group_name) == 0 then
 							require("catppuccin.lib.highlighter").syntax {
 								[group_name] = {

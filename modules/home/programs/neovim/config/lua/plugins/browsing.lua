@@ -43,7 +43,6 @@ return {
 			},
 		},
 		config = function()
-			require("notify")
 			local telescope = require("telescope")
 
 			telescope.setup {
@@ -65,7 +64,7 @@ return {
 			}
 
 			telescope.load_extension("fzf")
-			telescope.load_extension("notify")
+			-- telescope.load_extension("notify")
 			telescope.load_extension("media_files")
 			telescope.load_extension("textcase")
 			telescope.load_extension("yank_history")

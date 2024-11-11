@@ -1,19 +1,16 @@
+local colors = require("core.colors")
+local hl = colors.hl
+local utils = require("plugins.ui.utils")
+local diag = require("core.diagnostics")
+
 return {
 	"b0o/incline.nvim",
 	enabled = not vim.g["started_by_firenvim"],
 	event = "UIEnter",
 	config = function()
-		local function format_color(color) return string.format("#%x", color) end
+		local function f(color) return string.format("#%06x", color) end
 
 		local incline = require("incline")
-		local colors = require("core.colors")
-		local utils = require("plugins.ui.utils")
-		local diag = require("core.diagnostics")
-
-		local col_inactive = format_color(colors.hl.InclineNormalNC.bg)
-		local col_active = format_color(colors.hl.InclineNormal.bg)
-		local col_base = format_color(colors.hl.Normal.bg)
-		local col_modified = format_color(colors.hl.CustomTablineModifiedIcon.fg)
 
 		incline.setup {
 			render = function(props)
@@ -25,17 +22,21 @@ return {
 				local modified = vim.bo[props.buf].modified
 				local icon, icon_hl = require("mini.icons").get("filetype", filetype)
 
+				local col_inactive = f(hl.InclineNormalNC.bg)
+				local col_active = f(hl.InclineNormal.bg)
+				local col_base = f(hl.Normal.bg)
+				local col_modified = f(hl.CustomTablineModifiedIcon.fg)
+				local col_icon_fg = f(hl[icon_hl].fg)
+
 				if buftype == "terminal" then
 					filename = vim.b[props.buf].term_title
 					icon = ""
 					icon_hl = "TermFloatBorder"
 				end
 
-				local icon_fg_color = format_color(colors.hl[icon_hl].fg)
-
 				local icon_color = {
-					fg = icon_fg_color,
-					bg = colors.darken(icon_fg_color, 0.3),
+					fg = col_icon_fg,
+					bg = colors.darken(col_icon_fg, 0.3),
 				}
 
 				local color = col_inactive
@@ -47,7 +48,7 @@ return {
 					{ "", guifg = icon_color.bg, guibg = col_base, blend = 100 },
 					{ icon .. "  ", guifg = icon_color.fg, guibg = icon_color.bg },
 					{ "", guifg = color, guibg = icon_color.bg },
-					{ filename },
+					{ filename, guibg = color },
 				}
 
 				local diag_counts = utils.diag_count_for_buffer(props.buf)
@@ -55,14 +56,14 @@ return {
 
 				for severity, count in ipairs(diag_counts) do
 					if count > 0 then
-						local hl = diag.sign_hl(severity)
-						table.insert(result, { "", guifg = prev_color, guibg = format_color(hl.bg) })
+						local sigh_hl = diag.sign_hl(severity)
+						table.insert(result, { "", guifg = prev_color, guibg = f(sigh_hl.bg) })
 						table.insert(result, {
 							" " .. diag.sign(severity) .. count,
-							guifg = format_color(hl.fg),
-							guibg = format_color(hl.bg),
+							guifg = f(sigh_hl.fg),
+							guibg = f(sigh_hl.bg),
 						})
-						prev_color = format_color(hl.bg)
+						prev_color = f(sigh_hl.bg)
 					end
 				end
 

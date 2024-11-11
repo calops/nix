@@ -13,15 +13,6 @@ return {
 			{ "K", require("noice.lsp").hover, desc = "Show documentation" },
 			{ "H", function() vim.diagnostic.open_float { border = "rounded" } end, desc = "Show diagnostics" },
 			{ "<C-k>", vim.lsp.buf.signature_help, desc = "Interactive signature help" },
-			{
-				"<leader>i",
-				function()
-					vim.b.inlay_hints_enabled = not vim.b.inlay_hints_enabled
-					vim.lsp.inlay_hint.enable(vim.b.inlay_hints_enabled or false)
-				end,
-				desc = "Toggle inlay hints for buffer",
-			},
-
 			{ "<leader>rn", vim.lsp.buf.rename, desc = "Interactive rename" },
 			{ "<leader>rf", vim.lsp.buf.format, desc = "Format code" },
 		},
@@ -56,9 +47,6 @@ return {
 				cmd = { "lexical" },
 				root_dir = function(fname) return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or nil end,
 			}
-
-			utils.aucmd("InsertEnter", function() vim.lsp.inlay_hint.enable(false) end)
-			utils.aucmd("InsertLeave", function() vim.lsp.inlay_hint.enable(vim.b.inlay_hints_enabled or false) end)
 
 			utils.map {
 				{ "<leader>r", group = "refactor", icon = "" },
@@ -98,6 +86,7 @@ return {
 		},
 		opts = {
 			library = {
+				"snacks.nvim",
 				{ path = "luvit-meta/library", words = { "vim%.uv" } },
 				{ path = "wezterm-types", mods = { "wezterm" } },
 			},

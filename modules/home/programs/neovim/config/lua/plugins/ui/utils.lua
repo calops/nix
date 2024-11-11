@@ -11,7 +11,7 @@ local function fmt(color)
 	if type(color) == "string" then
 		return color
 	elseif type(color) == "number" then
-		return string.format("#%x", color)
+		return string.format("#%06x", color)
 	end
 end
 
