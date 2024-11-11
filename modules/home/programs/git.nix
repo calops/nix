@@ -11,8 +11,9 @@ in
   config = lib.mkIf config.my.roles.terminal.enable {
     home.packages = [
       pkgs.git-crypt
-      pkgs.lazygit
     ];
+
+    programs.lazygit.enable = true;
 
     programs.git = {
       enable = true;

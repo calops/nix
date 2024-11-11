@@ -115,25 +115,6 @@ return {
 			},
 		},
 	},
-	{
-		"shellRaining/hlchunk.nvim",
-		enabled = false,
-		event = { "BufReadPre", "BufNewFile" },
-		opts = {
-			indent = { enable = true },
-			chunk = {
-				enable = true,
-				delay = 10,
-				duration = 0,
-				textobject = "ic",
-				chars = { right_arrow = "▶" },
-				style = {
-					colors.darken(colors.palette().mauve, 0.7),
-					colors.palette().red,
-				},
-			},
-		},
-	},
 	-- Notification handler, and various utilities
 	{
 		"folke/snacks.nvim",
@@ -154,7 +135,9 @@ return {
 		},
 		init = function()
 			require("core.utils").user_aucmd("VeryLazy", function()
+				---@diagnostic disable-next-line: duplicate-set-field
 				_G.dd = function(...) Snacks.debug.inspect(...) end
+				---@diagnostic disable-next-line: duplicate-set-field
 				_G.bt = function() Snacks.debug.backtrace() end
 				vim.print = _G.dd
 
