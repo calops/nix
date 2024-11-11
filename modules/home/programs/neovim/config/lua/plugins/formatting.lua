@@ -2,9 +2,27 @@ return {
 	{
 		"stevearc/conform.nvim",
 		event = { "BufRead" },
-		cmd = { "ConformInfo", "Format" },
+		cmd = { "ConformInfo" },
 		keys = {
-			{ "<space>f", ":Format<cr>", desc = "Format code", mode = { "n", "x" } },
+			{
+				"<space>f",
+				function()
+					require("conform").format({ async = true }, function(err)
+						if not err then
+							local mode = vim.api.nvim_get_mode().mode
+							if vim.startswith(string.lower(mode), "v") then
+								vim.api.nvim_feedkeys(
+									vim.api.nvim_replace_termcodes("<Esc>", true, false, true),
+									"n",
+									true
+								)
+							end
+						end
+					end)
+				end,
+				desc = "Format code",
+				mode = { "n", "x" },
+			},
 		},
 		init = function()
 			vim.api.nvim_create_user_command("Format", function(args)
@@ -16,7 +34,7 @@ return {
 						["end"] = { args.line2, end_line:len() },
 					}
 				end
-				require("conform").format { async = true, lsp_fallback = true, range = range }
+				require("conform").format { async = true, lsp_format = "fallback", range = range }
 			end, { range = true })
 
 			vim.api.nvim_create_user_command("FormatDisable", function(args)

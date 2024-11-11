@@ -54,6 +54,7 @@ in
         ".vim"
         ".yarn"
         ".yarnrc"
+        ".nvim.lua"
         "Session.vim"
         "__pycache__"
         "target"
