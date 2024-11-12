@@ -11,9 +11,16 @@ in
   config = lib.mkIf config.my.roles.terminal.enable {
     home.packages = [
       pkgs.git-crypt
+      pkgs.difftastic
     ];
 
-    programs.lazygit.enable = true;
+    programs.lazygit = {
+      enable = true;
+      settings = {
+        nerdFontsVersion = 3;
+        git.paging.externalDiffCommand = "difft --color=always --syntax-highlight=on";
+      };
+    };
 
     programs.git = {
       enable = true;
