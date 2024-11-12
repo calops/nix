@@ -1,7 +1,5 @@
 {
   config,
-  pkgs,
-  inputs,
   ...
 }:
 let
@@ -10,7 +8,8 @@ in
 {
   programs.kitty = {
     enable = cfg.enable && cfg.terminal == "kitty";
-    package = inputs.nightly-tools.packages.${pkgs.system}.kitty;
+    # TODO: Use the nightly-tools package once it's fixed
+    # package = inputs.nightly-tools.packages.${pkgs.system}.kitty;
     settings = {
       font_size = cfg.fonts.sizes.terminal;
       font_family = cfg.fonts.monospace.name;
