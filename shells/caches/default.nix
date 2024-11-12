@@ -6,7 +6,7 @@ inputs.devenv.lib.mkShell {
   inherit inputs pkgs;
   modules = [
     {
-      name = "bootstrap";
+      name = "caches";
 
       env.NIX_CONFIG = ''
         extra-substituters = ${toString caches.substituters}
