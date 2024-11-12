@@ -91,14 +91,15 @@ in
                 }
               }
 
-              /* Default state: Set initial height to enable animation */
-              #main-window #titlebar { height: 3em !important; }
-              #main-window[uidensity="touch"] #titlebar { height: 3.35em !important; }
-              #main-window[uidensity="compact"] #titlebar { height: 2.7em !important; }
-              /* Hidden state: Hide native tabs strip */
-              #main-window[titlepreface*="[Sidebery]"] #titlebar { height: 0 !important; }
-              /* Hidden state: Fix z-index of active pinned tabs */
-              #main-window[titlepreface*="[Sidebery]"] #tabbrowser-tabs { z-index: 0 !important; }
+              #main-window #TabsToolbar {
+                overflow: hidden;
+                transition: height 0.3s 0.3s !important;
+                height: 3em !important;
+                visibility: visible !important;
+              }
+              #main-window[uidensity="touch"] #TabsToolbar { height: 3.35em !important; }
+              #main-window[uidensity="compact"] #TabsToolbar { height: 2.7em !important; }
+              #main-window[titlepreface*="[Sidebery]"] #TabsToolbar { visibility: collapse !important; }
             '';
         };
 

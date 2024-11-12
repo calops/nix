@@ -188,6 +188,7 @@ return {
 		flavour = "mocha",
 		term_colors = true,
 		integrations = {
+			blink_cmp = true,
 			telescope = true,
 			neotree = true,
 			indent_blankline = { enabled = false },
