@@ -88,7 +88,7 @@ return {
 				elixir = {
 					left = 'IO.puts :stderr, "',
 					right = '"',
-					mid_var = "#{IO.inspect(",
+					mid_var = "#{inspect(",
 					right_var = ', syntax_colors: IO.ANSI.syntax_colors())}"',
 				},
 			},
