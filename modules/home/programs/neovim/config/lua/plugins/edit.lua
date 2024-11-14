@@ -84,6 +84,14 @@ return {
 		end,
 		opts = {
 			print_tag = "[31mDEBUGPRINT[0m",
+			filetypes = {
+				elixir = {
+					left = 'IO.puts :stderr, "',
+					right = '"',
+					mid_var = "#{IO.inspect(",
+					right_var = ', syntax_colors: IO.ANSI.syntax_colors())}"',
+				},
+			},
 		},
 	},
 	-- Edit filesystem as a buffer
