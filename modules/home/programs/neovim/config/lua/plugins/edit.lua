@@ -82,7 +82,9 @@ return {
 				},
 			}
 		end,
-		config = true,
+		opts = {
+			print_tag = "[31mDEBUGPRINT[2][0m",
+		},
 	},
 	-- Edit filesystem as a buffer
 	{
