@@ -30,7 +30,6 @@ return {
 
 			require("gitsigns") -- Dependency
 			require("heirline").setup {
-				-- statuscolumn = require("plugins.ui.statuscolumn"),
 				statusline = require("plugins.ui.statusline"),
 			}
 		end,
