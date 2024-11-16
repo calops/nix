@@ -26,14 +26,29 @@ return {
 	{
 		"lewis6991/gitsigns.nvim",
 		event = "BufRead",
-		keys = {
-			{ "<leader>gs", function() require("gitsigns").stage_hunk() end, desc = "Stage hunk" },
-			{ "<leader>gu", function() require("gitsigns").undo_stage_hunk() end, desc = 'Undo "stage hunk"' },
-			{ "<leader>gr", function() require("gitsigns").reset_hunk() end, desc = "Reset hunk" },
-			{ "<leader>gn", function() require("gitsigns").nav_hunk("next") end, desc = "Next hunk" },
-			{ "<leader>gN", function() require("gitsigns").nav_hunk("prev") end, desc = "Previous hunk" },
-			{ "<leader>gp", function() require("gitsigns").preview_hunk_inline() end, desc = "Preview hunk" },
-		},
+		keys = function()
+			local function g() return require("gitsigns") end
+			return {
+				{ "<leader>gu", function() g().undo_stage_hunk() end, desc = 'Undo "stage hunk"' },
+				{ "<leader>gn", function() g().nav_hunk("next") end, desc = "Next hunk" },
+				{ "<leader>gN", function() g().nav_hunk("prev") end, desc = "Previous hunk" },
+				{ "<leader>gp", function() g().preview_hunk_inline() end, desc = "Preview hunk" },
+				{ "<leader>gs", function() g().stage_hunk() end, desc = "Stage hunk", mode = { "n" } },
+				{ "<leader>gr", function() g().reset_hunk() end, desc = "Stage hunk", mode = { "n" } },
+				{
+					"<leader>gs",
+					function() g().stage_hunk { vim.fn.line("."), vim.fn.line("v") } end,
+					desc = "Stage hunk",
+					mode = { "x" },
+				},
+				{
+					"<leader>gr",
+					function() g().reset_hunk { vim.fn.line("."), vim.fn.line("v") } end,
+					desc = "Stage hunk",
+					mode = { "x" },
+				},
+			}
+		end,
 		init = function() map { "<leader>g", group = "git", icon = "" } end,
 		opts = {
 			preview_config = { border = "rounded" },
