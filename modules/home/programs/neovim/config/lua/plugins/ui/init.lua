@@ -25,14 +25,12 @@ return {
 			}
 		end,
 		config = function()
-			vim.o.signcolumn = "no"
-			vim.o.foldcolumn = "0"
 			vim.go.laststatus = 3
 			vim.go.showtabline = 0
 
 			require("gitsigns") -- Dependency
 			require("heirline").setup {
-				statuscolumn = require("plugins.ui.statuscolumn"),
+				-- statuscolumn = require("plugins.ui.statuscolumn"),
 				statusline = require("plugins.ui.statusline"),
 			}
 		end,
@@ -121,7 +119,21 @@ return {
 		priority = 1000,
 		lazy = false,
 		opts = {
+			bigfile = { enabled = true },
+			quickfile = { enabled = true },
+			statuscolumn = {
+				left = { "mark", "sign" },
+				right = { "fold", "git" },
+				folds = {
+					open = false,
+					git_hl = true,
+				},
+				git = { patterns = { "GitSign", "MiniDiffSign" } },
+				refresh = 50,
+			},
+			words = { enabled = false },
 			notifier = {
+				enabled = true,
 				timeout = 5000,
 				sort = { "added" },
 			},
