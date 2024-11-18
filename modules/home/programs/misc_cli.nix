@@ -7,28 +7,32 @@
 }:
 {
   config = lib.mkIf config.my.roles.terminal.enable {
-    home.packages = with pkgs; [
-      megatools
-      ast-grep
-      choose
-      du-dust
-      dysk
-      fclones
-      fd
-      rargs
-      rm-improved
-      sshfs
-      xcp
-      gh
-      killall
-      unzip
-      unrar
-      yq
-      pastel
-      jaq
-      dtrx
-      inputs.devenv.packages.${pkgs.system}.devenv
-    ];
+    home.packages =
+      with pkgs;
+      [
+        megatools
+        ast-grep
+        choose
+        du-dust
+        dysk
+        fclones
+        fd
+        rargs
+        rm-improved
+        sshfs
+        xcp
+        gh
+        killall
+        unzip
+        unrar
+        yq
+        pastel
+        jaq
+        inputs.devenv.packages.${pkgs.system}.devenv
+      ]
+      ++ lib.optional (!pkgs.stdenv.isDarwin) [
+        dtrx
+      ];
 
     programs.nix-index-database.comma.enable = true;
 
