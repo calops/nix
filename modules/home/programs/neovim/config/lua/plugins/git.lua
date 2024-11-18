@@ -9,6 +9,7 @@ return {
 		keys = {
 			{ "<leader>gv", "<cmd>DiffviewOpen<cr>", desc = "Open diff view" },
 			{ "<leader>gh", "<cmd>DiffviewFileHistory %<cr>", desc = "Open file history" },
+			{ "<leader>gB", "<cmd>DiffviewOpen origin/HEAD...HEAD --imply-local<cr>", desc = "Review branch changes" },
 		},
 		opts = {
 			enhanced_diff_hl = true,

@@ -26,6 +26,7 @@
       yq
       pastel
       jaq
+      dtrx
       inputs.devenv.packages.${pkgs.system}.devenv
     ];
 

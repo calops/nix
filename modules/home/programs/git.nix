@@ -53,7 +53,7 @@ in
         pum = "pull upstream main";
         pom = "pull origin main --no-rebase";
         dv = ''! args=$@; shift $#; nvim -c "DiffviewOpen $args"'';
-        db = ''! args=$@; shift $#; nvim -c "DiffviewOpen $(git merge-base --fork-point main)"'';
+        db = ''! args=$@; shift $#; nvim -c "DiffviewOpen origin/HEAD...HEAD --imply-local)"'';
       };
 
       ignores = [
