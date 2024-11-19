@@ -90,6 +90,7 @@ in
               nixos.expr = ''(${flake}).nixosConfigurations.tocardstation.options'';
               homeManager.expr = ''(${flake}).homeConfigurations."calops@tocardstation".options'';
               darwin.expr = ''(${flake}).darwinConfigurations.rlabeyrie-sonio.options'';
+              niri.expr = ''(${flake}).inputs.niri.homeModules.options'';
             };
           };
         };

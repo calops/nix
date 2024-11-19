@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   ...
 }:
 let
@@ -15,7 +16,7 @@ in
       font_family = cfg.fonts.monospace.name;
       undercurl_style = "thick-sparse";
       cursor_trail = 3;
-      hide_window_decorations = "titlebar-only";
+      hide_window_decorations = if pkgs.stdenv.isDarwin then "titlebar-only" else "yes";
       cursor_blink_interval = "-1 ease-in-out";
 
       "modify_font underline_position" = "+2";

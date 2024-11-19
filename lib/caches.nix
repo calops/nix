@@ -8,6 +8,7 @@
     "https://cache.garnix.io"
     "https://nightly-tools.cachix.org"
     "https://anyrun.cachix.org"
+    "https://niri.cachix.org"
   ];
 
   trustedPublicKeys = [
@@ -19,5 +20,6 @@
     "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
     "nightly-tools.cachix.org-1:UDM6zVPkMMG1F5s59vD4Je9WJA0SjGPI5P2V+dhZo8Y="
     "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
+    "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
   ];
 }

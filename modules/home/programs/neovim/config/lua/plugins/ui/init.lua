@@ -137,6 +137,7 @@ return {
 				sort = { "added" },
 			},
 			styles = { notification = { wo = { wrap = true } } },
+			dashboard = { enabled = true },
 		},
 		keys = {
 			{ "<leader>k", function() Snacks.notifier.hide() end, desc = "Dismiss notifications" },

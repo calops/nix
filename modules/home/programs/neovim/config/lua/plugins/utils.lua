@@ -34,7 +34,7 @@ return {
 		opts = {
 			use_git_branch = true,
 			autosave = true,
-			autoload = true,
+			autoload = false,
 			follow_cwd = false,
 		},
 	},

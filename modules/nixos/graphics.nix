@@ -1,6 +1,14 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  inputs,
+  pkgs,
+  ...
+}:
 {
   options.my.roles.graphical.enable = lib.mkEnableOption "Graphical environment";
+
+  imports = [ inputs.niri.nixosModules.niri ];
 
   config = lib.mkIf config.my.roles.graphical.enable {
     # Window manager
@@ -22,5 +30,10 @@
     hardware.graphics.enable = true;
 
     security.pam.services.swaylock = { };
+
+    programs.niri = {
+      enable = true;
+      package = lib.mkDefault inputs.niri.packages.${pkgs.system}.niri-unstable;
+    };
   };
 }
