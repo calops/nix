@@ -4,6 +4,7 @@ import clock from "./clock";
 import system from "./system";
 
 const mainBar = Widget.CenterBox({
+	name: "main",
 	vertical: true,
 	startWidget: Widget.Box({
 		vertical: true,

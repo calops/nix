@@ -30,6 +30,6 @@ in
       ];
     };
 
-    xdg.configFile."ags".source = config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/config/programs/ags/config";
+    xdg.configFile."ags".source = config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/programs/ags/config";
   };
 }

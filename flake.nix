@@ -67,6 +67,12 @@
 
     # Vencord settings module (discord mod)
     nixcord.url = "github:kaylorben/nixcord";
+
+    # Logitech devices manager
+    solaar = {
+      url = "github:Svenum/Solaar-Flake/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

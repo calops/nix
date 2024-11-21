@@ -63,6 +63,15 @@ return {
 	{
 		"RRethy/vim-illuminate",
 		event = "BufRead",
+		configure = function()
+			require("illuminate").configure {
+				large_file_cutoff = 2000,
+				large_file_overrides = {
+					providers = { "lsp" },
+					under_cursor = true,
+				},
+			}
+		end,
 	},
 	-- Diagnostics window
 	{

@@ -3,21 +3,27 @@
   lib,
   inputs,
   pkgs,
+  nixosConfig ? null,
   ...
 }:
 let
   palette = config.my.colors.palette.withHashtag;
+  mkCommand = cmd: lib.strings.splitString " " cmd;
+  wallpaper = pkgs.fetchurl {
+    url = "https://w.wallhaven.cc/full/d6/wallhaven-d6j79o.png";
+    hash = "sha256-4nFo0PPlESqoFWZhEtA9JvFnOChOIxxcZq/FqiYNfCw=";
+  };
 in
 {
   config = lib.mkIf config.my.roles.graphical.enable {
     programs.niri = {
       package = inputs.niri.packages.${pkgs.system}.niri-unstable;
       settings = {
-        prefer-no-csd = false;
+        prefer-no-csd = true;
         screenshot-path = "~/Pictures/Screenshots/%Y-%m-%dT%H:%M:%S.png";
 
         input = {
-          keyboard.xkb.layout = "fr";
+          keyboard.xkb.layout = nixosConfig.services.xserver.xkb.layout or "fr";
           focus-follows-mouse = {
             enable = true;
             max-scroll-amount = "0%";
@@ -25,15 +31,28 @@ in
         };
 
         workspaces = {
-          web = { };
-          dev = { };
-          work = { };
-          games = { };
-          chat = { };
-          misc = { };
+          "01-web" = {
+            name = "web";
+          };
+          "02-dev" = {
+            name = "dev";
+          };
+          "03-work" = {
+            name = "work";
+          };
+          "04-chat" = {
+            name = "chat";
+          };
+          "05-games" = {
+            name = "games";
+          };
+          "06-misc" = {
+            name = "misc";
+          };
         };
 
         environment = {
+          DISPLAY = ":0";
           LIBVA_DRIVER_NAME = "nvidia";
           GBM_BACKEND = "nvidia-drm";
           NVD_BACKEND = "direct";
@@ -72,32 +91,46 @@ in
         spawn-at-startup = [
           { command = [ "${pkgs.xwayland-satellite}" ]; }
           { command = [ "${config.programs.firefox.package}" ]; }
+          { command = [ "swww-daemon" ]; }
+          { command = (mkCommand "swww img ${wallpaper}"); }
         ];
 
-        window-rules = [
-          {
-            clip-to-geometry = true;
-            geometry-corner-radius =
-              let
-                r = 8.0;
-              in
-              {
-                top-left = r;
-                top-right = r;
-                bottom-left = r;
-                bottom-right = r;
-              };
-          }
-          {
-            matches = [ { app-id = "^kitty$"; } ];
-            default-column-width.proportion = 0.33333;
-          }
-          {
-            matches = [ { app-id = "^firefox(-beta)?$"; } ];
-            open-on-workspace = "web";
-            default-column-width.proportion = 0.66667;
-          }
-        ];
+        window-rules =
+          let
+            mkRule = app-id: opts: { matches = [ { inherit app-id; } ]; } // opts;
+          in
+          [
+            {
+              clip-to-geometry = true;
+              geometry-corner-radius =
+                let
+                  radius = 8.0;
+                in
+                {
+                  top-left = radius;
+                  top-right = radius;
+                  bottom-left = radius;
+                  bottom-right = radius;
+                };
+            }
+            (mkRule "^kitty$" { default-column-width.proportion = 0.33333; })
+            (mkRule "^firefox(-beta)?$" {
+              default-column-width.proportion = 0.66667;
+              open-on-workspace = "web";
+            })
+            (mkRule "^discord$" {
+              default-column-width.proportion = 0.5;
+              open-on-workspace = "chat";
+            })
+            (mkRule "^element-desktop$" {
+              default-column-width.proportion = 0.5;
+              open-on-workspace = "chat";
+            })
+            (mkRule "^slack$" {
+              default-column-width.proportion = 0.5;
+              open-on-workspace = "chat";
+            })
+          ];
 
         binds =
           let
@@ -120,7 +153,7 @@ in
             "Mod+Shift+S".action = act.screenshot-window;
             "Mod+Ctrl+S".action = act.screenshot-screen;
 
-            "Mod+Minus".action = act.set-column-width "-10%";
+            "Mod+Equal".action = act.set-column-width "-10%";
             "Mod+Plus".action = act.set-column-width "+10%";
 
             "Mod+Left".action = act.focus-column-left;
@@ -145,6 +178,14 @@ in
             "Mod+Page_Up".action = act.focus-workspace-up;
             "Mod+Shift+Page_Down".action = act.move-workspace-down;
             "Mod+Shift+Page_Up".action = act.move-workspace-up;
+
+            # AZERTY mappings
+            "Mod+Ampersand".action = act.focus-workspace "web";
+            "Mod+Eacute".action = act.focus-workspace "dev";
+            "Mod+Quotedbl".action = act.focus-workspace "work";
+            "Mod+Apostrophe".action = act.focus-workspace "chat";
+            "Mod+Parenleft".action = act.focus-workspace "games";
+            "Mod+Minus".action = act.focus-workspace "misc";
 
             "Mod+WheelScrollDown" = {
               cooldown-ms = 150;
@@ -173,29 +214,37 @@ in
 
             "XF86AudioRaiseVolume" = {
               allow-when-locked = true;
-              action = act.spawn [
-                "swayosd-client"
-                "--output-volume"
-                "raise"
-              ];
+              action = act.spawn (mkCommand "swayosd-client --output-volume raise");
             };
             "XF86AudioLowerVolume" = {
               allow-when-locked = true;
-              action = act.spawn [
-                "swayosd-client"
-                "--output-volume"
-                "lower"
-              ];
+              action = act.spawn (mkCommand "swayosd-client --output-volume lower");
             };
             "XF86AudioMute" = {
               allow-when-locked = true;
-              action = act.spawn [
-                "swayosd-client"
-                "--output-volume"
-                "mute-toggle"
-              ];
+              action = act.spawn (mkCommand "swayosd-client --output-volume mute-toggle");
             };
           };
+      };
+    };
+
+    home.packages = [ pkgs.swww ];
+
+    systemd.user.services.xwayland-satellite = {
+      Unit = {
+        Description = "XWayland Satellite";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        ExecStart = lib.getExe pkgs.xwayland-satellite;
+        Restart = "on-failure";
+        KillMode = "mixed";
+      };
+
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
       };
     };
   };

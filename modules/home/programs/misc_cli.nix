@@ -30,9 +30,7 @@
         jaq
         inputs.devenv.packages.${pkgs.system}.devenv
       ]
-      ++ lib.optional (!pkgs.stdenv.isDarwin) [
-        dtrx
-      ];
+      ++ lib.optional (!pkgs.stdenv.isDarwin) dtrx;
 
     programs.nix-index-database.comma.enable = true;
 

@@ -1,6 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
-  imports = [ ./hardware.nix ];
+  imports = [
+    ./hardware.nix
+    inputs.solaar.nixosModules.default
+  ];
 
   networking.hostName = "tocardstation";
   time.timeZone = "Europe/Paris";
@@ -15,6 +18,9 @@
     bluetooth.enable = true;
     #monitoring.enable = true;
   };
+
+  services.solaar.enable = true;
+  hardware.logitech.wireless.enable = true;
 
   boot.initrd.luks.devices.rootDrive.device = "/dev/disk/by-uuid/ab146bd7-2e99-4aa7-a115-040df4acc43d";
   boot.supportedFilesystems = [ "ntfs" ];
