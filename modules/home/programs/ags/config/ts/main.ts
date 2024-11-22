@@ -17,7 +17,7 @@ const mainBar = Widget.CenterBox({
 	centerWidget: Widget.Box({
 		vertical: true,
 		children: [
-			// hyprland.widget,
+			// niri.widget,
 		],
 	}),
 	endWidget: Widget.Box({

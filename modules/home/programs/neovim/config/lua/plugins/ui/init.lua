@@ -19,9 +19,9 @@ return {
 
 			return {
 				{ "<C-t>", new_tab, desc = "Open current buffer in new tab" },
-				{ "<C-S-t>", ":tabclose<CR>", desc = "Close current tab" },
-				{ "<C-Tab>", ":tabnext<CR>", desc = "View next tab" },
-				{ "<C-S-Tab>", ":tabprevious<CR>", desc = "View previous tab" },
+				{ "<C-S-t>", vim.cmd.tabclose, desc = "Close current tab" },
+				{ "<C-Tab>", vim.cmd.tabnext, desc = "View next tab" },
+				{ "<C-S-Tab>", vim.cmd.tabprevious, desc = "View previous tab" },
 			}
 		end,
 		config = function()
@@ -117,28 +117,64 @@ return {
 		"folke/snacks.nvim",
 		priority = 1000,
 		lazy = false,
-		opts = {
-			bigfile = { enabled = true },
-			quickfile = { enabled = true },
-			statuscolumn = {
-				left = { "mark", "sign" },
-				right = { "fold", "git" },
-				folds = {
-					open = false,
-					git_hl = true,
+		opts = function()
+			return {
+				bigfile = { enabled = true },
+				quickfile = { enabled = true },
+				statuscolumn = {
+					left = { "mark", "sign" },
+					right = { "fold", "git" },
+					folds = {
+						open = false,
+						git_hl = true,
+					},
+					git = { patterns = { "GitSign", "MiniDiffSign" } },
+					refresh = 50,
 				},
-				git = { patterns = { "GitSign", "MiniDiffSign" } },
-				refresh = 50,
-			},
-			words = { enabled = false },
-			notifier = {
-				enabled = true,
-				timeout = 5000,
-				sort = { "added" },
-			},
-			styles = { notification = { wo = { wrap = true } } },
-			dashboard = { enabled = true },
-		},
+				words = { enabled = false },
+				notifier = {
+					enabled = true,
+					timeout = 5000,
+					sort = { "added" },
+				},
+				styles = { notification = { wo = { wrap = true } } },
+				dashboard = {
+					enabled = true,
+					sections = {
+						{ section = "keys", gap = 1, padding = 1 },
+						{
+							pane = 2,
+							icon = " ",
+							title = "Recent Files",
+							section = "recent_files",
+							indent = 2,
+							padding = 1,
+						},
+						{
+							pane = 2,
+							icon = " ",
+							title = "Projects",
+							section = "projects",
+							indent = 2,
+							padding = 1,
+						},
+						{
+							pane = 2,
+							icon = " ",
+							title = "Git Status",
+							section = "terminal",
+							enabled = require("snacks").git.get_root() ~= nil,
+							cmd = "hub status --short --branch --renames",
+							height = 5,
+							padding = 1,
+							ttl = 5 * 60,
+							indent = 3,
+						},
+						{ section = "startup" },
+					},
+				},
+			}
+		end,
 		keys = {
 			{ "<leader>k", function() Snacks.notifier.hide() end, desc = "Dismiss notifications" },
 			{ "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
