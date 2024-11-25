@@ -14,7 +14,10 @@ return {
 			sources = {
 				completion = { enabled_providers = { "lsp", "path", "snippets", "buffer", "lazydev" } },
 				providers = {
-					lsp = { fallback_for = { "lazydev" } },
+					lsp = {
+						name = "lsp",
+						fallback_for = { "lazydev" },
+					},
 					lazydev = { name = "LazyDev", module = "lazydev.integrations.blink" },
 				},
 			},
