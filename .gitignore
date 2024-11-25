@@ -2,3 +2,5 @@
 .luarc.json
 node_modules
 .devenv
+.aider*
+.env

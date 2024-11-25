@@ -34,6 +34,7 @@
 
     environment.systemPackages = [ pkgs.raycast ];
     environment.shells = [ pkgs.fish ];
+    environment.variables.EDITOR = "nvim";
     programs.fish.enable = true;
     homebrew.enable = true;
     security.pam.enableSudoTouchIdAuth = true;

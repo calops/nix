@@ -9,6 +9,7 @@
       alsa.support32Bit = true;
       pulse.enable = true;
     };
+    services.wireplumber.enable = true;
     hardware.pulseaudio.enable = false;
   };
 }

@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  inputs,
   pkgs,
   nixosConfig ? null,
   ...
@@ -15,9 +14,8 @@ let
   };
 in
 {
-  config = lib.mkIf config.my.roles.graphical.enable {
+  config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.niri = {
-      package = inputs.niri.packages.${pkgs.system}.niri-unstable;
       settings = {
         prefer-no-csd = true;
         screenshot-path = "~/Pictures/Screenshots/%Y-%m-%dT%H:%M:%S.png";
@@ -135,7 +133,7 @@ in
 
         binds =
           let
-            act = config.lib.niri.actions;
+            act = if (!pkgs.stdenv.isDarwin) then config.lib.niri.actions else { };
           in
           {
             "Mod+Return".action = act.spawn "kitty";
