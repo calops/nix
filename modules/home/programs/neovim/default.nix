@@ -26,7 +26,6 @@ in
       extraPackages = [
         # Formatters
         pkgs.nixfmt-rfc-style # Nix
-        pkgs.black # Python
         pkgs.prettierd # Multi-language
         pkgs.shfmt # Shell
         pkgs.isort # Python
@@ -37,6 +36,8 @@ in
         pkgs.my.logseqlsp
         inputs.nightly-tools.packages.${pkgs.system}.nixd
         pkgs.nil
+        pkgs.ruff
+        pkgs.pyright
         rustToolchain
 
         # Tools

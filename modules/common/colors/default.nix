@@ -93,6 +93,10 @@ in
         type = lib.types.path;
         description = "Path to the GTK CSS file";
       };
+      asScss = lib.mkOption {
+        type = lib.types.path;
+        description = "Path to the SCSS file";
+      };
     };
   };
 
@@ -121,6 +125,12 @@ in
           )
         )
       );
+
+      asScss = pkgs.writeText "colors.scss" ''
+        ${lib.concatStringsSep "\n" (
+          builtins.attrValues (builtins.mapAttrs (name: value: "$" + name + ": " + value + ";") withHashtag)
+        )}
+      '';
     };
   };
 }

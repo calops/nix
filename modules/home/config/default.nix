@@ -66,6 +66,7 @@
       options = "--delete-older-than 30d";
     };
 
+    xdg.enable = true;
     xdg.mimeApps = lib.mkIf (!pkgs.stdenv.isDarwin) {
       enable = true;
       defaultApplications =

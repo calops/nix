@@ -65,7 +65,7 @@ return {
 
 				lua = { "stylua" },
 				nix = { "nixfmt" },
-				python = { "isort", "black" },
+				python = { "ruff_format" },
 				sh = { "shfmt" },
 				sql = { "sqlfluff" },
 			},

@@ -89,9 +89,10 @@ in
 
         spawn-at-startup = [
           { command = [ "${pkgs.xwayland-satellite}" ]; }
-          { command = [ "${config.programs.firefox.package}" ]; }
+          { command = mkCommand "swww img ${wallpaper}"; }
           { command = [ "swww-daemon" ]; }
-          { command = (mkCommand "swww img ${wallpaper}"); }
+          { command = [ "ags" ]; }
+          { command = [ "${config.programs.firefox.package}" ]; }
         ];
 
         window-rules =

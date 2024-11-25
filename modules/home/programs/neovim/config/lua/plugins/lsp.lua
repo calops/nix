@@ -36,6 +36,8 @@ return {
 			local lspconfig = require("lspconfig")
 			lspconfig.lua_ls.setup {}
 			lspconfig.nil_ls.setup {}
+			lspconfig.ruff.setup {}
+			lspconfig.pyright.setup {}
 			lspconfig.nixd.setup {
 				on_init = function(client, _)
 					-- Turn off semantic tokens until they're more consistent

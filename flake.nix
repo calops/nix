@@ -68,6 +68,9 @@
     # Vencord settings module (discord mod)
     nixcord.url = "github:kaylorben/nixcord";
 
+    # GTK widget toolkit
+    fabric.url = "github:wholikeel/fabric-nix";
+
     # Logitech devices manager
     solaar = {
       url = "github:Svenum/Solaar-Flake/main";
