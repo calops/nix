@@ -113,9 +113,9 @@ return {
 		},
 	},
 	{
-		"topaxi/gh-actions.nvim",
+		"topaxi/pipeline.nvim",
 		keys = {
-			{ "<leader>ga", "<cmd>GhActions<cr>", desc = "Open Github Actions" },
+			{ "<leader>ga", "<cmd>Pipeline<cr>", desc = "Open Github Actions" },
 		},
 		opts = {},
 	},
