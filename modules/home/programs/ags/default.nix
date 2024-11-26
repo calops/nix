@@ -19,15 +19,12 @@ in
     programs.ags = {
       enable = true;
       configDir = null;
-      package = inputs.ags.packages.${system}.agsWithTypes.overrideAttrs {
+      package = inputs.ags.packages.${system}.agsFull.overrideAttrs {
         postFixup = ''
           wrapProgram $out/bin/ags --prefix PATH : ${lib.makeBinPath deps}
         '';
       };
-      extraPackages = with pkgs; [
-        sassc
-        bun
-      ];
+      extraPackages = deps;
     };
 
     xdg.configFile."ags".source = config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/programs/ags/config";

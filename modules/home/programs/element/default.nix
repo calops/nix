@@ -13,8 +13,14 @@ let
   elementPkg = pkgs.element-desktop-wayland;
 in
 {
+  options.programs.element.package = lib.mkOption {
+    type = lib.types.package;
+    default = elementPkg;
+    description = "Package used for the Element chat client.";
+  };
+
   config = lib.mkIf cfg.enable {
-    home.packages = [ elementPkg ];
+    home.packages = [ config.programs.element.package ];
 
     xdg.configFile."Element/config.json".text = builtins.toJSON {
       setting_defaults = {

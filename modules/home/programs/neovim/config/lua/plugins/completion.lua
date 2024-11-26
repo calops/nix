@@ -6,8 +6,6 @@ return {
 		dependencies = "rafamadriz/friendly-snippets",
 		build = "cargo build --release",
 
-		---@module 'blink.cmp'
-		---@type blink.cmp.Config
 		opts = {
 			highlight = { use_nvim_cmp_as_default = true },
 			trigger = { signature_help = { enabled = true } },
@@ -25,6 +23,7 @@ return {
 				---@diagnostic disable-next-line: assign-type-mismatch
 				preset = "default",
 				["<Cr>"] = { "accept", "fallback" },
+				["<C-y>"] = { "accept", "fallback" },
 				["<S-Tab>"] = { "select_prev", "fallback" },
 				["<Tab>"] = { "select_next", "fallback" },
 				["<Up>"] = { "select_prev", "fallback" },

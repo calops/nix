@@ -89,10 +89,12 @@ in
 
         spawn-at-startup = [
           { command = [ "${pkgs.xwayland-satellite}" ]; }
-          { command = mkCommand "swww img ${wallpaper}"; }
           { command = [ "swww-daemon" ]; }
-          { command = [ "ags" ]; }
+          { command = mkCommand "swww img ${wallpaper}"; }
+          { command = mkCommand "ags run"; }
           { command = [ "${config.programs.firefox.package}" ]; }
+          { command = [ "${pkgs.slack}" ]; }
+          { command = [ "${config.programs.element.package}" ]; }
         ];
 
         window-rules =
