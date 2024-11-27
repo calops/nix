@@ -1,6 +1,11 @@
 // https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
 $theme_fg_color: "@theme_fg_color";
 $theme_bg_color: "@theme_bg_color";
+$shadow_color: rgba(0, 0, 0, 0.5);
+
+* {
+	font-family: "Iosevka Comfy";
+}
 
 window.Bar {
 	background: transparent;
@@ -9,11 +14,17 @@ window.Bar {
 
 	>centerbox {
 		margin: 16px;
-		margin-right: 0;
+		margin-right: 1px;
 		min-width: 40px;
 	}
 
 	button {
-		border-radius: 16px;
+		border-radius: 50px;
+		border: 1px solid #{$theme_bg_color};
+		box-shadow: 0px 0px 2px 2px #{$shadow_color};
 	}
+}
+
+.big {
+	font-size: 20px;
 }
