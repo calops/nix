@@ -44,11 +44,6 @@ return {
 					client.server_capabilities.semanticTokensProvider = nil
 				end,
 			}
-			lspconfig.lexical.setup {
-				filetypes = { "elixir", "eelixir", "heex" },
-				cmd = { "lexical" },
-				root_dir = function(fname) return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or nil end,
-			}
 
 			utils.map {
 				{ "<leader>r", group = "refactor", icon = "" },
@@ -115,6 +110,48 @@ return {
 						}
 					end,
 				},
+			}
+		end,
+	},
+	-- Elixir-specific utilities and LSP configurations
+	{
+		"elixir-tools/elixir-tools.nvim",
+		version = "*",
+		ft = "elixir",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			local elixir = require("elixir")
+			local elixirls = require("elixir.elixirls")
+
+			elixir.setup {
+				nextls = {
+					enable = true,
+					init_options = { experimental = { completions = { enable = true } } },
+				},
+				projectionist = { enable = false },
+				elixirls = {
+					enable = true,
+					settings = elixirls.settings {
+						dialyzerEnabled = true,
+						enableTestLenses = false,
+					},
+					on_attach = function(client)
+						client.server_capabilities.completionProvider = nil
+						utils.map {
+							{ "<spaceP>", ":ElixirFromPipe<cr>", desc = "Convert from pipe" },
+							{ "<space>p", ":ElixirToPipe<cr>", desc = "Convert to pipe" },
+							{ "<space>em", ":ElixirExpandMacro<cr>", desc = "Expand macro", mode = "v" },
+						}
+					end,
+				},
+			}
+
+			local lspconfig = require("lspconfig")
+			lspconfig.lexical.setup {
+				filetypes = { "elixir", "eelixir", "heex" },
+				cmd = { "lexical" },
+				root_dir = function(fname) return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or nil end,
+				on_attach = function(client) client.server_capabilities.completionProvider = nil end,
 			}
 		end,
 	},
