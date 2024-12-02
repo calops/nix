@@ -203,8 +203,11 @@ return {
 					.option("background", { off = "light", on = "dark", name = "Dark Background" })
 					:map("<leader>ub")
 				Snacks.toggle.inlay_hints():map("<leader>uh")
+				Snacks.toggle.profiler():map("<leader>dp")
+				Snacks.toggle.profiler_highlights():map("<leader>dh")
 
-				utils.map { { "<leader>u", name = "Toggles" } }
+				utils.map { { "<leader>u", name = "toggles" } }
+				utils.map { { "<leader>d", name = "debug" } }
 			end)
 		end,
 	},

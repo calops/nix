@@ -24,6 +24,7 @@ let
 in
 {
   config = lib.mkIf config.my.roles.graphical.enable {
+    home.packages = [ pkgs.firefoxpwa ];
     programs.firefox = {
       enable = true;
       package = package;
@@ -43,6 +44,7 @@ in
             addons.sponsorblock
             addons.firenvim
             addons.video-downloadhelper
+            addons.pwas-for-firefox
           ];
           search = {
             default = "Google";
