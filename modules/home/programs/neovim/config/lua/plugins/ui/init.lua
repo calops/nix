@@ -180,6 +180,7 @@ return {
 			{ "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
 			{ "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
 			{ "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git Blame Line" },
+			{ "<leader>ds", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Bufer" },
 		},
 		init = function()
 			require("core.utils").user_aucmd("VeryLazy", function()

@@ -23,7 +23,7 @@
   };
 
   config = {
-    system.stateVersion = "24.11";
+    system.stateVersion = "25.05";
     hardware.enableAllFirmware = true;
     security.rtkit.enable = true;
     virtualisation.docker.enable = true;
