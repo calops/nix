@@ -1,27 +1,35 @@
-// https://gitlab.gnome.org/GNOME/gtk/-/blob/gtk-3-24/gtk/theme/Adwaita/_colors-public.scss
-$theme_fg_color: "@theme_fg_color";
-$theme_bg_color: "@theme_bg_color";
-$shadow_color: rgba(0, 0, 0, 0.5);
-
 * {
 	font-family: "Iosevka Comfy";
 }
 
-window.Bar {
-	background: transparent;
-	color: #{$theme_bg_color};
-	font-weight: bold;
+window.bar {
+	// gradient:
+	background: linear-gradient(90deg, rgba($crust, 0.8) 0%, rgba($crust, 0) 100%);
+	min-width: 80px;
 
-	>centerbox {
-		margin: 16px;
-		margin-right: 1px;
+	centerbox {
+		margin-left: 6px;
+		margin-bottom: 6px;
+		margin-top: 16px;
+		padding-right: 15px;
 		min-width: 40px;
 	}
+}
 
-	button {
-		border-radius: 50px;
-		border: 1px solid #{$theme_bg_color};
-		box-shadow: 0px 0px 2px 2px #{$shadow_color};
+button {
+	background-color: transparent;
+	border-radius: 50px;
+
+	&:hover {
+		background-color: $peach;
+		color: $base;
+		box-shadow: 0px 0px 2px 2px $base;
+	}
+
+	&:active {
+		background-color: $base;
+		color: $peach;
+		box-shadow: 0px 0px 2px 2px $peach;
 	}
 }
 

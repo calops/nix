@@ -7,7 +7,7 @@
         "module": "ES2022",
         "moduleResolution": "Bundler",
         // "checkJs": true,
-        // "allowJs": true,
+        "allowJs": false,
         "jsx": "react-jsx",
         "jsxImportSource": "/home/calops/.local/share/ags/gtk3",
         "paths": {

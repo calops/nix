@@ -7,9 +7,14 @@
 }:
 let
   system = "x86_64-linux";
-  deps = with pkgs; [
-    sassc
-    bun
+  ags = inputs.ags.packages.${system};
+  deps = [
+    pkgs.sassc
+    pkgs.bun
+    ags.tray
+    ags.mpris
+    ags.network
+    ags.wireplumber
   ];
 in
 {
@@ -19,7 +24,7 @@ in
     programs.ags = {
       enable = true;
       configDir = null;
-      package = inputs.ags.packages.${system}.agsFull.overrideAttrs {
+      package = ags.agsFull.overrideAttrs {
         postFixup = ''
           wrapProgram $out/bin/ags --prefix PATH : ${lib.makeBinPath deps}
         '';

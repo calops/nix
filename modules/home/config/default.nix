@@ -50,9 +50,6 @@
     services.network-manager-applet.enable = false; # FIXME: tray icon isn't working on ironbar
     services.udiskie = lib.mkIf (!pkgs.stdenv.isDarwin) {
       enable = true;
-      settings.program_options = {
-        tray = false; # FIXME: tray icon isn't working on ironbar
-      };
     };
 
     programs.nh = lib.mkIf (config.my.configType == "standalone") {

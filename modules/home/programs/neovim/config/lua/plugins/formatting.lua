@@ -57,8 +57,6 @@ return {
 		end,
 		opts = {
 			formatters_by_ft = {
-				javascript = { "prettierd" },
-				typescript = { "prettierd" },
 				json = { "prettierd" },
 				yaml = { "prettierd" },
 				html = { "prettierd" },

@@ -68,7 +68,8 @@ in
           gaps = 16;
           always-center-single-column = true;
           center-focused-column = "on-overflow";
-          struts.right = 35;
+          struts.right = 40;
+          struts.left = 40;
 
           border = {
             width = 4;

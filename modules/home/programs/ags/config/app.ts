@@ -1,16 +1,21 @@
 import Gio from "gi://Gio?version=2.0";
+import GLib from "gi://GLib?version=2.0";
 import { App } from "astal/gtk3";
-import Bar from "./widget/Bar";
 import * as fileUtils from "astal/file";
 import * as processUtils from "astal/process";
+import Bar from "./widget/Bar";
 
+const palette_file = `${GLib.getenv("XDG_CONFIG_HOME")}/colors/palette.scss`;
 const scss_file = `./style.scss`;
 const css_file = `/tmp/ags/style.css`;
 
 function reloadCss() {
-	processUtils.exec(`sassc ${scss_file} ${css_file}`);
+	const cmd = `cat ${palette_file} ${scss_file} | sassc -s ${css_file}`;
+	processUtils.exec(`bash -c "${cmd}"`);
+
 	App.reset_css();
 	App.apply_css(css_file);
+
 	console.log("CSS loaded");
 }
 
@@ -24,5 +29,6 @@ App.start({
 	main() {
 		reloadCss();
 		App.get_monitors().map(Bar);
+		// window.input_shape_combine_region(new cairo.Rectangle({ x: 0, y: 0, width: 1, height: 1 }));
 	},
 });
