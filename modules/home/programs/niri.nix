@@ -231,7 +231,10 @@ in
       };
     };
 
-    home.packages = [ pkgs.swww ];
+    home.packages = [
+      pkgs.swww
+      pkgs.nautilus
+    ];
 
     systemd.user.services.xwayland-satellite = {
       Unit = {

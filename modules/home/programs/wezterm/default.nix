@@ -19,7 +19,7 @@ let
   };
 in
 {
-  config = lib.mkIf (cfg.enable && cfg.terminal == "wezterm") {
+  config = lib.mkIf (cfg.enable) {
     programs.wezterm = {
       enable = true;
       extraConfig = builtins.readFile ./config.lua;

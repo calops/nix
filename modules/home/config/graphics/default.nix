@@ -53,7 +53,7 @@ in
       fonts = {
         monospace = lib.mkOption {
           type = my.types.font;
-          default = config.my.fonts.iosevka-comfy; # wait until comfy is fixed
+          default = config.my.fonts.iosevka; # wait until comfy is fixed
           description = "Monospace font";
         };
         serif = lib.mkOption {
@@ -151,10 +151,10 @@ in
     fonts.fontconfig.enable = true;
 
     my.fonts = {
-      iosevka-comfy = {
-        name = "Iosevka Comfy";
-        package = pkgs.iosevka-comfy.comfy;
-      };
+      # iosevka-comfy = {
+      #   name = "Iosevka Comfy";
+      #   package = pkgs.iosevka-comfy.comfy;
+      # };
       iosevka = {
         name = "Iosevka";
         package = pkgs.iosevka;
@@ -188,12 +188,12 @@ in
         package = pkgs.cozette;
       };
       terminus-nerdfont = {
-        name = "Terminus Nerd Font";
-        package = pkgs.terminus-nerdfont;
+        name = "Terminess Nerd Font";
+        package = pkgs.nerd-fonts.terminess-ttf;
       };
       nerdfont-symbols = {
         name = "Symbols Nerd Font Mono";
-        package = pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; };
+        package = pkgs.nerd-fonts.symbols-only;
       };
     };
 

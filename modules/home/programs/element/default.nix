@@ -9,7 +9,7 @@
 let
   cfg = config.my.roles.graphical;
   palette = config.my.colors.palette.withHashtag;
-  font = config.my.fonts.iosevka-comfy.name;
+  font = config.my.fonts.iosevka.name;
   elementPkg = pkgs.element-desktop-wayland;
 in
 {

@@ -4,10 +4,18 @@ local nix = require("nix")
 local wezterm = require("wezterm")
 local act = wezterm.action
 
+local function passthrough(mods, key)
+	return {
+		key = key,
+		mods = mods,
+		action = act.SendKey { key = key, mods = mods },
+	}
+end
+
 return {
 	term = "wezterm",
 	font = wezterm.font_with_fallback {
-		"Iosevka Comfy",
+		nix.font.name,
 		nix.font.symbols,
 	},
 	front_end = "WebGpu",
@@ -42,20 +50,8 @@ return {
 		font = wezterm.font(nix.font.name),
 	},
 	keys = {
-		{
-			key = "Tab",
-			mods = "CTRL",
-			action = act.SendKey { key = "Tab", mods = "CTRL" },
-		},
-		{
-			key = "Tab",
-			mods = "SHIFT|CTRL",
-			action = act.SendKey { key = "Tab", mods = "SHIFT|CTRL" },
-		},
-		{
-			key = "Enter",
-			mods = "ALT",
-			action = act.SendKey { key = "Enter", mods = "ALT" },
-		},
+		passthrough("Tab", "CTRL"),
+		passthrough("Tab", "SHIFT|CTRL"),
+		passthrough("Enter", "ALT"),
 	},
 }
