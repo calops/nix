@@ -32,9 +32,13 @@
       };
     };
 
-    environment.systemPackages = [ pkgs.raycast ];
-    environment.shells = [ pkgs.fish ];
-    environment.variables.EDITOR = "nvim";
+    environment = {
+      systemPackages = [ pkgs.raycast ];
+      shells = [ pkgs.fish ];
+      variables.EDITOR = "nvim";
+      variables.MOZ_LEGACY_PROFILES = "1";
+    };
+
     programs.fish.enable = true;
     homebrew.enable = true;
     security.pam.enableSudoTouchIdAuth = true;

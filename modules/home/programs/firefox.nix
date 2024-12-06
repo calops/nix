@@ -24,7 +24,7 @@ let
 in
 {
   config = lib.mkIf config.my.roles.graphical.enable {
-    home.packages = [ pkgs.firefoxpwa ];
+    home.packages = lib.optional (!pkgs.stdenv.isDarwin) pkgs.firefoxpwa;
     programs.firefox = {
       enable = true;
       package = package;
@@ -116,15 +116,12 @@ in
     xdg.configFile."tridactyl/tridactylrc".text =
       # vim
       ''
-        guiset_quiet hoverlink left
-        guiset_quiet statuspanel left
+        sanitise tridactyllocal tridactylsync
 
-        colorscheme dark
-
+        set configversion 2.0
+        set theme dark
         set searchengine google
         set editorcmd ${config.my.roles.graphical.terminal} -e nvim
-
-        setpref browser.uidensity 1
 
         bind / fillcmdline find
         bind ? fillcmdline find -?
@@ -135,15 +132,21 @@ in
         bind ;M composite hint -pipe img src | jsb -p tri.excmds.tabopen('images.google.com/searchbyimage?image_url=' + JS_ARG)
         bind gd tabdetach
         bind gD composite tabduplicate | tabdetach
+        unbind C-f
 
         bindurl www.google.com f hint -Jc .rc > .r > a
-        bindurl www.google.com F hint -Jbc .rc>.r>a
+        bindurl www.google.com F hint -Jbc .rc > .r > a
 
-        autocmd TriStart .* source_quiet ${config.xdg.configHome}/tridactyl/tridactylrc
+        autocmd TriStart .* source_quiet "${config.xdg.configHome}/tridactyl/tridactylrc"
       '';
 
-    home.sessionVariables = lib.mkIf pkgs.stdenv.isLinux {
-      MOZ_ENABLE_WAYLAND = 1;
-    };
+    home.sessionVariables = lib.mkMerge [
+      (lib.optionalAttrs pkgs.stdenv.isLinux {
+        MOZ_ENABLE_WAYLAND = "1";
+      })
+      (lib.optionalAttrs pkgs.stdenv.isDarwin {
+        MOZ_LEGACY_PROFILES = "1";
+      })
+    ];
   };
 }

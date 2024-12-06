@@ -11,7 +11,9 @@ in
   options = {
     programs.logseq = {
       enable = lib.mkEnableOption "logseq";
-      package = lib.mkPackageOption pkgs "logseq" { };
+      package = (
+        (lib.mkPackageOption pkgs "logseq" { }) // { type = lib.types.nullOr lib.types.package; }
+      );
       customCss = lib.mkOption {
         type = lib.types.str;
         default = "";
@@ -23,7 +25,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    home.packages = lib.optional (cfg.package != null) cfg.package;
 
     home.file.".logseq/config/config.edn".text =
       let
