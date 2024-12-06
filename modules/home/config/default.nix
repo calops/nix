@@ -47,10 +47,8 @@
     programs.gpg.enable = true;
     programs.dircolors.enable = true;
 
-    services.network-manager-applet.enable = false; # FIXME: tray icon isn't working on ironbar
-    services.udiskie = lib.mkIf (!pkgs.stdenv.isDarwin) {
-      enable = true;
-    };
+    services.network-manager-applet.enable = true;
+    services.udiskie.enable = !pkgs.stdenv.isDarwin;
 
     programs.nh = lib.mkIf (config.my.configType == "standalone") {
       enable = true;

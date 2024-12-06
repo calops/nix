@@ -35,7 +35,7 @@ return {
 				{ "<leader>gN", function() g().nav_hunk("prev") end, desc = "Previous hunk" },
 				{ "<leader>gp", function() g().preview_hunk_inline() end, desc = "Preview hunk" },
 				{ "<leader>gs", function() g().stage_hunk() end, desc = "Stage hunk", mode = { "n" } },
-				{ "<leader>gr", function() g().reset_hunk() end, desc = "Stage hunk", mode = { "n" } },
+				{ "<leader>gr", function() g().reset_hunk() end, desc = "Reset hunk", mode = { "n" } },
 				{
 					"<leader>gs",
 					function() g().stage_hunk { vim.fn.line("."), vim.fn.line("v") } end,
@@ -45,7 +45,7 @@ return {
 				{
 					"<leader>gr",
 					function() g().reset_hunk { vim.fn.line("."), vim.fn.line("v") } end,
-					desc = "Stage hunk",
+					desc = "Reset hunk",
 					mode = { "x" },
 				},
 			}

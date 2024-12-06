@@ -1,3 +1,5 @@
+local function test(a, b, c) end
+
 return {
 	-- Auto-completion
 	{
@@ -31,19 +33,24 @@ return {
 				["<C-j>"] = { "scroll_documentation_down", "fallback" },
 				["<C-k>"] = { "scroll_documentation_up", "fallback" },
 			},
-			windows = {
-				autocomplete = {
+			completion = {
+				list = { selection = "manual" },
+				menu = {
 					border = "rounded",
 					max_height = 15,
-					selection = "manual",
 				},
-				signature_help = { border = "rounded" },
 				documentation = {
-					border = "rounded",
 					auto_show = true,
 					auto_show_delay_ms = 50,
-					max_width = 80,
+					window = {
+						border = "rounded",
+						max_width = 80,
+					},
 				},
+			},
+			signature = {
+				enabled = true,
+				window = { border = "rounded" },
 			},
 		},
 	},

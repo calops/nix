@@ -36,3 +36,11 @@ button {
 .big {
 	font-size: 20px;
 }
+
+.tray-item {
+	button {
+		padding: 2px;
+		margin: 0px;
+		min-width: 25px;
+	}
+}

@@ -23,5 +23,9 @@
     };
 
     hardware.xpadneo.enable = true; # Xbox One controller driver
+
+    environment.systemPackages = [
+      pkgs.protontricks
+    ];
   };
 }

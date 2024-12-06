@@ -7,11 +7,11 @@ export default function Time() {
 		return GLib.DateTime.new_now_local().format("%H:%M:%Y:%m:%d")!.split(":")
 	});
 
-	const date = new Widget.Revealer({
-		child: <CenterBox name="date">
+	const date = <revealer>
+		<CenterBox name="date">
 			<label label={time(([_, __, year, month, day]) => `${year}\n${month}\n${day}`)} justify={Gtk.Justification.CENTER} />
-		</CenterBox>
-	});
+		</CenterBox >
+	</revealer> as Widget.Revealer;
 
 	const box = <box name="datetime" vertical>
 		{date}

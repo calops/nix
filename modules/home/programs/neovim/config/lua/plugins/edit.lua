@@ -83,7 +83,7 @@ return {
 			}
 		end,
 		opts = {
-			print_tag = "[31mDEBUGPRINT[0m",
+			print_tag = "🔴🔴🔴DEBUGPRINT🔴🔴🔴",
 			filetypes = {
 				elixir = {
 					left = 'IO.puts :stderr, "',

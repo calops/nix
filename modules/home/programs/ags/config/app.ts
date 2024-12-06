@@ -1,6 +1,6 @@
 import Gio from "gi://Gio?version=2.0";
 import GLib from "gi://GLib?version=2.0";
-import { App } from "astal/gtk3";
+import { App, Astal } from "astal/gtk3";
 import * as fileUtils from "astal/file";
 import * as processUtils from "astal/process";
 import Bar from "./widget/Bar";
@@ -28,7 +28,13 @@ fileUtils.monitorFile(scss_file, (_, event) => {
 App.start({
 	main() {
 		reloadCss();
-		App.get_monitors().map(Bar);
-		// window.input_shape_combine_region(new cairo.Rectangle({ x: 0, y: 0, width: 1, height: 1 }));
+
+		App.get_monitors().map((monitor) => {
+			const bar = Bar(monitor);
+			const clip = bar.get_clip();
+			return bar;
+		});
+
+		Astal.widget_set_click_through(App.get_window("bar")!, true);
 	},
 });

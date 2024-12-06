@@ -1,9 +1,11 @@
 import { App, Astal, Gtk, Gdk } from "astal/gtk3"
+
 import Time from "./Time"
 import Tray from "./Tray";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
-	const window = <window
+	return <window
+		name="bar"
 		className="bar"
 		gdkmonitor={gdkmonitor}
 		exclusivity={Astal.Exclusivity.IGNORE}
@@ -23,6 +25,4 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 			</box>
 		</centerbox>
 	</window>
-
-	return window;
 }
