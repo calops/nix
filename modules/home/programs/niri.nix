@@ -60,7 +60,7 @@ in
         };
 
         cursor = {
-          theme = "catppuccino-mocha-peach-cursors";
+          theme = "catppuccin-mocha-peach-cursors";
           size = 32;
         };
 

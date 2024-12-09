@@ -37,7 +37,7 @@ in
         customCss =
           builtins.readFile customCss
           # css
-          ++ ''
+          + ''
             * {
               font-family: ${config.my.roles.graphical.fonts.monospace.name};
             }
