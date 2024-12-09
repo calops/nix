@@ -36,8 +36,9 @@
       systemPackages = [ pkgs.raycast ];
       shells = [ pkgs.fish ];
       variables.EDITOR = "nvim";
-      variables.MOZ_LEGACY_PROFILES = "1";
     };
+
+    launchd.user.envVariables.MOZ_LEGACY_PROFILES = "1";
 
     programs.fish.enable = true;
     homebrew.enable = true;

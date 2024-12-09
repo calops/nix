@@ -131,9 +131,11 @@ return {
 				projectionist = { enable = false },
 				elixirls = {
 					enable = true,
+					cmd = "elixir-ls",
 					settings = elixirls.settings {
 						dialyzerEnabled = true,
 						enableTestLenses = false,
+						suggestSpecs = true,
 					},
 					on_attach = function(client)
 						client.server_capabilities.completionProvider = nil

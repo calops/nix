@@ -75,8 +75,11 @@ return {
 			require("telescope-all-recent").setup {
 				default = { sorting = "frecency" },
 				pickers = {
+					---@diagnostic disable-next-line: assign-type-mismatch
 					live_grep = { disable = false },
+					---@diagnostic disable-next-line: assign-type-mismatch
 					grep_string = { disable = false },
+					---@diagnostic disable-next-line: assign-type-mismatch
 					yank_history = { disable = true },
 				},
 			}
@@ -130,6 +133,7 @@ return {
 			{ "nvim-tree/nvim-web-devicons", enabled = false, optional = true },
 		},
 		init = function()
+			---@diagnostic disable-next-line: duplicate-set-field
 			package.preload["nvim-web-devicons"] = function()
 				-- needed since it will be false when loading and mini will fail
 				package.loaded["nvim-web-devicons"] = {}

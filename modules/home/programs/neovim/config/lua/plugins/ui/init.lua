@@ -330,6 +330,7 @@ return {
 			},
 			right = {
 				"copilot-chat",
+				"codecompanion",
 				{
 					ft = "help",
 					filter = function(buf) return vim.bo[buf].buftype == "help" end,
@@ -343,5 +344,9 @@ return {
 		enabled = false,
 		event = "VeryLazy",
 		dev = true,
+	},
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		ft = { "markdown", "codecompanion" },
 	},
 }

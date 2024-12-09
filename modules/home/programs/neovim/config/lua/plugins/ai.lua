@@ -1,3 +1,5 @@
+local utils = require("core.utils")
+
 return {
 	{
 		"zbirenbaum/copilot.lua",
@@ -25,6 +27,7 @@ return {
 	},
 	{
 		"CopilotC-Nvim/CopilotChat.nvim",
+		enabled = true,
 		branch = "canary",
 		dependencies = {
 			{ "zbirenbaum/copilot.lua" },
@@ -59,7 +62,7 @@ Wrap the whole message in code block with language gitcommit.
 Once you're done with the bullet points, DO NOT write anything else.
 Very important points to remember: be SUCCINT, make sure the title is under 50 characters, and that the bullet points are wrapped at 72 characters.
 ]],
-					selection = function(source) return require("CopilotChat.select").gitdiff(source, true) end,
+					selection = function() return require("CopilotChat.select").gitdiff() end,
 				},
 			},
 		},
@@ -70,7 +73,7 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 					actions.pick(actions.prompt_actions { selection = require("CopilotChat.select")[selection] })
 				end
 			end
-			require("core.utils").map {
+			utils.map {
 				{ "<leader>c", group = "copilot", icon = "" },
 			}
 			return {
@@ -85,5 +88,34 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 				{ "<leader>cs", pick_with_selection("visual"), desc = "Actions on selection", mode = { "n", "x" } },
 			}
 		end,
+	},
+	{
+		"olimorris/codecompanion.nvim",
+		enabled = false, -- requires too much customization for now
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+		},
+		cmd = { "CodeCompanion", "CodeCompanionActions", "CodeCompanionChat", "CodeCompanionCmd" },
+		keys = function()
+			local cc = utils.lazy_require("codecompanion")
+			utils.map {
+				{ "<leader>c", group = "copilot", icon = "" },
+			}
+			return {
+				{ "<leader>cc", cc("toggle"), mode = { "n", "x" }, desc = "Toggle Code Companion" },
+				{ "<leader>ca", cc("actions"), mode = { "n", "x" }, desc = "Code companion actions" },
+			}
+		end,
+		opts = {
+			strategies = {
+				chat = {
+					adapter = "copilot",
+				},
+				inline = {
+					adapter = "copilot",
+				},
+			},
+		},
 	},
 }

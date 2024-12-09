@@ -196,6 +196,13 @@ function DynamicList:new(opts)
 	return list
 end
 
+local function lazy_require(module)
+	return function(func, ...)
+		local args = ...
+		return function() return require(module)[func](args) end
+	end
+end
+
 return {
 	map = map,
 	lazy_init = lazy_init,
@@ -206,4 +213,5 @@ return {
 	for_all_buffers = for_all_buffers,
 	aucmd = aucmd,
 	user_aucmd = user_aucmd,
+	lazy_require = lazy_require,
 }
