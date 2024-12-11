@@ -92,10 +92,9 @@ in
           { command = [ "${pkgs.xwayland-satellite}" ]; }
           { command = [ "swww-daemon" ]; }
           { command = mkCommand "swww img ${wallpaper}"; }
-          { command = mkCommand "ags run"; }
-          { command = [ "${config.programs.firefox.package}" ]; }
-          { command = [ "${pkgs.slack}" ]; }
-          { command = [ "${config.programs.element.package}" ]; }
+          { command = [ "${lib.getExe config.programs.firefox.package}" ]; }
+          { command = [ "${lib.getExe pkgs.slack}" ]; }
+          { command = [ "${lib.getExe config.programs.element.package}" ]; }
         ];
 
         window-rules =
@@ -125,7 +124,7 @@ in
               default-column-width.proportion = 0.5;
               open-on-workspace = "chat";
             })
-            (mkRule "^element-desktop$" {
+            (mkRule "^Element$" {
               default-column-width.proportion = 0.5;
               open-on-workspace = "chat";
             })

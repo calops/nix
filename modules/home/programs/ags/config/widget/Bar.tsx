@@ -2,6 +2,7 @@ import { App, Astal, Gtk, Gdk } from "astal/gtk3"
 
 import Time from "./Time"
 import Tray from "./Tray";
+import Workspaces from "./Workspaces";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
 	return <window
@@ -18,6 +19,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 			</box>
 
 			<box name="middle" vertical valign={Gtk.Align.CENTER}>
+				<Workspaces />
 			</box>
 
 			<box name="bottom" vertical valign={Gtk.Align.END}>

@@ -6,12 +6,12 @@ import { CenterBox } from "./core"
 export default function Tray() {
 	const tray = AstalTray.get_default()
 
-	return <box vertical>
+	return <CenterBox vertical>
 		{bind(tray, "items").as((items: AstalTray.TrayItem[]) => items
 			.filter(item => item.gicon)
 			.map((item: AstalTray.TrayItem) => {
 				const menu = item.create_menu()
-				return <CenterBox className="tray-item">
+				return <CenterBox className="small">
 					<button
 						tooltipMarkup={bind(item, "tooltipMarkup")}
 						onDestroy={() => menu?.destroy()}
@@ -22,5 +22,5 @@ export default function Tray() {
 					</button>
 				</CenterBox>
 			}))}
-	</box>
+	</CenterBox>
 }

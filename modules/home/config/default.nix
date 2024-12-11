@@ -48,7 +48,11 @@
     programs.dircolors.enable = true;
 
     services.network-manager-applet.enable = true;
-    services.udiskie.enable = !pkgs.stdenv.isDarwin;
+
+    services.udiskie = {
+      enable = !pkgs.stdenv.isDarwin;
+      tray = "auto";
+    };
 
     programs.nh = lib.mkIf (config.my.configType == "standalone") {
       enable = true;

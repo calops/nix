@@ -32,6 +32,28 @@ in
       extraPackages = deps;
     };
 
-    xdg.configFile."ags".source = config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/programs/ags/config";
+    xdg.configFile."ags".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/programs/ags/config";
+
+    systemd.user.services.ags-bar = {
+      Unit = {
+        Description = "AGS Bar";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+      };
+
+      Service =
+        let
+          ags = "${config.programs.ags.package}/bin/ags";
+        in
+        {
+          ExecStart = "${ags} run";
+          ExecReload = "${ags} quit && ${ags} run";
+          Restart = "on-failure";
+          KillMode = "mixed";
+        };
+
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
   };
 }

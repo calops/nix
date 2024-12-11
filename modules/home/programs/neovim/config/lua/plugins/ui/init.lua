@@ -92,7 +92,7 @@ return {
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		commit = "e7a4442e055ec953311e77791546238d1eaae507", -- FIXME: unpin once solved upstream
-		enabled = true,
+		enabled = false,
 		event = "BufRead",
 		main = "ibl",
 		opts = {
@@ -121,6 +121,14 @@ return {
 			return {
 				bigfile = { enabled = true },
 				quickfile = { enabled = true },
+				words = { enabled = false },
+				styles = { notification = { wo = { wrap = true } } },
+				indent = { scope = { animate = { enabled = false } } },
+				notifier = {
+					enabled = true,
+					timeout = 5000,
+					sort = { "added" },
+				},
 				statuscolumn = {
 					left = { "mark", "sign" },
 					right = { "fold", "git" },
@@ -131,13 +139,6 @@ return {
 					git = { patterns = { "GitSign", "MiniDiffSign" } },
 					refresh = 50,
 				},
-				words = { enabled = false },
-				notifier = {
-					enabled = true,
-					timeout = 5000,
-					sort = { "added" },
-				},
-				styles = { notification = { wo = { wrap = true } } },
 				dashboard = {
 					enabled = true,
 					sections = {

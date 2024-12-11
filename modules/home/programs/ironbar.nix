@@ -7,7 +7,7 @@
 {
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     services.ironbar = {
-      enable = true;
+      enable = false;
       settings =
         let
           ironbarClient = lib.getExe config.services.ironbar.package;
