@@ -88,30 +88,6 @@ return {
 			select = { enabled = true },
 		},
 	},
-	-- Context-aware indentation lines
-	{
-		"lukas-reineke/indent-blankline.nvim",
-		commit = "e7a4442e055ec953311e77791546238d1eaae507", -- FIXME: unpin once solved upstream
-		enabled = false,
-		event = "BufRead",
-		main = "ibl",
-		opts = {
-			indent = {
-				char = "▎",
-				tab_char = "▎",
-			},
-			scope = {
-				show_start = false,
-				show_end = false,
-				include = {
-					node_type = {
-						lua = { "table_constructor" },
-						nix = { "attrset_expression", "list_expression" },
-					},
-				},
-			},
-		},
-	},
 	-- Notification handler, and various utilities
 	{
 		"folke/snacks.nvim",

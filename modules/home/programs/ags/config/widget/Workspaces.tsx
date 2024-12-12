@@ -7,36 +7,43 @@ import { bind } from "astal"
 export default function Workspaces() {
 	const niri = new Niri()
 
-	return <CenterBox className="workspaces" vertical>
-		{bind(niri, "focusedWorkspace").as((_) => niri.workspaces?.map((workspace: any) => {
-			const label = workspace.name ? nameToSymbol(workspace.name) : String(workspace.id)
-			const isActive = workspace.id === niri.focusedWorkspace
+	const workspaces = bind(niri, "workspaces").as((workspaces) => workspaces?.map((workspace) => {
+		// FIXME: a lot of icons are missed with this strategy
+		const windows = bind(niri, "windows").as((windows) => windows
+			?.filter((window) => window.workspace_id == workspace.id)
+			.map((window) => [
+				window.title,
+				Gio.AppInfo.get_all().find(a => {
+					return a.get_name() === window.app_id ||
+						a.get_id()?.replace(".desktop", "") === window.app_id
+				})?.get_icon()
+			] as [string, Gio.Icon])
+			.filter(([_title, icon]) => icon)
+			.map(([title, icon]) => <icon gIcon={icon} className="window" tooltipMarkup={title} />))
 
-			// FIXME: a lot of icons are missed with this strategy
-			const windows =
-				bind(niri, "windows").as((windows: any[]) => windows
-					?.filter((window) => window.workspace_id == workspace.id)
-					.map((window) => Gio.AppInfo.get_all().find(a => a.get_name() == window.app_id)?.get_icon())
-					.filter((icon) => icon)
-					.flatMap((icon) => <button className="window"><icon gIcon={icon!} /></button>))
+		const revealer = <revealer>
+			<box className="windows" vertical>{windows}</box>
+		</revealer> as Widget.Revealer
 
-			const revealer = <revealer><box vertical>{windows}</box></revealer> as Widget.Revealer
+		const label = workspace.name ? nameToSymbol(workspace.name) : String(workspace.id)
 
-			if (isActive) revealer.set_reveal_child(true)
+		const workspaceBox = <box vertical className="workspace-box">
+			<button className={"workspace small"} onClick={() => niri.focusWorkspace(workspace.id)}>
+				<label label={label} className={workspace.name ? "symbol" : ""} />
+			</button>
+			{revealer}
+		</box> as Widget.Box
 
-			return <box vertical className={"workspace-box" + (isActive ? " active" : "")}>
-				<button
-					className={"workspace small" + (isActive ? " active" : "")}
-					onClick={() => niri.focusedWorkspace = workspace.id}
-					onHover={() => revealer.set_reveal_child(true)}
-					onHoverLost={() => revealer.set_reveal_child(isActive)}
-				>
-					<label label={label} className={workspace.name ? "symbol" : ""} />
-				</button>
-				{revealer}
-			</box>
-		}))}
-	</CenterBox>
+		niri.connect("focus-changed", (_, focusedWorkspace: number) => {
+			const isFocused = workspace.id === focusedWorkspace
+			revealer.set_reveal_child(isFocused)
+			workspaceBox.set_class_name(isFocused ? "workspace-box active" : "workspace-box")
+		})
+
+		return workspaceBox;
+	}))
+
+	return <CenterBox className="workspaces" vertical>{workspaces}</CenterBox>
 }
 
 function nameToSymbol(name: string) {

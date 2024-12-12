@@ -20,19 +20,27 @@ window.bar {
 	button {
 		padding: 2px;
 		min-width: 25px;
+	}
+
+	box.workspace-box {
+		margin: -3px 0px;
 
 		&.active {
-			border: 2px solid $mauve;
-			box-shadow: none;
-			background-color: $mauve;
-			color: $base;
+			margin: 2px 0px;
+			border-radius: 50px;
+			box-shadow: 0px 0px 2px 2px $mauve;
+
+			button {
+				border-radius: 50px;
+				box-shadow: none;
+				background-color: transparent;
+				color: $mauve;
+			}
 		}
 	}
 
-	box.workspace-box.active {
-		margin: -3px 0px;
-		border-radius: 50px;
-		border: 2px solid $mauve;
+	box.windows {
+		padding-bottom: 2px;
 	}
 
 	label.symbol {
@@ -70,8 +78,9 @@ button {
 }
 
 .window {
-	margin: -5px;
+	margin: 2px 0px;
 	padding: 0px;
+	background-color: transparent;
 
 	&:hover {
 		background-color: transparent;

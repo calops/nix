@@ -3,6 +3,7 @@ import { App, Astal, Gtk, Gdk } from "astal/gtk3"
 import Time from "./Time"
 import Tray from "./Tray";
 import Workspaces from "./Workspaces";
+import { CenterBox } from "./core";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
 	return <window
@@ -14,17 +15,17 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 		application={App}
 	>
 		<centerbox vertical halign={Gtk.Align.START}>
-			<box name="top" vertical valign={Gtk.Align.START}>
+			<CenterBox name="top" vertical valign={Gtk.Align.START}>
 				<Tray />
-			</box>
+			</CenterBox>
 
-			<box name="middle" vertical valign={Gtk.Align.CENTER}>
+			<CenterBox name="middle" vertical valign={Gtk.Align.CENTER}>
 				<Workspaces />
-			</box>
+			</CenterBox>
 
-			<box name="bottom" vertical valign={Gtk.Align.END}>
+			<CenterBox name="bottom" vertical valign={Gtk.Align.END}>
 				<Time />
-			</box>
+			</CenterBox>
 		</centerbox>
 	</window>
 }
