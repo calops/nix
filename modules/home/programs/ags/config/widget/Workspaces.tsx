@@ -1,14 +1,13 @@
 import Gio from "gi://Gio?version=2.0"
 import Niri from "./services/niri";
 import { CenterBox } from "./core";
-import { Widget } from "astal/gtk3";
+import { Widget, Gtk } from "astal/gtk3";
 import { bind } from "astal"
 
 export default function Workspaces() {
 	const niri = new Niri()
 
 	const workspaces = bind(niri, "workspaces").as((workspaces) => workspaces?.map((workspace) => {
-		// FIXME: a lot of icons are missed with this strategy
 		const windows = bind(niri, "windows").as((windows) => windows
 			?.filter((window) => window.workspace_id == workspace.id)
 			.map((window) => [
@@ -37,7 +36,7 @@ export default function Workspaces() {
 		niri.connect("focus-changed", (_, focusedWorkspace: number) => {
 			const isFocused = workspace.id === focusedWorkspace
 			revealer.set_reveal_child(isFocused)
-			workspaceBox.set_class_name(isFocused ? "workspace-box active" : "workspace-box")
+			workspaceBox.set_state_flags(isFocused ? Gtk.StateFlags.SELECTED : null, true)
 		})
 
 		return workspaceBox;
