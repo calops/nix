@@ -54,7 +54,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # Flake framework to reduce boilerplate
-    snowfall-lib.url = "github:snowfallorg/lib/dev";
+    snowfall-lib.url = "github:snowfallorg/lib";
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
 
     # App launcher
@@ -62,7 +62,7 @@
     anyrun.inputs.nixpkgs.follows = "nixpkgs";
 
     # Nix fork with more up to date optimizations and features
-    lix.url = "https://git.lix.systems/lix-project/nixos-module/archive/2.90.0.tar.gz";
+    lix.url = "git+https://git.lix.systems/lix-project/nixos-module";
     lix.inputs.nixpkgs.follows = "nixpkgs";
 
     # Vencord settings module (discord mod)

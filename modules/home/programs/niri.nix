@@ -8,10 +8,8 @@
 let
   palette = config.my.colors.palette.withHashtag;
   mkCommand = cmd: lib.strings.splitString " " cmd;
-  wallpaper = pkgs.fetchurl {
-    url = "https://w.wallhaven.cc/full/d6/wallhaven-d6j79o.png";
-    hash = "sha256-4nFo0PPlESqoFWZhEtA9JvFnOChOIxxcZq/FqiYNfCw=";
-  };
+  wallpaper = config.stylix.image;
+  lock = lib.getExe config.programs.swaylock.package;
 in
 {
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
@@ -28,26 +26,16 @@ in
           };
         };
 
-        workspaces = {
-          "01-web" = {
-            name = "web";
-          };
-          "02-dev" = {
-            name = "dev";
-          };
-          "03-work" = {
-            name = "work";
-          };
-          "04-chat" = {
-            name = "chat";
-          };
-          "05-games" = {
-            name = "games";
-          };
-          "06-misc" = {
-            name = "misc";
-          };
-        };
+        workspaces = lib.mapAttrs' (index: name: lib.nameValuePair "${index}-${name}" { inherit name; }) (
+          lib.my.enumerateList [
+            "web"
+            "dev"
+            "work"
+            "chat"
+            "games"
+            "misc"
+          ]
+        );
 
         environment = {
           DISPLAY = ":0";
@@ -141,7 +129,7 @@ in
           {
             "Mod+Return".action = act.spawn "kitty";
             "Mod+Space".action = act.spawn "anyrun";
-            "Mod+K".action = act.spawn "hyprlock";
+            "Mod+L".action = act.spawn lock;
 
             "Mod+Shift+E".action = act.quit;
             "Mod+Shift+Comma".action = act.show-hotkey-overlay;
@@ -228,6 +216,51 @@ in
             };
           };
       };
+    };
+
+    programs.swaylock = {
+      enable = true;
+      package = pkgs.swaylock-effects;
+      settings = {
+        screenshots = true;
+        effect-pixelate = 7;
+        fade-in = 1.0;
+        grace = 5;
+        grace-no-mouse = true;
+      };
+    };
+
+    services.swayidle = {
+      enable = true;
+      events = [
+        {
+          event = "before-sleep";
+          command = "pidof ${lock} || ${lock}";
+        }
+        {
+          event = "lock";
+          command = "${lock}";
+        }
+      ];
+      timeouts = [
+        {
+          timeout = 300;
+          command = "pidof ${lock} || ${lock}";
+        }
+        {
+          timeout = 600;
+          command = "niri msg action power-off-monitors";
+        }
+        # FIXME: suspend is not reliable with my hardware
+        # {
+        #   timeout = 7200;
+        #   command = "systemctl suspend";
+        # }
+        {
+          timeout = 300;
+          command = "pidof ${lock} && niri msg action power-off-monitors";
+        }
+      ];
     };
 
     home.packages = [

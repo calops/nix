@@ -18,8 +18,8 @@
       {
         enable = true;
         image = pkgs.fetchurl {
-          url = "https://github.com/zhichaoh/catppuccin-wallpapers/blob/main/waves/wavy_lines_v02_5120x2880.png?raw=true";
-          hash = "sha256-aTl04D/3ei0BqRg0zx+0TGufarWSXdKIlDxqOY+Iqyw=";
+          url = "https://w.wallhaven.cc/full/d6/wallhaven-d6j79o.png";
+          hash = "sha256-4nFo0PPlESqoFWZhEtA9JvFnOChOIxxcZq/FqiYNfCw=";
         };
         autoEnable = true;
         polarity = config.my.colors.background;

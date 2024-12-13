@@ -10,7 +10,6 @@
     ../common
     inputs.stylix.nixosModules.stylix
     inputs.madness.nixosModules.madness
-    # inputs.lix.nixosModules.default
   ] ++ lib.snowfall.fs.get-non-default-nix-files ./.;
 
   options = {
