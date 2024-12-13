@@ -31,10 +31,7 @@ App.start({
 
 		App.get_monitors().map((monitor) => {
 			const bar = Bar(monitor);
-			const clip = bar.get_clip();
 			return bar;
 		});
-
-		Astal.widget_set_click_through(App.get_window("bar")!, true);
 	},
 });

@@ -1,4 +1,4 @@
-import { App, Astal, Gtk, Gdk } from "astal/gtk3"
+import { App, Astal, Gtk, Gdk, Widget } from "astal/gtk3"
 
 import Time from "./Time"
 import Tray from "./Tray";
@@ -7,19 +7,19 @@ import { CenterBox } from "./core";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
 	return <window
-		name="bar"
 		className="bar"
 		gdkmonitor={gdkmonitor}
 		exclusivity={Astal.Exclusivity.IGNORE}
 		anchor={Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM}
 		application={App}
+		clickThrough={true}
 	>
-		<centerbox vertical halign={Gtk.Align.START}>
-			<CenterBox name="top" vertical valign={Gtk.Align.START}>
+		<centerbox vertical halign={Gtk.Align.START} clickThrough={true}>
+			<CenterBox name="top" vertical valign={Gtk.Align.START} clickThrough={true}>
 				<Tray />
 			</CenterBox>
 
-			<CenterBox name="middle" vertical valign={Gtk.Align.CENTER}>
+			<CenterBox name="middle" vertical valign={Gtk.Align.CENTER} clickThrough={true}>
 				<Workspaces />
 			</CenterBox>
 
@@ -27,5 +27,5 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 				<Time />
 			</CenterBox>
 		</centerbox>
-	</window>
+	</window> as Widget.Window
 }
