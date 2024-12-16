@@ -120,7 +120,7 @@ in
           "kitty"
           "wezterm"
         ];
-        default = "wezterm";
+        default = "kitty";
         description = "Terminal emulator";
       };
 

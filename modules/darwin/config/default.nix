@@ -1,12 +1,12 @@
 {
   pkgs,
-  inputs,
   config,
   lib,
+  inputs,
   ...
 }:
 {
-  imports = [ inputs.nh-darwin.nixDarwinModules.prebuiltin ];
+  imports = [ inputs.nh_plus.nixDarwinModules.prebuiltin ];
 
   options = {
     my.configDir = lib.mkOption {

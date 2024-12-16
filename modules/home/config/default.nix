@@ -47,7 +47,7 @@
     programs.gpg.enable = true;
     programs.dircolors.enable = true;
 
-    services.network-manager-applet.enable = true;
+    services.network-manager-applet.enable = !pkgs.stdenv.isDarwin;
 
     services.udiskie = {
       enable = !pkgs.stdenv.isDarwin;

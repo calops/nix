@@ -162,7 +162,7 @@
         # CSS
         ''
           * {
-            font-family: "Iosevka Comfy";
+            font-family: "Iosevka";
           }
 
           .background {

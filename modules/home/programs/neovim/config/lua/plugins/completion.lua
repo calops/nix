@@ -1,5 +1,3 @@
-local function test(a, b, c) end
-
 return {
 	-- Auto-completion
 	{
@@ -7,22 +5,23 @@ return {
 		event = "VeryLazy",
 		dependencies = "rafamadriz/friendly-snippets",
 		build = "cargo build --release",
+		opts_extend = { "sources.default" },
 
+		---@module 'blink.cmp'
+		---@type blink.cmp.Config
 		opts = {
-			highlight = { use_nvim_cmp_as_default = true },
-			trigger = { signature_help = { enabled = true } },
+			appearance = { use_nvim_cmp_as_default = true },
 			sources = {
-				completion = { enabled_providers = { "lsp", "path", "snippets", "buffer", "lazydev" } },
+				default = { "lsp", "path", "snippets", "buffer", "lazydev" },
 				providers = {
-					lsp = {
-						name = "lsp",
-						fallback_for = { "lazydev" },
+					lazydev = {
+						name = "LazyDev",
+						module = "lazydev.integrations.blink",
+						fallbacks = { "lsp" },
 					},
-					lazydev = { name = "LazyDev", module = "lazydev.integrations.blink" },
 				},
 			},
 			keymap = {
-				---@diagnostic disable-next-line: assign-type-mismatch
 				preset = "default",
 				["<Cr>"] = { "accept", "fallback" },
 				["<C-y>"] = { "accept", "fallback" },

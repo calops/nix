@@ -12,9 +12,12 @@ return {
 		"Wansmer/treesj",
 		lazy = true,
 		keys = {
-			{ "gs", function() require("treesj").toggle() end, desc = "Toggle split" },
+			{ "<space>s", function() require("treesj").toggle() end, desc = "Toggle split" },
 		},
-		opts = { max_join_length = 300 },
+		opts = {
+			max_join_length = 300,
+			use_default_keymaps = false,
+		},
 	},
 	-- Automatically adjust indentation settings depending on the file
 	{
@@ -185,18 +188,14 @@ return {
 			})
 		end,
 	},
-	-- Substitute operator
 	{
-		"gbprod/substitute.nvim",
-		lazy = true,
-		keys = {
-			{ "s", function() require("substitute").operator() end, desc = "Substitute" },
-			{ "s", function() require("substitute").visual() end, desc = "Substitute", mode = "x" },
-			{ "ss", function() require("substitute").line() end, desc = "Substitute line" },
-			{ "S", function() require("substitute").eol() end, desc = "Substitute until end of line" },
-		},
+		"echasnovski/mini.operators",
 		opts = {
-			on_substitute = function() require("yanky.integration").substitute() end,
+			evaluate = { prefix = "g=" },
+			exchange = { prefix = "gR" },
+			multiply = { prefix = "gm" },
+			replace = { prefix = "gx" },
+			sort = { prefix = "gs" },
 		},
 	},
 	-- More convenient word motions

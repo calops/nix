@@ -166,16 +166,21 @@ return {
 			"jfpedroza/neotest-elixir",
 		},
 		cmd = "Neotest",
-		keys = {
-			{ "<space>tt", function() require("neotest").run.run() end, desc = "Run closest test" },
-			{
-				"<space>tf",
-				function() require("neotest").run.run(vim.fn.expand("%")) end,
-				desc = "Run all tests in file",
-			},
-			{ "<space>ts", function() require("neotest").summary.toggle() end, desc = "Toggle summary" },
-			{ "<space>to", function() require("neotest").output_panel.toggle() end, desc = "Toggle output" },
-		},
+		keys = function()
+			utils.map {
+				{ "<space>t", group = "tests", icon = "" },
+			}
+			return {
+				{ "<space>tt", function() require("neotest").run.run() end, desc = "Run closest test" },
+				{
+					"<space>tf",
+					function() require("neotest").run.run(vim.fn.expand("%")) end,
+					desc = "Run all tests in file",
+				},
+				{ "<space>ts", function() require("neotest").summary.toggle() end, desc = "Toggle summary" },
+				{ "<space>to", function() require("neotest").output_panel.toggle() end, desc = "Toggle output" },
+			}
+		end,
 		config = function()
 			---@diagnostic disable-next-line: missing-fields
 			require("neotest").setup {

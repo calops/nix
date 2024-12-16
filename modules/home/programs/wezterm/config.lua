@@ -4,7 +4,7 @@ local nix = require("nix")
 local wezterm = require("wezterm")
 local act = wezterm.action
 
-local function passthrough(mods, key)
+local function passthrough(key, mods)
 	return {
 		key = key,
 		mods = mods,

@@ -24,7 +24,7 @@
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
 
     # nh fork with darwin support
-    nh-darwin.url = "github:ToyVo/nh-darwin";
+    nh_plus.url = "github:ToyVo/nh_plus";
 
     # Support dynamically linked binaries for generic Linux (nix-ld alternative)
     madness.url = "github:antithesishq/madness";

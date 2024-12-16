@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
   window = args: "yabai -m window --" + args;
   space = args: "yabai -m space --" + args;
@@ -14,7 +19,7 @@ in
     home.packages = [ pkgs.skhd ];
 
     xdg.configFile."skhd/skhdrc".text = mkSkhdrc {
-      "cmd - return" = "wezterm cli spawn --new-window";
+      "cmd - return" = "${config.my.roles.graphical.terminal} cli spawn --new-window";
 
       "cmd + shift - down" = window "warp south";
       "cmd + shift - up" = window "warp north";

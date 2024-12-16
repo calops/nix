@@ -99,7 +99,7 @@ return {
 				quickfile = { enabled = true },
 				words = { enabled = false },
 				styles = { notification = { wo = { wrap = true } } },
-				indent = { scope = { animate = { enabled = false } } },
+				indent = { enabled = true },
 				notifier = {
 					enabled = true,
 					timeout = 5000,
