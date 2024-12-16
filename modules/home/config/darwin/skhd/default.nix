@@ -19,7 +19,7 @@ in
     home.packages = [ pkgs.skhd ];
 
     xdg.configFile."skhd/skhdrc".text = mkSkhdrc {
-      "cmd - return" = "${config.my.roles.graphical.terminal} cli spawn --new-window";
+      "cmd - return" = "${config.my.roles.graphical.terminal}";
 
       "cmd + shift - down" = window "warp south";
       "cmd + shift - up" = window "warp north";
