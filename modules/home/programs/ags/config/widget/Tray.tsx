@@ -1,5 +1,5 @@
 import { bind } from "astal"
-import { Gdk, Widget } from "astal/gtk3"
+import { Gdk } from "astal/gtk3"
 import AstalTray from "gi://AstalTray"
 import { CenterBox } from "./core"
 
@@ -11,19 +11,16 @@ export default function Tray() {
 			.filter(item => item.gicon)
 			.map((item: AstalTray.TrayItem) => {
 				const menu = item.create_menu()
-				const revealer = <revealer>{menu}</revealer> as Widget.Revealer
 
 				return <CenterBox className="small">
 					<button
 						tooltipMarkup={bind(item, "tooltipMarkup")}
 						onDestroy={() => menu?.destroy()}
-						onHover={() => revealer.set_reveal_child(!revealer.revealChild)}
 						onClickRelease={self => {
 							menu?.popup_at_widget(self, Gdk.Gravity.SOUTH, Gdk.Gravity.NORTH, null)
 						}}>
 						<icon gIcon={bind(item, "gicon")} />
 					</button>
-					{revealer}
 				</CenterBox>
 			}))}
 	</CenterBox>

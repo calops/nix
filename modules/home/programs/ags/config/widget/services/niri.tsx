@@ -1,10 +1,6 @@
 import GObject, { register, property, signal } from "astal/gobject"
 import { execAsync, subprocess } from "astal/process"
 
-function action(...args: string[]) {
-	return execAsync(["niri", "msg", "action", ...args])
-}
-
 export type Workspace = {
 	id: number
 	name: string
@@ -17,6 +13,10 @@ export type Window = {
 	app_id: string
 	workspace_id: number
 	is_focused: boolean
+}
+
+function action(...args: string[]) {
+	return execAsync(["niri", "msg", "action", ...args])
 }
 
 @register({ GTypeName: "Niri" })

@@ -1,31 +1,35 @@
-import { App, Astal, Gtk, Gdk, Widget } from "astal/gtk3"
+import { App, Astal, Gtk, Gdk } from "astal/gtk3"
 
+import { idle } from "astal";
 import Time from "./Time"
 import Tray from "./Tray";
 import Workspaces from "./Workspaces";
 import { CenterBox } from "./core";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
+	const centerbox = <centerbox vertical halign={Gtk.Align.START}>
+		<CenterBox name="top" vertical valign={Gtk.Align.START}>
+			<Tray />
+		</CenterBox>
+
+		<CenterBox name="middle" vertical valign={Gtk.Align.CENTER}>
+			<Workspaces />
+		</CenterBox>
+
+		<CenterBox name="bottom" vertical valign={Gtk.Align.END}>
+			<Time />
+		</CenterBox>
+	</centerbox>
+
 	return <window
 		className="bar"
 		gdkmonitor={gdkmonitor}
 		exclusivity={Astal.Exclusivity.IGNORE}
+		keymode={Astal.Keymode.NONE}
 		anchor={Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM}
 		application={App}
-		clickThrough={true}
+		onRealize={self => idle(() => self.set_click_through(true))}
 	>
-		<centerbox vertical halign={Gtk.Align.START} clickThrough={true}>
-			<CenterBox name="top" vertical valign={Gtk.Align.START} clickThrough={true}>
-				<Tray />
-			</CenterBox>
-
-			<CenterBox name="middle" vertical valign={Gtk.Align.CENTER} clickThrough={true}>
-				<Workspaces />
-			</CenterBox>
-
-			<CenterBox name="bottom" vertical valign={Gtk.Align.END}>
-				<Time />
-			</CenterBox>
-		</centerbox>
-	</window> as Widget.Window
+		{centerbox}
+	</window>
 }

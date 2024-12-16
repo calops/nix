@@ -1,6 +1,6 @@
 import Gio from "gi://Gio?version=2.0";
 import GLib from "gi://GLib?version=2.0";
-import { App, Astal } from "astal/gtk3";
+import { App } from "astal/gtk3";
 import * as fileUtils from "astal/file";
 import * as processUtils from "astal/process";
 import Bar from "./widget/Bar";
@@ -28,10 +28,6 @@ fileUtils.monitorFile(scss_file, (_, event) => {
 App.start({
 	main() {
 		reloadCss();
-
-		App.get_monitors().map((monitor) => {
-			const bar = Bar(monitor);
-			return bar;
-		});
+		App.get_monitors().map((monitor) => Bar(monitor));
 	},
 });
