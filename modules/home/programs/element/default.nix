@@ -57,8 +57,8 @@ in
               other-user-pill-bg-color = "${palette.tangerine}";
             };
             compound = lib.mapAttrs' (name: value: lib.nameValuePair "--cpd-color-${name}" value) {
-              text-decorative-2 = "${palette.green}";
               text-decorative-1 = "${palette.blue}";
+              text-decorative-2 = "${palette.green}";
               text-decorative-3 = "${palette.mauve}";
               text-decorative-4 = "${palette.teal}";
               text-decorative-5 = "${palette.coral}";

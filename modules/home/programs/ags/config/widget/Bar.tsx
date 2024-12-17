@@ -5,6 +5,7 @@ import Time from "./Time"
 import Tray from "./Tray";
 import Workspaces from "./Workspaces";
 import { CenterBox } from "./core";
+import Audio from "./Audio";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
 	const centerbox = <centerbox vertical halign={Gtk.Align.START}>
@@ -17,6 +18,7 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 		</CenterBox>
 
 		<CenterBox name="bottom" vertical valign={Gtk.Align.END}>
+			<Audio />
 			<Time />
 		</CenterBox>
 	</centerbox>

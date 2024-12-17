@@ -10,6 +10,7 @@ let
   mkCommand = cmd: lib.strings.splitString " " cmd;
   wallpaper = config.stylix.image;
   lock = lib.getExe config.programs.swaylock.package;
+  niri = lib.getExe config.programs.niri.package;
 in
 {
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
@@ -249,7 +250,7 @@ in
         }
         {
           timeout = 600;
-          command = "niri msg action power-off-monitors";
+          command = "${niri} msg action power-off-monitors";
         }
         # FIXME: suspend is not reliable with my hardware
         # {
@@ -258,7 +259,7 @@ in
         # }
         {
           timeout = 300;
-          command = "pidof ${lock} && niri msg action power-off-monitors";
+          command = "pidof ${lock} && ${niri} msg action power-off-monitors";
         }
       ];
     };

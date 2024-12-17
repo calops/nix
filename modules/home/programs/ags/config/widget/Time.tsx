@@ -1,4 +1,4 @@
-import { idle, Variable, GLib } from "astal"
+import { Variable, GLib } from "astal"
 import { Gtk, Widget } from "astal/gtk3";
 import { CenterBox } from "./core";
 
