@@ -80,4 +80,13 @@ return {
 			end
 		end,
 	},
+	-- Symbol picker
+	{
+		"ziontee113/icon-picker.nvim",
+		cmd = { "IconPickerNormal" },
+		keys = {
+			{ "<leader>fe", "<cmd>IconPickerNormal<cr>", desc = "Pick icon" },
+		},
+		opts = { disable_legacy_commands = true },
+	},
 }
