@@ -52,30 +52,6 @@ return {
 		end,
 	},
 	{
-		"rachartier/tiny-code-action.nvim",
-		dependencies = {
-			{ "nvim-lua/plenary.nvim" },
-			{ "nvim-telescope/telescope.nvim" },
-		},
-		keys = {
-			{
-				"<leader>a",
-				function() require("tiny-code-action").code_action() end,
-				desc = "Interactive list of code actions",
-			},
-		},
-		event = "LspAttach",
-		opts = {
-			backend = "vim", -- FIXME: delta is not rendering correctly
-			backend_opts = {
-				delta = {
-					header_lines_to_remove = 4,
-					args = { "--features", "nosidebyside" },
-				},
-			},
-		},
-	},
-	{
 		"folke/lazydev.nvim",
 		ft = "lua",
 		dependencies = {

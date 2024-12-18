@@ -22,10 +22,9 @@ local function hl_override(palette)
 		FloatBorder = { fg = palette.mauve },
 		TermFloatBorder = { fg = palette.red },
 
-		TelescopeBorder = { fg = palette.yellow },
-		TelescopePreviewBorder = { fg = palette.teal },
-		TelescopePromptBorder = { fg = palette.peach },
-		TelescopeResultsBorder = { fg = palette.green },
+		FzfLuaBorder = { fg = palette.yellow },
+		FzfLuaPreviewBorder = { fg = palette.teal },
+		FzfLuaHeaderText = { fg = palette.overlay0 },
 
 		BlinkCmpMenu = { link = "NormalFloat" },
 		BlinkCmpMenuBorder = { fg = palette.mauve },
@@ -192,7 +191,6 @@ return {
 		term_colors = true,
 		integrations = {
 			blink_cmp = true,
-			telescope = true,
 			neotree = true,
 			cmp = true,
 			gitsigns = true,

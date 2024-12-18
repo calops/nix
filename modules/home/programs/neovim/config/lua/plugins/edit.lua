@@ -161,15 +161,10 @@ return {
 			storage = "sqlite",
 			cancel_event = "move",
 		} },
+		cmd = { "YankRingHistory" },
 		keys = {
-			{
-				"<C-y>",
-				function() require("telescope").extensions.yank_history.yank_history() end,
-				desc = "Yank history",
-			},
+			{ "<C-y>", "<cmd>YankRingHistory<cr>", desc = "Yank history" },
 			{ "<leader>y", '"+y', desc = "Copy to system clipboard", mode = { "n", "v", "x" } },
-			{ "gp", "<Plug>YankyPreviousEntry", desc = "Previous yank" },
-			{ "gn", "<Plug>YankyNextEntry", desc = "Next yank" },
 		},
 		init = function()
 			-- Remove trailing whitespace from visual block yanks

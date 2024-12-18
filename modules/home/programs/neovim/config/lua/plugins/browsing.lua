@@ -3,87 +3,25 @@ local map = require("core.utils").map
 return {
 	-- Fuzzy finder
 	{
-		"nvim-telescope/telescope.nvim",
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-telescope/telescope-media-files.nvim",
-			"nvim-telescope/telescope-symbols.nvim",
-			"Marskey/telescope-sg",
-			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-			{ "prochri/telescope-all-recent.nvim", dependencies = { "kkharji/sqlite.lua" } },
-		},
-		cmd = "Telescope",
-		lazy = true,
-		keys = {
-			{ "<C-p>", function() require("telescope.builtin").find_files() end, desc = "Find files" },
-			{
-				"<leader><Space>",
-				function() require("telescope.builtin").grep_string() end,
-				desc = "Grep word under cursor",
-			},
-			{
-				"<leader>S",
-				function() require("telescope.builtin").grep_string { search = "" } end,
-				desc = "Fuzzy grep",
-			},
-			{ "<leader>s", function() require("telescope.builtin").live_grep() end, desc = "Live grep" },
-			{ "<leader>b", function() require("telescope.builtin").buffers() end, desc = "Find buffer" },
-			{ "<leader>e", function() require("telescope.builtin").symbols() end, desc = "Select symbol" },
-			{ "<leader>R", function() require("telescope.builtin").resume() end, desc = "Resume selection" },
-			{
-				"<leader>s",
-				function()
-					vim.cmd('noau normal! "vy"')
-					local text = vim.fn.getreg("v")
-					vim.fn.setreg("v", {})
-					require("telescope.builtin").grep_string { search = text }
-				end,
-				desc = "Grep current selection",
-				mode = { "x", "v" },
-			},
-		},
-		config = function()
-			local telescope = require("telescope")
-
-			telescope.setup {
-				defaults = {
-					layout_strategy = "flex",
-					layout_config = {
-						flex = { flip_columns = 200 },
-					},
-					mappings = {
-						i = {
-							["<esc>"] = require("telescope.actions").close,
-							["<C-T>"] = function() require("trouble.sources.telescope").open() end,
-						},
-						n = {
-							["<C-T>"] = function() require("trouble.sources.telescope").open() end,
-						},
-					},
-				},
-			}
-
-			telescope.load_extension("fzf")
-			-- telescope.load_extension("notify")
-			telescope.load_extension("media_files")
-			telescope.load_extension("textcase")
-			telescope.load_extension("yank_history")
-			telescope.load_extension("persisted")
-			telescope.load_extension("ast_grep")
-
-			---@diagnostic disable-next-line: missing-fields
-			require("telescope-all-recent").setup {
-				default = { sorting = "frecency" },
-				pickers = {
-					---@diagnostic disable-next-line: assign-type-mismatch
-					live_grep = { disable = false },
-					---@diagnostic disable-next-line: assign-type-mismatch
-					grep_string = { disable = false },
-					---@diagnostic disable-next-line: assign-type-mismatch
-					yank_history = { disable = true },
-				},
+		"ibhagwan/fzf-lua",
+		cmd = "FzfLua",
+		keys = function()
+			local fzf = function(cmd) return "<cmd>FzfLua " .. cmd .. "<cr>" end
+			map { "<leader>f", group = "fzf", icon = "", mode = { "n", "v" } }
+			return {
+				{ "<C-p>", fzf("files"), desc = "Find files" },
+				{ "<leader>fb", fzf("buffers"), desc = "Find buffers" },
+				{ "<leader>fs", fzf("live_grep"), desc = "Find string" },
+				{ "<leader>fR", fzf("grep_last"), desc = "Find string again" },
+				{ "<leader>fr", fzf("resume"), desc = "Resume latest search" },
+				{ "<leader>ff", fzf("grep_cword"), desc = "Find string in files" },
+				{ "<leader>ff", fzf("grep_visual"), desc = "Find string in files", mode = { "x" } },
+				{ "<leader>fh", fzf("helptags"), desc = "Help tags" },
+				{ "<leader>fg", fzf("git_branches"), desc = "Find git branch" },
+				{ "<space>a", fzf("lsp_code_actions"), desc = "LSP code actions", mode = { "n", "x" } },
 			}
 		end,
+		opts = { "default-title" },
 	},
 	-- File tree browser
 	{

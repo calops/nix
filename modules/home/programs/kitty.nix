@@ -29,6 +29,8 @@ in
       "ctrl+shift+g" = "no_op";
       "ctrl+t" = "no_op";
       "ctrl+shift+t" = "no_op";
+      "alt+l" = "no_op";
+      "alt+w" = "no_op";
     };
   };
 }

@@ -74,7 +74,7 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 				end
 			end
 			utils.map {
-				{ "<leader>c", group = "copilot", icon = "" },
+				{ "<leader>c", group = "copilot", icon = "", mode = { "n", "x" } },
 			}
 			return {
 				{

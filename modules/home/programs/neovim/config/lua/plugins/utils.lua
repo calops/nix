@@ -5,9 +5,6 @@ return {
 	{
 		"olimorris/persisted.nvim",
 		lazy = false,
-		keys = {
-			{ "<leader>P", ":Telescope persisted<CR>", desc = "Browse sessions" },
-		},
 		init = function()
 			vim.opt.sessionoptions = {
 				"buffers",
@@ -50,7 +47,7 @@ return {
 		cmd = "ToggleTerm",
 		keys = {
 			{
-				"<C-g>",
+				"<C-h>",
 				function() require("toggleterm").toggle(1, 0, "", "vertical") end,
 				desc = "Toggle floating terminal",
 				mode = { "n", "t" },
