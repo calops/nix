@@ -63,6 +63,7 @@ return {
 				"snacks.nvim",
 				{ path = "luvit-meta/library", words = { "vim%.uv" } },
 				{ path = "wezterm-types", mods = { "wezterm" } },
+				{ path = "~/.local/share/lua", mods = { "palette" } },
 			},
 		},
 	},

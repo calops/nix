@@ -65,7 +65,7 @@ in
 
       "nvim/init.lua".text = # lua
         ''
-          package.path = package.path .. ";${config.home.homeDirectory}/.config/nvim/nix/?.lua"
+          package.path = package.path .. ";${config.xdg.dataHome}/lua/?.lua"
 
           vim.g.gcc_bin_path = '${lib.getExe pkgs.gcc}'
           vim.g.sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.${
@@ -74,8 +74,6 @@ in
 
           require("config")
         '';
-
-      "nvim/nix/palette.lua".text = ''return ${lib.my.asLua config.my.colors.palette.withHashtag}'';
 
       # Out of store symlink of whe whole configuration, for more agility when editing it
       "nvim/lua".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/config/lua";

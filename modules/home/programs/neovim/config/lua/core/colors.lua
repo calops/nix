@@ -11,34 +11,32 @@ end)
 ---@field bg MyColor
 
 local function format_color(color)
-	if type(color) == "string" then
-		return color
-	elseif type(color) == "number" then
+	if type(color) == "number" then
 		return string.format("#%06x", color)
 	end
 
-	return nil
+	return color
 end
 
 ---@return table<string, MyColor>
 local function get_palette() return require("catppuccin.palettes").get_palette() end
 
 ---@param color MyColor
----@param amount number
+---@param alpha number
 ---@param bg MyColor | nil
 ---@return MyColor
-local function darken_color(color, amount, bg)
+local function darken_color(color, alpha, bg)
 	bg = bg or get_palette().base
-	return require("catppuccin.utils.colors").darken(format_color(color), amount, format_color(bg))
+	return require("snacks").util.blend(format_color(color), format_color(bg), alpha)
 end
 
 ---@param color MyColor
----@param amount number
+---@param alpha number
 ---@param bg MyColor | nil
 ---@return MyColor
-local function lighten_color(color, amount, bg)
+local function lighten_color(color, alpha, bg)
 	bg = bg or get_palette().text
-	return require("catppuccin.utils.colors").lighten(format_color(color), amount, format_color(bg))
+	return require("snacks").util.blend(format_color(color), format_color(bg), alpha)
 end
 
 ---@param x number

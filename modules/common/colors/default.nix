@@ -97,6 +97,10 @@ in
         type = lib.types.path;
         description = "Path to the SCSS file";
       };
+      asLua = lib.mkOption {
+        type = lib.types.path;
+        description = "Path to the Lua file";
+      };
     };
   };
 
@@ -108,13 +112,11 @@ in
 
       asCss = pkgs.writeText "colors.css" ''
         :root {
-          ${
-            lib.concatStringsSep "\n" (
-              builtins.attrValues (
-                builtins.mapAttrs (name: value: "  --" + name + ": " + value + ";") withHashtag
-              )
+          ${lib.concatStringsSep "\n" (
+            builtins.attrValues (
+              builtins.mapAttrs (name: value: "  --" + name + ": " + value + ";") withHashtag
             )
-          }
+          )}
         }
       '';
 
@@ -130,6 +132,16 @@ in
         ${lib.concatStringsSep "\n" (
           builtins.attrValues (builtins.mapAttrs (name: value: "$" + name + ": " + value + ";") withHashtag)
         )}
+      '';
+
+      asLua = pkgs.writeText "palette.lua" ''
+        return {
+          ${lib.concatStringsSep "\n" (
+            builtins.attrValues (
+              builtins.mapAttrs (name: value: "  " + name + " = \"" + value + "\",") withHashtag
+            )
+          )}
+        }
       '';
     };
   };
