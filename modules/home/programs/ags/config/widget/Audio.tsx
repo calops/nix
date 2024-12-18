@@ -1,13 +1,13 @@
 import AstalWp from "gi://AstalWp"
 import { bind } from "astal"
-import { Gdk, Gtk, Widget } from "astal/gtk3"
+import { Gtk, Widget } from "astal/gtk3"
 
 const audio = AstalWp.get_default()?.audio
 
 export default function Audio() {
 	const speaker = audio?.defaultSpeaker!
 
-	const revealer = <revealer >
+	const revealer = <revealer>
 		<box className="sliderBox" halign={Gtk.Align.CENTER}>
 			<slider
 				vertical

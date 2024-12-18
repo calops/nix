@@ -15,6 +15,8 @@ let
     ags.mpris
     ags.network
     ags.wireplumber
+    ags.apps
+    ags.cava
   ];
 in
 {

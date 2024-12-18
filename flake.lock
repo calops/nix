@@ -1227,6 +1227,23 @@
         "type": "github"
       }
     },
+    "niri-tmp": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1732475984,
+        "narHash": "sha256-pk9nXRHsBH4Zdk59fE8NtFxzNZ8idPXmvnUU6Hf15Yg=",
+        "owner": "cmeissl",
+        "repo": "niri",
+        "rev": "08255b2c926f1e68537ad6b43132f93c2e426e73",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cmeissl",
+        "ref": "fix/popup_grab_keyboard_focus",
+        "repo": "niri",
+        "type": "github"
+      }
+    },
     "niri-unstable": {
       "flake": false,
       "locked": {
@@ -1660,6 +1677,7 @@
         "nh_plus": "nh_plus",
         "nightly-tools": "nightly-tools",
         "niri": "niri",
+        "niri-tmp": "niri-tmp",
         "nix-index-database": "nix-index-database",
         "nixcord": "nixcord",
         "nixpkgs": "nixpkgs_13",

@@ -10,7 +10,7 @@ let
     if [ -d "$1" ]; then
       ${lib.getExe pkgs.eza} --color=always --icons -lH --git "$1"
     elif [ -f "$1" ]; then
-      ${lib.getExe pkgs.bat} -n "$1"
+      ${lib.getExe pkgs.bat} --color=always -n "$1"
     fi
   '';
 in

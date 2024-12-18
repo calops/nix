@@ -3,13 +3,16 @@ import { Gtk, Widget } from "astal/gtk3";
 import { CenterBox } from "./core";
 
 export default function Time() {
-	const time = Variable<string[]>([]).poll(1000, () => {
-		return GLib.DateTime.new_now_local().format("%H:%M:%Y:%m:%d")!.split(":")
+	const time = Variable<GLib.DateTime>(GLib.DateTime.new_now_local()).poll(1000, () => {
+		return GLib.DateTime.new_now_local()
 	});
 
 	const date = <revealer>
 		<CenterBox name="date">
-			<label label={time(([_, __, year, month, day]) => `${year}\n${month}\n${day}`)} justify={Gtk.Justification.CENTER} />
+			<label
+				label={time(date => date.format("%Y-%m-%d")!)}
+				angle={90}
+			/>
 		</CenterBox >
 	</revealer> as Widget.Revealer;
 
@@ -23,7 +26,7 @@ export default function Time() {
 		>
 			<label
 				className="big"
-				label={time(([hour, minute]) => { return `${hour}\n${minute}`; })}
+				label={time((date) => date.format("%H\n%M")!)}
 			/>
 		</button>
 	</box>

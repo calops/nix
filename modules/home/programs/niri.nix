@@ -245,11 +245,11 @@ in
       ];
       timeouts = [
         {
-          timeout = 300;
+          timeout = 900;
           command = "pidof ${lock} || ${lock}";
         }
         {
-          timeout = 600;
+          timeout = 1800;
           command = "${niri} msg action power-off-monitors";
         }
         # FIXME: suspend is not reliable with my hardware
@@ -258,7 +258,7 @@ in
         #   command = "systemctl suspend";
         # }
         {
-          timeout = 300;
+          timeout = 900;
           command = "pidof ${lock} && ${niri} msg action power-off-monitors";
         }
       ];

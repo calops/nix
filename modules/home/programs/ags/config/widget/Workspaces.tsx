@@ -24,11 +24,14 @@ export default function Workspaces() {
 			<box className="windows" vertical>{windows}</box>
 		</revealer> as Widget.Revealer
 
-		const label = workspace.name ? nameToSymbol(workspace.name) : String(workspace.id)
+		const label = <label
+			label={workspace.name ? nameToSymbol(workspace.name) : String(workspace.id)}
+			className={workspace.name ? "symbol" : ""}
+		/> as Widget.Label
 
 		const workspaceBox = <box vertical className="workspace-box">
 			<button className={"workspace small"} onClick={() => niri.focusWorkspace(workspace.id)}>
-				<label label={label} className={workspace.name ? "symbol" : ""} />
+				{label}
 			</button>
 			{revealer}
 		</box> as Widget.Box
