@@ -59,7 +59,7 @@ in
     };
 
     xdg.dataFile = {
-      "nvim/nix.lua".text = # lua
+      "nvim/nix/nix.lua".text = # lua
         ''
           vim.g.gcc_bin_path = '${lib.getExe pkgs.gcc}'
           vim.g.sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.${
