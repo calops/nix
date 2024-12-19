@@ -50,57 +50,58 @@ in
             default = "Google";
             force = true;
           };
-          userChrome = ''
-            .titlebar-buttonbox {
-              appearance: none !important;
-              margin-inline: 0 !important;
-              -moz-box-direction: reverse !important;
-              flex-direction: row-reverse !important;
-            }
-
-            tabs {
-              counter-reset: tab-counter;
-            }
-
-            #sidebar-header {
-              display: none;
-            }
-
-            #nav-bar {
-              box-shadow: 0 0 16px black !important;
-              z-index: 1;
-            }
-
-            #urlbar {
-              z-index: 2 !important;
-            }
-
-            @-moz-document url("chrome://browser/content/browser.xhtml"){
-              #browser {
-                overflow: hidden;
+          userChrome = # css
+            ''
+              .titlebar-buttonbox {
+                appearance: none !important;
+                margin-inline: 0 !important;
+                -moz-box-direction: reverse !important;
+                flex-direction: row-reverse !important;
               }
 
-              #sidebar-splitter {
-                width: 1px !important;
+              tabs {
+                counter-reset: tab-counter;
               }
 
-              #sidebar-box {
-                box-shadow: 0 0 16px black;
-                position: relative;
+              #sidebar-header {
+                display: none;
+              }
+
+              #nav-bar {
+                box-shadow: 0 0 16px black !important;
                 z-index: 1;
               }
-            }
 
-            #main-window #TabsToolbar {
-              overflow: hidden;
-              transition: height 0.3s 0.3s !important;
-              height: 3em !important;
-              visibility: visible !important;
-            }
-            #main-window[uidensity="touch"] #TabsToolbar { height: 3.35em !important; }
-            #main-window[uidensity="compact"] #TabsToolbar { height: 2.7em !important; }
-            #main-window[titlepreface*="[Sidebery]"] #TabsToolbar { visibility: collapse !important; }
-          '';
+              #urlbar {
+                z-index: 2 !important;
+              }
+
+              @-moz-document url("chrome://browser/content/browser.xhtml"){
+                #browser {
+                  overflow: hidden;
+                }
+
+                #sidebar-splitter {
+                  width: 1px !important;
+                }
+
+                #sidebar-box {
+                  box-shadow: 0 0 16px black;
+                  position: relative;
+                  z-index: 1;
+                }
+              }
+
+              #main-window #TabsToolbar {
+                overflow: hidden;
+                transition: height 0.3s 0.3s !important;
+                height: 3em !important;
+                visibility: visible !important;
+              }
+              #main-window[uidensity="touch"] #TabsToolbar { height: 3.35em !important; }
+              #main-window[uidensity="compact"] #TabsToolbar { height: 2.7em !important; }
+              #main-window[titlepreface*="[Sidebery]"] #TabsToolbar { visibility: collapse !important; }
+            '';
         };
 
         gw = default // {
