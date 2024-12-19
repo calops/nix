@@ -143,8 +143,10 @@ return {
 	},
 	{
 		"calops/hmts.nvim",
-		enabled = false,
-		dev = false,
+		enabled = true,
+		opts = {},
+		lazy = false,
+		dev = true,
 	},
 	{
 		"folke/todo-comments.nvim",

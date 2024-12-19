@@ -21,7 +21,23 @@ return {
 				{ "<space>a", fzf("lsp_code_actions"), desc = "LSP code actions", mode = { "n", "x" } },
 			}
 		end,
-		opts = { "default-title" },
+		opts = {
+			"default-title",
+			previewers = { builtin = { syntax_limit_b = 1024 * 100 } }, -- no highlighting for files larger than 100KB
+			ui_select = function(opts, items)
+				return vim.tbl_extend("force", opts, {
+					winopts = {
+						width = 0.5,
+						height = math.floor(math.min(vim.o.lines * 0.6, #items + 2) + 0.5),
+					},
+				})
+			end,
+		},
+		config = function(_, opts)
+			local fzf = require("fzf-lua")
+			fzf.setup(opts)
+			fzf.register_ui_select()
+		end,
 	},
 	-- File tree browser
 	{

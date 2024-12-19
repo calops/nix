@@ -52,41 +52,21 @@ return {
 				{ "<leader>p", group = "debug print", icon = "" },
 			}
 			return {
-				{ "<leader>pp", dp(), desc = "Add debug print below", expr = true },
-				{ "<leader>pP", dp { above = true }, desc = "Add debug print above", expr = true },
-				{
-					"<leader>pv",
-					dp { variable = true },
-					desc = "Add variable debug print below",
-					expr = true,
-					mode = { "n", "o" },
-				},
-				{
-					"<leader>pV",
-					dp { variable = true, above = true },
-					desc = "Add variable debug print above",
-					expr = true,
-					mode = { "n", "o" },
-				},
+				{ "<leader>pp", dp(), desc = "Add debug print below" },
+				{ "<leader>pP", dp { above = true }, desc = "Add debug print above" },
+				{ "<leader>pv", dp { variable = true }, desc = "Add variable debug print below" },
+				{ "<leader>pV", dp { variable = true, above = true }, desc = "Add variable debug print above" },
 				{ "<leader>pd", ":DeleteDebugPrints<CR>", desc = "Delete debug prints" },
-				{
-					"<leader>p",
-					dp { variable = true },
-					desc = "Add variable debug print below",
-					expr = true,
-					mode = { "x" },
-				},
+				{ "<leader>p", dp { variable = true }, desc = "Add variable debug print below", mode = { "x" } },
 				{
 					"<leader>P",
 					dp { variable = true, above = true },
 					desc = "Add variable debug print above",
-					expr = true,
 					mode = { "x" },
 				},
 			}
 		end,
 		opts = {
-			print_tag = "🔴🔴🔴DEBUGPRINT🔴🔴🔴",
 			filetypes = {
 				elixir = {
 					left = 'IO.puts :stderr, "',
