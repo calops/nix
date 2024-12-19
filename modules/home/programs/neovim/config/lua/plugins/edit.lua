@@ -141,9 +141,9 @@ return {
 			storage = "sqlite",
 			cancel_event = "move",
 		} },
-		cmd = { "YankRingHistory" },
+		cmd = { "YankyRingHistory" },
 		keys = {
-			{ "<C-y>", "<cmd>YankRingHistory<cr>", desc = "Yank history" },
+			{ "<C-y>", "<cmd>YankyRingHistory<cr>", desc = "Yank history" },
 			{ "<leader>y", '"+y', desc = "Copy to system clipboard", mode = { "n", "v", "x" } },
 		},
 		init = function()

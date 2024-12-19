@@ -27,8 +27,8 @@ return {
 			ui_select = function(opts, items)
 				return vim.tbl_extend("force", opts, {
 					winopts = {
-						width = 0.5,
-						height = math.floor(math.min(vim.o.lines * 0.6, #items + 2) + 0.5),
+						width = math.floor(math.max(vim.o.columns * 0.3, 80)),
+						height = math.floor(math.min(vim.o.lines * 0.6, #items + 1) + 0.5),
 					},
 				})
 			end,
@@ -36,7 +36,7 @@ return {
 		config = function(_, opts)
 			local fzf = require("fzf-lua")
 			fzf.setup(opts)
-			fzf.register_ui_select()
+			fzf.register_ui_select(opts.ui_select)
 		end,
 	},
 	-- File tree browser
