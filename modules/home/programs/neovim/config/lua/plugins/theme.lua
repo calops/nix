@@ -198,9 +198,7 @@ return {
 			mini = true,
 			native_lsp = {
 				enabled = true,
-				inlay_hints = {
-					background = false,
-				},
+				inlay_hints = { background = false },
 			},
 		},
 		compile = {

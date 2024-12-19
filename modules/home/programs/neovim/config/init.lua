@@ -1,3 +1,10 @@
+-- Make shared nix-generated files available
+package.path = package.path .. ";${config.xdg.dataHome}/lua/?.lua" .. ";${config.xdg.dataHome}/nix/?.lua"
+
+if pcall(require, "nix") then
+	vim.notify("Nix environment detected", "info", { title = "Neovim" })
+end
+
 vim.loader.enable()
 
 ---------- Settings
@@ -125,10 +132,12 @@ require("core.symbols").define_signs {
 	GitSignsDelete = { text = "▋", texthl = "GitSignsDelete", numhl = "" },
 }
 
-require("lazy").setup("plugins", {
+require("lazy").setup {
+	spec = { { import = "plugins" } },
 	ui = { border = "rounded" },
+	lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
 	dev = {
 		fallback = true,
 		path = "~/projects",
 	},
-})
+}

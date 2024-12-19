@@ -58,42 +58,35 @@ in
       ];
     };
 
-    xdg.configFile = {
-      # Raw symlink to the plugin manager lock file, so that it stays writeable
-      "nvim/lazy-lock.json".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/lazy-lock.json";
-      "nvim/neoconf.json".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/neoconf.json";
-
-      "nvim/init.lua".text = # lua
+    xdg.dataFile = {
+      "nvim/nix.lua".text = # lua
         ''
-          package.path = package.path .. ";${config.xdg.dataHome}/lua/?.lua"
-
           vim.g.gcc_bin_path = '${lib.getExe pkgs.gcc}'
           vim.g.sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.${
             if pkgs.stdenv.isDarwin then "dylib" else "so"
           }'
-
-          require("config")
         '';
+    };
 
-      # Out of store symlink of whe whole configuration, for more agility when editing it
-      "nvim/lua".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/config/lua";
+    xdg.configFile = {
+      "nvim".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/config";
+    };
 
-      # Nixd LSP configuration
-      "${config.my.configDir}/.neoconf.json".text =
-        let
-          flake = ''builtins.getFlake "${config.my.configDir}"'';
-        in
-        builtins.toJSON {
-          lspconfig.nixd.nixd = {
-            nixpkgs.expr = ''import (${flake}).inputs.nixpkgs {}'';
-            options = {
-              nixos.expr = ''(${flake}).nixosConfigurations.tocardstation.options'';
-              homeManager.expr = ''(${flake}).homeConfigurations."calops@tocardstation".options'';
-              darwin.expr = ''(${flake}).darwinConfigurations.rlabeyrie-sonio.options'';
-            };
+    # Nixd LSP configuration
+    home.file."${config.my.configDir}/.neoconf.json".text =
+      let
+        flake = ''builtins.getFlake "${config.my.configDir}"'';
+      in
+      builtins.toJSON {
+        lspconfig.nixd.nixd = {
+          nixpkgs.expr = ''import (${flake}).inputs.nixpkgs {}'';
+          options = {
+            nixos.expr = ''(${flake}).nixosConfigurations.tocardstation.options'';
+            homeManager.expr = ''(${flake}).homeConfigurations."calops@tocardstation".options'';
+            darwin.expr = ''(${flake}).darwinConfigurations.rlabeyrie-sonio.options'';
           };
         };
-    };
+      };
 
     stylix.targets.neovim.enable = false;
 

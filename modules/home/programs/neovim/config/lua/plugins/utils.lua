@@ -1,6 +1,12 @@
 local utils = require("core.utils")
 
 return {
+	-- Plugins manager
+	-- Defined and pinned here so that it's excluded from updates
+	{
+		"folke/lazy.nvim",
+		pin = true,
+	},
 	-- Session management
 	{
 		"olimorris/persisted.nvim",
