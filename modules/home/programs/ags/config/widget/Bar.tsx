@@ -27,34 +27,40 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 		{bottom}
 	</centerbox>
 
-	const bar = <window
-		className="bar"
+	const bar = <box className="bar" orientation={Gtk.Orientation.HORIZONTAL} hexpand={false}>
+		{centerbox}
+	</box>
+
+	const window = <window
+		className="window"
 		gdkmonitor={gdkmonitor}
 		exclusivity={Astal.Exclusivity.IGNORE}
 		keymode={Astal.Keymode.NONE}
-		anchor={Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM}
+		anchor={Astal.WindowAnchor.LEFT | Astal.WindowAnchor.TOP | Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT}
 		application={App}
 	>
-		{centerbox}
+		<box>
+			{bar}
+			<box className="rest" hexpand />
+		</box>
 	</window>
 
 	const setInputShape = () => idle(() => {
 		const region = new Cairo.Region();
+		const input_areas = [top, middle, bottom];
 
-		// @ts-ignore
-		region.unionRectangle(top.get_allocation());
-		// @ts-ignore
-		region.unionRectangle(middle.get_allocation());
-		// @ts-ignore
-		region.unionRectangle(bottom.get_allocation());
+		input_areas.forEach((area) => {
+			// @ts-ignore
+			region.unionRectangle(area.get_allocation());
+		});
 
-		bar.input_shape_combine_region(region);
+		window.input_shape_combine_region(region);
 	});
 
 	top.connect("size-allocate", setInputShape);
 	middle.connect("size-allocate", setInputShape);
 	bottom.connect("size-allocate", setInputShape);
-	bar.connect("realize", setInputShape);
+	window.connect("realize", setInputShape);
 
 	return bar;
 }

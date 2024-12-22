@@ -33,11 +33,7 @@
 
     programs.niri = {
       enable = true;
-      package = lib.mkDefault (
-        inputs.niri.packages.${pkgs.system}.niri-unstable.override {
-          src = inputs.niri-tmp;
-        }
-      );
+      package = inputs.nightly-tools.packages.${pkgs.system}.niri;
     };
   };
 }

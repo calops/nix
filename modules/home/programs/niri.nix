@@ -127,7 +127,7 @@ in
           let
             act = if (!pkgs.stdenv.isDarwin) then config.lib.niri.actions else { };
           in
-          {
+          lib.mkIf (!pkgs.stdenv.isDarwin) {
             "Mod+Return".action = act.spawn "kitty";
             "Mod+Space".action = act.spawn "anyrun";
             "Mod+L".action = act.spawn lock;
@@ -252,11 +252,6 @@ in
           timeout = 1800;
           command = "${niri} msg action power-off-monitors";
         }
-        # FIXME: suspend is not reliable with my hardware
-        # {
-        #   timeout = 7200;
-        #   command = "systemctl suspend";
-        # }
         {
           timeout = 900;
           command = "pidof ${lock} && ${niri} msg action power-off-monitors";

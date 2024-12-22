@@ -7,7 +7,7 @@ const audio = AstalWp.get_default()?.audio
 export default function Audio() {
 	const speaker = audio?.defaultSpeaker!
 
-	const revealer = <revealer>
+	const revealer = <revealer transitionType={Gtk.RevealerTransitionType.SLIDE_UP}>
 		<box className="sliderBox" halign={Gtk.Align.CENTER}>
 			<slider
 				vertical

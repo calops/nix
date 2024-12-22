@@ -80,5 +80,20 @@
           "x-scheme-handler/unknown" = firefox;
         };
     };
+
+    # Fix systemd order of some targets so that they play nice with most compositors
+    systemd.user.targets.tray.Unit = {
+      Description = "Home Manager System Tray";
+      Requires = [ "graphical-session-pre.target" ];
+    };
+    systemd.user.services.swayidle.Unit.After = lib.mkForce [ "graphical-session.target" ];
+    systemd.user.services.udiskie.Unit.After = lib.mkForce [
+      "graphical-session.target"
+      "tray.target"
+    ];
+    systemd.user.services.network-manager-applet.Unit.After = lib.mkForce [
+      "graphical-session.target"
+      "tray.target"
+    ];
   };
 }

@@ -83,5 +83,6 @@
       clean.extraArgs = "--keep-since 4d --keep 3";
       flake = config.my.configDir;
     };
+    environment.sessionVariables.EDITOR = "nvim";
   };
 }

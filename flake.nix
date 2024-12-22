@@ -48,8 +48,6 @@
     # Niri window manager
     niri.url = "github:sodiboo/niri-flake";
     niri.inputs.nixpkgs.follows = "nixpkgs";
-    niri-tmp.url = "github:cmeissl/niri/fix/popup_grab_keyboard_focus";
-    niri-tmp.flake = false;
 
     # Home-manager modules
     home-manager.url = "github:nix-community/home-manager";
