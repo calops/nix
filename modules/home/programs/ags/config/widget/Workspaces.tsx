@@ -36,11 +36,13 @@ export default function Workspaces() {
 			{revealer}
 		</box> as Widget.Box
 
-		niri.connect("focus-changed", (_, focusedWorkspace: number) => {
+		const niriConnection = niri.connect("focus-changed", (_, focusedWorkspace: number) => {
 			const isFocused = workspace.id === focusedWorkspace
 			revealer.set_reveal_child(isFocused)
 			workspaceBox.set_state_flags(isFocused ? Gtk.StateFlags.SELECTED : null, true)
 		})
+
+		workspaceBox.connect("destroy", () => niri.disconnect(niriConnection))
 
 		return workspaceBox;
 	}))

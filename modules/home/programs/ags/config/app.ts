@@ -1,6 +1,6 @@
 import Gio from "gi://Gio?version=2.0";
 import GLib from "gi://GLib?version=2.0";
-import { App } from "astal/gtk3";
+import { App, Gdk, Gtk } from "astal/gtk3";
 import * as fileUtils from "astal/file";
 import * as processUtils from "astal/process";
 import Bar from "./widget/Bar";
@@ -28,6 +28,20 @@ fileUtils.monitorFile(scss_file, (_, event) => {
 App.start({
 	main() {
 		reloadCss();
-		App.get_monitors().map((monitor) => Bar(monitor));
+		const bars = new Map<Gdk.Monitor, Gtk.Widget>()
+
+		// initialize
+		for (const gdkmonitor of App.get_monitors()) {
+			bars.set(gdkmonitor, Bar(gdkmonitor))
+		}
+
+		App.connect("monitor-added", (_, gdkmonitor) => {
+			bars.set(gdkmonitor, Bar(gdkmonitor))
+		})
+
+		App.connect("monitor-removed", (_, gdkmonitor) => {
+			bars.get(gdkmonitor)?.destroy()
+			bars.delete(gdkmonitor)
+		})
 	},
 });

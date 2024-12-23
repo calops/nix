@@ -45,9 +45,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 		</box>
 	</window>
 
+	const input_areas = [top, middle, bottom];
+
 	const setInputShape = () => idle(() => {
 		const region = new Cairo.Region();
-		const input_areas = [top, middle, bottom];
 
 		input_areas.forEach((area) => {
 			// @ts-ignore
@@ -57,9 +58,10 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
 		window.input_shape_combine_region(region);
 	});
 
-	top.connect("size-allocate", setInputShape);
-	middle.connect("size-allocate", setInputShape);
-	bottom.connect("size-allocate", setInputShape);
+	for (const area of input_areas) {
+		area.connect("size-allocate", setInputShape);
+	}
+
 	window.connect("realize", setInputShape);
 
 	return bar;
