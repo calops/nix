@@ -3,6 +3,7 @@
   lib,
   pkgs,
   nixosConfig ? null,
+  inputs,
   ...
 }:
 let
@@ -13,6 +14,10 @@ let
   niri = lib.getExe config.programs.niri.package;
 in
 {
+  imports = [
+    inputs.niri.homeModules.config
+    inputs.niri.homeModules.stylix
+  ];
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.niri = {
       settings = {

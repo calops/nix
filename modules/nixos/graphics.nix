@@ -34,6 +34,7 @@
     programs.niri = {
       enable = true;
       package = inputs.nightly-tools.packages.${pkgs.system}.niri;
+      autoImportHomeModule = false;
     };
   };
 }

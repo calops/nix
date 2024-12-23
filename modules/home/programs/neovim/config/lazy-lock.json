@@ -5,7 +5,6 @@
   "codecompanion.nvim": { "branch": "main", "commit": "c70ae04bf39709b2bb91304514524ad9d452aa5a" },
   "conform.nvim": { "branch": "master", "commit": "f4e8837878fc5712d053ba3091a73d27d96a09e2" },
   "copilot.lua": { "branch": "master", "commit": "d3783b9283a7c35940ed8d71549030d5f5f9f980" },
-  "debugprint.nvim": { "branch": "main", "commit": "29a802d4f2009a825471a9d16571c20b6a2f2944" },
   "diffview.nvim": { "branch": "main", "commit": "4516612fe98ff56ae0415a259ff6361a89419b0a" },
   "direnv.vim": { "branch": "master", "commit": "ab2a7e08dd630060cd81d7946739ac7442a4f269" },
   "dressing.nvim": { "branch": "master", "commit": "fc78a3ca96f4db9f8893bb7e2fd9823e0780451b" },

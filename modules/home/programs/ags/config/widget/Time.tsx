@@ -1,5 +1,5 @@
 import { Variable, GLib } from "astal"
-import { Gtk, Widget } from "astal/gtk3";
+import { Widget } from "astal/gtk3";
 import { CenterBox } from "./core";
 
 export default function Time() {
