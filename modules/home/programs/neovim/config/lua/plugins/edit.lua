@@ -42,41 +42,51 @@ return {
 	},
 	-- Debug print statements
 	{
-		"andrewferrier/debugprint.nvim",
+		"Goose97/timber.nvim",
 		lazy = true,
-		keys = function()
-			local dp = function(opts)
-				return function() return require("debugprint").debugprint(opts) end
-			end
-			utils.map {
-				{ "<leader>p", group = "debug print", icon = "" },
-			}
-			return {
-				{ "<leader>pp", dp(), desc = "Add debug print below" },
-				{ "<leader>pP", dp { above = true }, desc = "Add debug print above" },
-				{ "<leader>pv", dp { variable = true }, desc = "Add variable debug print below" },
-				{ "<leader>pV", dp { variable = true, above = true }, desc = "Add variable debug print above" },
-				{ "<leader>pd", ":DeleteDebugPrints<CR>", desc = "Delete debug prints" },
-				{ "<leader>p", dp { variable = true }, desc = "Add variable debug print below", mode = { "x" } },
-				{
-					"<leader>P",
-					dp { variable = true, above = true },
-					desc = "Add variable debug print above",
-					mode = { "x" },
-				},
-			}
-		end,
+		---@module "timber"
+		---@type Timber.InitConfig
 		opts = {
-			print_tag = "🔴🔴🔴DEBUGPRINT🔴🔴🔴",
-			filetypes = {
-				elixir = {
-					left = 'IO.puts :stderr, "',
-					right = '"',
-					mid_var = "#{inspect(",
-					right_var = ', syntax_colors: IO.ANSI.syntax_colors())}"',
+			template_placeholders = {
+				insert_cursor = function(ctx)
+					local placement = ctx.log_position == "above" and "before" or "after"
+					return "%%log_marker "
+						.. vim.fn.fnamemodify(vim.fn.bufname(), ":t")
+						.. ":"
+						.. vim.fn.line(".")
+						.. ": "
+						.. placement
+						.. " "
+						.. vim.trim(vim.fn.getline(".")):gsub('"', ""):sub(1, 50)
+				end,
+			},
+			default_keymaps_enabled = false,
+			log_marker = "🔴🔴🔴DEBUG🔴🔴🔴",
+			log_templates = {
+				default = {
+					elixir = [[IO.inspect(%log_target, label: "%log_marker %log_target", syntax_colors: IO.ANSI.syntax_colors())]],
+					lua = [[print("%log_marker %log_target=", %log_target)]],
 				},
 			},
 		},
+		init = function()
+			local log = function(position, template)
+				return function()
+					require("timber.actions").insert_log {
+						position = position or "below",
+						template = template or "default",
+					}
+				end
+			end
+
+			utils.map {
+				{ "<leader>p", group = "debug logs", icon = "" },
+				{ "<leader>pp", log("below", "plain"), desc = "Debug log below", icon = " " },
+				{ "<leader>pP", log("above", "plain"), desc = "Debug log above", icon = " " },
+				{ "<leader>pv", log("below"), desc = "Variable log below", icon = " 󰫧 ", mode = { "n", "x" } },
+				{ "<leader>pV", log("above"), desc = "Variable log above", icon = " 󰫧 ", mode = { "n", "x" } },
+			}
+		end,
 	},
 	-- Edit filesystem as a buffer
 	{
