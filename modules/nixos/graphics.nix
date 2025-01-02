@@ -12,7 +12,11 @@
 
   config = lib.mkIf config.my.roles.graphical.enable {
     # Window manager
-    programs.hyprland.enable = true;
+    programs.niri = {
+      enable = true;
+      package = inputs.nightly-tools.packages.${pkgs.system}.niri;
+      autoImportHomeModule = false;
+    };
 
     environment.sessionVariables = {
       WLR_NO_HARDWARE_CURSORS = "1";
@@ -28,13 +32,7 @@
 
     # Misc
     hardware.graphics.enable = true;
-
     security.pam.services.swaylock = { };
-
-    programs.niri = {
-      enable = true;
-      package = inputs.nightly-tools.packages.${pkgs.system}.niri;
-      autoImportHomeModule = false;
-    };
+    xdg.portal.xdgOpenUsePortal = true;
   };
 }

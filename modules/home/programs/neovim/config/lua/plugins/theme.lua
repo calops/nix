@@ -53,6 +53,9 @@ local function hl_override(palette)
 		InclineNormal = { fg = palette.base, bg = palette.sapphire, style = { "bold" } },
 		InclineNormalNC = { fg = palette.sapphire, bg = colors.darken(palette.sapphire, 0.33) },
 
+		EdgyNormal = { bg = palette.mantle },
+		TroubleNormal = { bg = palette.mantle },
+
 		TreesitterContext = { bg = palette.base, style = { "italic" }, blend = 0 },
 		TreesitterContextSeparator = { fg = palette.surface1 },
 		TreesitterContextBottom = { bg = palette.base, sp = palette.surface1, style = { "underdashed" } },
@@ -141,6 +144,8 @@ local function hl_override(palette)
 		NoiceCmdlinePopupBorder = { link = "NoiceCmdlineIcon" },
 		NoiceCmdlineIconSearch = { fg = palette.yellow },
 		NoiceCmdlinePopupBorderSearch = { link = "NoiceCmdlineIconSearch" },
+
+		LazyCommitTypeFeat = { style = { "underline" } },
 
 		-- Syntax
 		["@variable.parameter"] = { fg = palette.text, style = { "nocombine" } },

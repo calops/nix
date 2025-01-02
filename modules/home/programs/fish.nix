@@ -44,6 +44,7 @@
         ll = "ls -lH --time-style=long-iso";
         la = "ll -a";
         lt = "ll -T";
+        rg = if config.my.roles.graphical.terminal == "kitty" then "kitten hyperlinked-grep" else "rg";
       };
 
       functions = {

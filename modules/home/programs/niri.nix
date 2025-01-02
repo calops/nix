@@ -83,7 +83,6 @@ in
         };
 
         spawn-at-startup = [
-          { command = [ "${pkgs.xwayland-satellite}" ]; }
           { command = [ "swww-daemon" ]; }
           { command = mkCommand "swww img ${wallpaper}"; }
           { command = [ "${lib.getExe config.programs.firefox.package}" ]; }
@@ -122,7 +121,7 @@ in
               default-column-width.proportion = 0.5;
               open-on-workspace = "chat";
             })
-            (mkRule "^slack$" {
+            (mkRule "^Slack$" {
               default-column-width.proportion = 0.5;
               open-on-workspace = "chat";
             })
@@ -131,18 +130,21 @@ in
         binds =
           let
             act = if (!pkgs.stdenv.isDarwin) then config.lib.niri.actions else { };
+            spawn = cmd: act.spawn (mkCommand cmd);
           in
           lib.mkIf (!pkgs.stdenv.isDarwin) {
-            "Mod+Return".action = act.spawn "kitty";
-            "Mod+Space".action = act.spawn "anyrun";
-            "Mod+L".action = act.spawn lock;
+            "Mod+Return".action = spawn "kitty";
+            "Mod+Space".action = spawn "anyrun";
+            "Mod+L".action = spawn lock;
+            "Mod+N".action = spawn "${lib.getExe' config.services.swaync.package "swaync-client"} -t";
 
             "Mod+Shift+E".action = act.quit;
             "Mod+Shift+Comma".action = act.show-hotkey-overlay;
             "Mod+Shift+Q".action = act.close-window;
             "Mod+Backspace".action = act.switch-preset-column-width;
             "Mod+F".action = act.maximize-column;
-            "Mod+Shift+F".action = act.fullscreen-window;
+            "Mod+Shift+F".action = act.toggle-window-floating;
+            "Mod+Ctrl+F".action = act.fullscreen-window;
             "Mod+C".action = act.center-column;
 
             "Mod+S".action = act.screenshot;
@@ -210,15 +212,15 @@ in
 
             "XF86AudioRaiseVolume" = {
               allow-when-locked = true;
-              action = act.spawn (mkCommand "swayosd-client --output-volume raise");
+              action = spawn "swayosd-client --output-volume raise";
             };
             "XF86AudioLowerVolume" = {
               allow-when-locked = true;
-              action = act.spawn (mkCommand "swayosd-client --output-volume lower");
+              action = spawn "swayosd-client --output-volume lower";
             };
             "XF86AudioMute" = {
               allow-when-locked = true;
-              action = act.spawn (mkCommand "swayosd-client --output-volume mute-toggle");
+              action = spawn "swayosd-client --output-volume mute-toggle";
             };
           };
       };

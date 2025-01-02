@@ -131,7 +131,7 @@ return {
 				filetypes = { "elixir", "eelixir", "heex" },
 				cmd = { "lexical" },
 				root_dir = function(fname) return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or nil end,
-				on_attach = function(client) client.server_capabilities.completionProvider = nil end,
+				-- on_attach = function(client) client.server_capabilities.completionProvider = nil end,
 			}
 		end,
 	},

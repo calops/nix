@@ -41,10 +41,6 @@
     fenix.url = "github:nix-community/fenix";
     fenix.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Hyprland plugins
-    hyprland-contrib.url = "github:hyprwm/contrib";
-    hyprland-contrib.inputs.nixpkgs.follows = "nixpkgs";
-
     # Niri window manager
     # TODO: switch back to upstream once the PR is merged
     niri.url = "github:calops/niri-flake";
