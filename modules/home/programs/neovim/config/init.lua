@@ -77,18 +77,18 @@ vim.o.foldtext = ""
 vim.o.foldlevel = 99
 
 -- Neovide configuration
-vim.g.neovide_floating_blur_amount_x = 1.5
-vim.g.neovide_floating_blur_amount_y = 1.5
-vim.g.neovide_scroll_animation_length = 0.13
-vim.g.neovide_floating_shadow = true
-vim.g.neovide_floating_z_height = 10
-vim.g.neovide_light_angle_degrees = 45
-vim.g.neovide_light_radius = 5
-vim.g.neovide_unlink_border_highlights = true
-vim.g.neovide_refresh_rate = 60
-vim.g.neovide_cursor_smooth_blink = true
-
 if vim.g.neovide == true then
+	vim.g.neovide_floating_blur_amount_x = 1.5
+	vim.g.neovide_floating_blur_amount_y = 1.5
+	vim.g.neovide_scroll_animation_length = 0.13
+	vim.g.neovide_floating_shadow = true
+	vim.g.neovide_floating_z_height = 10
+	vim.g.neovide_light_angle_degrees = 45
+	vim.g.neovide_light_radius = 5
+	vim.g.neovide_unlink_border_highlights = true
+	vim.g.neovide_refresh_rate = 60
+	vim.g.neovide_cursor_smooth_blink = true
+
 	local function set_scale(scale)
 		vim.g.neovide_scale_factor = scale
 		-- Force redraw, otherwise the scale change won't be rendered until the next UI update

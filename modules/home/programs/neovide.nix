@@ -26,7 +26,7 @@
             normal = [
               {
                 family = config.my.roles.graphical.fonts.monospace.name;
-                style = "Thin";
+                style = "Normal";
               }
               symbols
             ];
