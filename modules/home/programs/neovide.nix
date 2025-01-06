@@ -33,21 +33,21 @@
             bold = [
               {
                 family = config.my.roles.graphical.fonts.monospace.name;
-                style = "SemiBold";
+                style = "Bold";
               }
               symbols
             ];
             italic = [
               {
                 family = config.my.roles.graphical.fonts.monospace.name;
-                style = "Thin Italic";
+                style = "Italic";
               }
               symbols
             ];
             bold_italic = [
               {
                 family = config.my.roles.graphical.fonts.monospace.name;
-                style = "SemiBold Italic";
+                style = "Bold Italic";
               }
               symbols
             ];

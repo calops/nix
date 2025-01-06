@@ -1,4 +1,8 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 {
   my.roles.terminal.enable = true;
   my.roles.ai.enable = true;
@@ -13,5 +17,6 @@
   home.packages = [
     pkgs.rustdesk
     pkgs.freecad-wayland
+    pkgs.nightly.cq-editor
   ];
 }
