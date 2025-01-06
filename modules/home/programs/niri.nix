@@ -18,8 +18,10 @@ in
     inputs.niri.homeModules.config
     inputs.niri.homeModules.stylix
   ];
+
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.niri = {
+      package = if pkgs.stdenv.isDarwin then null else nixosConfig.programs.niri.package;
       settings = {
         prefer-no-csd = true;
         screenshot-path = "~/Pictures/Screenshots/%Y-%m-%dT%H:%M:%S.png";
