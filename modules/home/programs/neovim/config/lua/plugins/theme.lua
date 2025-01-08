@@ -150,7 +150,7 @@ local function hl_override(palette)
 		-- Syntax
 		["@variable.parameter"] = { fg = palette.text, style = { "nocombine" } },
 		["@module"] = { fg = palette.pink, style = { "nocombine" } },
-		["@number"] = { fg = palette.green },
+		["@number"] = { fg = palette.peach },
 		["@boolean"] = { fg = palette.green, style = { "bold" } },
 		["@type.qualifier"] = { fg = palette.mauve, style = { "bold" } },
 		["@function.macro"] = { fg = palette.blue },

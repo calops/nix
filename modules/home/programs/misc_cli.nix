@@ -33,6 +33,7 @@
       ++ lib.optional (!pkgs.stdenv.isDarwin) dtrx;
 
     programs.nix-index-database.comma.enable = true;
+    programs.nix-index.enable = true;
 
     programs.btop = {
       enable = config.my.roles.terminal.enable;
