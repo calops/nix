@@ -145,7 +145,7 @@ local function hl_override(palette)
 		NoiceCmdlineIconSearch = { fg = palette.yellow },
 		NoiceCmdlinePopupBorderSearch = { link = "NoiceCmdlineIconSearch" },
 
-		LazyCommitTypeFeat = { style = { "underline" } },
+		LazyCommitTypeFeat = { sp = palette.blue, style = { "underline" } },
 
 		-- Syntax
 		["@variable.parameter"] = { fg = palette.text, style = { "nocombine" } },

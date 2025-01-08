@@ -33,7 +33,10 @@
       ++ lib.optional (!pkgs.stdenv.isDarwin) dtrx;
 
     programs.nix-index-database.comma.enable = true;
-    programs.nix-index.enable = true;
+    programs.nix-index = {
+      enable = true;
+      enableFishIntegration = true;
+    };
 
     programs.btop = {
       enable = config.my.roles.terminal.enable;
@@ -46,6 +49,7 @@
     programs.direnv = {
       enable = config.my.roles.terminal.enable;
       nix-direnv.enable = true;
+      config.global.hide_env_diff = true;
     };
 
     programs.eza = {

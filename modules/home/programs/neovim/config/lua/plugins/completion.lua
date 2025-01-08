@@ -33,7 +33,9 @@ return {
 				["<C-k>"] = { "scroll_documentation_up", "fallback" },
 			},
 			completion = {
-				list = { selection = "manual" },
+				list = {
+					selection = { preselect = false, auto_insert = false },
+				},
 				menu = {
 					border = "rounded",
 					max_height = 15,

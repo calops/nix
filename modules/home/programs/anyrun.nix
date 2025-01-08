@@ -13,8 +13,8 @@ in
   imports = [ inputs.anyrun.homeManagerModules.default ];
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.anyrun = {
+      inherit package;
       enable = true;
-      package = package;
 
       config = {
         y.fraction = 0.3;

@@ -1,1 +1,1 @@
-vim.fn.matchadd("LazyCommitTypeFeat", "feat:.*")
+vim.fn.matchadd("LazyCommitTypeFeat", "feat.*:.*")
