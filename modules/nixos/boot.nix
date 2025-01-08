@@ -1,9 +1,4 @@
-{
-  pkgs,
-  config,
-  lib,
-  ...
-}:
+{ ... }:
 {
   boot = {
     initrd.systemd.enable = true;
