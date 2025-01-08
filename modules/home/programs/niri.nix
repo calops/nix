@@ -12,6 +12,7 @@ let
   wallpaper = config.stylix.image;
   lock = lib.getExe config.programs.swaylock.package;
   niri = lib.getExe config.programs.niri.package;
+  pidof = lib.getExe' pkgs.sysvinit "pidof";
 in
 {
   imports = [
@@ -245,7 +246,7 @@ in
       events = [
         {
           event = "before-sleep";
-          command = "pidof ${lock} || ${lock}";
+          command = "${pidof} ${lock} || ${lock}";
         }
         {
           event = "lock";
@@ -255,15 +256,15 @@ in
       timeouts = [
         {
           timeout = 900;
-          command = "pidof ${lock} || ${lock}";
-        }
-        {
-          timeout = 1800;
-          command = "${niri} msg action power-off-monitors";
+          command = "${pidof} ${lock} || ${lock}";
         }
         {
           timeout = 900;
-          command = "pidof ${lock} && ${niri} msg action power-off-monitors";
+          command = "${pidof} ${lock} && ${niri} msg action power-off-monitors";
+        }
+        {
+          timeout = 1800;
+          command = "${pidof} ${lock} && ${niri} msg action power-off-monitors";
         }
       ];
     };

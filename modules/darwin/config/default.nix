@@ -24,7 +24,7 @@
     nix = {
       optimise.automatic = true;
       gc = {
-        # automatic = true;
+        automatic = true;
         interval = {
           Day = 7;
         };
@@ -46,7 +46,7 @@
 
     programs.nh = {
       enable = true;
-      clean.enable = true;
+      clean.enable = false;
       clean.extraArgs = "--keep-since 4d --keep 3";
       os.flake = config.my.configDir;
     };
