@@ -19,7 +19,6 @@ in
       pkgs.protonup-qt
       pkgs.lutris
       pkgs.steamcmd
-      pkgs.steam-tui
       pkgs.steam-run
     ];
 

@@ -1,5 +1,14 @@
-{ config, lib, ... }:
 {
+  config,
+  lib,
+  inputs,
+  ...
+}:
+{
+  imports = [
+    inputs.nixcord.homeManagerModules.nixcord
+  ];
+
   config = lib.mkIf config.my.roles.graphical.enable {
     programs.nixcord = {
       enable = true;

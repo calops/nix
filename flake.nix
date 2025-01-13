@@ -56,14 +56,13 @@
 
     # App launcher
     anyrun.url = "github:Kirottu/anyrun";
-    anyrun.inputs.nixpkgs.follows = "nixpkgs";
 
     # Nix fork with more up to date optimizations and features
     lix.url = "git+https://git.lix.systems/lix-project/nixos-module";
     lix.inputs.nixpkgs.follows = "nixpkgs";
 
     # Vencord settings module (discord mod)
-    nixcord.url = "github:kaylorben/nixcord";
+    nixcord.url = "github:kaylorben/nixcord/d5f2fbef2fad379190e0c7a0d2d2f12c4e4df034";
 
     # GTK widget toolkit
     fabric.url = "github:wholikeel/fabric-nix";

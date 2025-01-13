@@ -10,7 +10,7 @@ let
   cfg = config.my.roles.graphical;
   palette = config.my.colors.palette.withHashtag;
   font = config.my.fonts.iosevka.name;
-  elementPkg = pkgs.element-desktop-wayland;
+  elementPkg = pkgs.element-desktop;
 in
 {
   options.programs.element.package = lib.mkOption {
