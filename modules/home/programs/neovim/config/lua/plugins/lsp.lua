@@ -15,6 +15,7 @@ return {
 			{ "<C-k>", vim.lsp.buf.signature_help, desc = "Interactive signature help" },
 			{ "<leader>rn", vim.lsp.buf.rename, desc = "Interactive rename" },
 			{ "<leader>rf", vim.lsp.buf.format, desc = "Format code" },
+			{ "<space>a", vim.lsp.buf.code_action, desc = "Code actions" },
 		},
 		config = function()
 			require("neoconf").setup {

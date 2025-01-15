@@ -3,40 +3,33 @@ local map = require("core.utils").map
 return {
 	-- Fuzzy finder
 	{
-		"ibhagwan/fzf-lua",
-		cmd = "FzfLua",
-		keys = function()
-			local fzf = function(cmd) return "<cmd>FzfLua " .. cmd .. "<cr>" end
-			map { "<leader>f", group = "fzf", icon = "", mode = { "n", "v" } }
-			return {
-				{ "<C-p>", fzf("files"), desc = "Find files" },
-				{ "<leader>fb", fzf("buffers"), desc = "Find buffers" },
-				{ "<leader>fs", fzf("live_grep"), desc = "Find string" },
-				{ "<leader>fR", fzf("grep_last"), desc = "Find string again" },
-				{ "<leader>fr", fzf("resume"), desc = "Resume latest search" },
-				{ "<leader>ff", fzf("grep_cword"), desc = "Find string in files" },
-				{ "<leader>ff", fzf("grep_visual"), desc = "Find string in files", mode = { "x" } },
-				{ "<leader>fh", fzf("helptags"), desc = "Help tags" },
-				{ "<leader>fg", fzf("git_branches"), desc = "Find git branch" },
-				{ "<space>a", fzf("lsp_code_actions"), desc = "LSP code actions", mode = { "n", "x" } },
-			}
-		end,
+		"folke/snacks.nvim",
+
+		---@type snacks.Config
 		opts = {
-			"default-title",
-			previewers = { builtin = { syntax_limit_b = 1024 * 100 } }, -- no highlighting for files larger than 100KB
-			ui_select = function(opts, items)
-				return vim.tbl_extend("force", opts, {
-					winopts = {
-						width = math.floor(math.max(vim.o.columns * 0.3, 80)),
-						height = math.floor(math.min(vim.o.lines * 0.6, #items + 1) + 0.5),
-					},
-				})
-			end,
+			picker = { ui_select = true },
 		},
-		config = function(_, opts)
-			local fzf = require("fzf-lua")
-			fzf.setup(opts)
-			fzf.register_ui_select(opts.ui_select)
+
+		keys = function()
+			local picker = function(command, ...)
+				local args = ...
+				return function() Snacks.picker[command](args) end
+			end
+
+			map { "<leader>f", group = "finder", icon = "", mode = { "n", "v" } }
+
+			return {
+				{ "<C-p>", picker("files"), desc = "Find files" },
+				{ "<leader>fb", picker("buffers"), desc = "Find buffers" },
+				{ "<leader>fs", picker("grep"), desc = "Find string" },
+				{ "<leader>fr", picker("resume"), desc = "Resume latest search" },
+				{ "<leader>ff", picker("grep_word"), desc = "Find string in files", mode = { "x", "n" } },
+				{ "<leader>fh", picker("help"), desc = "Help tags" },
+				{ "<leader>fH", picker("highlights"), desc = "Highlights" },
+				-- TODO:
+				-- { "<leader>fg", fzf("git_branches"), desc = "Find git branch" },
+				-- { "<space>a", fzf("lsp_code_actions"), desc = "LSP code actions", mode = { "n", "x" } },
+			}
 		end,
 	},
 	-- File tree browser

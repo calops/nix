@@ -22,6 +22,7 @@
         package = pkgs.catppuccin-qt5ct;
       };
     };
-    home.packages = [ pkgs.libsForQt5.qt5ct ];
+
+    home.packages = lib.optional pkgs.stdenv.isLinux pkgs.libsForQt5.qt5ct;
   };
 }

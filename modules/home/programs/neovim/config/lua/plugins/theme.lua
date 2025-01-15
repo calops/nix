@@ -22,9 +22,7 @@ local function hl_override(palette)
 		FloatBorder = { fg = palette.mauve },
 		TermFloatBorder = { fg = palette.red },
 
-		FzfLuaBorder = { fg = palette.yellow },
-		FzfLuaPreviewBorder = { fg = palette.teal },
-		FzfLuaHeaderText = { fg = palette.overlay0 },
+		SnacksPickerMatch = { sp = palette.peach, fg = palette.peach, style = { "underline" } },
 
 		BlinkCmpMenu = { link = "NormalFloat" },
 		BlinkCmpMenuBorder = { fg = palette.mauve },

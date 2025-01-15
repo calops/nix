@@ -2,6 +2,8 @@ local utils = require("core.utils")
 local colors = require("core.colors")
 
 return {
+	require("plugins.ui.dashboard"),
+	require("plugins.ui.statuscolumn"),
 	-- TUI
 	{
 		"rebelot/heirline.nvim",
@@ -93,65 +95,18 @@ return {
 		"folke/snacks.nvim",
 		priority = 1000,
 		lazy = false,
-		opts = function()
-			return {
-				bigfile = { enabled = true },
-				quickfile = { enabled = true },
-				words = { enabled = false },
-				styles = { notification = { wo = { wrap = true } } },
-				indent = { enabled = true },
-				notifier = {
-					enabled = true,
-					timeout = 5000,
-					sort = { "added" },
-				},
-				statuscolumn = {
-					left = { "mark", "sign" },
-					right = { "fold", "git" },
-					folds = {
-						open = false,
-						git_hl = true,
-					},
-					git = { patterns = { "GitSign", "MiniDiffSign" } },
-					refresh = 50,
-				},
-				dashboard = {
-					enabled = true,
-					sections = {
-						{ section = "keys", gap = 1, padding = 1 },
-						{
-							pane = 2,
-							icon = " ",
-							title = "Recent Files",
-							section = "recent_files",
-							indent = 2,
-							padding = 1,
-						},
-						{
-							pane = 2,
-							icon = " ",
-							title = "Projects",
-							section = "projects",
-							indent = 2,
-							padding = 1,
-						},
-						{
-							pane = 2,
-							icon = " ",
-							title = "Git Status",
-							section = "terminal",
-							enabled = require("snacks").git.get_root() ~= nil,
-							cmd = "hub status --short --branch --renames",
-							height = 5,
-							padding = 1,
-							ttl = 5 * 60,
-							indent = 3,
-						},
-						{ section = "startup" },
-					},
-				},
-			}
-		end,
+		opts = {
+			bigfile = { enabled = true },
+			quickfile = { enabled = true },
+			words = { enabled = false },
+			styles = { notification = { wo = { wrap = true } } },
+			indent = { enabled = true },
+			notifier = {
+				enabled = true,
+				timeout = 5000,
+				sort = { "added" },
+			},
+		},
 		keys = {
 			{ "<leader>k", function() Snacks.notifier.hide() end, desc = "Dismiss notifications" },
 			{ "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
@@ -166,6 +121,8 @@ return {
 				---@diagnostic disable-next-line: duplicate-set-field
 				_G.bt = function() Snacks.debug.backtrace() end
 				vim.print = _G.dd
+
+				vim.ui.select = Snacks.picker.select
 
 				-- Create some toggle mappings
 				Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
@@ -184,8 +141,10 @@ return {
 				Snacks.toggle.profiler():map("<leader>dp")
 				Snacks.toggle.profiler_highlights():map("<leader>dh")
 
-				utils.map { { "<leader>u", name = "toggles" } }
-				utils.map { { "<leader>d", name = "debug" } }
+				utils.map {
+					{ "<leader>u", name = "toggles" },
+					{ "<leader>d", name = "debug" },
+				}
 			end)
 		end,
 	},
