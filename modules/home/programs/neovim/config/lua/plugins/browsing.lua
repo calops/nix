@@ -19,7 +19,7 @@ return {
 			map { "<leader>f", group = "finder", icon = "", mode = { "n", "v" } }
 
 			return {
-				{ "<C-p>", picker("files"), desc = "Find files" },
+				{ "<C-p>", picker("smart"), desc = "Find files" },
 				{ "<leader>fb", picker("buffers"), desc = "Find buffers" },
 				{ "<leader>fs", picker("grep"), desc = "Find string" },
 				{ "<leader>fr", picker("resume"), desc = "Resume latest search" },
