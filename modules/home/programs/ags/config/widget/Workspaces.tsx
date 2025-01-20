@@ -58,7 +58,6 @@ function nameToSymbol(name: string) {
 
 function getIcon(window: Window) {
 	return Gio.AppInfo.get_all().find(a => {
-		return a.get_name() === window.app_id ||
-			a.get_id()?.replace(".desktop", "") === window.app_id
+		return a.get_name() === window.app_id || a.get_id()?.replace(".desktop", "") === window.app_id
 	})?.get_icon() as Gio.Icon
 }
