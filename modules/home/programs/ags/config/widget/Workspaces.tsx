@@ -1,5 +1,5 @@
 import Gio from "gi://Gio?version=2.0"
-import Niri from "./services/niri";
+import Niri, { Window } from "./services/niri";
 import { CenterBox } from "./core";
 import { Widget, Gtk } from "astal/gtk3";
 import { bind } from "astal"
@@ -10,13 +10,7 @@ export default function Workspaces() {
 	const workspaces = bind(niri, "workspaces").as((workspaces) => workspaces?.map((workspace) => {
 		const windows = bind(niri, "windows").as((windows) => windows
 			?.filter((window) => window.workspace_id == workspace.id)
-			.map((window) => [
-				window.title,
-				Gio.AppInfo.get_all().find(a => {
-					return a.get_name() === window.app_id ||
-						a.get_id()?.replace(".desktop", "") === window.app_id
-				})?.get_icon()
-			] as [string, Gio.Icon])
+			.map((window) => [window.title, getIcon(window)] as [string, Gio.Icon])
 			.filter(([_title, icon]) => icon)
 			.map(([title, icon]) => <icon gIcon={icon} className="window" tooltipMarkup={title} />))
 
@@ -60,4 +54,11 @@ function nameToSymbol(name: string) {
 		case "misc": return "";
 		default: return name;
 	}
+}
+
+function getIcon(window: Window) {
+	return Gio.AppInfo.get_all().find(a => {
+		return a.get_name() === window.app_id ||
+			a.get_id()?.replace(".desktop", "") === window.app_id
+	})?.get_icon() as Gio.Icon
 }

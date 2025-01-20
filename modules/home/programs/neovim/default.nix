@@ -40,6 +40,7 @@ in
         pkgs.nil
         pkgs.ruff
         pkgs.pyright
+        pkgs.vtsls
         rustToolchain
 
         # Tools

@@ -36,16 +36,27 @@ return {
 			}
 
 			local lspconfig = require("lspconfig")
+			-- lua
+			---@diagnostic disable-next-line: missing-fields
 			lspconfig.lua_ls.setup {}
-			lspconfig.nil_ls.setup {}
+
+			-- python
 			lspconfig.ruff.setup {}
+			---@diagnostic disable-next-line: missing-fields
 			lspconfig.pyright.setup {}
+
+			-- nix
+			lspconfig.nil_ls.setup {}
 			lspconfig.nixd.setup {
 				on_init = function(client, _)
 					-- Turn off semantic tokens until they're more consistent
 					client.server_capabilities.semanticTokensProvider = nil
 				end,
 			}
+
+			-- js/ts
+			---@diagnostic disable-next-line: missing-fields
+			lspconfig.vtsls.setup {}
 
 			utils.map {
 				{ "<leader>r", group = "refactor", icon = "" },

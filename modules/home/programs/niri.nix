@@ -78,6 +78,8 @@ in
             };
           };
 
+          # shadow.width = 20;
+
           preset-column-widths = [
             { proportion = 0.33333; }
             { proportion = 0.5; }
@@ -133,13 +135,12 @@ in
         binds =
           let
             act = if (!pkgs.stdenv.isDarwin) then config.lib.niri.actions else { };
-            spawn = cmd: act.spawn (mkCommand cmd);
           in
           lib.mkIf (!pkgs.stdenv.isDarwin) {
-            "Mod+Return".action = spawn "kitty";
-            "Mod+Space".action = spawn "anyrun";
-            "Mod+L".action = spawn lock;
-            "Mod+N".action = spawn "${lib.getExe' config.services.swaync.package "swaync-client"} -t";
+            "Mod+Return".action = act.spawn "kitty";
+            "Mod+Space".action = act.spawn "anyrun";
+            "Mod+L".action = act.spawn lock;
+            "Mod+N".action = act.spawn "${lib.getExe' config.services.swaync.package "swaync-client"}" "-t";
 
             "Mod+Shift+E".action = act.quit;
             "Mod+Shift+Comma".action = act.show-hotkey-overlay;
@@ -215,15 +216,15 @@ in
 
             "XF86AudioRaiseVolume" = {
               allow-when-locked = true;
-              action = spawn "swayosd-client --output-volume raise";
+              action = act.spawn "swayosd-client" "--output-volume" "raise";
             };
             "XF86AudioLowerVolume" = {
               allow-when-locked = true;
-              action = spawn "swayosd-client --output-volume lower";
+              action = act.spawn "swayosd-client" "--output-volume" "lower";
             };
             "XF86AudioMute" = {
               allow-when-locked = true;
-              action = spawn "swayosd-client --output-volume mute-toggle";
+              action = act.spawn "swayosd-client" "--output-volume" "mute-toggle";
             };
           };
       };
