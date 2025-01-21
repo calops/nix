@@ -14,6 +14,9 @@ in
     settings = {
       font_size = cfg.fonts.sizes.terminal;
       font_family = cfg.fonts.monospace.name;
+      bold_font = "${cfg.fonts.monospace.name} Bold";
+      italic_font = "${cfg.fonts.monospace.name} Italic";
+      bold_italic_font = "${cfg.fonts.monospace.name} Bold Italic";
       undercurl_style = "thick-sparse";
       cursor_trail = 3;
       hide_window_decorations = if pkgs.stdenv.isDarwin then "titlebar-only" else "yes";

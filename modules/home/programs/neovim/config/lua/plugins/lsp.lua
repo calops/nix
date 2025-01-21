@@ -18,14 +18,15 @@ return {
 			{ "<space>a", vim.lsp.buf.code_action, desc = "Code actions" },
 		},
 		config = function()
-			require("neoconf").setup {
-				plugins = {
-					jsonls = {
-						enabled = true,
-						configured_servers_only = false,
-					},
-				},
-			}
+			-- FIXME: broken
+			-- require("neoconf").setup {
+			-- 	plugins = {
+			-- 		jsonls = {
+			-- 			enabled = true,
+			-- 			configured_servers_only = false,
+			-- 		},
+			-- 	},
+			-- }
 			require("mason").setup { ui = { border = "rounded" } }
 			require("mason-lspconfig").setup {
 				ensure_installed = {},
@@ -35,28 +36,19 @@ return {
 				},
 			}
 
-			local lspconfig = require("lspconfig")
-			-- lua
-			---@diagnostic disable-next-line: missing-fields
-			lspconfig.lua_ls.setup {}
-
-			-- python
-			lspconfig.ruff.setup {}
-			---@diagnostic disable-next-line: missing-fields
-			lspconfig.pyright.setup {}
-
-			-- nix
-			lspconfig.nil_ls.setup {}
-			lspconfig.nixd.setup {
-				on_init = function(client, _)
-					-- Turn off semantic tokens until they're more consistent
-					client.server_capabilities.semanticTokensProvider = nil
-				end,
+			require("core.lsp").configure_servers {
+				lua_ls = { bin = "lua-language-server" },
+				ruff = {},
+				pyright = {},
+				vtsls = {},
+				nil_ls = { bin = "nil" },
+				nixd = {
+					on_init = function(client, _)
+						-- Turn off semantic tokens until they're more consistent
+						client.server_capabilities.semanticTokensProvider = nil
+					end,
+				},
 			}
-
-			-- js/ts
-			---@diagnostic disable-next-line: missing-fields
-			lspconfig.vtsls.setup {}
 
 			utils.map {
 				{ "<leader>r", group = "refactor", icon = "" },
