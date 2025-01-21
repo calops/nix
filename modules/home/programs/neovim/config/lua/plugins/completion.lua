@@ -27,8 +27,6 @@ return {
 				["<C-y>"] = { "accept", "fallback" },
 				["<S-Tab>"] = { "select_prev", "fallback" },
 				["<Tab>"] = { "select_next", "fallback" },
-				["<Up>"] = { "select_prev", "fallback" },
-				["<Down>"] = { "select_next", "fallback" },
 				["<C-j>"] = { "scroll_documentation_down", "fallback" },
 				["<C-k>"] = { "scroll_documentation_up", "fallback" },
 			},
