@@ -26,8 +26,8 @@ return {
 				{ "<leader>ff", picker("grep_word"), desc = "Find string in files", mode = { "x", "n" } },
 				{ "<leader>fh", picker("help"), desc = "Help tags" },
 				{ "<leader>fH", picker("highlights"), desc = "Highlights" },
+				{ "<leader>fg", picker("git_branches"), desc = "Git branches" },
 				-- TODO:
-				-- { "<leader>fg", fzf("git_branches"), desc = "Find git branch" },
 				-- { "<space>a", fzf("lsp_code_actions"), desc = "LSP code actions", mode = { "n", "x" } },
 			}
 		end,

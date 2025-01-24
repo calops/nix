@@ -67,6 +67,9 @@ return {
 					elixir = [[IO.inspect(%log_target, label: "%log_marker %log_target", syntax_colors: IO.ANSI.syntax_colors())]],
 					lua = [[print("%log_marker %log_target=", %log_target)]],
 				},
+				plain = {
+					elixir = [[IO.puts("%insert_cursor")]],
+				},
 			},
 		},
 		init = function()
