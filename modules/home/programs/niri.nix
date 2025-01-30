@@ -15,10 +15,10 @@ let
   pidof = lib.getExe' pkgs.sysvinit "pidof";
 in
 {
-  imports = [
-    inputs.niri.homeModules.config
-    inputs.niri.homeModules.stylix
-  ];
+  # imports = [
+  #   inputs.niri.homeModules.config
+  #   inputs.niri.homeModules.stylix
+  # ];
 
   # config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
   #   programs.niri = {

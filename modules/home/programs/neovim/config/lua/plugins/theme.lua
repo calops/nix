@@ -98,9 +98,6 @@ local function hl_override(palette)
 		IlluminatedWordWrite = { bg = palette.surface1, style = { "bold", "underdotted" } },
 		IlluminatedWordRead = { bg = palette.surface1, style = { "bold", "underdotted" } },
 
-		UfoVirtText = { fg = palette.base, bg = palette.teal, style = { "bold" } },
-		UfoVirtTextPill = { fg = palette.teal },
-		UfoFoldedBg = { bg = colors.darken(palette.teal, 0.33) },
 		Folded = { bg = palette.base, style = { "italic" } },
 
 		GitSignsAdd = { fg = palette.green },
@@ -127,8 +124,6 @@ local function hl_override(palette)
 		CustomTablineCwdIcon = { fg = palette.base, bg = palette.yellow },
 		CustomTablineGitBranch = { fg = palette.peach, bg = colors.darken(palette.peach, 0.33) },
 		CustomTablineGitIcon = { fg = palette.base, bg = palette.peach },
-
-		VirtColumn = { fg = palette.surface0 },
 
 		CopilotSuggestion = { fg = colors.darken(palette.peach, 0.8), style = { "italic" } },
 

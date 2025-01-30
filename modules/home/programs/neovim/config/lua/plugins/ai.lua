@@ -2,6 +2,33 @@ local utils = require("core.utils")
 
 return {
 	{
+		"milanglacier/minuet-ai.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		enabled = false, -- TODO:
+		opts = {
+			virtualtext = {
+				auto_trigger_ft = {},
+				keymap = {
+					accept = "<M-CR>",
+					accept_line = "<M-l>",
+					prev = "<M-Left>",
+					next = "<M-Right>",
+					dismiss = "<M-:>",
+				},
+			},
+			provider_options = {
+				gemini = {
+					model = "gemini-2.0-flash-exp",
+					system = "see [Prompt] section for the default value",
+					few_shots = "see [Prompt] section for the default value",
+					chat_input = "See [Prompt Section for default value]",
+					stream = true,
+					optional = {},
+				},
+			},
+		},
+	},
+	{
 		"zbirenbaum/copilot.lua",
 		event = "VeryLazy",
 		opts = {

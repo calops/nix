@@ -19,7 +19,7 @@ in
     enable = config.my.roles.terminal.enable;
     defaultCommand = "fd --color=always";
     # Make sure this is added after the stylix options
-    defaultOptions = lib.mkOrder 2000 [
+    defaultOptions = lib.mkOrder 50000 [
       "--scheme=path"
       "--ansi"
       "--preview='${preview} {}'"
@@ -33,4 +33,6 @@ in
     fileWidgetCommand = "fd --color=always";
     changeDirWidgetCommand = "fd --type d --color=always";
   };
+  # Remove once stylix stops overriding customizations
+  stylix.targets.fzf.enable = false;
 }

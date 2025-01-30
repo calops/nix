@@ -77,9 +77,10 @@ vim.o.foldtext = ""
 vim.o.foldlevel = 99
 
 -- Neovide configuration
-if vim.g.neovide == true then
+if vim.g.neovide then
 	vim.g.neovide_floating_blur_amount_x = 1.5
 	vim.g.neovide_floating_blur_amount_y = 1.5
+	vim.g.neovide_floating_corner_radius = 0.5
 	vim.g.neovide_scroll_animation_length = 0.13
 	vim.g.neovide_floating_shadow = true
 	vim.g.neovide_floating_z_height = 10
@@ -88,6 +89,8 @@ if vim.g.neovide == true then
 	vim.g.neovide_unlink_border_highlights = true
 	vim.g.neovide_refresh_rate = 60
 	vim.g.neovide_cursor_smooth_blink = true
+	vim.g.neovide_underline_stroke_scale = 2.0
+	vim.g.experimental_layer_grouping = true
 
 	local function set_scale(scale)
 		vim.g.neovide_scale_factor = scale

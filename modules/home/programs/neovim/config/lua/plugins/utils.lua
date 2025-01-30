@@ -41,18 +41,7 @@ return {
 			follow_cwd = false,
 		},
 	},
-	-- Startup time analyzer
-	{
-		"dstein64/vim-startuptime",
-		lazy = false,
-		enabled = false,
-	},
-	-- Auto close buffers
-	{
-		"chrisgrieser/nvim-early-retirement",
-		event = "VeryLazy",
-		opts = { retirementAgeMins = 10 },
-	},
+	-- Firefox integration
 	{
 		"glacambre/firenvim",
 		lazy = not vim.g.started_by_firenvim,

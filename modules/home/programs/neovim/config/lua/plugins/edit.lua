@@ -94,10 +94,10 @@ return {
 	-- Edit filesystem as a buffer
 	{
 		"stevearc/oil.nvim",
-		keys = {
-			{ "<leader>o", "<cmd>Oil --float<cr>", desc = "Edit filesystem as a buffer" },
-		},
 		lazy = false,
+		keys = {
+			{ "<leader>o", "<cmd>Oil<cr>", desc = "Edit filesystem as a buffer" },
+		},
 		opts = {
 			columns = { "icon" },
 			view_options = {
@@ -151,6 +151,7 @@ return {
 	{
 		"gbprod/yanky.nvim",
 		dependencies = { "kkharji/sqlite.lua" },
+		event = "VeryLazy",
 		opts = { ring = {
 			storage = "sqlite",
 			cancel_event = "move",

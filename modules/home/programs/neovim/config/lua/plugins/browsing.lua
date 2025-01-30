@@ -27,6 +27,8 @@ return {
 				{ "<leader>fh", picker("help"), desc = "Help tags" },
 				{ "<leader>fH", picker("highlights"), desc = "Highlights" },
 				{ "<leader>fg", picker("git_branches"), desc = "Git branches" },
+				{ "<leader>fe", picker("icons"), desc = "Icons and emojis" },
+				{ "<leader>fS", picker("projects"), desc = "Open session" },
 				-- TODO:
 				-- { "<space>a", fzf("lsp_code_actions"), desc = "LSP code actions", mode = { "n", "x" } },
 			}
@@ -70,14 +72,5 @@ return {
 				},
 			},
 		},
-	},
-	-- Symbol picker
-	{
-		"ziontee113/icon-picker.nvim",
-		cmd = { "IconPickerNormal" },
-		keys = {
-			{ "<leader>fe", "<cmd>IconPickerNormal<cr>", desc = "Pick icon" },
-		},
-		opts = { disable_legacy_commands = true },
 	},
 }

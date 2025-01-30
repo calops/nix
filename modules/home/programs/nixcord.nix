@@ -2,6 +2,7 @@
   config,
   lib,
   inputs,
+  pkgs,
   ...
 }:
 {
@@ -9,7 +10,7 @@
     inputs.nixcord.homeManagerModules.nixcord
   ];
 
-  config = lib.mkIf config.my.roles.graphical.enable {
+  config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.nixcord = {
       enable = true;
       vesktop.enable = true;
