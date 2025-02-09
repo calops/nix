@@ -59,12 +59,6 @@ local function hl_override(palette)
 		TreesitterContextBottom = { bg = palette.base, sp = palette.surface1, style = { "underdashed" } },
 		TreesitterContextLineNumber = { link = "LineNr" },
 
-		DiagnosticUnderlineError = { sp = palette.red, style = { "undercurl" } },
-		DiagnosticUnderlineWarn = { sp = palette.yellow, style = { "undercurl" } },
-		DiagnosticUnderlineInfo = { sp = palette.sky, style = { "undercurl" } },
-		DiagnosticUnderlineHint = { sp = palette.teal, style = { "undercurl" } },
-		DiagnosticUnnecessary = { sp = palette.mauve, style = { "undercurl" } },
-
 		DiagnosticLineError = { bg = colors.darken(palette.red, 0.095, palette.base) },
 		DiagnosticLineWarn = { bg = colors.darken(palette.yellow, 0.095, palette.base) },
 		DiagnosticLineInfo = { bg = colors.darken(palette.sky, 0.095, palette.base) },
@@ -91,7 +85,6 @@ local function hl_override(palette)
 		ModesInsert = { link = "ModeInsert" },
 		ModesVisual = { link = "ModeVisual" },
 
-		LspInlayHint = { fg = palette.surface1 },
 		Comment = { fg = colors.darken(palette.lavender, 0.6) },
 
 		IlluminatedWordText = { bg = palette.surface1, style = { "bold", "underdotted" } },
@@ -130,13 +123,6 @@ local function hl_override(palette)
 		FlashLabel = { bg = palette.peach, fg = palette.base, style = { "bold" } },
 		FlashMatch = { bg = palette.lavender, fg = palette.base },
 		FlashBackdrop = { bg = nil, fg = palette.overlay0, style = { "nocombine" } },
-
-		NoiceMini = { fg = palette.blue, bg = nil, blend = 50 },
-		NoiceCmdlineIcon = { fg = palette.teal },
-		NoiceCmdlinePopupTitle = { link = "NoiceCmdlineIcon" },
-		NoiceCmdlinePopupBorder = { link = "NoiceCmdlineIcon" },
-		NoiceCmdlineIconSearch = { fg = palette.yellow },
-		NoiceCmdlinePopupBorderSearch = { link = "NoiceCmdlineIconSearch" },
 
 		LazyCommitTypeFeat = { sp = palette.blue, style = { "underline" } },
 
@@ -189,14 +175,24 @@ return {
 		term_colors = true,
 		integrations = {
 			blink_cmp = true,
-			neotree = true,
-			cmp = true,
+			neotest = true,
+			noice = true,
+			diffview = true,
 			gitsigns = true,
-			notify = true,
 			mini = true,
+			snacks = true,
+			lsp_trouble = true,
+			which_key = true,
 			native_lsp = {
 				enabled = true,
 				inlay_hints = { background = false },
+				underlines = {
+					errors = { "undercurl" },
+					hints = { "undercurl" },
+					warnings = { "undercurl" },
+					information = { "undercurl" },
+					ok = { "underline" },
+				},
 			},
 		},
 		compile = {

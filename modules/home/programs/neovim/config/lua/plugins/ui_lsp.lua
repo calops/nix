@@ -1,35 +1,4 @@
 return {
-	-- Show rich inline diagnostics
-	{
-		url = "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-		event = "LspAttach",
-		keys = {
-			{
-				"<leader>m",
-				function()
-					require("lsp_lines")
-					---@diagnostic disable-next-line: undefined-field
-					local is_enabled = vim.diagnostic.config().virtual_lines
-
-					vim.diagnostic.config {
-						virtual_lines = (not is_enabled) and { highlight_whole_line = false },
-						virtual_text = is_enabled,
-						severity_sort = true,
-					}
-				end,
-				desc = "Toggle full inline diagnostics",
-			},
-		},
-		config = function()
-			require("lsp_lines").setup()
-
-			vim.diagnostic.config {
-				severity_sort = true,
-				virtual_text = true,
-				virtual_lines = false,
-			}
-		end,
-	},
 	-- Code definition and references peeking
 	{
 		"dnlhc/glance.nvim",

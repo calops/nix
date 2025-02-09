@@ -67,6 +67,7 @@ in
         ".yarn"
         ".yarnrc"
         ".nvim.lua"
+        ".elixir-tools"
         "Session.vim"
         "__pycache__"
         "target"

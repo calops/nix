@@ -144,3 +144,23 @@ require("lazy").setup {
 if pcall(require, "nix") then
 	vim.notify("Nix environment detected", "info")
 end
+
+vim.diagnostic.config {
+	severity_sort = true,
+	virtual_text = true,
+	virtual_lines = false,
+}
+
+require("core.utils").map {
+	{
+		"<leader>m",
+		function()
+			local is_enabled = vim.diagnostic.config().virtual_lines
+			vim.diagnostic.config {
+				virtual_lines = not is_enabled,
+				virtual_text = is_enabled,
+			}
+		end,
+		desc = "Toggle full inline diagnostics",
+	},
+}

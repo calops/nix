@@ -116,33 +116,4 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 			}
 		end,
 	},
-	{
-		"olimorris/codecompanion.nvim",
-		enabled = false, -- requires too much customization for now
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
-		},
-		cmd = { "CodeCompanion", "CodeCompanionActions", "CodeCompanionChat", "CodeCompanionCmd" },
-		keys = function()
-			local cc = utils.lazy_require("codecompanion")
-			utils.map {
-				{ "<leader>c", group = "copilot", icon = "" },
-			}
-			return {
-				{ "<leader>cc", cc("toggle"), mode = { "n", "x" }, desc = "Toggle Code Companion" },
-				{ "<leader>ca", cc("actions"), mode = { "n", "x" }, desc = "Code companion actions" },
-			}
-		end,
-		opts = {
-			strategies = {
-				chat = {
-					adapter = "copilot",
-				},
-				inline = {
-					adapter = "copilot",
-				},
-			},
-		},
-	},
 }

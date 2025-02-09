@@ -18,15 +18,14 @@ return {
 			{ "<space>a", vim.lsp.buf.code_action, desc = "Code actions" },
 		},
 		config = function()
-			-- FIXME: broken
-			-- require("neoconf").setup {
-			-- 	plugins = {
-			-- 		jsonls = {
-			-- 			enabled = true,
-			-- 			configured_servers_only = false,
-			-- 		},
-			-- 	},
-			-- }
+			require("neoconf").setup {
+				plugins = {
+					jsonls = {
+						enabled = true,
+						configured_servers_only = false,
+					},
+				},
+			}
 			require("mason").setup { ui = { border = "rounded" } }
 			require("mason-lspconfig").setup {
 				ensure_installed = {},

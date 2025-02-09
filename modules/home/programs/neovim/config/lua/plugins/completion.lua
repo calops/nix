@@ -32,7 +32,10 @@ return {
 			},
 			completion = {
 				list = {
-					selection = { preselect = false, auto_insert = function(ctx) return ctx.mode == "cmdline" end },
+					selection = {
+						preselect = false,
+						auto_insert = function(ctx) return ctx.mode == "cmdline" end,
+					},
 				},
 				menu = {
 					border = "rounded",
