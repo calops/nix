@@ -55,7 +55,7 @@ return {
 	{
 		"CopilotC-Nvim/CopilotChat.nvim",
 		enabled = true,
-		branch = "canary",
+		branch = "main",
 		dependencies = {
 			{ "zbirenbaum/copilot.lua" },
 			{ "nvim-lua/plenary.nvim" },

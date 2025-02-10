@@ -5,8 +5,7 @@
     "https://nix-gaming.cachix.org"
     "https://devenv.cachix.org"
     "https://calops.cachix.org"
-    # TODO: uncomment once stable again
-    # "https://cache.garnix.io"
+    "https://cache.garnix.io"
     "https://nightly-tools.cachix.org"
     "https://anyrun.cachix.org"
     "https://niri.cachix.org"

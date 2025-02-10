@@ -16,11 +16,12 @@
 
     qt = lib.mkIf (!pkgs.stdenv.isDarwin) {
       enable = true;
-      platformTheme.name = "qt5ct";
-      style = {
-        name = "catppuccin-mocha-mauve";
-        package = pkgs.catppuccin-qt5ct;
-      };
+      # FIXME:
+      # platformTheme.name = "qt5ct";
+      # style = {
+      #   name = "catppuccin-mocha-mauve";
+      #   package = pkgs.catppuccin-qt5ct;
+      # };
     };
 
     home.packages = lib.optional pkgs.stdenv.isLinux pkgs.libsForQt5.qt5ct;

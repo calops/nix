@@ -132,18 +132,14 @@ require("core.symbols").define_signs {
 	GitSignsDelete = { text = "▋", texthl = "GitSignsDelete", numhl = "" },
 }
 
-require("lazy").setup {
-	spec = { { import = "plugins" } },
-	ui = { border = "rounded" },
-	dev = {
-		fallback = true,
-		path = "~/projects",
-	},
-}
-
 if pcall(require, "nix") then
 	vim.notify("Nix environment detected", "info")
 end
+
+require("lazy").setup {
+	spec = { { import = "plugins" } },
+	ui = { border = "rounded" },
+}
 
 vim.diagnostic.config {
 	severity_sort = true,

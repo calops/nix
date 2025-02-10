@@ -42,8 +42,7 @@
     fenix.inputs.nixpkgs.follows = "nixpkgs";
 
     # Niri window manager
-    # TODO: switch back to upstream once the PR is merged
-    niri.url = "github:calops/niri-flake";
+    niri.url = "github:sodiboo/niri-flake";
     niri.inputs.nixpkgs.follows = "nixpkgs";
 
     # Home-manager modules

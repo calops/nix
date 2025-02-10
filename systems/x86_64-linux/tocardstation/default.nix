@@ -64,4 +64,6 @@
     layout = "fr";
     variant = "azerty";
   };
+
+  virtualisation.waydroid.enable = true;
 }

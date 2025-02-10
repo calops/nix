@@ -32,6 +32,7 @@ in
         pkgs.shfmt # Shell
         pkgs.isort # Python
         pkgs.stylua # Lua
+        pkgs.sqlfluff
 
         # LSP
         pkgs.lua-language-server
@@ -55,7 +56,10 @@ in
         pkgs.tree-sitter
         pkgs.luarocks
         pkgs.hub
-      ] ++ lib.lists.optional (!pkgs.stdenv.isDarwin) pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter;
+        pkgs.wget # for mason.nvim
+      ];
+      # FIXME:
+      # ++ lib.lists.optional (!pkgs.stdenv.isDarwin) pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter;
       plugins = [
         pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
       ];

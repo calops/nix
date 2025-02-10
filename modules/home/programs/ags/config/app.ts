@@ -9,6 +9,8 @@ const palette_file = `${GLib.getenv("XDG_CONFIG_HOME")}/colors/palette.scss`;
 const scss_file = `./style.scss`;
 const css_file = `/tmp/ags/style.css`;
 
+processUtils.exec(`bash -c 'test -d /tmp/ags || mkdir -p /tmp/ags'`);
+
 function reloadCss() {
 	const cmd = `cat ${palette_file} ${scss_file} | sassc -s ${css_file}`;
 	processUtils.exec(`bash -c "${cmd}"`);

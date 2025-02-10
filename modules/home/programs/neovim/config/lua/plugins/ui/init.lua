@@ -2,8 +2,6 @@ local utils = require("core.utils")
 local colors = require("core.colors")
 
 return {
-	require("plugins.ui.dashboard"),
-	require("plugins.ui.statuscolumn"),
 	-- TUI
 	{
 		"rebelot/heirline.nvim",
@@ -81,39 +79,117 @@ return {
 			},
 		},
 	},
-	-- Better select dialog
-	{
-		"stevearc/dressing.nvim",
-		event = "VeryLazy",
-		opts = {
-			input = { enabled = false },
-			select = { enabled = true },
-		},
-	},
 	-- Notification handler, and various utilities
 	{
 		"folke/snacks.nvim",
 		priority = 1000,
 		lazy = false,
-		opts = {
-			bigfile = { enabled = true },
-			quickfile = { enabled = true },
-			words = { enabled = false },
-			styles = { notification = { wo = { wrap = true } } },
-			indent = { enabled = true },
-			notifier = {
-				enabled = true,
-				timeout = 5000,
-				sort = { "added" },
-			},
-		},
-		keys = {
-			{ "<leader>k", function() Snacks.notifier.hide() end, desc = "Dismiss notifications" },
-			{ "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
-			{ "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
-			{ "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git Blame Line" },
-			{ "<leader>ds", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Bufer" },
-		},
+		opts = function()
+			---@type snacks.Config
+			return {
+				bigfile = { enabled = true },
+				quickfile = { enabled = true },
+				words = { enabled = false },
+				styles = { notification = { wo = { wrap = true } } },
+				indent = { enabled = true },
+				explorer = { enabled = true },
+				input = { enabled = true },
+				picker = {
+					enabled = true,
+					ui_select = true,
+					db = {
+						sqlite3_path = vim.g.sqlite_clib_path,
+					},
+				},
+				notifier = {
+					enabled = true,
+					timeout = 5000,
+					sort = { "added" },
+				},
+				statuscolumn = {
+					left = { "mark", "sign" },
+					right = { "fold", "git" },
+					folds = {
+						open = false,
+						git_hl = true,
+					},
+					git = { patterns = { "GitSign", "MiniDiffSign" } },
+					refresh = 50,
+				},
+				dashboard = {
+					enabled = true,
+					sections = {
+						{ section = "keys", gap = 1, padding = 1 },
+						{
+							pane = 2,
+							icon = " ",
+							title = "Recent Files",
+							section = "recent_files",
+							indent = 2,
+							padding = 1,
+						},
+						{
+							pane = 2,
+							icon = " ",
+							title = "Projects",
+							section = "projects",
+							indent = 2,
+							padding = 1,
+						},
+						{
+							pane = 2,
+							icon = " ",
+							title = "Git Status",
+							section = "terminal",
+							enabled = require("snacks").git.get_root() ~= nil,
+							cmd = "hub status --short --branch --renames",
+							height = 5,
+							padding = 1,
+							ttl = 5 * 60,
+							indent = 3,
+						},
+						{ section = "startup" },
+					},
+				},
+			}
+		end,
+		keys = function()
+			local picker = function(command, ...)
+				local args = ...
+				return function() Snacks.picker[command](args) end
+			end
+
+			require("core.utils").map { "<leader>f", group = "finder", icon = "", mode = { "n", "v" } }
+
+			return {
+				{ "<leader>f", group = "finder", icon = "", mode = { "n", "v" } },
+				{ "<leader>k", function() Snacks.notifier.hide() end, desc = "Dismiss notifications" },
+				{ "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+				{ "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
+				{ "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git Blame Line" },
+				{ "<leader>ds", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Bufer" },
+
+				{ "<C-p>", picker("smart"), desc = "Find files" },
+				{ "<leader>fb", picker("buffers"), desc = "Find buffers" },
+				{ "<leader>fs", picker("grep"), desc = "Find string" },
+				{ "<leader>fr", picker("resume"), desc = "Resume latest search" },
+				{ "<leader>ff", picker("grep_word"), desc = "Find string in files", mode = { "x", "n" } },
+				{ "<leader>fh", picker("help"), desc = "Help tags" },
+				{ "<leader>fH", picker("highlights"), desc = "Highlights" },
+				{ "<leader>fg", picker("git_branches"), desc = "Git branches" },
+				{ "<leader>fe", picker("icons"), desc = "Icons and emojis" },
+				{ "<leader>fS", picker("projects"), desc = "Open session" },
+				{ "<leader>fp", picker("lazy"), desc = "Find plugin" },
+				{ "<leader>fe", picker("explorer"), desc = "Find plugin" },
+				{
+					"<leader>fy",
+					picker("lsp_symbols", { layout = { preset = "sidebar", preview = "main" } }),
+					desc = "Find plugin",
+				},
+				-- TODO:
+				-- { "<space>a", fzf("lsp_code_actions"), desc = "LSP code actions", mode = { "n", "x" } },
+			}
+		end,
 		init = function()
 			require("core.utils").user_aucmd("VeryLazy", function()
 				---@diagnostic disable-next-line: duplicate-set-field
@@ -121,8 +197,6 @@ return {
 				---@diagnostic disable-next-line: duplicate-set-field
 				_G.bt = function() Snacks.debug.backtrace() end
 				vim.print = _G.dd
-
-				vim.ui.select = Snacks.picker.select
 
 				-- Create some toggle mappings
 				Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")

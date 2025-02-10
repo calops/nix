@@ -17,7 +17,6 @@
         dysk
         fclones
         fd
-        rargs
         rm-improved
         sshfs
         xcp
