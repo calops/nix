@@ -1,12 +1,11 @@
 {
   pkgs,
-  config,
   lib,
-  inputs,
   ...
 }:
 {
-  imports = [ inputs.nh_plus.nixDarwinModules.prebuiltin ];
+  # FIXME:
+  # imports = [ inputs.nh_plus.nixDarwinModules.prebuiltin ];
 
   options = {
     my.configDir = lib.mkOption {
@@ -33,9 +32,13 @@
     };
 
     environment = {
-      systemPackages = [ pkgs.raycast ];
+      systemPackages = [
+        pkgs.raycast
+        pkgs.nh
+      ];
       shells = [ pkgs.fish ];
       variables.EDITOR = "nvim";
+      variables.MOZ_LEGACY_PROFILES = "1";
     };
 
     launchd.user.envVariables.MOZ_LEGACY_PROFILES = "1";
@@ -44,12 +47,13 @@
     homebrew.enable = true;
     security.pam.enableSudoTouchIdAuth = true;
 
-    programs.nh = {
-      enable = true;
-      clean.enable = false;
-      clean.extraArgs = "--keep-since 4d --keep 3";
-      os.flake = config.my.configDir;
-    };
+    # FIXME:
+    # programs.nh = {
+    #   enable = true;
+    #   clean.enable = false;
+    #   clean.extraArgs = "--keep-since 4d --keep 3";
+    #   os.flake = config.my.configDir;
+    # };
 
     system.defaults = {
       dock = {
