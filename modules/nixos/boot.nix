@@ -1,4 +1,9 @@
-{ ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 {
   boot = {
     initrd.systemd.enable = true;
@@ -11,9 +16,19 @@
     };
   };
 
-  # boot.plymouth = lib.mkIf config.my.roles.graphical.enable {
-  #   enable = true;
-  # themePackages = [pkgs.catppuccin-plymouth];
-  # theme = "catppuccin-mocha";
-  # };
+  boot.plymouth = lib.mkIf config.my.roles.graphical.enable {
+    enable = true;
+  };
+
+  services.kmscon = lib.mkIf config.my.roles.graphical.enable {
+    enable = true;
+    hwRender = true;
+    useXkbConfig = true;
+    fonts = [
+      {
+        name = "Terminess Nerd Font";
+        package = pkgs.nerd-fonts.terminess-ttf;
+      }
+    ];
+  };
 }

@@ -26,6 +26,7 @@
 
     environment.systemPackages = [
       pkgs.protontricks
+      pkgs.i2c-tools
     ];
 
     services.hardware.openrgb = {

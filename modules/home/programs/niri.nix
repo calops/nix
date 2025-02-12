@@ -219,6 +219,10 @@ in
           timeout = 1800;
           command = "${pidof} ${lock} && ${niri} msg action power-off-monitors";
         }
+        {
+          timeout = 36000;
+          command = "systemctl suspend";
+        }
       ];
     };
 

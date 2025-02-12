@@ -65,5 +65,6 @@
     variant = "azerty";
   };
 
+  # Android virtualisation
   virtualisation.waydroid.enable = true;
 }
