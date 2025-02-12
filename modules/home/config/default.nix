@@ -78,6 +78,7 @@
           "x-scheme-handler/https" = firefox;
           "x-scheme-handler/about" = firefox;
           "x-scheme-handler/unknown" = firefox;
+          "application/pdf" = "org.pwmt.zathura.desktop";
         };
     };
 

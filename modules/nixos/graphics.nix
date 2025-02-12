@@ -32,6 +32,6 @@
     # Misc
     hardware.graphics.enable = true;
     security.pam.services.swaylock = { };
-    xdg.portal.xdgOpenUsePortal = true;
+    xdg.portal.xdgOpenUsePortal = false;
   };
 }

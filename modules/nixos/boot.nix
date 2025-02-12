@@ -16,9 +16,9 @@
     };
   };
 
-  boot.plymouth = lib.mkIf config.my.roles.graphical.enable {
-    enable = true;
-  };
+  # boot.plymouth = lib.mkIf config.my.roles.graphical.enable {
+  #   enable = true;
+  # };
 
   services.kmscon = lib.mkIf config.my.roles.graphical.enable {
     enable = true;

@@ -48,6 +48,7 @@ return {
 		priority = 100,
 		build = function() vim.fn["firenvim#install"](0) end,
 		init = function()
+			vim.o.guifont = "Iosevka:h10,Symbols Nerd Font Mono:h10"
 			vim.g.firenvim_config = {
 				localSettings = {
 					[".*"] = {
@@ -56,6 +57,18 @@ return {
 					},
 				},
 			}
+
+			local function bind_ft_to_domain(pattern, filetype)
+				utils.aucmd(
+					"BufEnter",
+					function() vim.bo.filetype = filetype end,
+					{ pattern = "https?://.*" .. pattern }
+				)
+			end
+
+			bind_ft_to_domain("github.com", "markdown")
+			bind_ft_to_domain("reddit.com", "markdown")
+			bind_ft_to_domain("metabase.com", "sql")
 		end,
 	},
 	-- Direnv sync

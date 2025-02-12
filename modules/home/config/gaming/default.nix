@@ -25,6 +25,10 @@ in
     programs.mangohud = {
       enable = true;
       enableSessionWide = true;
+      settingsPerApplication = {
+        mpv.no_display = true;
+        "org.gnome.font-viewer".no_display = true;
+      };
     };
 
     stylix.targets.mangohud.enable = false;
