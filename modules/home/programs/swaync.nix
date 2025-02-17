@@ -44,6 +44,7 @@ in
 
           .notification {
             background-color: ${palette.surface0};
+            box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
           }
         '';
     };

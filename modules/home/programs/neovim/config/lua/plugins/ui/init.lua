@@ -185,7 +185,7 @@ return {
 				{
 					"<leader>fy",
 					picker("lsp_symbols", { layout = { preset = "sidebar", preview = "main" } }),
-					desc = "Find plugin",
+					desc = "Find symbols",
 				},
 				-- TODO:
 				-- { "<space>a", fzf("lsp_code_actions"), desc = "LSP code actions", mode = { "n", "x" } },

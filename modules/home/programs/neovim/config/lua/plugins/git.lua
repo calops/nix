@@ -28,9 +28,10 @@ return {
 		"lewis6991/gitsigns.nvim",
 		event = "BufRead",
 		keys = function()
+			map { "<leader>g", group = "git", icon = "" }
 			local function g() return require("gitsigns") end
 			return {
-				{ "<leader>gu", function() g().undo_stage_hunk() end, desc = 'Undo "stage hunk"' },
+				{ "<leader>gu", function() g().stage_hunk() end, desc = 'Undo "stage hunk"' },
 				{ "<leader>gn", function() g().nav_hunk("next") end, desc = "Next hunk" },
 				{ "<leader>gN", function() g().nav_hunk("prev") end, desc = "Previous hunk" },
 				{ "<leader>gp", function() g().preview_hunk_inline() end, desc = "Preview hunk" },
@@ -50,7 +51,6 @@ return {
 				},
 			}
 		end,
-		init = function() map { "<leader>g", group = "git", icon = "" } end,
 		opts = {
 			preview_config = { border = "rounded" },
 			signs = {

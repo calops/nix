@@ -141,9 +141,11 @@ require("lazy").setup {
 	ui = { border = "rounded" },
 }
 
+local virtual_text_config = { source = true }
+
 vim.diagnostic.config {
 	severity_sort = true,
-	virtual_text = true,
+	virtual_text = virtual_text_config,
 	virtual_lines = false,
 }
 
@@ -154,7 +156,7 @@ require("core.utils").map {
 			local is_enabled = vim.diagnostic.config().virtual_lines
 			vim.diagnostic.config {
 				virtual_lines = not is_enabled,
-				virtual_text = is_enabled,
+				virtual_text = is_enabled and virtual_text_config or nil,
 			}
 		end,
 		desc = "Toggle full inline diagnostics",
