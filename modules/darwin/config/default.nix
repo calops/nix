@@ -18,7 +18,6 @@
 
   config = {
     system.stateVersion = 4;
-    services.nix-daemon.enable = true;
 
     nix = {
       optimise.automatic = true;

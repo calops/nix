@@ -98,9 +98,7 @@ return {
 				picker = {
 					enabled = true,
 					ui_select = true,
-					db = {
-						sqlite3_path = vim.g.sqlite_clib_path,
-					},
+					db = { sqlite3_path = vim.g.sqlite_clib_path },
 				},
 				notifier = {
 					enabled = true,
@@ -182,6 +180,7 @@ return {
 				{ "<leader>fS", picker("projects"), desc = "Open session" },
 				{ "<leader>fp", picker("lazy"), desc = "Find plugin" },
 				{ "<leader>fe", picker("explorer"), desc = "Find plugin" },
+				{ "<leader>fk", picker("keymaps"), desc = "Find keymap" },
 				{
 					"<leader>fy",
 					picker("lsp_symbols", { layout = { preset = "sidebar", preview = "main" } }),

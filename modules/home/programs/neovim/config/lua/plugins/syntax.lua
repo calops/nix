@@ -7,7 +7,7 @@ local function diagnose(args)
 		return
 	end
 	-- don't diagnose strange stuff
-	if vim.bo[args.buf].buftype ~= "" then
+	if vim.api.nvim_buf_is_valid(args.buf) and vim.bo[args.buf].buftype ~= "" then
 		return
 	end
 
