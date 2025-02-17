@@ -5,7 +5,7 @@
     "https://nix-gaming.cachix.org"
     "https://devenv.cachix.org"
     "https://calops.cachix.org"
-    "https://cache.garnix.io"
+    # "https://cache.garnix.io"
     "https://nightly-tools.cachix.org"
     "https://anyrun.cachix.org"
     "https://niri.cachix.org"

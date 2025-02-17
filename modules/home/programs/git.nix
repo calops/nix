@@ -31,6 +31,7 @@ in
       signing = {
         signByDefault = true;
         key = "1FAB C23C 7766 D833 7C4D  C502 5357 919C 06FD 9147";
+        format = "openpgp";
       };
 
       delta = {
