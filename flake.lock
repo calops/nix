@@ -1142,11 +1142,11 @@
     "neovide-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1739006603,
-        "narHash": "sha256-6q5bdQMAUkLw8644pf2bjfCMTqSwmLeAWP1lu/bsGZk=",
+        "lastModified": 1739717460,
+        "narHash": "sha256-s/78zcAIAj5Ak+w+GuR3O5XbuaL6vbhrfevnT16DkRM=",
         "owner": "neovide",
         "repo": "neovide",
-        "rev": "9ff21b850e9ace6cb342a20c93f263dc8f878dd4",
+        "rev": "56c674e2d02d84f98c0134d88331377a5e2d1ac2",
         "type": "github"
       },
       "original": {
@@ -1195,6 +1195,27 @@
         "type": "github"
       }
     },
+    "nh": {
+      "inputs": {
+        "nixpkgs": [
+          "nightly-tools",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1738579718,
+        "narHash": "sha256-HcNEFumdZ4Y59CBB1h1IzOyPxwn0u/Wson6hhzItXCA=",
+        "owner": "viperML",
+        "repo": "nh",
+        "rev": "8ef70b642b8351c010a48f43dda6a1ebf038f5d9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "viperML",
+        "repo": "nh",
+        "type": "github"
+      }
+    },
     "nh_plus": {
       "inputs": {
         "nixpkgs": "nixpkgs_8"
@@ -1220,17 +1241,18 @@
         "lix": "lix_3",
         "neovide-src": "neovide-src",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
+        "nh": "nh",
         "niri": "niri",
         "niri-fork": "niri-fork",
         "nixd": "nixd",
         "nixpkgs": "nixpkgs_12"
       },
       "locked": {
-        "lastModified": 1739675264,
-        "narHash": "sha256-/lIRkaUuceXBCfYySjoKVuKexQ5X5byne7ug7upYCRA=",
+        "lastModified": 1739795122,
+        "narHash": "sha256-zNveLhp6fnFFPbDLZApKUVYmEz6hQR4gt2VO4m3/P1c=",
         "owner": "calops",
         "repo": "nightly-tools",
-        "rev": "d3204e2c0f37cdbcbb8c2ea3bf3b8a720686f4b3",
+        "rev": "f73e42aa3ed86521457408b216b0fa95343fc7bd",
         "type": "github"
       },
       "original": {
@@ -1252,11 +1274,11 @@
         "xwayland-satellite-unstable": "xwayland-satellite-unstable"
       },
       "locked": {
-        "lastModified": 1739627445,
-        "narHash": "sha256-fl1kOwskXXa5dJsRcly9e+UaOTdjdvy8Jqg9WhKe0Nw=",
+        "lastModified": 1739759323,
+        "narHash": "sha256-swNi43B5nBgsN7nPggtGB8cg9wLPFWHp0zvjzL8uZ3E=",
         "owner": "sodiboo",
         "repo": "niri-flake",
-        "rev": "b4f7ae09bc209e76944fed4648191dac8381ca76",
+        "rev": "ef712dc30edc3dd10fcb10a2d99d74690de68f13",
         "type": "github"
       },
       "original": {
@@ -1574,11 +1596,11 @@
     },
     "nixpkgs_12": {
       "locked": {
-        "lastModified": 1739446958,
-        "narHash": "sha256-+/bYK3DbPxMIvSL4zArkMX0LQvS7rzBKXnDXLfKyRVc=",
+        "lastModified": 1739580444,
+        "narHash": "sha256-+/bSz4EAVbqz8/HsIGLroF8aNaO8bLRL7WfACN+24g4=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "2ff53fe64443980e139eaa286017f53f88336dd0",
+        "rev": "8bb37161a0488b89830168b81c48aed11569cb93",
         "type": "github"
       },
       "original": {
