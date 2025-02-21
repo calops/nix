@@ -89,7 +89,7 @@ in
 
         sizes = {
           terminal = lib.mkOption {
-            type = lib.types.int;
+            type = lib.types.number;
             default = 10;
             description = "Terminal font size";
           };
@@ -108,7 +108,7 @@ in
           };
 
           applications = lib.mkOption {
-            type = lib.types.int;
+            type = lib.types.number;
             default = 10;
             description = "Application font size";
           };
@@ -151,13 +151,17 @@ in
     fonts.fontconfig.enable = true;
 
     my.fonts = {
-      # iosevka-comfy = {
-      #   name = "Iosevka Comfy";
-      #   package = pkgs.iosevka-comfy.comfy;
-      # };
+      aporetic = {
+        name = "Aporetic";
+        package = pkgs.aporetic;
+      };
       iosevka = {
         name = "Iosevka";
         package = pkgs.iosevka;
+      };
+      commit = {
+        name = "Commit Mono";
+        package = pkgs.commit-mono;
       };
       luculent = {
         name = "Luculent";

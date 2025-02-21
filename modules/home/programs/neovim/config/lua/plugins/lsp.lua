@@ -16,6 +16,11 @@ return {
 			{ "<leader>rn", vim.lsp.buf.rename, desc = "Interactive rename" },
 			{ "<leader>rf", vim.lsp.buf.format, desc = "Format code" },
 			{ "<space>a", vim.lsp.buf.code_action, desc = "Code actions" },
+			{
+				"<space>d",
+				function() vim.diagnostic.jump { count = 1, float = { border = "rounded" } } end,
+				desc = "Code actions",
+			},
 		},
 		config = function()
 			require("neoconf").setup {

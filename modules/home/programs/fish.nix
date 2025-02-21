@@ -55,13 +55,19 @@
         gc = ''git commit -m "$argv"'';
       };
 
-      interactiveShellInit = ''
-        set fish_greeting
+      interactiveShellInit = # fish
+        ''
+          set fish_greeting
 
-        if test -e ~/.nix-profile/etc/profile.d/nix.fish
-          source ~/.nix-profile/etc/profile.d/nix.fish
-        end
-      '';
+          if test -e ~/.nix-profile/etc/profile.d/nix.fish
+            source ~/.nix-profile/etc/profile.d/nix.fish
+          end
+
+          # The builtin fish integration uses the wrong command-not-found instead of the faster one from nix-index-db
+          function fish_command_not_found
+            command-not-found $argv
+          end
+        '';
     };
 
     home.packages = [ pkgs.oh-my-fish ];

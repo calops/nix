@@ -27,14 +27,14 @@
         yq
         pastel
         jaq
-        inputs.devenv.packages.${pkgs.system}.devenv
+        inputs.nightly-tools.packages.${pkgs.system}.devenv
       ]
       ++ lib.optional (!pkgs.stdenv.isDarwin) dtrx;
 
     programs.nix-index-database.comma.enable = true;
     programs.nix-index = {
       enable = true;
-      enableFishIntegration = true;
+      enableFishIntegration = false;
     };
 
     programs.btop = {

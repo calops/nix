@@ -13,18 +13,19 @@
 
     # Nix user repository
     nur.url = "github:nix-community/NUR";
+    nur.inputs.nixpkgs.follows = "nixpkgs";
 
     # Devshell framework and utilities
     devenv.url = "github:cachix/devenv";
+    devenv.inputs.nixpkgs.follows = "nixpkgs";
 
     # AGS linux GUI utilities
     ags.url = "github:Aylur/ags";
+    ags.inputs.nixpkgs.follows = "nixpkgs";
 
     # Firefox package for darwin
     firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
-
-    # nh fork with darwin support
-    nh_plus.url = "github:ToyVo/nh_plus";
+    firefox-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # Support dynamically linked binaries for generic Linux (nix-ld alternative)
     madness.url = "github:antithesishq/madness";
@@ -55,6 +56,7 @@
 
     # App launcher
     anyrun.url = "github:Kirottu/anyrun";
+    anyrun.inputs.nixpkgs.follows = "nixpkgs";
 
     # Nix fork with more up to date optimizations and features
     lix.url = "git+https://git.lix.systems/lix-project/nixos-module";
@@ -62,15 +64,12 @@
 
     # Vencord settings module (discord mod)
     nixcord.url = "github:kaylorben/nixcord/d5f2fbef2fad379190e0c7a0d2d2f12c4e4df034";
-
-    # GTK widget toolkit
-    fabric.url = "github:wholikeel/fabric-nix";
+    nixcord.inputs.nixpkgs.follows = "nixpkgs";
 
     # Logitech devices manager
-    solaar = {
-      url = "github:Svenum/Solaar-Flake/main";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    solaar.url = "github:Svenum/Solaar-Flake/main";
+    solaar.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs =

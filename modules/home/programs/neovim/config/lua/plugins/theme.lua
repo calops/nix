@@ -29,7 +29,6 @@ local function hl_override(palette)
 		BlinkCmpDocBorder = { fg = palette.green },
 		BlinkCmpSignatureHelpBorder = { fg = palette.peach },
 
-		SnacksIndent = { fg = palette.surface0 },
 		SnacksIndentScope = { fg = palette.mauve },
 
 		GlancePreviewMatch = { bg = colors.darken(palette.peach, 0.2) },

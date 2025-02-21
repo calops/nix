@@ -99,6 +99,12 @@ return {
 					enabled = true,
 					ui_select = true,
 					db = { sqlite3_path = vim.g.sqlite_clib_path },
+					previewers = {
+						diff = {
+							builtin = false,
+							cmd = { "delta" },
+						},
+					},
 				},
 				notifier = {
 					enabled = true,
@@ -167,8 +173,14 @@ return {
 				{ "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
 				{ "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git Blame Line" },
 				{ "<leader>ds", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Bufer" },
-
-				{ "<C-p>", picker("smart"), desc = "Find files" },
+				{
+					"<C-p>",
+					function()
+						return Snacks.git.get_root() and Snacks.picker.smart { multi = { "git_files", "files" } }
+							or Snacks.picker.files()
+					end,
+					desc = "Find files",
+				},
 				{ "<leader>fb", picker("buffers"), desc = "Find buffers" },
 				{ "<leader>fs", picker("grep"), desc = "Find string" },
 				{ "<leader>fr", picker("resume"), desc = "Resume latest search" },

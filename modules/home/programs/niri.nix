@@ -50,11 +50,12 @@ in
               }
               shadow {
                   on
-                  softness 30
-                  spread 5
+                  softness 40
+                  spread 0
                   offset x=0 y=0
                   draw-behind-window false
-                  color "${palette.text}"
+                  color "${palette.text}cc"
+                  inactive-color "${palette.text}cc"
               }
               insert-hint { color "rgba(127 200 255 50%)"; }
               default-column-width

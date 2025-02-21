@@ -4,9 +4,6 @@
   ...
 }:
 {
-  # FIXME:
-  # imports = [ inputs.nh_plus.nixDarwinModules.prebuiltin ];
-
   options = {
     my.configDir = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
@@ -45,14 +42,6 @@
     programs.fish.enable = true;
     homebrew.enable = true;
     security.pam.enableSudoTouchIdAuth = true;
-
-    # FIXME:
-    # programs.nh = {
-    #   enable = true;
-    #   clean.enable = false;
-    #   clean.extraArgs = "--keep-since 4d --keep 3";
-    #   os.flake = config.my.configDir;
-    # };
 
     system.defaults = {
       dock = {
