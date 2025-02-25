@@ -19,7 +19,7 @@ return {
 			{
 				"<space>d",
 				function() vim.diagnostic.jump { count = 1, float = { border = "rounded" } } end,
-				desc = "Code actions",
+				desc = "Jump to next diagnostic",
 			},
 		},
 		config = function()

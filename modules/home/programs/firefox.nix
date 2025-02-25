@@ -33,7 +33,7 @@ in
           name = "default";
           id = 0;
           isDefault = true;
-          extensions = [
+          extensions.packages = [
             addons.ublock-origin
             addons.onepassword-password-manager
             addons.bitwarden

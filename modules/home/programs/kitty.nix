@@ -19,6 +19,7 @@ in
       cursor_trail = 3;
       hide_window_decorations = if pkgs.stdenv.isDarwin then "titlebar-only" else "yes";
       cursor_blink_interval = "-1 ease-in-out";
+      macos_hide_from_tasks = true;
 
       "modify_font underline_position" = "+2";
       "modify_font underline_thickness" = "2px";
@@ -32,6 +33,9 @@ in
       "ctrl+shift+t" = "no_op";
       "alt+l" = "no_op";
       "alt+w" = "no_op";
+
+      "ctrl+up" = "scroll_to_prompt -1";
+      "ctrl+down" = "scroll_to_prompt 1";
     };
   };
 }

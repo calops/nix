@@ -21,6 +21,7 @@ in
   config = lib.mkIf config.my.roles.terminal.enable {
     # TODO: figure out why this is needed
     home.sessionVariables.EDITOR = "nvim";
+
     programs.neovim = {
       enable = true;
       defaultEditor = true;
@@ -35,14 +36,14 @@ in
         pkgs.sqlfluff
 
         # LSP
-        pkgs.lua-language-server
-        pkgs.my.logseqlsp
-        inputs.nightly-tools.packages.${pkgs.system}.nixd
-        pkgs.nil
-        pkgs.ruff
-        pkgs.pyright
-        pkgs.vtsls
-        rustToolchain
+        pkgs.lua-language-server # lua
+        pkgs.my.logseqlsp # logseq
+        inputs.nightly-tools.packages.${pkgs.system}.nixd # nix
+        pkgs.nil # nix
+        pkgs.ruff # python
+        pkgs.pyright # python
+        pkgs.vtsls # typescript / javascript
+        rustToolchain # rust
 
         # Tools
         pkgs.cmake
@@ -57,9 +58,9 @@ in
         pkgs.luarocks
         pkgs.hub
         pkgs.wget # for mason.nvim
+        pkgs.pandoc # for devdocs.nvim
       ];
-      # FIXME:
-      # ++ lib.lists.optional (!pkgs.stdenv.isDarwin) pkgs.vscode-extensions.vadimcn.vscode-lldb.adapter;
+
       plugins = [
         pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
       ];

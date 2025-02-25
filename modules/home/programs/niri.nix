@@ -18,36 +18,46 @@ in
       package = if pkgs.stdenv.isDarwin then null else nixosConfig.programs.niri.package;
       config = # kdl
         ''
+          screenshot-path "~/Pictures/Screenshots/%Y-%m-%dT%H:%M:%S.png"
+          hotkey-overlay
+          prefer-no-csd
+          animations { slowdown 1.000000; }
+
           input {
-              keyboard {
-                  xkb {
-                      layout "fr"
-                  }
-                  repeat-delay 600
-                  repeat-rate 25
-                  track-layout "global"
-              }
               mouse { accel-speed 0.000000; }
               trackpoint { accel-speed 0.000000; }
               trackball { accel-speed 0.000000; }
               focus-follows-mouse max-scroll-amount="0%"
+
+              keyboard {
+                  xkb { layout "fr"; }
+                  repeat-delay 600
+                  repeat-rate 25
+                  track-layout "global"
+              }
           }
-          screenshot-path "~/Pictures/Screenshots/%Y-%m-%dT%H:%M:%S.png"
-          prefer-no-csd
+
           layout {
               gaps 16
+              focus-ring { off; }
+              insert-hint { color "rgba(127 200 255 50%)"; }
+              center-focused-column "on-overflow"
+              always-center-single-column
+              default-column-width
+
               struts {
                   left 40
                   right 40
                   top 0
                   bottom 0
               }
-              focus-ring { off; }
+
               border {
                   width 4
                   active-gradient angle=45 from="${palette.red}" in="oklch longer hue" relative-to="window" to="${palette.green}"
                   inactive-color "#6c7086"
               }
+
               shadow {
                   on
                   softness 40
@@ -57,21 +67,24 @@ in
                   color "${palette.text}cc"
                   inactive-color "${palette.text}cc"
               }
-              insert-hint { color "rgba(127 200 255 50%)"; }
-              default-column-width
+
+              tab-indicator {
+                corner-radius 5
+                position "top"
+              }
+
               preset-column-widths {
                   proportion 0.333330
                   proportion 0.500000
                   proportion 0.666670
               }
-              center-focused-column "on-overflow"
-              always-center-single-column
           }
+
           cursor {
               xcursor-theme "catppuccin-mocha-peach-cursors"
               xcursor-size 32
           }
-          hotkey-overlay
+
           environment {
               DISPLAY ":0"
               "ELECTRON_OZONE_PLATFORM_HINT" "auto"
@@ -81,11 +94,13 @@ in
               "NVD_BACKEND" "direct"
               "__GLX_VENDOR_LIBRARY_NAME" "nvidia"
           }
+
           binds {
               Mod+Ampersand { focus-workspace "web"; }
               Mod+Apostrophe { focus-workspace "chat"; }
               Mod+Backspace { switch-preset-column-width; }
               Mod+C { center-column; }
+              Mod+T { toggle-column-tabbed-display; }
               Mod+Ctrl+F { fullscreen-window; }
               Mod+Ctrl+Left { move-column-left; }
               Mod+Ctrl+Right { move-column-right; }
@@ -100,8 +115,8 @@ in
               Mod+Left { focus-column-left; }
               Mod+Minus { focus-workspace "misc"; }
               Mod+N { spawn "${lib.getExe' config.services.swaync.package "swaync-client"}" "-t"; }
-              "Mod+Page_Down" { focus-workspace-down; }
-              "Mod+Page_Up" { focus-workspace-up; }
+              Mod+Page_Down { focus-workspace-down; }
+              Mod+Page_Up { focus-workspace-up; }
               Mod+Parenleft { focus-workspace "games"; }
               Mod+Plus { set-column-width "+10%"; }
               Mod+Quotedbl { focus-workspace "work"; }
@@ -115,8 +130,8 @@ in
               Mod+Shift+F { toggle-window-floating; }
               Mod+Shift+Home { move-column-to-first; }
               Mod+Shift+Left { consume-or-expel-window-left; }
-              "Mod+Shift+Page_Down" { move-workspace-down; }
-              "Mod+Shift+Page_Up" { move-workspace-up; }
+              Mod+Shift+Page_Down { move-workspace-down; }
+              Mod+Shift+Page_Up { move-workspace-up; }
               Mod+Shift+Q { close-window; }
               Mod+Shift+Right { consume-or-expel-window-right; }
               Mod+Shift+S { screenshot-window; }
@@ -133,26 +148,27 @@ in
               XF86AudioMute allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
               XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "raise"; }
           }
+
           workspace "web"
           workspace "dev"
           workspace "work"
           workspace "chat"
           workspace "games"
           workspace "misc"
+
           spawn-at-startup "swww-daemon"
           spawn-at-startup "swww" "img" "${wallpaper}"
           spawn-at-startup "${lib.getExe config.programs.firefox.package}"
           spawn-at-startup "${lib.getExe pkgs.slack}"
           spawn-at-startup "${lib.getExe config.programs.element.package}"
+
           window-rule {
               geometry-corner-radius 8.000000 8.000000 8.000000 8.000000
               clip-to-geometry true
           }
           window-rule {
               match is-floating=false
-              shadow {
-                  off
-              }
+              shadow { off; }
           }
           window-rule {
               match app-id="^kitty$"
@@ -164,22 +180,12 @@ in
               open-on-workspace "web"
           }
           window-rule {
+              match app-id="^Element$"
+              match app-id="^Slack$"
               match app-id="^discord$"
               default-column-width { proportion 0.500000; }
               open-on-workspace "chat"
           }
-          window-rule {
-              match app-id="^Element$"
-              default-column-width { proportion 0.500000; }
-              open-on-workspace "chat"
-          }
-          window-rule {
-              match app-id="^Slack$"
-              default-column-width { proportion 0.500000; }
-              open-on-workspace "chat"
-          }
-          animations { slowdown 1.000000; }
-
         '';
     };
 

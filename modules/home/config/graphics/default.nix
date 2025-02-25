@@ -3,6 +3,7 @@
   config,
   nixosConfig ? null,
   pkgs,
+  inputs,
   ...
 }:
 let
@@ -152,20 +153,12 @@ in
 
     my.fonts = {
       aporetic = {
-        name = "Aporetic";
-        package = pkgs.aporetic;
+        name = "Aporetic Sans Mono";
+        package = inputs.aporetic.packages.${pkgs.system}.aporetic-sans-mono-prebuilt;
       };
       iosevka = {
         name = "Iosevka";
         package = pkgs.iosevka;
-      };
-      commit = {
-        name = "Commit Mono";
-        package = pkgs.commit-mono;
-      };
-      luculent = {
-        name = "Luculent";
-        package = pkgs.luculent;
       };
       noto-serif = {
         name = "Noto Serif";

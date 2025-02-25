@@ -76,4 +76,27 @@ return {
 		"direnv/direnv.vim",
 		lazy = false,
 	},
+	-- Universal documentation
+	{
+		"maskudo/devdocs.nvim",
+		lazy = true,
+		cmd = { "DevDocs" },
+		keys = {
+			{
+				"<space>h",
+				function()
+					local devdocs = require("devdocs")
+					local installedDocs = devdocs.GetInstalledDocs()
+					vim.ui.select(installedDocs, {}, function(selected)
+						if selected then
+							local docDir = devdocs.GetDocDir(selected)
+							Snacks.picker.files { cwd = docDir }
+						end
+					end)
+				end,
+				desc = "Search DevDocs",
+			},
+		},
+		opts = {},
+	},
 }

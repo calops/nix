@@ -3,21 +3,22 @@
 
   inputs = {
     # Upstream nixpkgs
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.follows = "nightly-tools/nixpkgs";
 
     # Nightly versions of various packages
     nightly-tools.url = "github:calops/nightly-tools";
 
     # Theming framework for nixos and home-manager
     stylix.url = "github:danth/stylix";
+    stylix.inputs.nur.follows = "nur";
 
     # Nix user repository
     nur.url = "github:nix-community/NUR";
     nur.inputs.nixpkgs.follows = "nixpkgs";
 
     # Devshell framework and utilities
-    devenv.url = "github:cachix/devenv";
-    devenv.inputs.nixpkgs.follows = "nixpkgs";
+    devenv.follows = "nightly-tools/devenv";
 
     # AGS linux GUI utilities
     ags.url = "github:Aylur/ags";
@@ -43,8 +44,7 @@
     fenix.inputs.nixpkgs.follows = "nixpkgs";
 
     # Niri window manager
-    niri.url = "github:sodiboo/niri-flake";
-    niri.inputs.nixpkgs.follows = "nixpkgs";
+    niri.follows = "nightly-tools/niri";
 
     # Home-manager modules
     home-manager.url = "github:nix-community/home-manager";
@@ -59,8 +59,7 @@
     anyrun.inputs.nixpkgs.follows = "nixpkgs";
 
     # Nix fork with more up to date optimizations and features
-    lix.url = "git+https://git.lix.systems/lix-project/nixos-module";
-    lix.inputs.nixpkgs.follows = "nixpkgs";
+    lix.follows = "nightly-tools/lix";
 
     # Vencord settings module (discord mod)
     nixcord.url = "github:kaylorben/nixcord/d5f2fbef2fad379190e0c7a0d2d2f12c4e4df034";
@@ -70,6 +69,9 @@
     solaar.url = "github:Svenum/Solaar-Flake/main";
     solaar.inputs.nixpkgs.follows = "nixpkgs";
 
+    # Custom font
+    aporetic.url = "github:calops/iosevka-aporetic";
+    aporetic.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
