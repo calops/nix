@@ -34,7 +34,7 @@
     programs.nix-index-database.comma.enable = true;
     programs.nix-index = {
       enable = true;
-      enableFishIntegration = false;
+      enableFishIntegration = true;
     };
 
     programs.btop = {

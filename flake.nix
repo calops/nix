@@ -6,7 +6,7 @@
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.follows = "nightly-tools/nixpkgs";
 
-    # Nightly versions of various packages
+    # Nightly versions of various packages, all cached
     nightly-tools.url = "github:calops/nightly-tools";
 
     # Theming framework for nixos and home-manager

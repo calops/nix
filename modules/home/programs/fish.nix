@@ -64,9 +64,9 @@
           end
 
           # The builtin fish integration uses the wrong command-not-found instead of the faster one from nix-index-db
-          function fish_command_not_found
-            command-not-found $argv
-          end
+          # function fish_command_not_found
+          #   command-not-found $argv
+          # end
         '';
     };
 

@@ -76,62 +76,6 @@ vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.o.foldtext = ""
 vim.o.foldlevel = 99
 
--- Neovide configuration
-if vim.g.neovide then
-	vim.g.neovide_floating_blur_amount_x = 1.5
-	vim.g.neovide_floating_blur_amount_y = 1.5
-	vim.g.neovide_floating_corner_radius = 0.5
-	vim.g.neovide_scroll_animation_length = 0.13
-	vim.g.neovide_floating_shadow = true
-	vim.g.neovide_floating_z_height = 10
-	vim.g.neovide_light_angle_degrees = 45
-	vim.g.neovide_light_radius = 5
-	vim.g.neovide_unlink_border_highlights = true
-	vim.g.neovide_refresh_rate = 60
-	vim.g.neovide_cursor_smooth_blink = true
-	vim.g.neovide_underline_stroke_scale = 2.0
-	vim.g.experimental_layer_grouping = true
-
-	local function set_scale(scale)
-		vim.g.neovide_scale_factor = scale
-		-- Force redraw, otherwise the scale change won't be rendered until the next UI update
-		vim.cmd.redraw { bang = true }
-	end
-
-	vim.keymap.set("n", "<C-+>", function() set_scale(vim.g.neovide_scale_factor + 0.1) end)
-	vim.keymap.set("n", "<C-->", function() set_scale(vim.g.neovide_scale_factor - 0.1) end)
-	vim.keymap.set("n", "<C-0>", function() set_scale(1.0) end)
-end
-
-vim.diagnostic.config {
-	signs = {
-		text = {
-			[vim.diagnostic.severity.ERROR] = " ",
-			[vim.diagnostic.severity.WARN] = " ",
-			[vim.diagnostic.severity.INFO] = " ",
-			[vim.diagnostic.severity.HINT] = " ",
-		},
-		linehl = {
-			[vim.diagnostic.severity.ERROR] = "DiagnosticLineError",
-			[vim.diagnostic.severity.WARN] = "DiagnosticLineWarn",
-			[vim.diagnostic.severity.INFO] = "DiagnosticLineInfo",
-			[vim.diagnostic.severity.HINT] = "DiagnosticLineHint",
-		},
-		numhl = {
-			[vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
-			[vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
-			[vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
-			[vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
-		},
-	},
-}
-
-require("core.symbols").define_signs {
-	GitSignsAdd = { text = "▋", texthl = "GitSignsAdd", numhl = "" },
-	GitSignsChange = { text = "▋", texthl = "GitSignsChange", numhl = "" },
-	GitSignsDelete = { text = "▋", texthl = "GitSignsDelete", numhl = "" },
-}
-
 if pcall(require, "nix") then
 	vim.notify("Nix environment detected", "info")
 end
@@ -141,25 +85,10 @@ require("lazy").setup {
 	ui = { border = "rounded" },
 }
 
-local virtual_text_config = { source = "if_many" }
-local virtual_lines_config = { source = true }
-
-vim.diagnostic.config {
-	severity_sort = true,
-	virtual_text = virtual_text_config,
-	virtual_lines = false,
-}
-
-require("core.utils").map {
-	{
-		"<leader>m",
-		function()
-			local is_enabled = vim.diagnostic.config().virtual_lines
-			vim.diagnostic.config {
-				virtual_lines = (not is_enabled) and virtual_text_config or false,
-				virtual_text = is_enabled and virtual_lines_config or false,
-			}
-		end,
-		desc = "Toggle full inline diagnostics",
-	},
+require("neovide")
+require("diagnostics")
+require("core.symbols").define_signs {
+	GitSignsAdd = { text = "▋", texthl = "GitSignsAdd", numhl = "" },
+	GitSignsChange = { text = "▋", texthl = "GitSignsChange", numhl = "" },
+	GitSignsDelete = { text = "▋", texthl = "GitSignsDelete", numhl = "" },
 }
