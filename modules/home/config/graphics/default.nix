@@ -152,7 +152,11 @@ in
     fonts.fontconfig.enable = true;
 
     my.fonts = {
-      aporetic = {
+      aporetic-sans = {
+        name = "Aporetic Sans";
+        package = inputs.aporetic.packages.${pkgs.system}.aporetic-sans-prebuilt;
+      };
+      aporetic-sans-mono = {
         name = "Aporetic Sans Mono";
         package = inputs.aporetic.packages.${pkgs.system}.aporetic-sans-mono-prebuilt;
       };

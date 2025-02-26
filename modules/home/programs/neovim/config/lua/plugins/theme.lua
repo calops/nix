@@ -28,6 +28,7 @@ local function hl_override(palette)
 		BlinkCmpMenuBorder = { fg = palette.mauve },
 		BlinkCmpDocBorder = { fg = palette.green },
 		BlinkCmpSignatureHelpBorder = { fg = palette.peach },
+		BlinkCmpGhostText = { fg = palette.surface2 },
 
 		SnacksIndentScope = { fg = palette.mauve },
 

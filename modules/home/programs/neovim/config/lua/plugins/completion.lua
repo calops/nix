@@ -31,6 +31,7 @@ return {
 				["<C-k>"] = { "scroll_documentation_up", "fallback" },
 			},
 			completion = {
+				ghost_text = { enabled = false },
 				list = {
 					selection = {
 						preselect = false,
@@ -49,6 +50,10 @@ return {
 						max_width = 80,
 					},
 				},
+			},
+			cmdline = {
+				enabled = true,
+				completion = { ghost_text = { enabled = true } },
 			},
 			signature = {
 				enabled = true,

@@ -9,7 +9,7 @@
 let
   cfg = config.my.roles.graphical;
   palette = config.my.colors.palette.withHashtag;
-  font = config.my.fonts.iosevka.name;
+  font = config.my.roles.graphical.fonts.monospace.name;
   elementPkg = pkgs.element-desktop;
 in
 {

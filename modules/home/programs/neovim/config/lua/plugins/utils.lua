@@ -48,7 +48,7 @@ return {
 		priority = 100,
 		build = function() vim.fn["firenvim#install"](0) end,
 		init = function()
-			vim.o.guifont = "Iosevka:h10,Symbols Nerd Font Mono:h10"
+			vim.o.guifont = vim.g.font_name and (vim.g.font_name .. ":h10,Symbols Nerd Font Mono:h10") or nil
 			vim.g.firenvim_config = {
 				localSettings = {
 					[".*"] = {
@@ -75,28 +75,5 @@ return {
 	{
 		"direnv/direnv.vim",
 		lazy = false,
-	},
-	-- Universal documentation
-	{
-		"maskudo/devdocs.nvim",
-		lazy = true,
-		cmd = { "DevDocs" },
-		keys = {
-			{
-				"<space>h",
-				function()
-					local devdocs = require("devdocs")
-					local installedDocs = devdocs.GetInstalledDocs()
-					vim.ui.select(installedDocs, {}, function(selected)
-						if selected then
-							local docDir = devdocs.GetDocDir(selected)
-							Snacks.picker.files { cwd = docDir }
-						end
-					end)
-				end,
-				desc = "Search DevDocs",
-			},
-		},
-		opts = {},
 	},
 }

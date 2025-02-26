@@ -53,11 +53,11 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1740396604,
-        "narHash": "sha256-uzjHkDYhaXbqoN6liRFGrEL78rNb7BA+4qFx3s2A3xg=",
+        "lastModified": 1740566721,
+        "narHash": "sha256-jXcPhHQkaLsb9sUhYsKNU25Dj/yzi7VImNaGPd3hGsM=",
         "owner": "calops",
         "repo": "iosevka-aporetic",
-        "rev": "44b02e78aab033a3497f312beeb2612cf022d1cb",
+        "rev": "e27135bf4b9c282c83367a69a10fd75c63900145",
         "type": "github"
       },
       "original": {
