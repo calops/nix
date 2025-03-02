@@ -346,13 +346,8 @@ return {
 		opts = {
 			animate = { enabled = false },
 			options = { right = { size = 80 } },
-			bottom = {
-				"Trouble",
-				{ ft = "qf", title = "QuickFix" },
-			},
 			right = {
 				"copilot-chat",
-				"codecompanion",
 				{
 					ft = "help",
 					filter = function(buf) return vim.bo[buf].buftype == "help" end,
@@ -382,6 +377,6 @@ return {
 	-- Markdown rendering
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
-		ft = { "markdown", "codecompanion" },
+		ft = { "markdown" },
 	},
 }

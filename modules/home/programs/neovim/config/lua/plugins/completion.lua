@@ -11,6 +11,7 @@ return {
 		---@type blink.cmp.Config
 		opts = {
 			appearance = { use_nvim_cmp_as_default = true },
+			cmdline = { completion = { ghost_text = { enabled = false } } },
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer", "lazydev" },
 				providers = {
@@ -50,10 +51,6 @@ return {
 						max_width = 80,
 					},
 				},
-			},
-			cmdline = {
-				enabled = true,
-				completion = { ghost_text = { enabled = true } },
 			},
 			signature = {
 				enabled = true,

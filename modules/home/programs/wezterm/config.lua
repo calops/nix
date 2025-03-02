@@ -20,7 +20,7 @@ return {
 	},
 	front_end = "WebGpu",
 	font_size = nix.font.size,
-	window_decorations = "RESIZE",
+	window_decorations = "NONE",
 	enable_wayland = true,
 	freetype_load_target = nix.font.hinting,
 	cell_width = nix.font.cell_width,

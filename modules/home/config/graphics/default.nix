@@ -98,7 +98,7 @@ in
           terminalCell = {
             width = lib.mkOption {
               type = lib.types.float;
-              default = 0.9;
+              default = 1.0;
               description = "Terminal cell width";
             };
             height = lib.mkOption {

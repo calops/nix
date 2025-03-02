@@ -1,13 +1,11 @@
 {
   lib,
   config,
-  nixosConfig ? null,
   ...
 }:
 let
   cfg = config.my.roles.graphical;
   lua = lib.generators.toLua { } {
-    nvidia = nixosConfig.my.roles.nvidia.enable or false;
     font = {
       name = cfg.fonts.monospace.name;
       size = cfg.fonts.sizes.terminal;
@@ -24,6 +22,7 @@ in
       enable = true;
       extraConfig = builtins.readFile ./config.lua;
     };
+    stylix.targets.wezterm.enable = false;
 
     xdg.configFile."wezterm/nix.lua".text = ''return ${lua}'';
   };
