@@ -5,7 +5,7 @@
   ...
 }:
 {
-  programs.aerospace = {
+  programs.aerospace = lib.mkIf pkgs.stdenv.isDarwin {
     enable = true;
     userSettings = {
       start-at-login = true;

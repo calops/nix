@@ -103,7 +103,6 @@ in
       lib.home-manager.hm.dag.entryAfter [ "linkGeneration" ] # bash
         ''
           LOCK_FILE=$(readlink -f ~/.config/nvim/lazy-lock.json)
-          echo $LOCK_FILE
           [ ! -f "$LOCK_FILE" ] && echo "No lock file found, skipping" && exit 0
 
           STATE_DIR=~/.local/state/nix/
@@ -112,7 +111,7 @@ in
           [ ! -d $STATE_DIR ] && mkdir -p $STATE_DIR
           [ ! -f $STATE_FILE ] && touch $STATE_FILE
 
-          HASH=$(nix-hash --flat $LOCK_FILE)
+          HASH=$(nix hash path $LOCK_FILE)
 
           if [ "$(cat $STATE_FILE)" != "$HASH" ]; then
             echo "Syncing neovim plugins"
