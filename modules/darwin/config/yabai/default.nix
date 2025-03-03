@@ -1,7 +1,8 @@
 { ... }:
 {
   services.yabai = {
-    enable = true;
+    enable = false;
+
     config = {
       debug_output = true;
       auto_balance = true;
@@ -14,5 +15,10 @@
       right_padding = 10;
       window_gap = 10;
     };
+
+    extraConfig = # sh
+      ''
+        yabai -m rule --add app='kunkun' manage=off
+      '';
   };
 }

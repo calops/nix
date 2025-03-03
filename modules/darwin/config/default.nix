@@ -29,8 +29,10 @@
 
     environment = {
       systemPackages = [
-        pkgs.raycast
+        # FIXME: move to kunkun (package it)
+        # pkgs.raycast
         pkgs.nh
+        pkgs.deno # for kunkun
       ];
       shells = [ pkgs.fish ];
       variables.EDITOR = "nvim";
@@ -41,7 +43,7 @@
 
     programs.fish.enable = true;
     homebrew.enable = true;
-    security.pam.enableSudoTouchIdAuth = true;
+    security.pam.services.sudo_local.touchIdAuth = true;
 
     system.defaults = {
       dock = {
