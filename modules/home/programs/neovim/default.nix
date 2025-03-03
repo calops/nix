@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 let
@@ -25,7 +24,7 @@ in
     programs.neovim = {
       enable = true;
       defaultEditor = true;
-      package = inputs.nightly-tools.packages.${pkgs.system}.neovim;
+      package = pkgs.nightly.neovim;
       extraPackages = [
         # Formatters
         pkgs.nixfmt-rfc-style # Nix
@@ -38,7 +37,7 @@ in
         # LSP
         pkgs.lua-language-server # lua
         pkgs.my.logseqlsp # logseq
-        inputs.nightly-tools.packages.${pkgs.system}.nixd # nix
+        pkgs.nightly.nixd # nix
         pkgs.nil # nix
         pkgs.ruff # python
         pkgs.pyright # python

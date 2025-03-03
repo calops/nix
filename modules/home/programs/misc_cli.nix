@@ -2,34 +2,30 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
 {
   config = lib.mkIf config.my.roles.terminal.enable {
-    home.packages =
-      with pkgs;
-      [
-        megatools
-        ast-grep
-        choose
-        du-dust
-        dysk
-        fclones
-        fd
-        rm-improved
-        sshfs
-        xcp
-        gh
-        killall
-        unzip
-        unrar
-        yq
-        pastel
-        jaq
-        inputs.nightly-tools.packages.${pkgs.system}.devenv
-      ]
-      ++ lib.optional (!pkgs.stdenv.isDarwin) dtrx;
+    home.packages = [
+      pkgs.megatools
+      pkgs.ast-grep
+      pkgs.choose
+      pkgs.du-dust
+      pkgs.dysk
+      pkgs.fclones
+      pkgs.fd
+      pkgs.rm-improved
+      pkgs.sshfs
+      pkgs.xcp
+      pkgs.gh
+      pkgs.killall
+      pkgs.unzip
+      pkgs.unrar
+      pkgs.yq
+      pkgs.pastel
+      pkgs.jaq
+      pkgs.nightly.devenv
+    ] ++ lib.optional (!pkgs.stdenv.isDarwin) pkgs.dtrx;
 
     programs.nix-index-database.comma.enable = true;
     programs.nix-index = {

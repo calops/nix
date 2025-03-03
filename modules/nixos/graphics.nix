@@ -14,7 +14,7 @@
     # Window manager
     programs.niri = {
       enable = true;
-      package = inputs.nightly-tools.packages.${pkgs.system}.niri;
+      package = pkgs.nightly.niri;
     };
 
     environment.sessionVariables = {

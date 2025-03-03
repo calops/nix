@@ -2,14 +2,13 @@
   lib,
   config,
   pkgs,
-  inputs,
   ...
 }:
 {
   config = lib.mkIf config.my.roles.graphical.enable {
     programs.neovide = {
       enable = true;
-      package = inputs.nightly-tools.packages.${pkgs.system}.neovide;
+      package = pkgs.nightly.neovide;
       settings =
         let
           symbols = {
