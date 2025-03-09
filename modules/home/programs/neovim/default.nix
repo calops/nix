@@ -18,8 +18,11 @@ let
 in
 {
   config = lib.mkIf config.my.roles.terminal.enable {
-    # TODO: figure out why this is needed
-    home.sessionVariables.EDITOR = "nvim";
+    home.sessionVariables = {
+      # TODO: figure out why this is needed
+      EDITOR = "nvim";
+      MANPAGER = "nvim +Man!";
+    };
 
     programs.neovim = {
       enable = true;
