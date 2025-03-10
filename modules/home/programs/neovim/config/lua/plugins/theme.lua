@@ -23,14 +23,13 @@ local function hl_override(palette)
 		TermFloatBorder = { fg = palette.red },
 
 		SnacksPickerMatch = { sp = palette.peach, fg = palette.peach, style = { "underline" } },
+		SnacksIndentScope = { fg = palette.mauve },
 
 		BlinkCmpMenu = { link = "NormalFloat" },
 		BlinkCmpMenuBorder = { fg = palette.mauve },
 		BlinkCmpDocBorder = { fg = palette.green },
 		BlinkCmpSignatureHelpBorder = { fg = palette.peach },
 		BlinkCmpGhostText = { fg = palette.surface2 },
-
-		SnacksIndentScope = { fg = palette.mauve },
 
 		GlancePreviewMatch = { bg = colors.darken(palette.peach, 0.2) },
 		GlanceListMatch = { fg = palette.peach },
