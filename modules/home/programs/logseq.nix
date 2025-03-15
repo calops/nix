@@ -22,26 +22,27 @@ let
       null;
 in
 {
-  config = lib.mkIf cfg.enable {
-    programs.logseq =
-      let
-        customCss = pkgs.fetchurl {
-          url = "https://logseq.catppuccin.com/ctp-mocha.css";
-          hash = "sha256-J8zX/X7lpPHaozkZYSF+ZrshDAZ2jILhCVFzljxvx0s=";
-        };
-      in
-      {
-        enable = true;
-        package = logseqPkg;
-        # TODO: make a custom package for this and fetch from github
-        customCss =
-          builtins.readFile customCss
-          # css
-          + ''
-            * {
-              font-family: ${config.my.roles.graphical.fonts.monospace.name};
-            }
-          '';
-      };
-  };
+  # FIXME: logseq has been removed from nixpkgs
+  # config = lib.mkIf cfg.enable {
+  #   programs.logseq =
+  #     let
+  #       customCss = pkgs.fetchurl {
+  #         url = "https://logseq.catppuccin.com/ctp-mocha.css";
+  #         hash = "sha256-J8zX/X7lpPHaozkZYSF+ZrshDAZ2jILhCVFzljxvx0s=";
+  #       };
+  #     in
+  #     {
+  #       enable = true;
+  #       package = logseqPkg;
+  #       # TODO: make a custom package for this and fetch from github
+  #       customCss =
+  #         builtins.readFile customCss
+  #         # css
+  #         + ''
+  #           * {
+  #             font-family: ${config.my.roles.graphical.fonts.monospace.name};
+  #           }
+  #         '';
+  #     };
+  # };
 }
