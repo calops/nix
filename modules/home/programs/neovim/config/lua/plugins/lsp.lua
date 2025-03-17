@@ -126,7 +126,7 @@ return {
 					on_attach = function(client)
 						client.server_capabilities.completionProvider = nil
 						utils.map {
-							{ "<spaceP>", ":ElixirFromPipe<cr>", desc = "Convert from pipe" },
+							{ "<space>P", ":ElixirFromPipe<cr>", desc = "Convert from pipe" },
 							{ "<space>p", ":ElixirToPipe<cr>", desc = "Convert to pipe" },
 							{ "<space>em", ":ElixirExpandMacro<cr>", desc = "Expand macro", mode = "v" },
 						}
