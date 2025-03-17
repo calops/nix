@@ -121,7 +121,7 @@
 
       on-window-detected = [
         {
-          "if.app-id" = "sh.kunkun.desktop";
+          "if".app-id = "sh.kunkun.desktop";
           run = [ "layout floating" ];
         }
       ];

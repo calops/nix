@@ -17,7 +17,7 @@
         ns =
           {
             nixos = "nh os switch";
-            darwin = "nh os switch";
+            darwin = "nh darwin switch";
             standalone = "nh home switch";
           }
           .${config.my.configType};

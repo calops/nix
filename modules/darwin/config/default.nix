@@ -31,7 +31,7 @@
       systemPackages = [
         # FIXME: move to kunkun (package it)
         # pkgs.raycast
-        pkgs.nh
+        pkgs.nightly.nh
         pkgs.deno # for kunkun
       ];
       shells = [ pkgs.fish ];

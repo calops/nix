@@ -43,6 +43,7 @@
     programs.home-manager.enable = true;
     home.stateVersion = "25.05";
     home.sessionVariables.FLAKE = config.my.configDir;
+    home.sessionVariables.NH_FLAKE = config.my.configDir;
 
     programs.gpg.enable = true;
     programs.dircolors.enable = true;
@@ -56,6 +57,7 @@
 
     programs.nh = lib.mkIf (config.my.configType == "standalone") {
       enable = true;
+      package = pkgs.nightly.nh;
       flake = config.my.configDir;
     };
 
