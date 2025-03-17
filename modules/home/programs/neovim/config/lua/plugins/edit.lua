@@ -170,6 +170,8 @@ return {
 						return
 					end
 					local content = {}
+
+					---@diagnostic disable-next-line: param-type-mismatch
 					for _, line in ipairs(event.regcontents) do
 						table.insert(content, vim.fn.trim(line, "", 2))
 					end
