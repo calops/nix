@@ -13,8 +13,8 @@ return {
 			{ "K", require("noice.lsp").hover, desc = "Show documentation" },
 			{ "H", function() vim.diagnostic.open_float { border = "rounded" } end, desc = "Show diagnostics" },
 			{ "<C-k>", vim.lsp.buf.signature_help, desc = "Interactive signature help" },
-			{ "<leader>rn", vim.lsp.buf.rename, desc = "Interactive rename" },
-			{ "<leader>rf", vim.lsp.buf.format, desc = "Format code" },
+			{ "<space>n", vim.lsp.buf.rename, desc = "Interactive rename" },
+			{ "<space>F", vim.lsp.buf.format, desc = "Format code with LSP" },
 			{ "<space>a", vim.lsp.buf.code_action, desc = "Code actions" },
 			{
 				"<space>d",
@@ -52,10 +52,6 @@ return {
 						client.server_capabilities.semanticTokensProvider = nil
 					end,
 				},
-			}
-
-			utils.map {
-				{ "<leader>r", group = "refactor", icon = "" },
 			}
 		end,
 	},

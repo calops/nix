@@ -112,6 +112,8 @@ in
       };
     };
 
+    stylix.targets.firefox.enable = false;
+
     xdg.configFile."tridactyl/tridactylrc".text =
       # vim
       ''

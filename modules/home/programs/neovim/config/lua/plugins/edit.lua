@@ -222,7 +222,7 @@ return {
 		event = "VeryLazy",
 		keys = {
 			{
-				"<leader>rs",
+				"<space>S",
 				function() require("ssr").open() end,
 				mode = { "n", "x" },
 				desc = "Structural search/replace",

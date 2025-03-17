@@ -39,7 +39,6 @@ in
 
         # LSP
         pkgs.lua-language-server # lua
-        pkgs.my.logseqlsp # logseq
         pkgs.nightly.nixd # nix
         pkgs.nil # nix
         pkgs.ruff # python
