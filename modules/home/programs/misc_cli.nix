@@ -24,7 +24,8 @@
       pkgs.yq
       pkgs.pastel
       pkgs.jaq
-      pkgs.nightly.devenv
+      # FIXME: nightly is broken
+      pkgs.devenv
     ] ++ lib.optional (!pkgs.stdenv.isDarwin) pkgs.dtrx;
 
     programs.nix-index-database.comma.enable = true;
