@@ -146,17 +146,20 @@ in
                 Mod+Shift+Right { consume-or-expel-window-right; }
                 Mod+Shift+S { screenshot-window; }
                 Mod+Shift+Up { move-window-up-or-to-workspace-up; }
-                Mod+Shift+WheelScrollDown cooldown-ms=150 { focus-column-right; }
-                Mod+Shift+WheelScrollUp cooldown-ms=150 { focus-column-left; }
                 Mod+Space { spawn "anyrun"; }
                 Mod+Up { focus-window-or-workspace-up; }
-                Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
-                Mod+WheelScrollLeft cooldown-ms=150 { focus-column-left; }
-                Mod+WheelScrollRight cooldown-ms=150 { focus-column-right; }
-                Mod+WheelScrollUp cooldown-ms=150 { focus-workspace-up; }
-                XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "lower"; }
-                XF86AudioMute allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
-                XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "raise"; }
+
+                Mod+Shift+WheelScrollDown cooldown-ms=150 { focus-column-right; }
+                Mod+Shift+WheelScrollUp   cooldown-ms=150 { focus-column-left;  }
+
+                Mod+WheelScrollDown  cooldown-ms=150 { focus-workspace-down; }
+                Mod+WheelScrollLeft  cooldown-ms=150 { focus-column-left;    }
+                Mod+WheelScrollRight cooldown-ms=150 { focus-column-right;   }
+                Mod+WheelScrollUp    cooldown-ms=150 { focus-workspace-up;   }
+
+                XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "lower";       }
+                XF86AudioMute        allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
+                XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "raise";       }
             }
 
             workspace "web"
