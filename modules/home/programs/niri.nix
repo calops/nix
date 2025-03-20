@@ -106,48 +106,48 @@ in
             }
 
             binds {
-                Mod+Ampersand { focus-workspace "web"; }
-                Mod+Apostrophe { focus-workspace "chat"; }
-                Mod+Backspace { switch-preset-column-width; }
-                Mod+C { center-column; }
-                Mod+T { toggle-column-tabbed-display; }
-                Mod+Ctrl+F { fullscreen-window; }
-                Mod+Ctrl+Left { move-column-left; }
-                Mod+Ctrl+Right { move-column-right; }
-                Mod+Ctrl+S { screenshot-screen; }
-                Mod+Down { focus-window-or-workspace-down; }
-                Mod+Eacute { focus-workspace "dev"; }
-                Mod+End { focus-column-last; }
-                Mod+Equal { set-column-width "-10%"; }
-                Mod+F { maximize-column; }
-                Mod+Home { focus-column-first; }
-                Mod+L { spawn "${lock}"; }
-                Mod+Left { focus-column-left; }
-                Mod+Minus { focus-workspace "misc"; }
-                Mod+N { spawn "${lib.getExe' config.services.swaync.package "swaync-client"}" "-t"; }
-                Mod+Page_Down { focus-workspace-down; }
-                Mod+Page_Up { focus-workspace-up; }
-                Mod+Parenleft { focus-workspace "games"; }
-                Mod+Plus { set-column-width "+10%"; }
-                Mod+Quotedbl { focus-workspace "work"; }
-                Mod+Return { spawn "kitty"; }
-                Mod+Right { focus-column-right; }
-                Mod+S { screenshot; }
-                Mod+Shift+Comma { show-hotkey-overlay; }
-                Mod+Shift+Down { move-window-down-or-to-workspace-down; }
-                Mod+Shift+E { quit; }
-                Mod+Shift+End { move-column-to-last; }
-                Mod+Shift+F { toggle-window-floating; }
-                Mod+Shift+Home { move-column-to-first; }
-                Mod+Shift+Left { consume-or-expel-window-left; }
+                Mod+Ampersand       { focus-workspace "web"; }
+                Mod+Apostrophe      { focus-workspace "chat"; }
+                Mod+Backspace       { switch-preset-column-width; }
+                Mod+C               { center-column; }
+                Mod+T               { toggle-column-tabbed-display; }
+                Mod+Ctrl+F          { fullscreen-window; }
+                Mod+Ctrl+Left       { move-column-left; }
+                Mod+Ctrl+Right      { move-column-right; }
+                Mod+Ctrl+S          { screenshot-screen; }
+                Mod+Down            { focus-window-or-workspace-down; }
+                Mod+Eacute          { focus-workspace "dev"; }
+                Mod+End             { focus-column-last; }
+                Mod+Equal           { set-column-width "-10%"; }
+                Mod+F               { maximize-column; }
+                Mod+Home            { focus-column-first; }
+                Mod+L               { spawn "${lock}"; }
+                Mod+Left            { focus-column-left; }
+                Mod+Minus           { focus-workspace "misc"; }
+                Mod+N               { spawn "${lib.getExe' config.services.swaync.package "swaync-client"}" "-t"; }
+                Mod+Page_Down       { focus-workspace-down; }
+                Mod+Page_Up         { focus-workspace-up; }
+                Mod+Parenleft       { focus-workspace "games"; }
+                Mod+Plus            { set-column-width "+10%"; }
+                Mod+Quotedbl        { focus-workspace "work"; }
+                Mod+Return          { spawn "kitty"; }
+                Mod+Right           { focus-column-right; }
+                Mod+S               { screenshot; }
+                Mod+Shift+Comma     { show-hotkey-overlay; }
+                Mod+Shift+Down      { move-window-down-or-to-workspace-down; }
+                Mod+Shift+E         { quit; }
+                Mod+Shift+End       { move-column-to-last; }
+                Mod+Shift+F         { toggle-window-floating; }
+                Mod+Shift+Home      { move-column-to-first; }
+                Mod+Shift+Left      { consume-or-expel-window-left; }
                 Mod+Shift+Page_Down { move-workspace-down; }
-                Mod+Shift+Page_Up { move-workspace-up; }
-                Mod+Shift+Q { close-window; }
-                Mod+Shift+Right { consume-or-expel-window-right; }
-                Mod+Shift+S { screenshot-window; }
-                Mod+Shift+Up { move-window-up-or-to-workspace-up; }
-                Mod+Space { spawn "anyrun"; }
-                Mod+Up { focus-window-or-workspace-up; }
+                Mod+Shift+Page_Up   { move-workspace-up; }
+                Mod+Shift+Q         { close-window; }
+                Mod+Shift+Right     { consume-or-expel-window-right; }
+                Mod+Shift+S         { screenshot-window; }
+                Mod+Shift+Up        { move-window-up-or-to-workspace-up; }
+                Mod+Space           { spawn "anyrun"; }
+                Mod+Up              { focus-window-or-workspace-up; }
 
                 Mod+Shift+WheelScrollDown cooldown-ms=150 { focus-column-right; }
                 Mod+Shift+WheelScrollUp   cooldown-ms=150 { focus-column-left;  }
