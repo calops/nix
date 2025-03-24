@@ -166,16 +166,15 @@ return {
 			vim.api.nvim_create_autocmd("TextYankPost", {
 				callback = function()
 					local event = vim.v.event
-					if event.regtype:sub(1, 1) ~= "" or not event.visual then
-						return
-					end
-					local content = {}
+					if event.visual and event.regtype:sub(1, 1) == "" then
+						local content = vim.tbl_map(
+							function(line) return vim.fn.substitute(line, "\\s\\+$", "", "") end,
+							---@diagnostic disable-next-line: param-type-mismatch
+							event.regcontents
+						)
 
-					---@diagnostic disable-next-line: param-type-mismatch
-					for _, line in ipairs(event.regcontents) do
-						table.insert(content, vim.fn.trim(line, "", 2))
+						vim.fn.setreg(event.regname, content)
 					end
-					vim.fn.setreg(event.regname, content)
 				end,
 			})
 		end,
