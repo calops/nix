@@ -176,4 +176,10 @@ return {
 			}
 		end,
 	},
+	-- Database explorer
+	{
+		"xemptuous/sqlua.nvim",
+		cmd = "SQLua",
+		opts = {},
+	},
 }

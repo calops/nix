@@ -47,7 +47,7 @@ in
             addons.pwas-for-firefox
           ];
           search = {
-            default = "Google";
+            default = "google";
             force = true;
           };
           userChrome = # css
