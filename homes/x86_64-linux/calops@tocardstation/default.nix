@@ -12,4 +12,6 @@
     terminal = "kitty";
     monitors.primary.id = "DP-2";
   };
+
+  nix.settings.cores = 30; # keep two cores for the system
 }

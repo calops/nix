@@ -15,6 +15,8 @@
 
   my.configDir = "/home/calops/nix";
 
+  nix.settings.cores = 30; # keep two cores for the system
+
   my.roles = {
     graphical.enable = true;
     nvidia.enable = true;
