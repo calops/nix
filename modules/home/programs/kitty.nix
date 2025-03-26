@@ -15,11 +15,17 @@ in
       bold_font = "${cfg.fonts.monospace.name} Bold";
       italic_font = "${cfg.fonts.monospace.name} Italic";
       bold_italic_font = "${cfg.fonts.monospace.name} Bold Italic";
+
       undercurl_style = "thick-sparse";
       cursor_trail = 3;
       hide_window_decorations = if pkgs.stdenv.isDarwin then "titlebar-only" else "yes";
       cursor_blink_interval = "-1 ease-in-out";
       macos_hide_from_tasks = true;
+      scrollback_lines = 10000;
+      scrollback_fill_enlarged_window = true;
+      show_hyperlink_targets = true;
+      strip_trailing_spaces = "always";
+      notify_on_cmd_finish = "invisible 15";
 
       "modify_font underline_position" = "+2";
       "modify_font underline_thickness" = "2px";

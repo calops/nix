@@ -21,7 +21,7 @@ vim.diagnostic.config {
 	},
 }
 
-local virtual_text_config = { source = "if_many" }
+local virtual_text_config = { source = true }
 local virtual_lines_config = { source = true }
 
 vim.diagnostic.config {

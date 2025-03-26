@@ -104,28 +104,6 @@ return {
 				{ "<M-Left>", dr("v:lua.STSSwapCurrentNodePrevNormal_Dot"), desc = "Swap with previous node", expr = true },
 				{ "<M-Right>", dr("v:lua.STSSwapCurrentNodeNextNormal_Dot"), desc = "Swap with next node", expr = true },
 				{ "<Cr>", ":STSSelectCurrentNode<CR>", desc = "Select current node" },
-				{
-					"gO",
-					function()
-						require("syntax-tree-surfer").go_to_top_node_and_execute_commands(false, {
-							"normal! O",
-							"normal! O",
-							"startinsert",
-						})
-					end,
-					desc = "Insert above top-level node",
-				},
-				{
-					"go",
-					function()
-						require("syntax-tree-surfer").go_to_top_node_and_execute_commands(true, {
-							"normal! o",
-							"normal! o",
-							"startinsert",
-						})
-					end,
-					desc = "Insert below top-level node",
-				},
 				{ "<M-Up>", "<CMD>STSSwapPrevVisual<CR>", desc = "Swap with previous node" , mode = "x" },
 				{ "<M-Down>", "<CMD>STSSwapNextVisual<CR>", desc = "Swap with next node" , mode = "x" },
 				{ "<M-Left>", "<CMD>STSSwapPrevVisual<CR>", desc = "Swap with previous node" , mode = "x" },
