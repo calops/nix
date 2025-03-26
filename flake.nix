@@ -62,7 +62,7 @@
     lix.follows = "nightly-tools/lix";
 
     # Vencord settings module (discord mod)
-    nixcord.url = "github:kaylorben/nixcord/d5f2fbef2fad379190e0c7a0d2d2f12c4e4df034";
+    nixcord.url = "github:kaylorben/nixcord";
     nixcord.inputs.nixpkgs.follows = "nixpkgs";
 
     # Logitech devices manager
