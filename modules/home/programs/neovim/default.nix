@@ -60,7 +60,6 @@ in
         pkgs.hub
         pkgs.wget # for mason.nvim
         pkgs.pandoc # for devdocs.nvim
-        pkgs.postgresql
       ];
 
       plugins = [
