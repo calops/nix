@@ -28,6 +28,7 @@
     virtualisation.docker.enable = true;
     stylix.homeManagerIntegration.autoImport = false;
     home-manager.backupFileExtension = "hm-backup";
+    madness.enable = true;
 
     nix = {
       optimise.automatic = true;

@@ -77,7 +77,7 @@ vim.o.foldtext = ""
 vim.o.foldlevel = 99
 
 if pcall(require, "nix") then
-	vim.notify("Nix environment detected", "info")
+	vim.defer_fn(function() vim.notify("Nix environment detected", "info") end, 500)
 end
 
 require("lazy").setup {
