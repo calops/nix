@@ -32,7 +32,6 @@ return {
 		"zbirenbaum/copilot.lua",
 		event = "VeryLazy",
 		opts = {
-			lsp_binary = vim.g.copilot_bin_path,
 			copilot_model = "gpt-4o-copilot",
 			suggestion = {
 				enabled = true,
