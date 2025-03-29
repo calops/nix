@@ -90,7 +90,7 @@ local function hl_override(palette)
 		IlluminatedWordWrite = { bg = palette.surface1, style = { "bold", "underdotted" } },
 		IlluminatedWordRead = { bg = palette.surface1, style = { "bold", "underdotted" } },
 
-		Folded = { bg = palette.base, style = { "italic" } },
+		Folded = { bg = palette.base, style = { "italic" }, fg = palette.overlay0 },
 
 		GitSignsAdd = { fg = palette.green },
 		GitSignsChange = { fg = palette.peach },

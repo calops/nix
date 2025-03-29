@@ -10,9 +10,9 @@ local function configure_server(name, bin, opts)
 	require("lspconfig")[name].setup(opts or {})
 end
 
-local function configure_servers(servers)
+local function configure_servers(servers, default_opts)
 	for name, opts in pairs(servers) do
-		configure_server(name, opts.bin, opts)
+		configure_server(name, opts.bin, vim.tbl_extend("keep", opts, default_opts))
 	end
 end
 

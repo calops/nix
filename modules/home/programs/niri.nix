@@ -96,7 +96,7 @@ in
             }
 
             environment {
-                DISPLAY ":0"
+                // DISPLAY ":0"
                 "ELECTRON_OZONE_PLATFORM_HINT" "auto"
                 "GBM_BACKEND" "nvidia-drm"
                 "LIBVA_DRIVER_NAME" "nvidia"

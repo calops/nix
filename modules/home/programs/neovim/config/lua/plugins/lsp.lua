@@ -32,15 +32,21 @@ return {
 				},
 			}
 			require("mason").setup { ui = { border = "rounded" } }
+
+			local capabilities = require("blink.cmp").get_lsp_capabilities()
 			require("mason-lspconfig").setup {
 				ensure_installed = {},
 				automatic_installation = false,
 				handlers = {
-					function(server_name) require("lspconfig")[server_name].setup {} end,
+					function(server_name)
+						require("lspconfig")[server_name].setup {
+							capabilities = capabilities,
+						}
+					end,
 				},
 			}
 
-			require("core.lsp").configure_servers {
+			require("core.lsp").configure_servers({
 				lua_ls = { bin = "lua-language-server" },
 				ruff = {},
 				pyright = {},
@@ -52,7 +58,7 @@ return {
 						client.server_capabilities.semanticTokensProvider = nil
 					end,
 				},
-			}
+			}, { capabilities = capabilities })
 		end,
 	},
 	{
