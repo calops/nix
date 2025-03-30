@@ -16,7 +16,7 @@
         user = {
           name = "Rémi Labeyrie";
           email = "remi.labeyrie@sonio.ai";
-          signingKey = "BC3E47212B5DA44E";
+          # signingKey = "BC3E47212B5DA44E";
         };
       };
     }

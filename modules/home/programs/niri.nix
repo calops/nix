@@ -147,6 +147,7 @@ in
                 Mod+Shift+S         { screenshot-window; }
                 Mod+Shift+Up        { move-window-up-or-to-workspace-up; }
                 Mod+Space           { spawn "anyrun"; }
+                Mod+Shift+Space     { spawn "1password" "--quick-access"; }
                 Mod+Up              { focus-window-or-workspace-up; }
 
                 Mod+Shift+WheelScrollDown cooldown-ms=150 { focus-column-right; }
@@ -182,6 +183,11 @@ in
             window-rule {
                 match is-floating=false
                 shadow { off; }
+            }
+            window-rule {
+                match app-id="^1Password$"
+                match app-id="org.kde.polkit-kde-authentication-agent-1"
+                open-floating true
             }
             window-rule {
                 match app-id="^kitty$"

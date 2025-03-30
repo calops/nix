@@ -37,6 +37,7 @@
         sr = "steam-run";
         devinit = "nix flake init --template github:cachix/devenv";
         x = "dtrx";
+        dl = "curl -O";
       };
 
       shellAliases = {

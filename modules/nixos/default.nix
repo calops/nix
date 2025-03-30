@@ -29,6 +29,7 @@
     stylix.homeManagerIntegration.autoImport = false;
     home-manager.backupFileExtension = "hm-backup";
     madness.enable = true;
+    environment.sessionVariables.EDITOR = "nvim";
 
     nix = {
       optimise.automatic = true;
@@ -85,6 +86,13 @@
       clean.extraArgs = "--keep-since 14d --keep 5";
       flake = config.my.configDir;
     };
-    environment.sessionVariables.EDITOR = "nvim";
+
+    programs._1password.enable = true;
+    programs._1password-gui = {
+      enable = true;
+      package = pkgs._1password-gui-beta;
+    };
+    security.polkit.enable = true;
+    security.soteria.enable = true;
   };
 }
