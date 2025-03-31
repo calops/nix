@@ -93,6 +93,6 @@
       package = pkgs._1password-gui-beta;
     };
     security.polkit.enable = true;
-    security.soteria.enable = true;
+    # security.soteria.enable = true;
   };
 }

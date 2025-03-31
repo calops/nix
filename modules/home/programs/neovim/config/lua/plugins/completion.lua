@@ -23,13 +23,9 @@ return {
 				},
 			},
 			keymap = {
-				preset = "default",
-				["<Cr>"] = { "accept", "fallback" },
-				["<C-y>"] = { "accept", "fallback" },
+				preset = "enter",
 				["<S-Tab>"] = { "select_prev", "fallback" },
 				["<Tab>"] = { "select_next", "fallback" },
-				["<C-j>"] = { "scroll_documentation_down", "fallback" },
-				["<C-k>"] = { "scroll_documentation_up", "fallback" },
 			},
 			completion = {
 				ghost_text = { enabled = false },

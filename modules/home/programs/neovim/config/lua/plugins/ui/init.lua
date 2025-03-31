@@ -188,7 +188,7 @@ return {
 				{ "<leader>fh", picker("help"), desc = "Help tags" },
 				{ "<leader>fH", picker("highlights"), desc = "Highlights" },
 				{ "<leader>fg", picker("git_branches"), desc = "Git branches" },
-				{ "<leader>fe", picker("icons"), desc = "Icons and emojis" },
+				{ "<leader>fi", picker("icons"), desc = "Icons and emojis" },
 				{ "<leader>fS", picker("projects"), desc = "Open session" },
 				{ "<leader>fp", picker("lazy"), desc = "Find plugin" },
 				{ "<leader>fe", picker("explorer"), desc = "Find plugin" },

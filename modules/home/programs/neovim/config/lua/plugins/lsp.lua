@@ -51,6 +51,7 @@ return {
 				ruff = {},
 				pyright = {},
 				vtsls = {},
+				fish_lsp = { bin = "fish-lsp" },
 				nil_ls = { bin = "nil" },
 				nixd = {
 					on_init = function(client, _)

@@ -72,6 +72,10 @@
     # Custom font
     aporetic.url = "github:calops/iosevka-aporetic";
     aporetic.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Personal fork of tide (upstream is unmaintained)
+    fish-tide.url = "github:calops/tide";
+    fish-tide.flake = false;
   };
 
   outputs =

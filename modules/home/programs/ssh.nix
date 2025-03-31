@@ -28,9 +28,10 @@
             user = "calops";
           };
         } // config.my.roles.terminal.ssh.hosts;
-        extraConfig = ''
-          IdentityAgent ${onePassPath}
-        '';
+        # FIXME: 1P is bugged
+        # extraConfig = ''
+        #   IdentityAgent ${onePassPath}
+        # '';
       };
     };
 }

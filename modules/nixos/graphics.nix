@@ -16,7 +16,7 @@
       enable = true;
       package = pkgs.nightly.niri;
     };
-    systemd.user.services.niri-flake-polkit.enable = false;
+    # systemd.user.services.niri-flake-polkit.enable = false;
 
     environment.sessionVariables = {
       WLR_NO_HARDWARE_CURSORS = "1";

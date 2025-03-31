@@ -193,9 +193,18 @@ return {
 	{
 		"chrisgrieser/nvim-spider",
 		keys = {
-			mode = { "n", "x", "o", "i" },
-			{ "<C-Left>", function() require("spider").motion("b") end, desc = "Move backwards word-wise" },
-			{ "<C-Right>", function() require("spider").motion("w") end, desc = "Move forwards word-wise" },
+			{
+				"<C-Left>",
+				function() require("spider").motion("b") end,
+				desc = "Move backward word-wise",
+				mode = { "n", "x", "o", "i" },
+			},
+			{
+				"<C-Right>",
+				function() require("spider").motion("w") end,
+				desc = "Move forward word-wise",
+				mode = { "n", "x", "o", "i" },
+			},
 		},
 	},
 	-- Better and editable quickfix

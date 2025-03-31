@@ -287,6 +287,22 @@
         "type": "github"
       }
     },
+    "fish-tide": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1743458075,
+        "narHash": "sha256-t127ouXyKFB2D/lbRyegb7kuWx3TcqWJsWMRxBGXAt4=",
+        "owner": "calops",
+        "repo": "tide",
+        "rev": "cf07180e8a138509eb86a48fe2efb1f2f8056606",
+        "type": "github"
+      },
+      "original": {
+        "owner": "calops",
+        "repo": "tide",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -1450,6 +1466,7 @@
         ],
         "fenix": "fenix",
         "firefox-darwin": "firefox-darwin",
+        "fish-tide": "fish-tide",
         "home-manager": "home-manager",
         "lix": [
           "nightly-tools",

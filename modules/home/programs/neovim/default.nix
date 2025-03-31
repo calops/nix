@@ -44,6 +44,7 @@ in
         pkgs.ruff # python
         pkgs.pyright # python
         pkgs.vtsls # typescript / javascript
+        pkgs.fish-lsp
         rustToolchain # rust
 
         # Tools
