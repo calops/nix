@@ -39,6 +39,15 @@
     };
   };
 
+  imports = [
+    ./ai.nix
+    ./audio.nix
+    ./graphics.nix
+    ./gaming.nix
+    ./terminal.nix
+    ./darwin
+  ];
+
   config = {
     programs.home-manager.enable = true;
     home.stateVersion = "25.05";

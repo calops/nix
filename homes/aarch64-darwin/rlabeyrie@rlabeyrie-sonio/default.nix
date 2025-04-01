@@ -1,10 +1,9 @@
-{ lib, config, ... }:
+{ lib, ... }:
 {
   my.roles.terminal.enable = true;
   my.roles.graphical = {
     enable = true;
     fonts.sizes.terminal = 12;
-    fonts.monospace = config.my.fonts.aporetic-sans-mono;
     installAllFonts = true;
   };
   programs.kitty.enable = lib.mkForce true;

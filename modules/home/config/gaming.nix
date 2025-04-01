@@ -37,7 +37,7 @@ in
 
         # Text
         font_size=14
-        font_file=${config.my.fonts.aporetic-sans-mono.package}/share/fonts/TTF/aporetic-sans-mono-normalregularupright.ttf
+        font_file=${pkgs.fonts.aporetic-sans-mono.package}/share/fonts/TTF/aporetic-sans-mono-normalregularupright.ttf
         text_outline
         text_color=${palette.text}
 

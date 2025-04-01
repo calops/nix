@@ -54,27 +54,27 @@ in
       fonts = {
         monospace = lib.mkOption {
           type = my.types.font;
-          default = config.my.fonts.iosevka; # wait until comfy is fixed
+          default = pkgs.fonts.aporetic-sans-mono;
           description = "Monospace font";
         };
         serif = lib.mkOption {
           type = my.types.font;
-          default = config.my.fonts.noto-serif;
+          default = pkgs.fonts.noto-serif;
           description = "Serif font";
         };
         sansSerif = lib.mkOption {
           type = my.types.font;
-          default = config.my.fonts.noto-sans;
+          default = pkgs.fonts.noto-sans;
           description = "Sans-serif font";
         };
         emoji = lib.mkOption {
           type = my.types.font;
-          default = config.my.fonts.noto-emoji;
+          default = pkgs.fonts.noto-emoji;
           description = "Emoji font";
         };
         symbols = lib.mkOption {
           type = my.types.font;
-          default = config.my.fonts.nerdfont-symbols;
+          default = pkgs.fonts.nerdfont-symbols;
           description = "Symbols font";
         };
         hinting = lib.mkOption {
@@ -145,58 +145,12 @@ in
     fonts = lib.mkOption {
       type = lib.types.attrsOf my.types.font;
       description = "Fonts collection";
+      default = { };
     };
   };
 
   config = lib.mkIf cfg.enable {
     fonts.fontconfig.enable = true;
-
-    my.fonts = {
-      aporetic-sans = {
-        name = "Aporetic Sans";
-        package = inputs.aporetic.packages.${pkgs.system}.aporetic-sans-prebuilt;
-      };
-      aporetic-sans-mono = {
-        name = "Aporetic Sans Mono";
-        package = inputs.aporetic.packages.${pkgs.system}.aporetic-sans-mono-prebuilt;
-      };
-      iosevka = {
-        name = "Iosevka";
-        package = pkgs.iosevka;
-      };
-      noto-serif = {
-        name = "Noto Serif";
-        package = pkgs.noto-fonts;
-      };
-      noto-sans = {
-        name = "Noto Sans";
-        package = pkgs.noto-fonts;
-      };
-      noto-emoji = {
-        name = "Noto Emoji";
-        package = pkgs.noto-fonts-emoji;
-      };
-      dina = {
-        name = "Dina";
-        package = pkgs.dina-font;
-      };
-      terminus = {
-        name = "Terminus";
-        package = pkgs.terminus_font;
-      };
-      cozette = {
-        name = "Cozette";
-        package = pkgs.cozette;
-      };
-      terminus-nerdfont = {
-        name = "Terminess Nerd Font";
-        package = pkgs.nerd-fonts.terminess-ttf;
-      };
-      nerdfont-symbols = {
-        name = "Symbols Nerd Font Mono";
-        package = pkgs.nerd-fonts.symbols-only;
-      };
-    };
 
     home.packages =
       [
