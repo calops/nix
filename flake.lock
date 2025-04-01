@@ -290,11 +290,11 @@
     "fish-tide": {
       "flake": false,
       "locked": {
-        "lastModified": 1743463845,
-        "narHash": "sha256-toH9soCOkTCjBjudO8lOJKYL/ZemdBlZO3xcrv9Z33U=",
+        "lastModified": 1743493740,
+        "narHash": "sha256-3CmCVe8r7QJpIY9iSUYJQSw1yURbUVD3PXSbg5KdgQg=",
         "owner": "calops",
         "repo": "tide",
-        "rev": "cfd879471a1e8f880db8323ab443d5ce37bc1e93",
+        "rev": "620ed9bffa0e750c43c81d734b0ff4cfb89adf62",
         "type": "github"
       },
       "original": {

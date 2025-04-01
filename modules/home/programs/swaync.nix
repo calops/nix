@@ -9,7 +9,7 @@ let
 in
 {
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
-    services.swaynotificationcenter = {
+    services.swaync = {
       enable = true;
 
       settings = {
