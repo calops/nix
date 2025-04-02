@@ -98,9 +98,7 @@ in
                 height: 3em !important;
                 visibility: visible !important;
               }
-              #main-window[uidensity="touch"] #TabsToolbar { height: 3.35em !important; }
-              #main-window[uidensity="compact"] #TabsToolbar { height: 2.7em !important; }
-              #main-window[titlepreface*="[Sidebery]"] #TabsToolbar { visibility: collapse !important; }
+              #TabsToolbar { visibility: collapse !important; }
             '';
         };
 
