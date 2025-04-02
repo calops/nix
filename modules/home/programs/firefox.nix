@@ -8,12 +8,7 @@ let
   addons = pkgs.nur.repos.rycee.firefox-addons;
   package =
     if pkgs.stdenv.isDarwin then
-      pkgs.firefox-beta-bin.overrideAttrs {
-        # nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
-        # postInstall = ''
-        #   wrapProgram $out/Applications/Firefox.app/Contents/MacOS/firefox --set MOZ_LEGACY_PROFILES 1
-        # '';
-      }
+      pkgs.firefox-beta-bin
     else
       pkgs.firefox-beta-bin.override {
         nativeMessagingHosts = [
@@ -33,13 +28,18 @@ in
           name = "default";
           id = 0;
           isDefault = true;
+          # settings = {
+          #   "browser.aboutConfig.showWarning" = false;
+          #   "app.update.auto" = false;
+          #   "sidebar.verticalTabs" = true;
+          #   "browser.ml.chat.provider" = "https://gemini.google.com";
+          # };
           extensions.packages = [
             addons.ublock-origin
             addons.onepassword-password-manager
             addons.bitwarden
             addons.tridactyl
             addons.reddit-enhancement-suite
-            addons.sidebery
             addons.stylus
             addons.sponsorblock
             addons.firenvim
