@@ -112,11 +112,11 @@ in
 
       asCss = pkgs.writeText "colors.css" ''
         :root {
-          ${lib.concatStringsSep "\n" (
-            builtins.attrValues (
-              builtins.mapAttrs (name: value: "  --" + name + ": " + value + ";") withHashtag
-            )
-          )}
+        ${lib.concatStringsSep "\n" (
+          builtins.attrValues (
+            builtins.mapAttrs (name: value: "  --palette-" + name + ": " + value + ";") withHashtag
+          )
+        )}
         }
       '';
 

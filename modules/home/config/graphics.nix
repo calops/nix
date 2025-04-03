@@ -141,12 +141,6 @@ in
         };
       };
     };
-
-    fonts = lib.mkOption {
-      type = lib.types.attrsOf my.types.font;
-      description = "Fonts collection";
-      default = { };
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -164,7 +158,7 @@ in
       ])
       ++ (
         if cfg.installAllFonts then
-          lib.attrsets.mapAttrsToList (name: font: font.package) config.my.fonts
+          lib.attrsets.mapAttrsToList (name: font: font.package) pkgs.fonts
         else
           with cfg.fonts;
           [

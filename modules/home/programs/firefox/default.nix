@@ -28,12 +28,19 @@ in
           name = "default";
           id = 0;
           isDefault = true;
-          # settings = {
-          #   "browser.aboutConfig.showWarning" = false;
-          #   "app.update.auto" = false;
-          #   "sidebar.verticalTabs" = true;
-          #   "browser.ml.chat.provider" = "https://gemini.google.com";
-          # };
+
+          settings = {
+            "app.update.auto" = false;
+            "browser.aboutConfig.showWarning" = false;
+            "browser.ml.chat.provider" = "https://gemini.google.com";
+            "browser.tabs.groups.enabled" = true;
+            "sidebar.revamp.round-content-area" = true;
+            "browser.uidensity" = 1;
+            "sidebar.verticalTabs" = true;
+            "sidebar.visibility" = "always-show";
+            "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+          };
+
           extensions.packages = [
             addons.ublock-origin
             addons.onepassword-password-manager
@@ -46,60 +53,13 @@ in
             addons.video-downloadhelper
             addons.pwas-for-firefox
           ];
+
           search = {
             default = "google";
             force = true;
           };
-          userChrome = # css
-            ''
-              .titlebar-buttonbox {
-                appearance: none !important;
-                margin-inline: 0 !important;
-                -moz-box-direction: reverse !important;
-                flex-direction: row-reverse !important;
-              }
 
-              tabs {
-                counter-reset: tab-counter;
-              }
-
-              #sidebar-header {
-                display: none;
-              }
-
-              #nav-bar {
-                box-shadow: 0 0 16px black !important;
-                z-index: 1;
-              }
-
-              #urlbar {
-                z-index: 2 !important;
-              }
-
-              @-moz-document url("chrome://browser/content/browser.xhtml"){
-                #browser {
-                  overflow: hidden;
-                }
-
-                #sidebar-splitter {
-                  width: 1px !important;
-                }
-
-                #sidebar-box {
-                  box-shadow: 0 0 16px black;
-                  position: relative;
-                  z-index: 1;
-                }
-              }
-
-              #main-window #TabsToolbar {
-                overflow: hidden;
-                transition: height 0.3s 0.3s !important;
-                height: 3em !important;
-                visibility: visible !important;
-              }
-              #TabsToolbar { visibility: collapse !important; }
-            '';
+          userChrome = builtins.readFile ./userChrome.css;
         };
 
         gw = default // {
