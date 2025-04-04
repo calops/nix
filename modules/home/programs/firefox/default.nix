@@ -32,10 +32,11 @@ in
           settings = {
             "app.update.auto" = false;
             "browser.aboutConfig.showWarning" = false;
+            "browser.link.open_newwindow" = 3;
             "browser.ml.chat.provider" = "https://gemini.google.com";
             "browser.tabs.groups.enabled" = true;
-            "sidebar.revamp.round-content-area" = true;
             "browser.uidensity" = 1;
+            "sidebar.revamp.round-content-area" = true;
             "sidebar.verticalTabs" = true;
             "sidebar.visibility" = "always-show";
             "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
@@ -59,7 +60,11 @@ in
             force = true;
           };
 
-          userChrome = builtins.readFile ./userChrome.css;
+          userChrome =
+            ''
+              @import url("file:///${config.my.colors.palette.asCss}");
+            ''
+            + builtins.readFile ./userChrome.css;
         };
 
         gw = default // {

@@ -131,4 +131,6 @@ return {
 			signs = false,
 		},
 	},
+	-- Indent text objects
+	{ "michaeljsmith/vim-indent-object" },
 }

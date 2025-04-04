@@ -1,8 +1,8 @@
 :root {
-	/* FIXME: this should be imported from ~/.config/colors/palette.css */
-	--color-solid: #1e1e2e;
+	--color-solid: var(--palette-base);
 	--color-alpha: rgb(from var(--color-solid) r g b / 0.8);
 	--browser-margins: 0px;
+	--tab-size: .9;
 }
 
 :root:not([windowtype="Toolkit:PictureInPicture"], [inDOMFullscreen]) {
@@ -99,13 +99,13 @@ scrollbox {
 	}
 
 	.tab-background {
-		background: color-mix(in srgb, currentColor 10%, var(--bg-mixer, var(--tab-bg, transparent))) !important;
+		background: color-mix(in srgb, currentColor 30%, var(--bg-mixer, var(--tab-bg, transparent))) !important;
+		color: var(--palette-crust);
 	}
 
 	&[pending="true"] {
 		.tab-background {
-			--tab-bg: var(--transparent-bg-solid);
-			filter: brightness(60%);
+			color: var(--palette-surface2) !important;
 		}
 
 		.tab-icon-stack {
@@ -113,10 +113,17 @@ scrollbox {
 		}
 	}
 
+	&[selected="true"],
+	&[multiselected="true"] {
+		.tab-background {
+			outline-color: var(--palette-text) !important;
+			box-shadow: none !important;
+		}
+	}
+
 	&:hover {
 		.tab-background {
-			--tab-bg: var(--transparent-bg-light);
-			filter: brightness(100%);
+			color: var(--palette-text) !important;
 		}
 
 		.tab-icon-stack {
@@ -126,14 +133,7 @@ scrollbox {
 	}
 }
 
-/* Tab sizing - Support for magnification or different sizes. */
 #tabbrowser-tabs tab {
-	@media (-moz-bool-pref: "glassfox.sidebar.magnification-enabled") {
-		@media not (-moz-bool-pref: "glassfox.sidebar.magnification.icons-only") {
-			--tab-height: var(--tab-scale);
-		}
-	}
-
 	--min-height: var(--tab-min-height);
 
 	.tab-stack {
@@ -145,68 +145,22 @@ scrollbox {
 	}
 }
 
-/* Tab Sizing */
-@media (-moz-bool-pref: "glassfox.sidebar.smaller-tabs") {
-
-	tab,
-	#tab-preview-panel {
-		--tab-size: .8;
-	}
-}
-
-@media (-moz-bool-pref: "glassfox.sidebar.larger-tabs") {
-
-	tab,
-	#tab-preview-panel {
-		--tab-size: 1.25;
-	}
-}
-
-/* macOS Dock-like magnification for sidebar */
-@media (-moz-bool-pref: "glassfox.sidebar.magnification-enabled") and (-moz-bool-pref: "sidebar.verticalTabs") {
-	sidebar-main:not([expanded]) {
-		#vertical-tabs {
-			overflow: visible !important;
-		}
-
-		#tabbrowser-tabs {
-			overflow: visible clip !important;
-			width: min-content;
-
-			&> :has(tab) {
-				&>tab {
-
-					&:has(+tab+tab:hover),
-					&:is(tab:hover+tab+tab) {
-						--tab-scale: 1.05;
-					}
-
-					&:has(+tab:hover),
-					&:is(tab:hover+tab) {
-						--tab-scale: 1.25;
-					}
-
-					&:hover {
-						--tab-scale: 1.5;
-					}
-				}
-			}
-		}
-	}
-}
-
-@media (-moz-bool-pref: "glassfox.sidebar.hide-new-tab-button") {
-	#tabbrowser-tabs toolbarbutton[label="New Tab"] {
-		display: none !important;
-	}
-}
-
 /* Add border radius to developer tools */
 .devtools-toolbox-bottom-iframe {
 	clip-path: inset(0 0 0 round 5px) !important;
 	background: transparent !important;
 }
 
-splitter[class*="devtools"] {
-	display: none !important;
+.tab-group-label {
+	width: 100%;
+}
+
+tab-group {
+	&:not([collapsed])::before {
+		background-color: light-dark(var(--tab-group-color), var(--tab-group-color-invert));
+		width: 5px !important;
+		margin-top: -15px !important;
+		border-bottom-right-radius: 5px !important;
+		border-bottom-left-radius: 5px !important;
+	}
 }
