@@ -1,4 +1,5 @@
 local sbar = require("sketchybar")
+local fromNix = require("from_nix")
 
 local front_app = sbar.add("item", {
 	icon = {
@@ -14,6 +15,9 @@ front_app:subscribe("front_app_switched", function(env)
 	front_app:set {
 		label = {
 			string = app,
+			font = {
+				family = fromNix.fonts.monospace,
+			},
 		},
 		icon = {
 			background = {

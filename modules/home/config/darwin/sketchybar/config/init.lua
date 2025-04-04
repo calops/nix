@@ -59,7 +59,6 @@ sbar.default {
 }
 
 require("apple")
--- require("yabai")
 require("focused")
 
 require("date")

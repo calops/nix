@@ -61,6 +61,8 @@ in
         pkgs.hub
         pkgs.wget # for mason.nvim
         pkgs.pandoc # for devdocs.nvim
+        pkgs.imagemagick
+        pkgs.mermaid-cli
       ];
 
       plugins = [
@@ -103,7 +105,7 @@ in
     stylix.targets.neovim.enable = false;
 
     home.activation.neovim =
-      lib.home-manager.hm.dag.entryAfter [ "linkGeneration" ] # bash
+      lib.home-manager.hm.dag.entryAfter [ "writeBoundary" ] # bash
         ''
           LOCK_FILE=$(readlink -f ~/.config/nvim/lazy-lock.json)
           [ ! -f "$LOCK_FILE" ] && echo "No lock file found, skipping" && exit 0

@@ -160,13 +160,12 @@ in
         if cfg.installAllFonts then
           lib.attrsets.mapAttrsToList (name: font: font.package) pkgs.fonts
         else
-          with cfg.fonts;
           [
-            monospace.package
-            serif.package
-            sansSerif.package
-            emoji.package
-            symbols.package
+            cfg.fonts.monospace.package
+            cfg.fonts.serif.package
+            cfg.fonts.sansSerif.package
+            cfg.fonts.emoji.package
+            cfg.fonts.symbols.package
           ]
       );
 
