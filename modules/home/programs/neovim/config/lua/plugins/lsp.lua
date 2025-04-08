@@ -177,10 +177,6 @@ return {
 					require("neotest-elixir"),
 				},
 			}
-
-			utils.map {
-				{ "<leader>t", group = "tests", icon = "" },
-			}
 		end,
 	},
 	-- Database explorer
