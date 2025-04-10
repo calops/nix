@@ -27,11 +27,19 @@
     environment.systemPackages = [
       pkgs.protontricks
       pkgs.i2c-tools
+      pkgs.nexusmods-app-unfree
     ];
 
+    # OpenRGB
     services.hardware.openrgb = {
       enable = true;
-      # package = pkgs.openrgb-with-all-plugins;
+      package = pkgs.openrgb-with-all-plugins;
+      motherboard = "intel";
     };
+    services.udev.packages = [
+      pkgs.openrgb
+    ];
+    hardware.i2c.enable = true;
+    boot.kernelModules = [ "i2c-dev" ];
   };
 }

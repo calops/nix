@@ -76,6 +76,10 @@
     # Personal fork of tide (upstream is unmaintained)
     fish-tide.url = "github:calops/tide";
     fish-tide.flake = false;
+
+    # Disk formatting
+    disko.url = "github:nix-community/disko/latest";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
