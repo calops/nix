@@ -90,41 +90,40 @@
   virtualisation.waydroid.enable = true;
 
   # Disks configuration
-  # disko.devices = {
-  #   disk = {
-  #     main = {
-  #       # When using disko-install, we will overwrite this value from the commandline
-  #       device = "/dev/disk/by-id/some-disk-id";
-  #       type = "disk";
-  #       content = {
-  #         type = "gpt";
-  #         partitions = {
-  #           MBR = {
-  #             type = "EF02"; # for grub MBR
-  #             size = "1M";
-  #             priority = 1; # Needs to be first partition
-  #           };
-  #           ESP = {
-  #             type = "EF00";
-  #             size = "500M";
-  #             content = {
-  #               type = "filesystem";
-  #               format = "vfat";
-  #               mountpoint = "/boot";
-  #               mountOptions = [ "umask=0077" ];
-  #             };
-  #           };
-  #           root = {
-  #             size = "100%";
-  #             content = {
-  #               type = "filesystem";
-  #               format = "ext4";
-  #               mountpoint = "/";
-  #             };
-  #           };
-  #         };
-  #       };
-  #     };
-  #   };
-  # };
+  disko.devices.disk.main = {
+    type = "disk";
+    device = "/dev/disk/by-id/nvme-Samsung_SSD_990_PRO_4TB_S7DPNU0XA04429Z";
+    content = {
+      type = "gpt";
+
+      partitions.ESP = {
+        size = "1G";
+        type = "EF00";
+        content = {
+          type = "filesystem";
+          format = "vfat";
+          mountpoint = "/boot";
+          mountOptions = [ "umask=0077" ];
+        };
+      };
+      partitions.luks = {
+        size = "100%";
+        content = {
+          type = "luks";
+          name = "crypted";
+          settings.allowDiscards = true;
+          passwordFile = "/tmp/secret.key";
+          content = {
+            type = "filesystem";
+            format = "ext4";
+            mountpoint = "/";
+            mountOptions = [
+              "noatime"
+              "nodiratime"
+            ];
+          };
+        };
+      };
+    };
+  };
 }
