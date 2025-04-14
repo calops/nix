@@ -11,17 +11,20 @@
   imports = [ inputs.niri.nixosModules.niri ];
 
   config = lib.mkIf config.my.roles.graphical.enable {
+    environment.sessionVariables = {
+      WLR_NO_HARDWARE_CURSORS = "1";
+      NIXOS_OZONE_WL = "1";
+    };
+
     # Window manager
     programs.niri = {
       enable = true;
       package = pkgs.nightly.niri;
     };
-    # systemd.user.services.niri-flake-polkit.enable = false;
 
-    environment.sessionVariables = {
-      WLR_NO_HARDWARE_CURSORS = "1";
-      NIXOS_OZONE_WL = "1";
-    };
+    # Polkit agent
+    systemd.user.services.niri-flake-polkit.enable = false;
+    security.soteria.enable = true;
 
     # Display manager
     services.xserver = {

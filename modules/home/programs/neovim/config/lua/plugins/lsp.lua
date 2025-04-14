@@ -33,17 +33,9 @@ return {
 			}
 			require("mason").setup { ui = { border = "rounded" } }
 
-			local capabilities = require("blink.cmp").get_lsp_capabilities()
 			require("mason-lspconfig").setup {
 				ensure_installed = {},
 				automatic_installation = false,
-				handlers = {
-					function(server_name)
-						require("lspconfig")[server_name].setup {
-							capabilities = capabilities,
-						}
-					end,
-				},
 			}
 
 			require("core.lsp").configure_servers({
@@ -138,12 +130,13 @@ return {
 			}
 
 			local lspconfig = require("lspconfig")
-			lspconfig.lexical.setup {
+			vim.lsp.config.lexical = {
 				filetypes = { "elixir", "eelixir", "heex" },
 				cmd = { "lexical" },
-				root_dir = function(fname) return lspconfig.util.root_pattern("mix.exs", ".git")(fname) or nil end,
+				root_markers = { "mix.exs", ".git" },
 				-- on_attach = function(client) client.server_capabilities.completionProvider = nil end,
 			}
+			vim.lsp.enable("lexical")
 		end,
 	},
 	-- Tests

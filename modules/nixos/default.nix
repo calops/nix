@@ -90,9 +90,8 @@
     programs._1password.enable = true;
     programs._1password-gui = {
       enable = true;
-      package = pkgs._1password-gui-beta;
+      package = pkgs._1password-gui;
     };
     security.polkit.enable = true;
-    # security.soteria.enable = true;
   };
 }

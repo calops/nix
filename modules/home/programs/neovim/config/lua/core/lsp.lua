@@ -7,7 +7,8 @@ local function configure_server(name, bin, opts)
 		return
 	end
 
-	require("lspconfig")[name].setup(opts or {})
+	vim.lsp.config(name, opts or {})
+	vim.lsp.enable(name)
 end
 
 local function configure_servers(servers, default_opts)
