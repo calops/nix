@@ -98,7 +98,7 @@ return {
 	{
 		"elixir-tools/elixir-tools.nvim",
 		version = "*",
-		ft = "elixir",
+		ft = { "elixir", "eelixir", "heex" },
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
 			local elixir = require("elixir")
@@ -108,6 +108,7 @@ return {
 				nextls = {
 					enable = true,
 					init_options = { experimental = { completions = { enable = true } } },
+					-- on_attach = function(client) client.server_capabilities.completionProvider = nil end,
 				},
 				projectionist = { enable = false },
 				elixirls = {
@@ -115,6 +116,7 @@ return {
 					cmd = "elixir-ls",
 					settings = elixirls.settings {
 						dialyzerEnabled = true,
+						incrementalDialyzer = true,
 						enableTestLenses = false,
 						suggestSpecs = true,
 					},
