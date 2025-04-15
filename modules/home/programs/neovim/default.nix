@@ -63,6 +63,7 @@ in
         pkgs.pandoc # for devdocs.nvim
         pkgs.imagemagick
         pkgs.mermaid-cli
+        pkgs.github-mcp-server
       ];
 
       plugins = [

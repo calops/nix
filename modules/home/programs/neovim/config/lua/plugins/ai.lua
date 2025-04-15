@@ -91,15 +91,10 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 		end,
 	},
 
+	-- AI companion
 	{
 		"yetone/avante.nvim",
-		event = "VeryLazy",
-		opts = {
-			provider = "copilot",
-		},
-		-- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
 		build = "make",
-		-- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"MunifTanjim/nui.nvim",
@@ -115,6 +110,43 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 					},
 				},
 			},
+		},
+		event = "VeryLazy",
+		init = function()
+			require("core.utils").map {
+				{ "<leader>a", group = "ai", icon = " ", mode = { "n", "x" } },
+			}
+		end,
+		---@module "avante"
+		---@type avante.Config
+		opts = {
+			provider = "copilot",
+			auto_suggestions_provider = "copilot",
+			hints = { enabled = false },
+			windows = { ask = { start_insert = false } },
+			mappings = {
+				submit = {
+					normal = "<C-CR>",
+					insert = "<C-CR>",
+				},
+			},
+			system_prompt = function()
+				local hub = require("mcphub").get_hub_instance()
+				return hub and hub:get_active_servers_prompt() or ""
+			end,
+			custom_tools = function() return { require("mcphub.extensions.avante").mcp_tool() } end,
+		},
+	},
+
+	-- Model Context Protocol
+	{
+		"ravitemer/mcphub.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		cmd = "MCPHub",
+		build = "bundled_build.lua",
+		opts = {
+			config = vim.fn.expand("~/.config/nvim/mcphub-servers.json"),
+			use_bundled_binary = true,
 		},
 	},
 }

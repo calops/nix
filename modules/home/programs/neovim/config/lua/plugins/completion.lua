@@ -3,7 +3,10 @@ return {
 	{
 		"saghen/blink.cmp",
 		event = "VeryLazy",
-		dependencies = { "rafamadriz/friendly-snippets" },
+		dependencies = {
+			"rafamadriz/friendly-snippets",
+			"Kaiser-Yang/blink-cmp-avante",
+		},
 		build = "cargo build --release",
 		opts_extend = { "sources.default" },
 
@@ -13,12 +16,16 @@ return {
 			appearance = { use_nvim_cmp_as_default = true },
 			cmdline = { completion = { ghost_text = { enabled = false } } },
 			sources = {
-				default = { "lsp", "path", "snippets", "buffer", "lazydev" },
+				default = { "avante", "lsp", "path", "snippets", "buffer", "lazydev" },
 				providers = {
 					lazydev = {
 						name = "LazyDev",
 						module = "lazydev.integrations.blink",
 						fallbacks = { "lsp" },
+					},
+					avante = {
+						module = "blink-cmp-avante",
+						name = "Avante",
 					},
 				},
 			},
