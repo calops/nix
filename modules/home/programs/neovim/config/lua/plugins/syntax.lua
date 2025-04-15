@@ -91,7 +91,7 @@ return {
 			--- Dot repeatable
 			local function dr(op)
 				return function()
-					if require("nvim-treesitter.parsers").has_parser() then
+					if vim.treesitter.get_parser() then
 						require("syntax-tree-surfer")
 						vim.opt.opfunc = op
 						return "g@l"
@@ -101,7 +101,7 @@ return {
 
 			local function ts_guard(cmd)
 				return function()
-					if require("nvim-treesitter.parsers").has_parser() then
+					if vim.treesitter.get_parser() then
 						vim.cmd(cmd)
 					end
 				end
