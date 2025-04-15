@@ -62,7 +62,6 @@ return {
 				html = { "prettierd" },
 
 				lua = { "stylua" },
-				nix = { "nixfmt" },
 				python = { "ruff_format" },
 				sh = { "shfmt" },
 				sql = { "sqlfluff" },

@@ -29,9 +29,9 @@
           };
         } // config.my.roles.terminal.ssh.hosts;
         # FIXME: 1P is bugged
-        # extraConfig = ''
-        #     IdentityAgent ${onePassPath}
-        #   # '';
+        extraConfig = ''
+            IdentityAgent ${onePassPath}
+          # '';
       };
     };
 }

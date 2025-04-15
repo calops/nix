@@ -89,6 +89,7 @@
       src = ./.;
       snowfall.namespace = "my";
       channels-config.allowUnfree = true;
+      channels-config.allowBroken = true; # for _1password-gui on darwin
       outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
     };
 }

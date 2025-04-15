@@ -38,20 +38,29 @@ return {
 				automatic_installation = false,
 			}
 
-			require("core.lsp").configure_servers({
-				lua_ls = { bin = "lua-language-server" },
-				ruff = {},
-				pyright = {},
-				vtsls = {},
-				fish_lsp = { bin = "fish-lsp" },
-				nil_ls = { bin = "nil" },
-				nixd = {
-					on_init = function(client, _)
-						-- Turn off semantic tokens until they're more consistent
-						client.server_capabilities.semanticTokensProvider = nil
-					end,
-				},
-			}, { capabilities = capabilities })
+			vim.lsp.enable {
+				-- Lua
+				"lua_ls",
+
+				-- Python
+				"ruff",
+				"pyright",
+
+				-- JavaScript/TypeScript
+				"vtsls",
+
+				-- Fish
+				"fish_lsp",
+
+				-- Nix
+				"nil_ls",
+				"nixd",
+
+				-- Elixir
+				"lexical",
+				"elixirls",
+				"nextls",
+			}
 		end,
 	},
 	{
@@ -70,6 +79,7 @@ return {
 			},
 		},
 	},
+
 	-- Rust-specific utilities and LSP configurations
 	{
 		"mrcjkb/rustaceanvim",
@@ -94,53 +104,7 @@ return {
 			}
 		end,
 	},
-	-- Elixir-specific utilities and LSP configurations
-	{
-		"elixir-tools/elixir-tools.nvim",
-		version = "*",
-		ft = { "elixir", "eelixir", "heex" },
-		dependencies = { "nvim-lua/plenary.nvim" },
-		config = function()
-			local elixir = require("elixir")
-			local elixirls = require("elixir.elixirls")
 
-			elixir.setup {
-				nextls = {
-					enable = true,
-					init_options = { experimental = { completions = { enable = true } } },
-					-- on_attach = function(client) client.server_capabilities.completionProvider = nil end,
-				},
-				projectionist = { enable = false },
-				elixirls = {
-					enable = true,
-					cmd = "elixir-ls",
-					settings = elixirls.settings {
-						dialyzerEnabled = true,
-						incrementalDialyzer = true,
-						enableTestLenses = false,
-						suggestSpecs = true,
-					},
-					on_attach = function(client)
-						client.server_capabilities.completionProvider = nil
-						utils.map {
-							{ "<space>P", ":ElixirFromPipe<cr>", desc = "Convert from pipe" },
-							{ "<space>p", ":ElixirToPipe<cr>", desc = "Convert to pipe" },
-							{ "<space>em", ":ElixirExpandMacro<cr>", desc = "Expand macro", mode = "v" },
-						}
-					end,
-				},
-			}
-
-			local lspconfig = require("lspconfig")
-			vim.lsp.config.lexical = {
-				filetypes = { "elixir", "eelixir", "heex" },
-				cmd = { "lexical" },
-				root_markers = { "mix.exs", ".git" },
-				-- on_attach = function(client) client.server_capabilities.completionProvider = nil end,
-			}
-			vim.lsp.enable("lexical")
-		end,
-	},
 	-- Tests
 	{
 		"nvim-neotest/neotest",
@@ -174,6 +138,7 @@ return {
 			}
 		end,
 	},
+
 	-- Database explorer
 	{
 		"xemptuous/sqlua.nvim",

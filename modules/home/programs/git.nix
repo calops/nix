@@ -28,17 +28,21 @@ in
       userEmail = "calops@tocards.net";
       lfs.enable = true;
 
-      signing = {
-        signByDefault = true;
-        key = "1FAB C23C 7766 D833 7C4D  C502 5357 919C 06FD 9147";
-      };
-      # FIXME: 1P is bugged
       # signing = {
       #   signByDefault = true;
-      #   key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG5fbZ1KwrHKB+ItUQ5CRhjDVztrVBs4ZgULBkZHs2Iw";
-      #   format = "ssh";
-      #   signer = lib.getExe' pkgs._1password-gui "op-ssh-sign";
+      #   key = "1FAB C23C 7766 D833 7C4D  C502 5357 919C 06FD 9147";
       # };
+      # FIXME: 1P is bugged
+      signing = {
+        signByDefault = true;
+        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG5fbZ1KwrHKB+ItUQ5CRhjDVztrVBs4ZgULBkZHs2Iw";
+        format = "ssh";
+        signer =
+          if pkgs.stdenv.isLinux then
+            lib.getExe' pkgs._1password-gui "op-ssh-sign"
+          else
+            "${pkgs._1password-gui}/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+      };
 
       delta = {
         enable = true;

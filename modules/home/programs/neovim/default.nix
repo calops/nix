@@ -87,20 +87,29 @@ in
     };
 
     # Nixd LSP configuration
-    home.file."${config.my.configDir}/.neoconf.json".text =
+    home.file."${config.my.configDir}/.neovim.nixd.lua".text =
       let
         flake = ''builtins.getFlake "${config.my.configDir}"'';
       in
-      builtins.toJSON {
-        lspconfig.nixd.nixd = {
-          nixpkgs.expr = ''import (${flake}).inputs.nixpkgs {}'';
-          options = {
-            nixos.expr = ''(${flake}).nixosConfigurations.tocardstation.options'';
-            homeManager.expr = ''(${flake}).homeConfigurations."calops@tocardstation".options'';
-            darwin.expr = ''(${flake}).darwinConfigurations.rlabeyrie-sonio.options'';
-          };
-        };
-      };
+      # lua
+      ''
+        vim.lsp.config("nixd", {
+          settings = {
+            nixd = {
+              nixpkgs = { expr = { "import (${flake}).inputs.nixpkgs {}" } }
+            },
+            options = {
+              nixos = { expr = { "(${flake}).nixosConfigurations.tocardstation.options" } }
+              homeManager = {
+                expr = { "(${flake}).homeConfigurations.tocardstation.options" }
+              }
+              darwin = {
+                expr = { "(${flake}).darwinConfigurations.rlabeyrie-sonio.options" }
+              }
+            }
+          }
+        })
+      '';
 
     stylix.targets.neovim.enable = false;
 

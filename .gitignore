@@ -4,3 +4,4 @@ node_modules
 .devenv
 .aider*
 .env
+.neovim.nixd.lua

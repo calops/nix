@@ -24,8 +24,8 @@
       pkgs.yq
       pkgs.pastel
       pkgs.jaq
-      # FIXME: nightly is broken
       pkgs.devenv
+      pkgs._1password-cli
     ] ++ lib.optional (!pkgs.stdenv.isDarwin) pkgs.dtrx;
 
     programs.nix-index-database.comma.enable = true;
