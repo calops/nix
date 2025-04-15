@@ -91,29 +91,38 @@ return {
 			--- Dot repeatable
 			local function dr(op)
 				return function()
-					require("syntax-tree-surfer")
-					vim.opt.opfunc = op
-					return "g@l"
+					if require("nvim-treesitter.parsers").has_parser() then
+						require("syntax-tree-surfer")
+						vim.opt.opfunc = op
+						return "g@l"
+					end
 				end
 			end
 
-			-- stylua: ignore
+			local function ts_guard(cmd)
+				return function()
+					if require("nvim-treesitter.parsers").has_parser() then
+						vim.cmd(cmd)
+					end
+				end
+			end
+
 			return {
-				{ "<M-Up>", dr("v:lua.STSSwapUpNormal_Dot"), desc = "Swap node upwards", expr = true },
-				{ "<M-Down>", dr("v:lua.STSSwapDownNormal_Dot"), desc = "Swap node downwards", expr = true },
-				{ "<M-Left>", dr("v:lua.STSSwapCurrentNodePrevNormal_Dot"), desc = "Swap with previous node", expr = true },
-				{ "<M-Right>", dr("v:lua.STSSwapCurrentNodeNextNormal_Dot"), desc = "Swap with next node", expr = true },
-				{ "<Cr>", ":STSSelectCurrentNode<CR>", desc = "Select current node" },
-				{ "<M-Up>", "<CMD>STSSwapPrevVisual<CR>", desc = "Swap with previous node" , mode = "x" },
-				{ "<M-Down>", "<CMD>STSSwapNextVisual<CR>", desc = "Swap with next node" , mode = "x" },
-				{ "<M-Left>", "<CMD>STSSwapPrevVisual<CR>", desc = "Swap with previous node" , mode = "x" },
-				{ "<M-Right>", "<CMD>STSSwapNextVisual<CR>", desc = "Swap with next node" , mode = "x" },
-				{ "<C-Up>", "<CMD>STSSelectPrevSiblingNode<CR>", desc = "Select previous sibling" , mode = "x" },
-				{ "<C-Down>", "<CMD>STSSelectNextSiblingNode<CR>", desc = "Select next sibling" , mode = "x" },
-				{ "<C-Left>", "<CMD>STSSelectPrevSiblingNode<CR>", desc = "Select previous sibling" , mode = "x" },
-				{ "<C-Right>", "<CMD>STSSelectNextSiblingNode<CR>", desc = "Select next sibling" , mode = "x" },
-				{ "<Cr>", "<CMD>STSSelectParentNode<CR>", desc = "Select parent node" , mode = "x" },
-				{ "<S-Cr>", "<CMD>STSSelectChildNode<CR>", desc = "Select child node" , mode = "x" },
+				{ "<M-Up>",    dr("v:lua.STSSwapUpNormal_Dot"),              desc = "Swap node upwards",       expr = true },
+				{ "<M-Down>",  dr("v:lua.STSSwapDownNormal_Dot"),            desc = "Swap node downwards",     expr = true },
+				{ "<M-Left>",  dr("v:lua.STSSwapCurrentNodePrevNormal_Dot"), desc = "Swap with previous node", expr = true },
+				{ "<M-Right>", dr("v:lua.STSSwapCurrentNodeNextNormal_Dot"), desc = "Swap with next node",     expr = true },
+				{ "<M-Up>",    ts_guard("STSSwapPrevVisual"),                desc = "Swap with previous node", mode = "x" },
+				{ "<M-Down>",  ts_guard("STSSwapNextVisual"),                desc = "Swap with next node",     mode = "x" },
+				{ "<M-Left>",  ts_guard("STSSwapPrevVisual"),                desc = "Swap with previous node", mode = "x" },
+				{ "<M-Right>", ts_guard("STSSwapNextVisual"),                desc = "Swap with next node",     mode = "x" },
+				{ "<C-Up>",    ts_guard("STSSelectPrevSiblingNode"),         desc = "Select previous sibling", mode = "x" },
+				{ "<C-Down>",  ts_guard("STSSelectNextSiblingNode"),         desc = "Select next sibling",     mode = "x" },
+				{ "<C-Left>",  ts_guard("STSSelectPrevSiblingNode"),         desc = "Select previous sibling", mode = "x" },
+				{ "<C-Right>", ts_guard("STSSelectNextSiblingNode"),         desc = "Select next sibling",     mode = "x" },
+				{ "<Cr>",      ts_guard("STSSelectCurrentNode"),             desc = "Select current node" },
+				{ "<Cr>",      ts_guard("STSSelectCurrentNode"),             desc = "Select parent node",      mode = "x" },
+				{ "<S-Cr>",    ts_guard("STSSelectChildNode"),               desc = "Select child node",       mode = "x" },
 			}
 		end,
 		config = true,

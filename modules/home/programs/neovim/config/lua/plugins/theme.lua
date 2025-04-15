@@ -119,6 +119,10 @@ local function hl_override(palette)
 
 		CopilotSuggestion = { fg = colors.darken(palette.peach, 0.8), style = { "italic" } },
 
+		AvanteSidebarNormal = { bg = palette.mantle, fg = palette.text },
+		AvanteSidebarWinSeparator = { bg = palette.mantle, fg = palette.mantle },
+		AvanteSidebarWinHorizontalSeparator = { bg = palette.mantle, fg = palette.surface0 },
+
 		FlashLabel = { bg = palette.peach, fg = palette.base, style = { "bold" } },
 		FlashMatch = { bg = palette.lavender, fg = palette.base },
 		FlashBackdrop = { bg = nil, fg = palette.overlay0, style = { "nocombine" } },

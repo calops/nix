@@ -61,7 +61,6 @@ return {
 				yaml = { "prettierd" },
 				html = { "prettierd" },
 
-				lua = { "stylua" },
 				python = { "ruff_format" },
 				sh = { "shfmt" },
 				sql = { "sqlfluff" },

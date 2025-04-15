@@ -30,11 +30,9 @@ in
       package = pkgs.nightly.neovim;
       extraPackages = [
         # Formatters
-        pkgs.nixfmt-rfc-style # Nix
         pkgs.prettierd # Multi-language
         pkgs.shfmt # Shell
         pkgs.isort # Python
-        pkgs.stylua # Lua
         pkgs.sqlfluff
 
         # LSP

@@ -36,6 +36,7 @@ return {
 		},
 		cmd = "CopilotChat",
 		opts = {
+			model = "gpt-4.1",
 			question_header = "##   User ",
 			answer_header = "##   Copilot ",
 			error_header = "##   Error ",
@@ -70,8 +71,9 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 		keys = function()
 			local function pick_with_selection(selection)
 				return function()
-					local actions = require("CopilotChat.actions")
-					actions.pick(actions.prompt_actions { selection = require("CopilotChat.select")[selection] })
+					require("CopilotChat").select_prompt {
+						selection = require("CopilotChat.select")[selection],
+					}
 				end
 			end
 			utils.map {
