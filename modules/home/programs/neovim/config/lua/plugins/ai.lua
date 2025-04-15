@@ -2,33 +2,6 @@ local utils = require("core.utils")
 
 return {
 	{
-		"milanglacier/minuet-ai.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
-		enabled = false, -- TODO:
-		opts = {
-			virtualtext = {
-				auto_trigger_ft = {},
-				keymap = {
-					accept = "<M-CR>",
-					accept_line = "<M-l>",
-					prev = "<M-Left>",
-					next = "<M-Right>",
-					dismiss = "<M-:>",
-				},
-			},
-			provider_options = {
-				gemini = {
-					model = "gemini-2.0-flash-exp",
-					system = "see [Prompt] section for the default value",
-					few_shots = "see [Prompt] section for the default value",
-					chat_input = "See [Prompt Section for default value]",
-					stream = true,
-					optional = {},
-				},
-			},
-		},
-	},
-	{
 		"zbirenbaum/copilot.lua",
 		event = "VeryLazy",
 		opts = {
@@ -116,5 +89,32 @@ Very important points to remember: be SUCCINT, make sure the title is under 50 c
 				{ "<leader>cs", pick_with_selection("visual"), desc = "Actions on selection", mode = { "n", "x" } },
 			}
 		end,
+	},
+
+	{
+		"yetone/avante.nvim",
+		event = "VeryLazy",
+		opts = {
+			provider = "copilot",
+		},
+		-- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+		build = "make",
+		-- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+			{
+				-- support for image pasting
+				"HakonHarnes/img-clip.nvim",
+				event = "VeryLazy",
+				opts = {
+					default = {
+						embed_image_as_base64 = false,
+						prompt_for_file_name = false,
+						drag_and_drop = { insert_mode = true },
+					},
+				},
+			},
+		},
 	},
 }
