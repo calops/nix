@@ -72,7 +72,6 @@ in
         ".direnv"
         ".envrc"
         ".lsp.lua"
-        ".neoconf.json"
         ".venv"
         ".vim"
         ".yarn"

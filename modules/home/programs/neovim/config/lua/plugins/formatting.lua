@@ -47,6 +47,9 @@ return {
 				desc = "Re-enable autoformat-on-save",
 			})
 		end,
+
+		---@module "conform"
+		---@type conform.setupOpts
 		opts = {
 			formatters_by_ft = {
 				json = { "prettierd" },
@@ -58,14 +61,31 @@ return {
 				sh = { "shfmt" },
 				sql = { "sqlfluff" },
 			},
+			default_format_opts = {
+				lsp_format = "fallback",
+			},
 			format_on_save = function(bufnr)
-				if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
-					return
+				if
+					not vim.g.disable_autoformat
+					and not vim.b[bufnr].disable_autoformat
+					and vim.bo[0].filetype ~= "nix"
+				then
+					return {
+						lsp_format = "fallback",
+						timeout_ms = 500,
+					}
 				end
-				return {
-					lsp_fallback = true,
-					timeout_ms = 500,
-				}
+			end,
+			format_after_save = function(bufnr)
+				if
+					not vim.g.disable_autoformat
+					and not vim.b[bufnr].disable_autoformat
+					and vim.bo[0].filetype == "nix"
+				then
+					return {
+						lsp_format = "fallback",
+					}
+				end
 			end,
 			formatters = {
 				sqlfluff = {

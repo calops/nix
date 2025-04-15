@@ -7,7 +7,6 @@ return {
 		dependencies = {
 			"williamboman/mason.nvim",
 			"williamboman/mason-lspconfig.nvim",
-			"folke/neoconf.nvim",
 		},
 		keys = {
 			{ "K", require("noice.lsp").hover, desc = "Show documentation" },
@@ -23,16 +22,7 @@ return {
 			},
 		},
 		config = function()
-			require("neoconf").setup {
-				plugins = {
-					jsonls = {
-						enabled = true,
-						configured_servers_only = false,
-					},
-				},
-			}
 			require("mason").setup { ui = { border = "rounded" } }
-
 			require("mason-lspconfig").setup {
 				ensure_installed = {},
 				automatic_installation = false,

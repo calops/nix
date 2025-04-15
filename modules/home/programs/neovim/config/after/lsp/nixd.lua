@@ -3,4 +3,7 @@ return {
 		-- Turn off semantic tokens until they're more consistent
 		-- client.server_capabilities.semanticTokensProvider = nil
 	end,
+	settings = {
+		nixd = { formatting = { command = { "nix", "fmt" } } },
+	},
 }
