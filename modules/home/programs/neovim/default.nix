@@ -34,6 +34,7 @@ in
         pkgs.shfmt # Shell
         pkgs.isort # Python
         pkgs.sqlfluff
+        pkgs.stylua
 
         # LSP
         pkgs.lua-language-server # lua

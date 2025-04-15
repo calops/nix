@@ -93,7 +93,7 @@ return {
 				return function()
 					if vim.treesitter.get_parser() then
 						require("syntax-tree-surfer")
-						vim.opt.opfunc = op
+						vim.opt.opfunc = "v:lua." .. op .. "_Dot"
 						return "g@l"
 					end
 				end
@@ -108,21 +108,21 @@ return {
 			end
 
 			return {
-				{ "<M-Up>",    dr("v:lua.STSSwapUpNormal_Dot"),              desc = "Swap node upwards",       expr = true },
-				{ "<M-Down>",  dr("v:lua.STSSwapDownNormal_Dot"),            desc = "Swap node downwards",     expr = true },
-				{ "<M-Left>",  dr("v:lua.STSSwapCurrentNodePrevNormal_Dot"), desc = "Swap with previous node", expr = true },
-				{ "<M-Right>", dr("v:lua.STSSwapCurrentNodeNextNormal_Dot"), desc = "Swap with next node",     expr = true },
-				{ "<M-Up>",    ts_guard("STSSwapPrevVisual"),                desc = "Swap with previous node", mode = "x" },
-				{ "<M-Down>",  ts_guard("STSSwapNextVisual"),                desc = "Swap with next node",     mode = "x" },
-				{ "<M-Left>",  ts_guard("STSSwapPrevVisual"),                desc = "Swap with previous node", mode = "x" },
-				{ "<M-Right>", ts_guard("STSSwapNextVisual"),                desc = "Swap with next node",     mode = "x" },
-				{ "<C-Up>",    ts_guard("STSSelectPrevSiblingNode"),         desc = "Select previous sibling", mode = "x" },
-				{ "<C-Down>",  ts_guard("STSSelectNextSiblingNode"),         desc = "Select next sibling",     mode = "x" },
-				{ "<C-Left>",  ts_guard("STSSelectPrevSiblingNode"),         desc = "Select previous sibling", mode = "x" },
-				{ "<C-Right>", ts_guard("STSSelectNextSiblingNode"),         desc = "Select next sibling",     mode = "x" },
-				{ "<Cr>",      ts_guard("STSSelectCurrentNode"),             desc = "Select current node" },
-				{ "<Cr>",      ts_guard("STSSelectCurrentNode"),             desc = "Select parent node",      mode = "x" },
-				{ "<S-Cr>",    ts_guard("STSSelectChildNode"),               desc = "Select child node",       mode = "x" },
+				{ "<M-Up>", dr("STSSwapUpNormal"), desc = "Swap node upwards", expr = true },
+				{ "<M-Down>", dr("STSSwapDownNormal"), desc = "Swap node downwards", expr = true },
+				{ "<M-Left>", dr("STSSwapCurrentNodePrevNormal"), desc = "Swap with previous node", expr = true },
+				{ "<M-Right>", dr("STSSwapCurrentNodeNextNormal"), desc = "Swap with next node", expr = true },
+				{ "<M-Up>", ts_guard("STSSwapPrevVisual"), desc = "Swap with previous node", mode = "x" },
+				{ "<M-Down>", ts_guard("STSSwapNextVisual"), desc = "Swap with next node", mode = "x" },
+				{ "<M-Left>", ts_guard("STSSwapPrevVisual"), desc = "Swap with previous node", mode = "x" },
+				{ "<M-Right>", ts_guard("STSSwapNextVisual"), desc = "Swap with next node", mode = "x" },
+				{ "<C-Up>", ts_guard("STSSelectPrevSiblingNode"), desc = "Select previous sibling", mode = "x" },
+				{ "<C-Down>", ts_guard("STSSelectNextSiblingNode"), desc = "Select next sibling", mode = "x" },
+				{ "<C-Left>", ts_guard("STSSelectPrevSiblingNode"), desc = "Select previous sibling", mode = "x" },
+				{ "<C-Right>", ts_guard("STSSelectNextSiblingNode"), desc = "Select next sibling", mode = "x" },
+				{ "<Cr>", ts_guard("STSSelectCurrentNode"), desc = "Select current node" },
+				{ "<Cr>", ts_guard("STSSelectCurrentNode"), desc = "Select parent node", mode = "x" },
+				{ "<S-Cr>", ts_guard("STSSelectChildNode"), desc = "Select child node", mode = "x" },
 			}
 		end,
 		config = true,

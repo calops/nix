@@ -7,18 +7,10 @@ return {
 			{
 				"<space>f",
 				function()
-					require("conform").format({ async = true }, function(err)
-						if not err then
-							local mode = vim.api.nvim_get_mode().mode
-							if vim.startswith(string.lower(mode), "v") then
-								vim.api.nvim_feedkeys(
-									vim.api.nvim_replace_termcodes("<Esc>", true, false, true),
-									"n",
-									true
-								)
-							end
-						end
-					end)
+					require("conform").format {
+						async = true,
+						lsp_format = "fallback",
+					}
 				end,
 				desc = "Format code",
 				mode = { "n", "x" },
@@ -61,6 +53,7 @@ return {
 				yaml = { "prettierd" },
 				html = { "prettierd" },
 
+				lua = { "stylua" },
 				python = { "ruff_format" },
 				sh = { "shfmt" },
 				sql = { "sqlfluff" },
