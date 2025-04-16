@@ -86,27 +86,25 @@ in
       "nvim".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/config";
     };
 
-    # Nixd LSP configuration
-    home.file."${config.my.configDir}/.neovim.nixd.lua".text =
+    home.file."${config.my.configDir}/.nvim.lua".text =
       let
         flake = ''builtins.getFlake "${config.my.configDir}"'';
       in
       # lua
       ''
+        vim.g.lazydev_enabled = true
+
         vim.lsp.config("nixd", {
           settings = {
             nixd = {
-              nixpkgs = { expr = { "import (${flake}).inputs.nixpkgs {}" } }
+              nixpkgs = { expr = { 'import (${flake}).inputs.nixpkgs {}' } },
+              formatting = { command = { '${lib.getExe pkgs.nixfmt-rfc-style}' } },
+              options = {
+                nixos = { expr = { '(${flake}).nixosConfigurations.tocardstation.options' } },
+                homeManager = { expr = { '(${flake}).homeConfigurations.tocardstation.options' }, },
+                darwin = { expr = { '(${flake}).darwinConfigurations.rlabeyrie-sonio.options' }, },
+              }
             },
-            options = {
-              nixos = { expr = { "(${flake}).nixosConfigurations.tocardstation.options" } }
-              homeManager = {
-                expr = { "(${flake}).homeConfigurations.tocardstation.options" }
-              }
-              darwin = {
-                expr = { "(${flake}).darwinConfigurations.rlabeyrie-sonio.options" }
-              }
-            }
           }
         })
       '';

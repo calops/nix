@@ -65,25 +65,10 @@ return {
 				lsp_format = "fallback",
 			},
 			format_on_save = function(bufnr)
-				if
-					not vim.g.disable_autoformat
-					and not vim.b[bufnr].disable_autoformat
-					and vim.bo[0].filetype ~= "nix"
-				then
+				if not vim.g.disable_autoformat and not vim.b[bufnr].disable_autoformat then
 					return {
 						lsp_format = "fallback",
 						timeout_ms = 500,
-					}
-				end
-			end,
-			format_after_save = function(bufnr)
-				if
-					not vim.g.disable_autoformat
-					and not vim.b[bufnr].disable_autoformat
-					and vim.bo[0].filetype == "nix"
-				then
-					return {
-						lsp_format = "fallback",
 					}
 				end
 			end,
