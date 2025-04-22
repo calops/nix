@@ -40,7 +40,7 @@ self: super: {
       name = "Cozette";
       package = super.cozette;
     };
-    terminus-nerdfont = {
+    terminess = {
       name = "Terminess Nerd Font";
       package = super.nerd-fonts.terminess-ttf;
     };

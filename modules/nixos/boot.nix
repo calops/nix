@@ -26,8 +26,8 @@
     useXkbConfig = true;
     fonts = [
       {
-        name = "Terminess Nerd Font";
-        package = pkgs.nerd-fonts.terminess-ttf;
+        name = pkgs.fonts.terminess.name;
+        package = pkgs.fonts.terminess.package;
       }
     ];
   };

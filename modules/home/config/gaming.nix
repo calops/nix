@@ -20,6 +20,8 @@ in
       pkgs.lutris
       pkgs.steamcmd
       pkgs.steam-run
+      pkgs.wineWowPackages.waylandFull
+      pkgs.winetricks
     ];
 
     programs.mangohud = {

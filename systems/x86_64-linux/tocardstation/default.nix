@@ -75,6 +75,7 @@
       "wheel"
       "docker"
       "i2c"
+      "vboxusers"
     ];
     shell = pkgs.fish;
   };
@@ -86,8 +87,13 @@
     "1.0.0.1"
   ];
 
-  # Android virtualisation
+  # Virtualisation
   virtualisation.waydroid.enable = true;
+  virtualisation.virtualbox = {
+    host.enable = true;
+    host.enableExtensionPack = true;
+  };
+  boot.blacklistedKernelModules = [ "kvm-intel" ]; # needed for virtualbox
 
   # Disks configuration
   disko.devices.disk.main = {
@@ -106,6 +112,7 @@
           mountOptions = [ "umask=0077" ];
         };
       };
+
       partitions.luks = {
         size = "100%";
         content = {
@@ -126,4 +133,15 @@
       };
     };
   };
+
+  systemd.sleep.extraConfig = ''
+    SuspendState=freeze
+  '';
+
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 32 * 1024; # 64 GiB
+    }
+  ];
 }

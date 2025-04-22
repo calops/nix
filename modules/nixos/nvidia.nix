@@ -15,15 +15,15 @@
       package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
 
-    systemd.services =
-      let
-        override.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "false";
-      in
-      {
-        systemd-suspend = override;
-        systemd-hibernate = override;
-        systemd-hybrid-sleep = override;
-        systemd-suspend-then-hibernate = override;
-      };
+    # systemd.services =
+    #   let
+    #     override.environment.SYSTEMD_SLEEP_FREEZE_USER_SESSIONS = "true";
+    #   in
+    #   {
+    #     systemd-suspend = override;
+    #     systemd-hibernate = override;
+    #     systemd-hybrid-sleep = override;
+    #     systemd-suspend-then-hibernate = override;
+    #   };
   };
 }

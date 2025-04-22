@@ -4,6 +4,6 @@ return {
 		-- client.server_capabilities.semanticTokensProvider = nil
 	end,
 	settings = {
-		nixd = { formatting = { command = { "nix", "fmt" } } },
+		nixd = { formatting = { command = nil } },
 	},
 }

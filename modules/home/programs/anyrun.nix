@@ -10,7 +10,7 @@ let
   palette = config.my.colors.palette.asGtkCss;
 in
 {
-  imports = [ inputs.anyrun.homeManagerModules.default ];
+  # imports = [ inputs.anyrun.homeManagerModules.default ];
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.anyrun = {
       inherit package;

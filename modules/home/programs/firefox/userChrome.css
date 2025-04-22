@@ -3,6 +3,7 @@
 	--color-alpha: rgb(from var(--color-solid) r g b / 0.8);
 	--browser-margins: 0px;
 	--tab-size: .9;
+	--toolbarbutton-icon-fill-attention: var(--palette-peach) !important;
 }
 
 :root:not([windowtype="Toolkit:PictureInPicture"], [inDOMFullscreen]) {

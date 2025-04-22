@@ -108,6 +108,7 @@ in
                 Mod+Ampersand       { focus-workspace "web"; }
                 Mod+Apostrophe      { focus-workspace "chat"; }
                 Mod+Backspace       { switch-preset-column-width; }
+                Mod+Tab             { toggle-overview; }
                 Mod+C               { center-column; }
                 Mod+T               { toggle-column-tabbed-display; }
                 Mod+Ctrl+F          { fullscreen-window; }

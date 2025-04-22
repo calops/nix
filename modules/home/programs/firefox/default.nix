@@ -36,6 +36,10 @@ in
             "browser.ml.chat.provider" = "https://gemini.google.com";
             "browser.tabs.groups.enabled" = true;
             "browser.uidensity" = 1;
+            "browser.urlbar.resultmenu.keyboardAccessible" = false;
+            "devtools.chrome.enabled" = true;
+            "devtools.debugger.remote-enabled" = true;
+            "devtools.toolbox.host" = "right";
             "sidebar.revamp.round-content-area" = true;
             "sidebar.verticalTabs" = true;
             "sidebar.visibility" = "always-show";
@@ -75,7 +79,10 @@ in
       };
     };
 
-    stylix.targets.firefox.enable = false;
+    stylix.targets.firefox.profileNames = [
+      "default"
+      "gw"
+    ];
 
     xdg.configFile."tridactyl/tridactylrc".text =
       # vim

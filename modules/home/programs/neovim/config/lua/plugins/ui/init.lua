@@ -46,6 +46,7 @@ return {
 		"folke/noice.nvim",
 		lazy = false,
 		keys = {
+			{ "K", function() require("noice.lsp").hover() end, desc = "Show documentation" },
 			{ "<leader><leader>", ":noh<CR>", desc = "Hide search highlights" },
 		},
 		opts = {

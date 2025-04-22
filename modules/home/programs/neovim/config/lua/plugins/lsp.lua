@@ -9,7 +9,6 @@ return {
 			"williamboman/mason-lspconfig.nvim",
 		},
 		keys = {
-			{ "K", require("noice.lsp").hover, desc = "Show documentation" },
 			{ "H", function() vim.diagnostic.open_float { border = "rounded" } end, desc = "Show diagnostics" },
 			{ "<C-k>", vim.lsp.buf.signature_help, desc = "Interactive signature help" },
 			{ "<space>n", vim.lsp.buf.rename, desc = "Interactive rename" },
@@ -53,6 +52,7 @@ return {
 			}
 		end,
 	},
+
 	{
 		"folke/lazydev.nvim",
 		ft = "lua",

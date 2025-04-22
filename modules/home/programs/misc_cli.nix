@@ -7,7 +7,7 @@
 {
   config = lib.mkIf config.my.roles.terminal.enable {
     home.packages = [
-      pkgs.megatools
+      pkgs.megacmd
       pkgs.ast-grep
       pkgs.choose
       pkgs.du-dust

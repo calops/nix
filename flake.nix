@@ -5,6 +5,7 @@
     # Upstream nixpkgs
     # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs.follows = "nightly-tools/nixpkgs";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
 
     # Nightly versions of various packages, all cached
     nightly-tools.url = "github:calops/nightly-tools";
