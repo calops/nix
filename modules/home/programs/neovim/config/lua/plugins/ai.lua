@@ -43,6 +43,27 @@ return {
 		},
 	},
 
+	{
+		"olimorris/codecompanion.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		opts = {
+			adapters = {
+				gemini = function()
+					return require("codecompanion.adapters").extend("gemini", {
+						env = { api_key = [[cmd:op read "op://Private/Gemini API key/password"]] },
+						-- FIXME:
+						-- schema = { model = "gemini-2.5-pro-preview-03-25" },
+					})
+				end,
+			},
+			strategies = {
+				chat = { adapter = "gemini" },
+				inline = { adapter = "gemini" },
+				cmd = { adapter = "gemini" },
+			},
+		},
+	},
+
 	-- AI companion
 	{
 		"yetone/avante.nvim",
@@ -73,7 +94,10 @@ return {
 		---@type avante.Config
 		opts = {
 			provider = "copilot",
-			auto_suggestions_provider = "copilot",
+			auto_suggestions_provider = "gemini",
+			gemini = {
+				model = "gemini-2.5-pro-exp-03-25",
+			},
 			hints = { enabled = false },
 			windows = { ask = { start_insert = false } },
 			mappings = {
@@ -82,17 +106,18 @@ return {
 					insert = "<C-CR>",
 				},
 			},
-			system_prompt = function()
-				local hub = require("mcphub").get_hub_instance()
-				return hub and hub:get_active_servers_prompt() or ""
-			end,
-			custom_tools = function() return { require("mcphub.extensions.avante").mcp_tool() } end,
+			-- system_prompt = function()
+			-- 	local hub = require("mcphub").get_hub_instance()
+			-- 	return hub and hub:get_active_servers_prompt() or ""
+			-- end,
+			-- custom_tools = function() return { require("mcphub.extensions.avante").mcp_tool() } end,
 		},
 	},
 
 	-- Model Context Protocol
 	{
 		"ravitemer/mcphub.nvim",
+		enabled = true,
 		dependencies = { "nvim-lua/plenary.nvim" },
 		cmd = "MCPHub",
 		build = "bundled_build.lua",

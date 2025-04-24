@@ -16,7 +16,11 @@ return {
 			appearance = { use_nvim_cmp_as_default = true },
 			cmdline = { completion = { ghost_text = { enabled = false } } },
 			sources = {
-				default = { "avante", "lsp", "path", "snippets", "buffer", "lazydev" },
+				default = { "lsp", "path", "snippets", "buffer", "lazydev" },
+				per_filetype = {
+					codecompanion = { "codecompanion" },
+					AvanteInput = { "avante" },
+				},
 				providers = {
 					lazydev = {
 						name = "LazyDev",

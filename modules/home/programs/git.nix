@@ -47,9 +47,8 @@ in
       delta = {
         enable = true;
         options = {
-          side-by-side = true;
           line-numbers = true;
-          features = "catppuccin";
+          features = "catppuccin,sidebyside";
         };
       };
 
@@ -134,7 +133,6 @@ in
           file-decoration-style = "omit";
           file-style = "bold yellow";
           hunk-header-style = "omit";
-          line-numbers = true;
           line-numbers-left-format = "┃{nm:^5}";
           line-numbers-left-style = "#45475a";
           line-numbers-right-format = "┃{np:^5}";
@@ -149,8 +147,8 @@ in
           syntax-theme = "catppuccin";
         };
 
-        delta.nosidebyside = {
-          side-by-side = false;
+        delta.sidebyside = {
+          side-by-side = true;
         };
       };
     };

@@ -44,6 +44,7 @@ in
         pkgs.pyright # python
         pkgs.vtsls # typescript / javascript
         pkgs.fish-lsp
+        pkgs.kdePackages.qtdeclarative # for qmlls
         rustToolchain # rust
 
         # Tools
@@ -93,6 +94,14 @@ in
       # lua
       ''
         vim.g.lazydev_enabled = true
+
+        vim.lsp.config("qmlls", {
+          cmd = {
+            "qmlls",
+            "-I", "${config.programs.quickshell.package}/lib/qt-6/qml",
+            "-I", "${pkgs.kdePackages.qtdeclarative}/lib/qt-6/qml",
+          },
+        })
 
         vim.lsp.config("nixd", {
           settings = {

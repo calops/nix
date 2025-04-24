@@ -3,7 +3,6 @@
   config,
   nixosConfig ? null,
   pkgs,
-  inputs,
   ...
 }:
 let
@@ -151,6 +150,7 @@ in
         pkgs.wl-clipboard
         pkgs.libnotify
         pkgs.slack
+        pkgs.waypipe
       ]
       ++ (lib.lists.optionals (!pkgs.stdenv.isDarwin) [
         pkgs.google-chrome

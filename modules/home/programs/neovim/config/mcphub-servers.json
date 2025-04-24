@@ -1,14 +1,18 @@
 {
-  "nativeMCPServers": [
-    
-  ],
   "mcpServers": {
     "github": {
+      "command": "github-mcp-server",
       "disabled": true,
       "args": [
         "stdio"
-      ],
-      "command": "github-mcp-server"
+      ]
+    }
+  },
+  "nativeMCPServers": {
+    "mcphub": {
+      "disabled_tools": [
+        
+      ]
     }
   }
 }

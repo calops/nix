@@ -13,7 +13,6 @@ return {
 			{ "<C-k>", vim.lsp.buf.signature_help, desc = "Interactive signature help" },
 			{ "<space>n", vim.lsp.buf.rename, desc = "Interactive rename" },
 			{ "<space>F", vim.lsp.buf.format, desc = "Format code with LSP" },
-			{ "<space>a", vim.lsp.buf.code_action, desc = "Code actions" },
 			{
 				"<space>d",
 				function() vim.diagnostic.jump { count = 1, float = { border = "rounded" } } end,
@@ -49,8 +48,35 @@ return {
 				"lexical",
 				"elixirls",
 				"nextls",
+
+				-- QML
+				"qmlls",
 			}
 		end,
+	},
+
+	{
+		"rachartier/tiny-code-action.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		event = "LspAttach",
+		keys = {
+			{
+				"<space>a",
+				function() require("tiny-code-action").code_action {} end,
+				desc = "Code actions",
+			},
+		},
+		opts = {
+			backend = "delta",
+			picker = "snacks",
+			backend_opts = {
+				delta = {
+					args = {
+						"--features=catppuccin",
+					},
+				},
+			},
+		},
 	},
 
 	{
@@ -75,6 +101,7 @@ return {
 		"mrcjkb/rustaceanvim",
 		ft = "rust",
 		init = function()
+			local test = "te"
 			vim.g.rustaceanvim = {
 				tools = { inlay_hints = { auto = false } },
 				server = {
