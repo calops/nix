@@ -52,6 +52,10 @@ return {
 				-- QML
 				"qmlls",
 			}
+
+			vim.lsp.config("*", {
+				on_attach = function(_, bufnr) vim.lsp.document_color.enable(true, bufnr, { style = "virtual" }) end,
+			})
 		end,
 	},
 

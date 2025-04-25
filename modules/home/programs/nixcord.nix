@@ -7,14 +7,14 @@
 }:
 {
   imports = [
-    inputs.nixcord.homeManagerModules.nixcord
+    inputs.nixcord.homeModules.nixcord
   ];
 
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.nixcord = {
       # FIXME:
-      enable = true;
-      vesktop.enable = true;
+      enable = false;
+      vesktop.enable = false;
       config = {
         themeLinks = [ "https://catppuccin.github.io/discord/dist/catppuccin-mocha.theme.css" ];
         frameless = true;
