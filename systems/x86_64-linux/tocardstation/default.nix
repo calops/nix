@@ -64,6 +64,11 @@
         device = "/dev/disk/by-uuid/405E8B6F5E8B5C92";
         fsType = "ntfs";
       };
+      "/mnt/windows" = {
+        inherit options;
+        device = "/dev/disk/by-uuid/606EA0BB6EA08AFC";
+        fsType = "ntfs";
+      };
       "/".options = options;
     };
 

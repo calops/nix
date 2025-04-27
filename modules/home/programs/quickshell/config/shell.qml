@@ -1,27 +1,51 @@
 import Quickshell
 import QtQuick
 
-Scope {
-    Variants {
-        model: Quickshell.screens
+ShellRoot {
+    ReloadPopup {}
+    Scope {
+        Variants {
+            model: Quickshell.screens
 
-        PanelWindow {
-            property var modelData
-            screen: modelData
-            color: "transparent"
+            PanelWindow {
+                id: bar
+                color: "transparent"
 
-            anchors {
-                top: true
-                bottom: true
-                right: true
-            }
+                property var modelData
+                screen: modelData
 
-            height: 30
+                height: modelData.height
+                width: 56
 
-            Text {
-                color: "white"
-                anchors.centerIn: parent
-                text: "test"
+                anchors {
+                    top: true
+                    right: true
+                }
+
+                Rectangle {
+                    width: parent.width
+                    height: parent.height
+
+                    gradient: Gradient {
+                        orientation: Gradient.Horizontal
+
+                        GradientStop {
+                            position: 0.0
+                            color: Palette.yolo("red", 0.5)
+                        }
+
+                        GradientStop {
+                            position: 1.0
+                            color: Palette.alpha("base", 0.5)
+                        }
+                    }
+                }
+
+                Text {
+                    color: "white"
+                    anchors.centerIn: parent
+                    text: "test"
+                }
             }
         }
     }

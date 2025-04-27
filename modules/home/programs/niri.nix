@@ -31,6 +31,7 @@ in
             hotkey-overlay
             prefer-no-csd
             animations { slowdown 1.000000; }
+            overview { zoom 0.25; }
 
             input {
                 mouse { accel-speed 0.000000; }

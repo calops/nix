@@ -82,8 +82,7 @@
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    quickshell.url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-    quickshell.inputs.nixpkgs.follows = "nixpkgs";
+    quickshell.follows = "nightly-tools/quickshell";
   };
 
   outputs =

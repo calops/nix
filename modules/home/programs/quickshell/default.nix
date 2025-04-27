@@ -2,11 +2,10 @@
   pkgs,
   config,
   lib,
-  inputs,
   ...
 }:
 let
-  package = inputs.quickshell.packages.${pkgs.system}.quickshell.override {
+  package = pkgs.nightly.quickshell.override {
     withJemalloc = true;
     withQtSvg = true;
     withWayland = true;
