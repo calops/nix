@@ -1,6 +1,8 @@
 import Quickshell
 import QtQuick
 
+import "widgets"
+
 ShellRoot {
     ReloadPopup {}
     Scope {
@@ -9,12 +11,12 @@ ShellRoot {
 
             PanelWindow {
                 id: bar
-                color: "transparent"
 
                 property var modelData
                 screen: modelData
 
-                height: modelData.height
+                color: "transparent"
+                height: screen.height
                 width: 56
 
                 anchors {
@@ -22,29 +24,16 @@ ShellRoot {
                     right: true
                 }
 
-                Rectangle {
-                    width: parent.width
-                    height: parent.height
+                Backdrop {}
 
-                    gradient: Gradient {
-                        orientation: Gradient.Horizontal
-
-                        GradientStop {
-                            position: 0.0
-                            color: Palette.yolo("red", 0.5)
-                        }
-
-                        GradientStop {
-                            position: 1.0
-                            color: Palette.alpha("base", 0.5)
-                        }
-                    }
+                Workspaces {
+                    x: parent.width / 2 - width / 2
+                    y: parent.height / 2 - height / 2
                 }
 
-                Text {
-                    color: "white"
-                    anchors.centerIn: parent
-                    text: "test"
+                Time {
+                    x: parent.width / 2 - width / 2
+                    y: parent.height - height - 10
                 }
             }
         }

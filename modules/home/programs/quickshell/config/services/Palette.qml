@@ -9,7 +9,7 @@ Singleton {
         red: "#f38ba8";
     }
 
-    property var yolo: function (colorSlug, alpha) {
+    property var alpha: function (colorSlug, alpha) {
         var color = colors[colorSlug];
         var r = parseInt(color.slice(1, 3), 16);
         var g = parseInt(color.slice(3, 5), 16);

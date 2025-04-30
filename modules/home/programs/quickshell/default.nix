@@ -4,22 +4,12 @@
   lib,
   ...
 }:
-let
-  package = pkgs.nightly.quickshell.override {
-    withJemalloc = true;
-    withQtSvg = true;
-    withWayland = true;
-    withX11 = true;
-    withPipewire = true;
-    withPam = true;
-  };
-in
 {
   options.programs.quickshell = {
     enable = lib.mkEnableOption "Enable quickshell";
     package = lib.mkOption {
       type = lib.types.package;
-      default = package;
+      default = pkgs.nightly.quickshell;
       description = ''
         The quickshell package to use.
       '';

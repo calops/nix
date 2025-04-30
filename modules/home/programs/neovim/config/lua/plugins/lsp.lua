@@ -166,4 +166,9 @@ return {
 		cmd = "SQLua",
 		opts = {},
 	},
+
+	{
+		"jmbuhr/otter.nvim",
+		opts = {},
+	},
 }
