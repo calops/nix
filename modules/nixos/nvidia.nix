@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 {
   options.my.roles.nvidia.enable = lib.mkEnableOption "Nvidia support";
 
@@ -6,11 +11,12 @@
     services.xserver.videoDrivers = [ "nvidia" ];
     boot.kernelParams = [ "nvidia.NVreg_PreserveVideoMemoryAllocations=1" ];
 
+    hardware.graphics.extraPackages = [ pkgs.nvidia-vaapi-driver ];
     hardware.nvidia = {
       modesetting.enable = true; # Enable modesetting driver
       powerManagement.enable = true; # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
       powerManagement.finegrained = false; # Fine-grained power management. Turns off GPU when not in use.
-      open = false; # Open-source drivers
+      open = true; # Open-source kernel drivers
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
