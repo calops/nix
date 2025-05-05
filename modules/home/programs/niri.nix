@@ -174,7 +174,7 @@ in
             spawn-at-startup "swww-daemon"
             spawn-at-startup "swww" "img" "${wallpaper}"
             spawn-at-startup "${lib.getExe config.programs.firefox.package}"
-            spawn-at-startup "sh" "-c" "sleep 1 && ${lib.getExe pkgs.slack}"
+            // spawn-at-startup "sh" "-c" "sleep 1 && ${lib.getExe pkgs.slack}"
             spawn-at-startup "${lib.getExe config.programs.element.package}"
 
             window-rule {
