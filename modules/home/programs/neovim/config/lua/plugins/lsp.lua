@@ -5,8 +5,8 @@ return {
 		"neovim/nvim-lspconfig",
 		event = "BufRead",
 		dependencies = {
-			"williamboman/mason.nvim",
-			"williamboman/mason-lspconfig.nvim",
+			"mason-org/mason.nvim",
+			"mason-org/mason-lspconfig.nvim",
 		},
 		keys = {
 			{ "H", function() vim.diagnostic.open_float { border = "rounded" } end, desc = "Show diagnostics" },
@@ -43,11 +43,6 @@ return {
 				-- Nix
 				"nil_ls",
 				"nixd",
-
-				-- Elixir
-				"lexical",
-				"elixirls",
-				"nextls",
 
 				-- QML
 				"qmlls",
@@ -105,7 +100,6 @@ return {
 		"mrcjkb/rustaceanvim",
 		ft = "rust",
 		init = function()
-			local test = "te"
 			vim.g.rustaceanvim = {
 				tools = { inlay_hints = { auto = false } },
 				server = {
@@ -129,10 +123,7 @@ return {
 	-- Tests
 	{
 		"nvim-neotest/neotest",
-		dependencies = {
-			"nvim-neotest/nvim-nio",
-			"jfpedroza/neotest-elixir",
-		},
+		dependencies = { "nvim-neotest/nvim-nio" },
 		cmd = "Neotest",
 		keys = function()
 			utils.map {
@@ -154,7 +145,6 @@ return {
 			require("neotest").setup {
 				adapters = {
 					require("rustaceanvim.neotest"),
-					require("neotest-elixir"),
 				},
 			}
 		end,
