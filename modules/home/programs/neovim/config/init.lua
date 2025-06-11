@@ -87,8 +87,3 @@ require("lazy").setup {
 
 require("neovide")
 require("diagnostics")
-require("core.symbols").define_signs {
-	GitSignsAdd = { text = "▋", texthl = "GitSignsAdd", numhl = "" },
-	GitSignsChange = { text = "▋", texthl = "GitSignsChange", numhl = "" },
-	GitSignsDelete = { text = "▋", texthl = "GitSignsDelete", numhl = "" },
-}
