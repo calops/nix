@@ -56,11 +56,7 @@
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
 
     # App launcher
-    anyrun.url = "github:Kirottu/anyrun";
-    anyrun.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Nix fork with more up to date optimizations and features
-    lix.follows = "nightly-tools/lix";
+    anyrun.follows = "nightly-tools/anyrun";
 
     # Vencord settings module (discord mod)
     nixcord.url = "github:kaylorben/nixcord";
@@ -83,13 +79,18 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
     quickshell.follows = "nightly-tools/quickshell";
+
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
   };
 
   outputs =
     inputs:
     inputs.snowfall-lib.mkFlake {
       inherit inputs;
-      src = ./.;
+      src = builtins.path {
+        path = ./.;
+        name = "source";
+      };
       snowfall.namespace = "my";
       channels-config.allowUnfree = true;
       channels-config.allowBroken = true; # for _1password-gui on darwin

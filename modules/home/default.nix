@@ -6,7 +6,7 @@
 {
   imports = [
     ../common
-    inputs.stylix.homeManagerModules.stylix
+    inputs.stylix.homeModules.stylix
     inputs.nix-index-database.hmModules.nix-index
   ];
 

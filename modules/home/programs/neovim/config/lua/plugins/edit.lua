@@ -110,6 +110,13 @@ return {
 			},
 		},
 	},
+	-- Experimental
+	{
+		"A7Lavinraj/fyler.nvim",
+		lazy = false,
+		dependencies = { "echasnovski/mini.icons" },
+		opts = {},
+	},
 	-- Move stuff around
 	{
 		"echasnovski/mini.move",

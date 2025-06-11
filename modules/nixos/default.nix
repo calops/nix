@@ -6,11 +6,19 @@
   ...
 }:
 {
-  imports = [
-    ../common
-    inputs.stylix.nixosModules.stylix
-    inputs.madness.nixosModules.madness
-  ] ++ lib.snowfall.fs.get-non-default-nix-files ./.;
+  imports =
+    [
+      ../common
+      inputs.stylix.nixosModules.stylix
+      inputs.madness.nixosModules.madness
+      inputs.determinate.nixosModules.default
+    ]
+    ++ (lib.snowfall.fs.get-non-default-nix-files (
+      builtins.path {
+        path = ./.;
+        name = "source";
+      }
+    ));
 
   options = {
     my.configDir = lib.mkOption {

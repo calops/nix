@@ -49,10 +49,9 @@
   ];
 
   config = {
-    programs.home-manager.enable = true;
     home.stateVersion = "25.05";
-    home.sessionVariables.NH_FLAKE = config.my.configDir;
 
+    programs.home-manager.enable = true;
     programs.gpg.enable = true;
     programs.dircolors.enable = true;
 
@@ -63,6 +62,11 @@
       tray = "auto";
     };
 
+    home.sessionVariables = {
+      NH_FLAKE = config.my.configDir;
+      # Determinate nix removes flakes and command from experimental features, which NH checks for
+      NH_NO_CHECKS = "1";
+    };
     programs.nh = lib.mkIf (config.my.configType == "standalone") {
       enable = true;
       package = pkgs.nightly.nh;

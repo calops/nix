@@ -26,9 +26,9 @@
     systemd.user.services.niri-flake-polkit.enable = false;
     security.soteria.enable = true;
 
-    # Display manager
-    services.xserver = {
-      enable = true;
+    # Disply manager
+    services = {
+      xserver.enable = true;
       displayManager.gdm.enable = true;
       desktopManager.gnome.enable = true;
     };

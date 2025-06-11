@@ -9,6 +9,7 @@
     "https://anyrun.cachix.org"
     "https://niri.cachix.org"
     "https://ags.cachix.org"
+    "https://install.determinate.systems"
   ];
 
   trustedPublicKeys = [
@@ -21,5 +22,6 @@
     "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
     "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
     "ags.cachix.org-1:naAvMrz0CuYqeyGNyLgE010iUiuf/qx6kYrUv3NwAJ8="
+    "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
   ];
 }

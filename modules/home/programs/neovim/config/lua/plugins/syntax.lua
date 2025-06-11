@@ -2,8 +2,10 @@ return {
 	-- Universal language parser
 	{
 		"nvim-treesitter/nvim-treesitter",
+		-- The new main branch removed a bunch of features for some reason so here we are
+		branch = "master",
 		event = "BufRead",
-		build = function() vim.cmd("TSUpdate") end,
+		build = ":TSUpdate",
 		dependencies = {
 			{ "nvim-treesitter/nvim-treesitter-textobjects" },
 		},
@@ -56,6 +58,31 @@ return {
 			}
 		end,
 	},
+	-- {
+	-- 	"MeanderingProgrammer/treesitter-modules.nvim",
+	-- 	dependencies = { "nvim-treesitter/nvim-treesitter" },
+	-- 	opts = {
+	-- 		ensure_installed = { "json", "markdown", "markdown_inline", "regex" },
+	-- 		highlight = {
+	-- 			enable = true,
+	-- 			additional_vim_regex_highlighting = false,
+	-- 		},
+	-- 		incremental_selection = {
+	-- 			enable = false,
+	-- 			disable = false,
+	-- 			keymaps = {
+	-- 				init_selection = "gnn",
+	-- 				node_incremental = "grn",
+	-- 				scope_incremental = "grc",
+	-- 				node_decremental = "grm",
+	-- 			},
+	-- 		},
+	-- 		indent = {
+	-- 			enable = false,
+	-- 			disable = false,
+	-- 		},
+	-- 	},
+	-- },
 	-- Show sticky context for off-screen scope beginnings
 	{
 		"nvim-treesitter/nvim-treesitter-context",
