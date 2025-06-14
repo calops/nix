@@ -48,6 +48,7 @@
       };
     };
 
+    boot.kernelPackages = pkgs.linuxPackages_6_12;
     boot.kernel.sysctl = {
       "fs.inotify.max_user_watches" = 100000;
       "fs.inotify.max_queued_events" = 100000;

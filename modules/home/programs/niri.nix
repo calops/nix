@@ -80,7 +80,7 @@ in
 
                 tab-indicator {
                   corner-radius 5
-                  position "top"
+                  position "left"
                 }
 
                 preset-column-widths {

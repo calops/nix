@@ -40,6 +40,29 @@ return {
 			substitude_command_name = "S",
 		},
 	},
+	-- Increment/decrement values
+	{
+		"monaqa/dial.nvim",
+		keys = {
+			{ "<C-a>", "<Plug>(dial-increment)", desc = "Increment number", mode = { "n", "x", "i" } },
+			{ "<C-x>", "<Plug>(dial-decrement)", desc = "Decrement number", mode = { "n", "x", "i" } },
+		},
+		config = function()
+			local augend = require("dial.augend")
+			require("dial.config").augends:register_group {
+				default = {
+					augend.constant.alias.bool,
+					augend.date.alias["%d/%m/%Y"],
+					augend.date.alias["%Y-%m-%d"],
+					augend.integer.alias.decimal_int,
+					augend.integer.alias.hex,
+					augend.integer.alias.octal,
+					augend.integer.alias.binary,
+					augend.semver.alias.semver,
+				},
+			}
+		end,
+	},
 	-- Debug print statements
 	{
 		"Goose97/timber.nvim",

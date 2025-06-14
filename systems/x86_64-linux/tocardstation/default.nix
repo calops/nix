@@ -16,7 +16,7 @@
 
   my.configDir = "/home/calops/nix";
 
-  nix.settings.cores = 30; # keep two cores for the system
+  nix.settings.cores = 22; # keep two cores for the system
 
   my.roles = {
     graphical.enable = true;
@@ -37,40 +37,32 @@
   services.solaar.enable = true;
 
   boot = {
-    initrd.luks.devices.rootDrive.device = "/dev/disk/by-uuid/ab146bd7-2e99-4aa7-a115-040df4acc43d";
+    # initrd.luks.devices.rootDrive.device = "/dev/disk/by-uuid/ab146bd7-2e99-4aa7-a115-040df4acc43d";
     supportedFilesystems = [ "ntfs" ];
   };
 
-  fileSystems =
-    let
-      options = [
-        "noatime"
-        "nodiratime"
-      ];
-    in
-    {
-      "/mnt/stuff" = {
-        inherit options;
-        device = "/dev/disk/by-uuid/BAC095A2C0956583";
-        fsType = "ntfs";
-      };
-      "/mnt/games" = {
-        inherit options;
-        device = "/dev/disk/by-uuid/E084CC7984CC5426";
-        fsType = "ntfs";
-      };
-      "/mnt/data" = {
-        inherit options;
-        device = "/dev/disk/by-uuid/405E8B6F5E8B5C92";
-        fsType = "ntfs";
-      };
-      "/mnt/windows" = {
-        inherit options;
-        device = "/dev/disk/by-uuid/606EA0BB6EA08AFC";
-        fsType = "ntfs";
-      };
-      "/".options = options;
+  fileSystems = {
+    "/mnt/stuff" = {
+      device = "/dev/disk/by-uuid/BAC095A2C0956583";
+      fsType = "ntfs";
     };
+    "/mnt/games" = {
+      device = "/dev/disk/by-uuid/E084CC7984CC5426";
+      fsType = "ntfs";
+    };
+    "/mnt/data" = {
+      device = "/dev/disk/by-uuid/405E8B6F5E8B5C92";
+      fsType = "ntfs";
+    };
+    "/mnt/windows" = {
+      device = "/dev/disk/by-uuid/606EA0BB6EA08AFC";
+      fsType = "ntfs";
+    };
+    "/".options = [
+      "noatime"
+      "nodiratime"
+    ];
+  };
 
   users.users.calops = {
     isNormalUser = true;
@@ -93,12 +85,12 @@
   ];
 
   # Virtualisation
-  virtualisation.waydroid.enable = true;
-  virtualisation.virtualbox = {
-    host.enable = true;
-    host.enableExtensionPack = true;
-  };
-  boot.blacklistedKernelModules = [ "kvm-intel" ]; # needed for virtualbox
+  # virtualisation.waydroid.enable = true;
+  # virtualisation.virtualbox = {
+  #   host.enable = true;
+  #   host.enableExtensionPack = true;
+  # };
+  # boot.blacklistedKernelModules = [ "kvm-intel" ]; # needed for virtualbox
 
   # Disks configuration
   disko.devices.disk.main = {
