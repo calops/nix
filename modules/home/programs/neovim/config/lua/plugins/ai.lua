@@ -51,8 +51,6 @@ return {
 				gemini = function()
 					return require("codecompanion.adapters").extend("gemini", {
 						env = { api_key = [[cmd:op read "op://Private/Gemini API key/password"]] },
-						-- FIXME:
-						-- schema = { model = "gemini-2.5-pro-preview-03-25" },
 					})
 				end,
 			},
@@ -95,8 +93,10 @@ return {
 		opts = {
 			provider = "copilot",
 			auto_suggestions_provider = "gemini",
-			gemini = {
-				model = "gemini-2.5-pro-exp-03-25",
+			providers = {
+				gemini = {
+					model = "gemini-2.5-pro-exp-03-25",
+				},
 			},
 			hints = { enabled = false },
 			windows = { ask = { start_insert = false } },

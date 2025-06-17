@@ -53,5 +53,7 @@
           };
         };
     };
+
+    stylix.targets.neovide.enable = false;
   };
 }
