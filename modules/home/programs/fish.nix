@@ -6,7 +6,7 @@
   ...
 }:
 let
-  palette = config.my.colors.palette.withoutHashtag;
+  palette = config.my.colors.palette.asHex;
 in
 {
   config = lib.mkIf config.my.roles.terminal.enable {

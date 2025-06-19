@@ -13,7 +13,7 @@
   config = {
     stylix =
       let
-        palette = config.my.colors.palette.withoutHashtag;
+        palette = config.my.colors.palette.asHex;
       in
       {
         enable = true;

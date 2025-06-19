@@ -13,8 +13,8 @@
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.nixcord = {
       # FIXME:
-      enable = false;
-      vesktop.enable = false;
+      enable = true;
+      vesktop.enable = true;
       config = {
         themeLinks = [ "https://catppuccin.github.io/discord/dist/catppuccin-mocha.theme.css" ];
         frameless = true;

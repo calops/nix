@@ -8,7 +8,7 @@
 }:
 let
   cfg = config.my.roles.graphical;
-  palette = config.my.colors.palette.withHashtag;
+  palette = config.my.colors.palette.asHexWithHashtag;
   font = config.my.roles.graphical.fonts.monospace.name;
   elementPkg = pkgs.element-desktop;
 in

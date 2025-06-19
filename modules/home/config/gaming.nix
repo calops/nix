@@ -6,7 +6,7 @@
   ...
 }:
 let
-  palette = config.my.colors.palette.withoutHashtag;
+  palette = config.my.colors.palette.asHex;
 in
 {
   options.my.roles.gaming.enable = lib.mkOption {

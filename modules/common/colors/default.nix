@@ -73,17 +73,33 @@ in
     };
 
     palette = {
-      withHashtag = lib.mkOption {
+      asHexWithHashtag = lib.mkOption {
         type = my.types.palette;
         description = "Color palette";
       };
-      withoutHashtag = lib.mkOption {
+      asHex = lib.mkOption {
         type = my.types.palette;
         description = "Color palette";
       };
-      with0x = lib.mkOption {
+      asHexWith0x = lib.mkOption {
         type = my.types.palette;
         description = "Color palette";
+      };
+      asRgb = lib.mkOption {
+        type = my.types.palette;
+        description = "Color palette in RGB format";
+      };
+      asRgbInt = lib.mkOption {
+        type = my.types.palette;
+        description = "Color palette in RGB integer format";
+      };
+      asRgbFloat = lib.mkOption {
+        type = my.types.palette;
+        description = "Color palette in RGB float format";
+      };
+      asRgbFloatTuple = lib.mkOption {
+        type = my.types.palette;
+        description = "Color palette in RGB float tuple format";
       };
       asCss = lib.mkOption {
         type = lib.types.path;
@@ -106,15 +122,25 @@ in
 
   config = {
     my.colors.palette = rec {
-      withHashtag = import ./${config.my.colors.scheme}/${config.my.colors.background}.nix;
-      withoutHashtag = builtins.mapAttrs (name: value: builtins.substring 1 (-1) value) withHashtag;
-      with0x = builtins.mapAttrs (name: value: "0x${value}") withoutHashtag;
+      asHexWithHashtag = import ./${config.my.colors.scheme}/${config.my.colors.background}.nix;
+      asHex = builtins.mapAttrs (name: value: builtins.substring 1 (-1) value) asHexWithHashtag;
+      asHexWith0x = builtins.mapAttrs (name: value: "0x${value}") asHex;
+
+      asRgb = builtins.mapAttrs (name: value: [
+        (builtins.substring 1 (-1) value)
+        (builtins.substring 3 (-1) value)
+        (builtins.substring 5 (-1) value)
+      ]) asHexWithHashtag;
+
+      asRgbInt = builtins.mapAttrs (name: value: builtins.map (hex: lib.fromHexString hex) value) asRgb;
+      asRgbFloat = builtins.mapAttrs (name: value: builtins.map (int: int / 255.0) value) asRgbInt;
+      asRgbFloatTuple = builtins.mapAttrs (name: value: (lib.concatStringsSep ", " value)) asRgbFloat;
 
       asCss = pkgs.writeText "colors.css" ''
         :root {
         ${lib.concatStringsSep "\n" (
           builtins.attrValues (
-            builtins.mapAttrs (name: value: "  --palette-" + name + ": " + value + ";") withHashtag
+            builtins.mapAttrs (name: value: "  --palette-" + name + ": " + value + ";") asHexWithHashtag
           )
         )}
         }
@@ -123,14 +149,18 @@ in
       asGtkCss = pkgs.writeText "colors.gtk.css" (
         lib.concatStringsSep "\n" (
           builtins.attrValues (
-            builtins.mapAttrs (name: value: "@define-color palette-" + name + " " + value + ";") withHashtag
+            builtins.mapAttrs (
+              name: value: "@define-color palette-" + name + " " + value + ";"
+            ) asHexWithHashtag
           )
         )
       );
 
       asScss = pkgs.writeText "colors.scss" ''
         ${lib.concatStringsSep "\n" (
-          builtins.attrValues (builtins.mapAttrs (name: value: "$" + name + ": " + value + ";") withHashtag)
+          builtins.attrValues (
+            builtins.mapAttrs (name: value: "$" + name + ": " + value + ";") asHexWithHashtag
+          )
         )}
       '';
 
@@ -138,7 +168,7 @@ in
         return {
           ${lib.concatStringsSep "\n" (
             builtins.attrValues (
-              builtins.mapAttrs (name: value: "  " + name + " = \"" + value + "\",") withHashtag
+              builtins.mapAttrs (name: value: "  " + name + " = \"" + value + "\",") asHexWithHashtag
             )
           )}
         }

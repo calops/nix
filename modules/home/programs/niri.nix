@@ -7,7 +7,7 @@
   ...
 }:
 let
-  palette = config.my.colors.palette.withHashtag;
+  palette = config.my.colors.palette.asHexWithHashtag;
   wallpaper = config.stylix.image;
   lock = lib.getExe config.programs.swaylock.package;
   niri = lib.getExe config.programs.niri.package;
