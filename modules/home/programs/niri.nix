@@ -162,6 +162,9 @@ in
                 XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "lower";       }
                 XF86AudioMute        allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
                 XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "raise";       }
+                XF86AudioNext        allow-when-locked=true { spawn "swayosd-client" "--playerctl"     "next";        }
+                XF86AudioPrev        allow-when-locked=true { spawn "swayosd-client" "--playerctl"     "prev";        }
+                XF86AudioPlay        allow-when-locked=true { spawn "swayosd-client" "--playerctl"     "play-pause";  }
             }
 
             workspace "web"
@@ -174,7 +177,6 @@ in
             spawn-at-startup "swww-daemon"
             spawn-at-startup "swww" "img" "${wallpaper}"
             spawn-at-startup "${lib.getExe config.programs.firefox.package}"
-            // spawn-at-startup "sh" "-c" "sleep 1 && ${lib.getExe pkgs.slack}"
             spawn-at-startup "${lib.getExe config.programs.element.package}"
 
             window-rule {
