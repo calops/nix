@@ -150,13 +150,7 @@ return {
 			},
 		},
 	},
-	-- Align stuff
-	{
-		"echasnovski/mini.align",
-		event = "VeryLazy",
-		config = true,
-	},
-	-- Move around
+	-- Move around stuff
 	{
 		"folke/flash.nvim",
 		opts = {
@@ -170,19 +164,27 @@ return {
 			{ "f", function() require("flash").jump() end, desc = "Jump to target", mode = { "n", "x", "o" } },
 		},
 	},
+	-- Align stuff
+	{
+		"echasnovski/mini.align",
+		event = "VeryLazy",
+		config = true,
+	},
 	-- Improved yanking
 	{
 		"gbprod/yanky.nvim",
 		dependencies = { "kkharji/sqlite.lua" },
 		event = "VeryLazy",
-		opts = { ring = {
-			storage = "sqlite",
-			cancel_event = "move",
-		} },
 		cmd = { "YankyRingHistory" },
 		keys = {
 			{ "<C-y>", "<cmd>YankyRingHistory<cr>", desc = "Yank history" },
 			{ "<leader>y", '"+y', desc = "Copy to system clipboard", mode = { "n", "v", "x" } },
+		},
+		opts = {
+			ring = {
+				storage = "sqlite",
+				cancel_event = "move",
+			},
 		},
 		init = function()
 			-- Remove trailing whitespace from visual block yanks

@@ -2,10 +2,15 @@
   lib,
   config,
   pkgs,
+  inputs,
   ...
 }:
 {
   options.my.roles.gaming.enable = lib.mkEnableOption "Enable gaming configuration";
+
+  imports = [
+    inputs.nix-gaming.nixosModules.pipewireLowLatency
+  ];
 
   config = lib.mkIf config.my.roles.gaming.enable {
     programs.gamemode.enable = true;
@@ -36,5 +41,7 @@
       package = pkgs.nightly.openrgb;
       motherboard = "intel";
     };
+
+    services.pipewire.lowLatency.enable = true;
   };
 }

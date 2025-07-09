@@ -3,6 +3,7 @@
   pkgs,
   config,
   nixosConfig ? null,
+  inputs,
   ...
 }:
 let
@@ -22,6 +23,7 @@ in
       pkgs.steam-run
       pkgs.wineWowPackages.waylandFull
       pkgs.winetricks
+      inputs.nix-gaming.packages.${pkgs.system}.star-citizen
     ];
 
     programs.mangohud = {

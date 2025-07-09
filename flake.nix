@@ -81,6 +81,8 @@
     quickshell.follows = "nightly-tools/quickshell";
 
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
+
+    nix-gaming.url = "github:fufexan/nix-gaming";
   };
 
   outputs =

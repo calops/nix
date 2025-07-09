@@ -46,10 +46,10 @@
       device = "/dev/disk/by-uuid/BAC095A2C0956583";
       fsType = "ntfs";
     };
-    "/mnt/games" = {
-      device = "/dev/disk/by-uuid/E084CC7984CC5426";
-      fsType = "ntfs";
-    };
+    # "/mnt/games" = {
+    #   device = "/dev/disk/by-uuid/E084CC7984CC5426";
+    #   fsType = "ntfs";
+    # };
     "/mnt/data" = {
       device = "/dev/disk/by-uuid/405E8B6F5E8B5C92";
       fsType = "ntfs";
