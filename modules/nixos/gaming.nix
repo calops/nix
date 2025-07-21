@@ -38,7 +38,6 @@
     # OpenRGB
     services.hardware.openrgb = {
       enable = true;
-      package = pkgs.nightly.openrgb;
       motherboard = "intel";
     };
 

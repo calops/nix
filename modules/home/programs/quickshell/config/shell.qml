@@ -21,7 +21,7 @@ ShellRoot {
 
                 anchors {
                     top: true
-                    right: true
+                    left: true
                 }
 
                 Backdrop {}

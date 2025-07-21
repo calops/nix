@@ -27,6 +27,9 @@
     bluetooth.enable = true;
   };
 
+  # Last known kernel with working wifi driver
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   # SSD periodic trimming
   services.fstrim.enable = true;
 

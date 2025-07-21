@@ -48,7 +48,6 @@
       };
     };
 
-    boot.kernelPackages = pkgs.linuxPackages_6_12;
     boot.kernel.sysctl = {
       "fs.inotify.max_user_watches" = 100000;
       "fs.inotify.max_queued_events" = 100000;
@@ -97,10 +96,8 @@
     };
 
     programs._1password.enable = true;
-    programs._1password-gui = {
-      enable = true;
-      package = pkgs._1password-gui;
-    };
+    programs._1password-gui.enable = true;
+
     security.polkit.enable = true;
   };
 }
