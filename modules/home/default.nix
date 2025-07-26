@@ -7,7 +7,7 @@
   imports = [
     ../common
     inputs.stylix.homeModules.stylix
-    inputs.nix-index-database.hmModules.nix-index
+    inputs.nix-index-database.homeModules.nix-index
   ];
 
   config = {

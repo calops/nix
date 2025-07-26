@@ -4,6 +4,7 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		branch = "main",
 		lazy = false,
+		priority = 10001,
 		build = ":TSUpdate",
 		dependencies = {},
 		keys = {
@@ -44,8 +45,9 @@ return {
 	{
 		"MeanderingProgrammer/treesitter-modules.nvim",
 		dependencies = { "nvim-treesitter/nvim-treesitter" },
+		lazy = false,
 		opts = {
-			ensure_installed = { "json", "markdown", "markdown_inline", "regex" },
+			ensure_installed = { "vim", "lua", "json", "markdown", "markdown_inline", "regex" },
 			auto_install = true,
 			indent = { enable = true },
 			highlight = {
