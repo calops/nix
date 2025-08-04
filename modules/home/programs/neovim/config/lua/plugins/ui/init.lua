@@ -384,4 +384,6 @@ return {
 			file_types = { "markdown", "Avante", "codecompanion" },
 		},
 	},
+	-- Prevent nested neovim instances
+	{ "brianhuster/unnest.nvim" },
 }

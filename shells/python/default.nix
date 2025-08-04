@@ -8,9 +8,14 @@ inputs.devenv.lib.mkShell {
         languages.python = {
           enable = true;
           venv.enable = true;
+          uv.enable = true;
         };
 
-        packages = with pkgs.python3Packages; [ pip ];
+        packages = [
+          pkgs.python3Packages.pip
+          pkgs.ty # type checker
+          pkgs.ruff # linter
+        ];
       }
     )
   ];

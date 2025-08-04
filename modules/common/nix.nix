@@ -8,10 +8,6 @@ in
     extra-substituters = caches.substituters;
     extra-trusted-public-keys = caches.trustedPublicKeys;
 
-    # access-tokens = [
-    #   "TODO"
-    # ];
-
     experimental-features = [
       "flakes"
       "nix-command"
