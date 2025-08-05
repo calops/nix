@@ -57,7 +57,6 @@ return {
 				html = { "prettierd" },
 
 				lua = { "stylua" },
-				python = { "ruff_format" },
 				sh = { "shfmt" },
 				sql = { "sqlfluff" },
 			},

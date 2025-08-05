@@ -10,12 +10,11 @@
 
   programs.git.includes = [
     {
-      condition = "gitdir:~/sonio/";
+      condition = "gitdir:~/kiro/";
       contents = {
         user = {
           name = "Rémi Labeyrie";
-          email = "remi.labeyrie@sonio.ai";
-          # signingKey = "BC3E47212B5DA44E";
+          email = "remi.labeyrie-ext@kiro.bio";
         };
       };
     }

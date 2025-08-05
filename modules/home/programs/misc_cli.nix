@@ -11,12 +11,10 @@
       pkgs.ast-grep
       pkgs.choose
       pkgs.du-dust
-      pkgs.dysk
       pkgs.fclones
       pkgs.fd
       pkgs.rm-improved
       pkgs.sshfs
-      pkgs.xcp
       pkgs.gh
       pkgs.killall
       pkgs.unzip
@@ -25,7 +23,13 @@
       pkgs.pastel
       pkgs.jaq
       pkgs.devenv
-    ] ++ lib.optional (!pkgs.stdenv.isDarwin) pkgs.dtrx;
+    ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+      pkgs.dtrx
+      # TODO: move to general packages once darwin version is released
+      pkgs.dysk
+      # TODO: move to general packages once darwin version is released
+      pkgs.xcp
+    ];
 
     programs.nix-index-database.comma.enable = true;
     programs.nix-index = {

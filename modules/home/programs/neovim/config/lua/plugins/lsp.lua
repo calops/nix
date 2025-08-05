@@ -30,10 +30,6 @@ return {
 				-- Lua
 				"lua_ls",
 
-				-- Python
-				"ruff",
-				"pyright",
-
 				-- JavaScript/TypeScript
 				"vtsls",
 

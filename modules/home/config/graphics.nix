@@ -147,14 +147,14 @@ in
 
     home.packages =
       [
-        pkgs.wl-clipboard
         pkgs.libnotify
         pkgs.slack
-        pkgs.waypipe
       ]
       ++ (lib.lists.optionals (!pkgs.stdenv.isDarwin) [
         pkgs.google-chrome
         pkgs.rquickshare
+        pkgs.waypipe
+        pkgs.wl-clipboard
       ])
       ++ (
         if cfg.installAllFonts then

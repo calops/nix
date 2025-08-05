@@ -1,9 +1,11 @@
 { pkgs, ... }:
 {
-  my.configDir = /Users/rlabeyrie/nix;
+  my.configDir = /Users/remilabeyrie/nix;
 
-  users.users.rlabeyrie = {
-    home = "/Users/rlabeyrie";
+  system.primaryUser = "remilabeyrie";
+
+  users.users.remilabeyrie = {
+    home = "/Users/remilabeyrie";
     shell = pkgs.fish;
   };
 

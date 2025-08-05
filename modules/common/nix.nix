@@ -4,7 +4,7 @@ let
 in
 {
   nix.settings = {
-    lazy-trees = true;
+    # lazy-trees = true;
     extra-substituters = caches.substituters;
     extra-trusted-public-keys = caches.trustedPublicKeys;
 

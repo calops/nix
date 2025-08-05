@@ -35,6 +35,7 @@ in
             "browser.link.open_newwindow" = 3;
             "browser.ml.chat.provider" = "https://gemini.google.com";
             "browser.tabs.groups.enabled" = true;
+            "browser.tabs.groups.smart.enabled" = true;
             "browser.uidensity" = 1;
             "browser.urlbar.resultMenu.keyboardAccessible" = false;
             "devtools.chrome.enabled" = true;
@@ -64,11 +65,10 @@ in
             force = true;
           };
 
-          userChrome =
-            ''
-              @import url("file:///${config.my.colors.palette.asCss}");
-            ''
-            + builtins.readFile ./userChrome.css;
+          userChrome = ''
+            @import url("file:///${config.my.colors.palette.asCss}");
+          ''
+          + builtins.readFile ./userChrome.css;
         };
 
         gw = default // {

@@ -15,11 +15,10 @@ return {
 			vim.lsp.enable("copilot")
 		end,
 	},
-
 	{
 		"zbirenbaum/copilot.lua",
 		event = "VeryLazy",
-		enabled = true,
+		enabled = false,
 		opts = {
 			copilot_model = "gpt-4o-copilot",
 			suggestion = {
@@ -42,7 +41,6 @@ return {
 			},
 		},
 	},
-
 	{
 		"olimorris/codecompanion.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
@@ -125,5 +123,25 @@ return {
 			config = vim.fn.expand("~/.config/nvim/mcphub-servers.json"),
 			use_bundled_binary = true,
 		},
+	},
+	{
+		"Exafunction/windsurf.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		config = function()
+			require("codeium").setup {
+				enable_cmp_source = false,
+				virtual_text = {
+					enabled = true,
+					key_bindings = {
+						accept = "<M-CR>",
+						accept_word = "<M-w>",
+						accept_line = "<M-l>",
+						next = "<M-Right>",
+						prev = "<M-Left>",
+						clear = "<C-:>",
+					},
+				},
+			}
+		end,
 	},
 }

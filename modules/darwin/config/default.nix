@@ -16,16 +16,8 @@
   config = {
     system.stateVersion = 4;
 
-    nix = {
-      optimise.automatic = true;
-      gc = {
-        automatic = true;
-        interval = {
-          Day = 7;
-        };
-        options = "--delete-older-than 7d";
-      };
-    };
+    # Determinate nix manages itself
+    nix.enable = false;
 
     environment = {
       systemPackages = [
@@ -44,6 +36,9 @@
     programs.fish.enable = true;
     homebrew.enable = true;
     security.pam.services.sudo_local.touchIdAuth = true;
+
+    programs._1password.enable = true;
+    programs._1password-gui.enable = true;
 
     system.defaults = {
       dock = {

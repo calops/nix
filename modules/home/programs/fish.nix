@@ -34,7 +34,8 @@ in
         cc = "cargo check";
         rm = "rip";
         sd = "dev rust";
-        cp = "xcp";
+        # TODO: remove when xcp is fixed on darwin
+        # cp = "xcp";
         df = "dysk";
         du = "dust";
         rrm = "rm -rf";
