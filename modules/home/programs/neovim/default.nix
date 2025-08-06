@@ -75,6 +75,7 @@ in
           vim.g.is_nix = true
           vim.g.font_name = '${config.my.roles.graphical.fonts.monospace.name}'
           vim.g.gcc_bin_path = '${lib.getExe pkgs.gcc}'
+          vim.g.codeium_language_server_path = '${lib.getExe' pkgs.codeium "codeium_language_server"}'
           vim.g.sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.${
             if pkgs.stdenv.isDarwin then "dylib" else "so"
           }'

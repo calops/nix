@@ -130,6 +130,9 @@ return {
 		config = function()
 			require("codeium").setup {
 				enable_cmp_source = false,
+				tools = {
+					language_server = vim.g.codeium_language_server_path,
+				},
 				virtual_text = {
 					enabled = true,
 					key_bindings = {
