@@ -23,7 +23,9 @@
       pkgs.pastel
       pkgs.jaq
       pkgs.devenv
-    ] ++ lib.optionals (!pkgs.stdenv.isDarwin) [
+      pkgs.gemini-cli
+    ]
+    ++ lib.optionals (!pkgs.stdenv.isDarwin) [
       pkgs.dtrx
       # TODO: move to general packages once darwin version is released
       pkgs.dysk

@@ -1,17 +1,12 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }:
 {
   options.my.roles.ai.enable = lib.mkEnableOption "Enable AI tools";
 
   config = lib.mkIf config.my.roles.ai.enable {
-    home.packages = [
-      pkgs.gemini-cli
-    ];
-
     nix.settings = {
       extra-substituters = [
         "https://ai.cachix.org"

@@ -314,6 +314,7 @@ local lsp = {
 			if count > 1 then
 				text = text .. " ×" .. count
 			end
+			text = text .. " "
 
 			table.insert(servers, {
 				provider = text,

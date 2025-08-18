@@ -193,15 +193,13 @@ return {
 				{ "<leader>fi", picker("icons"), desc = "Icons and emojis" },
 				{ "<leader>fS", picker("projects"), desc = "Open session" },
 				{ "<leader>fp", picker("lazy"), desc = "Find plugin" },
-				{ "<leader>fe", function() Snacks.explorer.reveal() end, desc = "File explorer" },
+				{ "<leader>fe", picker("explorer"), desc = "File explorer" },
 				{ "<leader>fk", picker("keymaps"), desc = "Find keymap" },
 				{
 					"<leader>fy",
 					picker("lsp_symbols", { layout = { preset = "sidebar", preview = "main" } }),
 					desc = "Find symbols",
 				},
-				-- TODO:
-				-- { "<space>a", fzf("lsp_code_actions"), desc = "LSP code actions", mode = { "n", "x" } },
 			}
 		end,
 		init = function()
@@ -361,7 +359,6 @@ return {
 	-- Icons
 	{
 		"echasnovski/mini.icons",
-		opts = {},
 		lazy = true,
 		specs = {
 			{ "nvim-tree/nvim-web-devicons", enabled = false, optional = true },
@@ -375,6 +372,14 @@ return {
 				return package.loaded["nvim-web-devicons"]
 			end
 		end,
+		opts = {
+			filetype = {
+				python = { glyph = "" },
+				lua = { glyph = "" },
+				nix = { glyph = "" },
+				rust = { glyph = "" },
+			},
+		},
 	},
 	-- Markdown rendering
 	{
