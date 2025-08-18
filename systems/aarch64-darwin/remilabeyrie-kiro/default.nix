@@ -3,6 +3,7 @@
   my.configDir = /Users/remilabeyrie/nix;
 
   system.primaryUser = "remilabeyrie";
+  networking.hostName = "remilabeyrie-kiro";
 
   users.users.remilabeyrie = {
     home = "/Users/remilabeyrie";

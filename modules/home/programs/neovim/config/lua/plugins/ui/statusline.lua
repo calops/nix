@@ -303,10 +303,20 @@ local lsp = {
 		local servers = {}
 		local active_clients = map_to_names(self.active_clients)
 		local buffer_clients = map_to_names(vim.lsp.get_clients { bufnr = vim.api.nvim_get_current_buf() })
+		local counted_clients = {}
 
 		for _, client in ipairs(active_clients) do
+			counted_clients[client] = (counted_clients[client] or 0) + 1
+		end
+
+		for client, count in pairs(counted_clients) do
+			local text = client
+			if count > 1 then
+				text = text .. " ×" .. count
+			end
+
 			table.insert(servers, {
-				provider = client .. " ",
+				provider = text,
 				hl = vim.tbl_contains(buffer_clients, client) and colors.hl.CustomTablineLspActive
 					or colors.hl.CustomTablineLspInactive,
 				lite = true,

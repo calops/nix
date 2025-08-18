@@ -193,7 +193,7 @@ return {
 				{ "<leader>fi", picker("icons"), desc = "Icons and emojis" },
 				{ "<leader>fS", picker("projects"), desc = "Open session" },
 				{ "<leader>fp", picker("lazy"), desc = "Find plugin" },
-				{ "<leader>fe", picker("explorer"), desc = "File explorer" },
+				{ "<leader>fe", function() Snacks.explorer.reveal() end, desc = "File explorer" },
 				{ "<leader>fk", picker("keymaps"), desc = "Find keymap" },
 				{
 					"<leader>fy",

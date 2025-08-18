@@ -3,7 +3,7 @@ local utils = require("core.utils")
 return {
 	{
 		"neovim/nvim-lspconfig",
-		event = "BufRead",
+		event = "BufReadPre",
 		dependencies = {
 			"mason-org/mason.nvim",
 			"mason-org/mason-lspconfig.nvim",

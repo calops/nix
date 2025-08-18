@@ -38,7 +38,8 @@
     security.pam.services.sudo_local.touchIdAuth = true;
 
     programs._1password.enable = true;
-    programs._1password-gui.enable = true;
+    # Bugged, installed manually for now
+    # programs._1password-gui.enable = true;
 
     system.defaults = {
       dock = {
