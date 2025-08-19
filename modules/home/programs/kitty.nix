@@ -9,6 +9,7 @@ in
 {
   programs.kitty = {
     enable = cfg.enable && cfg.terminal == "kitty";
+
     settings = {
       font_size = cfg.fonts.sizes.terminal;
       font_family = cfg.fonts.monospace.name;
@@ -26,11 +27,14 @@ in
       show_hyperlink_targets = true;
       strip_trailing_spaces = "always";
       notify_on_cmd_finish = "invisible 15";
+      # Yes, I know it's a security risk, but it makes neovim unbearable through SSH otherwise
+      clipboard_control = "write-clipboard write-primary read-clipboard read-primary";
 
       "modify_font underline_position" = "+2";
       "modify_font underline_thickness" = "2px";
       "modify_font cell_width" = "${toString (cfg.fonts.sizes.terminalCell.width * 100)}%";
     };
+
     keybindings = {
       "ctrl+tab" = "no_op";
       "ctrl+shift+tab" = "no_op";

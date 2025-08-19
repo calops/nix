@@ -62,6 +62,7 @@ in
         pkgs.imagemagick
         pkgs.mermaid-cli
         pkgs.github-mcp-server
+        pkgs.ghostscript
       ];
 
       plugins = [
