@@ -5,7 +5,7 @@
   ...
 }:
 let
-  palette = config.my.colors.palette.asHexWithHashtag;
+  palette = config.my.colors.palette.asRgbIntTuple;
 in
 {
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
@@ -39,11 +39,11 @@ in
           }
 
           .control-center {
-            background-color: rgba(30, 30, 46, 0.8); /* palette.base */
+            background-color: rgba(${palette.base}, 0.8);
           }
 
           .notification {
-            background-color: ${palette.surface0};
+            background-color: rgb(${palette.surface0});
             box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.75);
           }
         '';

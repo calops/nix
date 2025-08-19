@@ -382,6 +382,7 @@ return {
 				gitattributes = { glyph = "" },
 				qml = { glyph = "" },
 				docker = { glyph = "" },
+				man = { glyph = "" },
 			},
 		},
 	},

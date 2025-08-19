@@ -85,13 +85,17 @@ in
         type = my.types.palette;
         description = "Color palette";
       };
-      asRgb = lib.mkOption {
+      asRgbHex = lib.mkOption {
         type = my.types.palette;
         description = "Color palette in RGB format";
       };
       asRgbInt = lib.mkOption {
         type = my.types.palette;
         description = "Color palette in RGB integer format";
+      };
+      asRgbIntTuple = lib.mkOption {
+        type = my.types.palette;
+        description = "Color palette in RGB integer tuple format";
       };
       asRgbFloat = lib.mkOption {
         type = my.types.palette;
@@ -126,15 +130,20 @@ in
       asHex = builtins.mapAttrs (name: value: builtins.substring 1 (-1) value) asHexWithHashtag;
       asHexWith0x = builtins.mapAttrs (name: value: "0x${value}") asHex;
 
-      asRgb = builtins.mapAttrs (name: value: [
-        (builtins.substring 1 (-1) value)
-        (builtins.substring 3 (-1) value)
-        (builtins.substring 5 (-1) value)
+      asRgbHex = builtins.mapAttrs (name: value: [
+        (builtins.substring 1 2 value)
+        (builtins.substring 3 2 value)
+        (builtins.substring 5 2 value)
       ]) asHexWithHashtag;
 
-      asRgbInt = builtins.mapAttrs (name: value: builtins.map (hex: lib.fromHexString hex) value) asRgb;
+      asRgbInt = builtins.mapAttrs (
+        name: value: builtins.map (hex: toString (lib.fromHexString hex)) value
+      ) asRgbHex;
+      asRgbIntTuple = builtins.mapAttrs (name: value: (builtins.concatStringsSep ", " value)) asRgbInt;
       asRgbFloat = builtins.mapAttrs (name: value: builtins.map (int: int / 255.0) value) asRgbInt;
-      asRgbFloatTuple = builtins.mapAttrs (name: value: (lib.concatStringsSep ", " value)) asRgbFloat;
+      asRgbFloatTuple = builtins.mapAttrs (
+        name: value: (builtins.concatStringsSep ", " value)
+      ) asRgbFloat;
 
       asCss = pkgs.writeText "colors.css" ''
         :root {
