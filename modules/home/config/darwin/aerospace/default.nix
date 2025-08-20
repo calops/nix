@@ -71,6 +71,7 @@
         cmd-backspace = "layout tiles horizontal vertical";
         cmd-equal = "layout accordion horizontal vertical";
         cmd-enter = "exec-and-forget ${lib.getExe config.programs.kitty.package}";
+        cmd-shift-s = "exec-and-forget ${lib.getExe' config.programs.kitty.package "kitten"} quick-access-terminal";
 
         cmd-left = "focus left";
         cmd-right = "focus right";

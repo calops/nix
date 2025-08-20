@@ -193,8 +193,12 @@ return {
 				{ "<leader>fi", picker("icons"), desc = "Icons and emojis" },
 				{ "<leader>fS", picker("projects"), desc = "Open session" },
 				{ "<leader>fp", picker("lazy"), desc = "Find plugin" },
-				{ "<leader>fe", picker("explorer", { follow_file = false }), desc = "File explorer" },
 				{ "<leader>fk", picker("keymaps"), desc = "Find keymap" },
+				{
+					"<leader>fe",
+					picker("explorer", { follow_file = false, hidden = true, ignored = true }),
+					desc = "File explorer",
+				},
 				{
 					"<leader>fy",
 					picker("lsp_symbols", { layout = { preset = "sidebar", preview = "main" } }),

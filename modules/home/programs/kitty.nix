@@ -9,6 +9,7 @@ in
 {
   programs.kitty = {
     enable = cfg.enable && cfg.terminal == "kitty";
+    enableGitIntegration = true;
 
     settings = {
       font_size = cfg.fonts.sizes.terminal;
@@ -48,4 +49,9 @@ in
       "ctrl+down" = "scroll_to_prompt 1";
     };
   };
+
+  xdg.configFile."kitty/quick-access-terminal.conf".text = ''
+    background_opacity 0.85
+    background_blur 60
+  '';
 }

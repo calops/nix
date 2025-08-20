@@ -56,6 +56,7 @@ in
         pkgs.sqlite
         pkgs.tree-sitter
         pkgs.luarocks
+        pkgs.luajit
         pkgs.hub
         pkgs.wget # for mason.nvim
         pkgs.pandoc # for devdocs.nvim
