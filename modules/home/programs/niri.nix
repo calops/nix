@@ -122,16 +122,16 @@ in
                 Mod+Equal           { set-column-width "-10%"; }
                 Mod+F               { maximize-column; }
                 Mod+Home            { focus-column-first; }
-                Mod+L               { spawn "${lock}"; }
+                Mod+L               { spawn-sh "${lock}"; }
                 Mod+Left            { focus-column-left; }
                 Mod+Minus           { focus-workspace "misc"; }
-                Mod+N               { spawn "${lib.getExe' config.services.swaync.package "swaync-client"}" "-t"; }
+                Mod+N               { spawn-sh "${lib.getExe' config.services.swaync.package "swaync-client"} -t"; }
                 Mod+Page_Down       { focus-workspace-down; }
                 Mod+Page_Up         { focus-workspace-up; }
                 Mod+Parenleft       { focus-workspace "games"; }
                 Mod+Plus            { set-column-width "+10%"; }
                 Mod+Quotedbl        { focus-workspace "work"; }
-                Mod+Return          { spawn "kitty"; }
+                Mod+Return          { spawn-sh "kitty"; }
                 Mod+Right           { focus-column-right; }
                 Mod+S               { screenshot; }
                 Mod+Shift+Comma     { show-hotkey-overlay; }
@@ -147,8 +147,8 @@ in
                 Mod+Shift+Right     { consume-or-expel-window-right; }
                 Mod+Shift+S         { screenshot-window; }
                 Mod+Shift+Up        { move-window-up-or-to-workspace-up; }
-                Mod+Space           { spawn "anyrun"; }
-                Mod+Shift+Space     { spawn "1password" "--quick-access"; }
+                Mod+Space           { spawn-sh "anyrun"; }
+                Mod+Shift+Space     { spawn-sh "1password --quick-access"; }
                 Mod+Up              { focus-window-or-workspace-up; }
 
                 Mod+Shift+WheelScrollDown cooldown-ms=150 { focus-column-right; }
@@ -159,12 +159,12 @@ in
                 Mod+WheelScrollRight cooldown-ms=150 { focus-column-right;   }
                 Mod+WheelScrollUp    cooldown-ms=150 { focus-workspace-up;   }
 
-                XF86AudioLowerVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "lower";       }
-                XF86AudioMute        allow-when-locked=true { spawn "swayosd-client" "--output-volume" "mute-toggle"; }
-                XF86AudioRaiseVolume allow-when-locked=true { spawn "swayosd-client" "--output-volume" "raise";       }
-                XF86AudioNext        allow-when-locked=true { spawn "swayosd-client" "--playerctl"     "next";        }
-                XF86AudioPrev        allow-when-locked=true { spawn "swayosd-client" "--playerctl"     "prev";        }
-                XF86AudioPlay        allow-when-locked=true { spawn "swayosd-client" "--playerctl"     "play-pause";  }
+                XF86AudioLowerVolume allow-when-locked=true { spawn-sh "swayosd-client --output-volume lower";       }
+                XF86AudioMute        allow-when-locked=true { spawn-sh "swayosd-client --output-volume mute-toggle"; }
+                XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "swayosd-client --output-volume raise";       }
+                XF86AudioNext        allow-when-locked=true { spawn-sh "swayosd-client --playerctl next";        }
+                XF86AudioPrev        allow-when-locked=true { spawn-sh "swayosd-client --playerctl prev";        }
+                XF86AudioPlay        allow-when-locked=true { spawn-sh "swayosd-client --playerctl play-pause";  }
             }
 
             workspace "web"
@@ -174,10 +174,10 @@ in
             workspace "games"
             workspace "misc"
 
-            spawn-at-startup "swww-daemon"
-            spawn-at-startup "swww" "img" "${wallpaper}"
-            spawn-at-startup "${lib.getExe config.programs.firefox.package}"
-            spawn-at-startup "${lib.getExe config.programs.element.package}"
+            spawn-sh-at-startup "swww-daemon"
+            spawn-sh-at-startup "swww img ${wallpaper}"
+            spawn-sh-at-startup "${lib.getExe config.programs.firefox.package}"
+            spawn-sh-at-startup "${lib.getExe config.programs.element.package}"
 
             window-rule {
                 geometry-corner-radius 8.000000 8.000000 8.000000 8.000000
