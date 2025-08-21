@@ -19,7 +19,7 @@
     # Window manager
     programs.niri = {
       enable = true;
-      package = pkgs.nightly.niri;
+      package = pkgs.my.niri;
     };
 
     # Polkit agent

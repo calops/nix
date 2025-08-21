@@ -8,7 +8,6 @@ self: super:
     pkgs = super;
     nurpkgs = super;
   };
-  nightly = inputs.nightly-tools.packages.${super.system};
 }
 // (inputs.fenix.overlays.default self super)
 // (inputs.darwin.overlays.default self super)

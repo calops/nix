@@ -13,7 +13,7 @@
         # lua
         ''
           #! ${pkgs.lua5_4_compat}/bin/lua
-          package.cpath = package.cpath .. ";${pkgs.my.sbarlua}/lib/?.so"
+          package.cpath = package.cpath .. ";${pkgs.sbarlua}/lib/lua/5.4/?.so"
           package.path = package.path
             .. ";${config.xdg.configHome}/sketchybar/?/init.lua"
             .. ";${config.xdg.configHome}/sketchybar/config/?.lua"

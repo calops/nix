@@ -27,7 +27,7 @@ in
     programs.neovim = {
       enable = true;
       defaultEditor = true;
-      package = pkgs.nightly.neovim;
+      package = pkgs.my.neovim;
       extraPackages = [
         # Formatters
         pkgs.prettierd # Multi-language

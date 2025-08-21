@@ -70,7 +70,7 @@
     };
     programs.nh = lib.mkIf (config.my.configType == "standalone") {
       enable = true;
-      package = pkgs.nightly.nh;
+      package = pkgs.my.nh;
       flake = config.my.configDir;
     };
 

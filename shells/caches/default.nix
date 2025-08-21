@@ -1,7 +1,4 @@
-{ inputs, pkgs, ... }:
-let
-  caches = import ../../lib/caches.nix;
-in
+{ inputs, pkgs, lib, ... }:
 inputs.devenv.lib.mkShell {
   inherit inputs pkgs;
   modules = [
@@ -9,8 +6,8 @@ inputs.devenv.lib.mkShell {
       name = "caches";
 
       env.NIX_CONFIG = ''
-        extra-substituters = ${toString caches.substituters}
-        extra-trusted-public-keys = ${toString caches.trustedPublicKeys}
+        extra-substituters = ${toString lib.my.caches.substituters}
+        extra-trusted-public-keys = ${toString lib.my.caches.trustedPublicKeys}
       '';
     }
   ];

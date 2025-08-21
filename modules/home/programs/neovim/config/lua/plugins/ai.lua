@@ -1,35 +1,5 @@
 return {
 	{
-		"copilotlsp-nvim/copilot-lsp",
-		enabled = true, -- TODO: replace the one below
-		event = "VeryLazy",
-		keys = {
-			{
-				"<S-CR>",
-				function()
-					local bufnr = vim.api.nvim_get_current_buf()
-					local state = vim.b[bufnr].nes_state
-					if state then
-						local nes = require("copilot-lsp.nes")
-						-- jump to edit or apply it
-						local _ = nes.walk_cursor_start_edit()
-							or (nes.apply_pending_nes() and nes.walk_cursor_end_edit())
-
-						vim.notify("Applied suggestion", vim.log.levels.INFO)
-					else
-						vim.notify("No suggestion", vim.log.levels.INFO)
-					end
-				end,
-				desc = "Accept Copilot next edit suggestion",
-				mode = { "i", "n" },
-			},
-		},
-		config = function()
-			vim.g.copilot_nes_debounce = 500
-			vim.lsp.enable("copilot_ls")
-		end,
-	},
-	{
 		"zbirenbaum/copilot.lua",
 		event = "VeryLazy",
 		enabled = false,

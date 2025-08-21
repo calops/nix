@@ -3,12 +3,7 @@
 
   inputs = {
     # Upstream nixpkgs
-    # nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs.follows = "nightly-tools/nixpkgs";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.11";
-
-    # Nightly versions of various packages, all cached
-    nightly-tools.url = "github:calops/nightly-tools";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Theming framework for nixos and home-manager
     stylix.url = "github:danth/stylix";
@@ -17,9 +12,6 @@
     # Nix user repository
     nur.url = "github:nix-community/NUR";
     nur.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Devshell framework and utilities
-    devenv.follows = "nightly-tools/devenv";
 
     # AGS linux GUI utilities
     ags.url = "github:Aylur/ags";
@@ -45,7 +37,10 @@
     fenix.inputs.nixpkgs.follows = "nixpkgs";
 
     # Niri window manager
-    niri.follows = "nightly-tools/niri";
+    niri-src.url = "github:yalter/niri";
+    niri.url = "github:calops/niri-flake/";
+    niri.inputs.nixpkgs.follows = "nixpkgs";
+    niri.inputs.niri-unstable.follows = "niri-src";
 
     # Home-manager modules
     home-manager.url = "github:nix-community/home-manager";
@@ -56,7 +51,8 @@
     snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
 
     # App launcher
-    anyrun.follows = "nightly-tools/anyrun";
+    anyrun.url = "github:Kirottu/anyrun";
+    anyrun.inputs.nixpkgs.follows = "nixpkgs";
 
     # Vencord settings module (discord mod)
     nixcord.url = "github:kaylorben/nixcord";
@@ -78,11 +74,16 @@
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
-    quickshell.follows = "nightly-tools/quickshell";
-
+    # Determinate version of nix
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/*";
 
     nix-gaming.url = "github:fufexan/nix-gaming";
+
+    nh.url = "github:viperML/nh";
+    nh.inputs.nixpkgs.follows = "nixpkgs";
+
+    neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
+    neovim-nightly.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =

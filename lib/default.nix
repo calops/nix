@@ -24,4 +24,6 @@
 
       Install.WantedBy = [ "graphical-session.target" ];
     };
+
+  caches = import ./caches.nix;
 }

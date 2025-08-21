@@ -8,7 +8,7 @@
   config = lib.mkIf config.my.roles.graphical.enable {
     programs.neovide = {
       enable = true;
-      package = pkgs.nightly.neovide;
+      # package = pkgs.my.neovide;
       settings =
         let
           symbols = {

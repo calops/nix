@@ -8,7 +8,6 @@ lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
   programs.quickshell = {
     enable = true;
     activeConfig = null;
-    package = pkgs.nightly.quickshell;
     systemd.enable = true;
   };
 

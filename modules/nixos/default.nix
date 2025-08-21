@@ -88,7 +88,7 @@
     };
 
     programs.nh = {
-      package = pkgs.nightly.nh;
+      package = pkgs.my.nh;
       enable = true;
       clean.enable = false;
       clean.extraArgs = "--keep-since 14d --keep 5";

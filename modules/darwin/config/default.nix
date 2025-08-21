@@ -1,9 +1,14 @@
 {
   pkgs,
   lib,
+  config,
   ...
 }:
 {
+  imports = [
+    ../../common/nix.nix
+  ];
+
   options = {
     my.configDir = lib.mkOption {
       type = lib.types.nullOr lib.types.path;
@@ -18,12 +23,19 @@
 
     # Determinate nix manages itself
     nix.enable = false;
+    environment.etc."nix/nix.custom.conf".text = ''
+      trusted-users = ${builtins.concatStringsSep " " config.nix.settings.trusted-users}
+
+      extra-substituters = ${builtins.concatStringsSep " " (lib.my.caches.substituters)}
+
+      extra-trusted-public-keys = ${builtins.concatStringsSep " " (lib.my.caches.trustedPublicKeys)}
+    '';
 
     environment = {
       systemPackages = [
         # FIXME: move to kunkun (package it)
         # pkgs.raycast
-        pkgs.nightly.nh
+        pkgs.my.nh
         pkgs.deno # for kunkun
       ];
       shells = [ pkgs.fish ];

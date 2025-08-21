@@ -175,14 +175,7 @@ return {
 				{ "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
 				{ "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git Blame Line" },
 				{ "<leader>ds", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Bufer" },
-				{
-					"<C-p>",
-					function()
-						return Snacks.git.get_root() and Snacks.picker.smart { multi = { "git_files", "files" } }
-							or Snacks.picker.files()
-					end,
-					desc = "Find files",
-				},
+				{ "<C-p>", picker("smart", { multi = { "buffers", "files" }, hidden = true }), desc = "Find files" },
 				{ "<leader>fb", picker("buffers"), desc = "Find buffers" },
 				{ "<leader>fs", picker("grep"), desc = "Find string" },
 				{ "<leader>fr", picker("resume"), desc = "Resume latest search" },
@@ -377,16 +370,24 @@ return {
 			end
 		end,
 		opts = {
+			-- wider icons
 			filetype = {
-				python = { glyph = "" },
-				lua = { glyph = "" },
-				nix = { glyph = "" },
-				rust = { glyph = "" },
-				gitignore = { glyph = "" },
-				gitattributes = { glyph = "" },
-				qml = { glyph = "" },
-				docker = { glyph = "" },
-				man = { glyph = "" },
+				docker = { glyph = " " },
+				gitattributes = { glyph = " " },
+				gitignore = { glyph = " " },
+				glsl = { glyph = " " },
+				lua = { glyph = " " },
+				man = { glyph = " " },
+				markdown = { glyph = " " },
+				nix = { glyph = " " },
+				python = { glyph = " " },
+				qml = { glyph = " " },
+				rust = { glyph = " " },
+				scss = { glyph = " " },
+				sql = { glyph = " " },
+				typescript = { glyph = " " },
+				typescriptreact = { glyph = " " },
+				yaml = { glyph = " " },
 			},
 		},
 	},

@@ -212,7 +212,7 @@ local tabs = {
 						local icon, icon_hl = require("mini.icons").get("filetype", filetype)
 						if icon and icon_hl then
 							table.insert(icons, {
-								provider = icon .. " ",
+								provider = icon,
 								hl = { fg = compute_icon_color(colors.hl[icon_hl].fg or colors.hl.Normal.fg) },
 							})
 						end

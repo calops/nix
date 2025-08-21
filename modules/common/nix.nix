@@ -1,12 +1,8 @@
-{ ... }:
-let
-  caches = import ../../lib/caches.nix;
-in
+{ lib, ... }:
 {
   nix.settings = {
-    # lazy-trees = true;
-    extra-substituters = caches.substituters;
-    extra-trusted-public-keys = caches.trustedPublicKeys;
+    extra-substituters = lib.my.caches.substituters;
+    extra-trusted-public-keys = lib.my.caches.trustedPublicKeys;
 
     experimental-features = [
       "flakes"

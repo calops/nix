@@ -30,7 +30,7 @@ return {
 
 				if buftype == "terminal" then
 					filename = vim.b[props.buf].term_title
-					icon = ""
+					icon = " "
 					icon_hl = "TermFloatBorder"
 				end
 
@@ -46,7 +46,7 @@ return {
 
 				local result = {
 					{ "", guifg = icon_color.bg, guibg = col_base, blend = 100 },
-					{ icon .. "  ", guifg = icon_color.fg, guibg = icon_color.bg },
+					{ icon .. " ", guifg = icon_color.fg, guibg = icon_color.bg },
 					{ "", guifg = color, guibg = icon_color.bg },
 					{ filename, guibg = color },
 				}
