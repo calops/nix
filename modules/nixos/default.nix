@@ -10,6 +10,7 @@
     inputs.stylix.nixosModules.stylix
     inputs.madness.nixosModules.madness
     inputs.determinate.nixosModules.default
+    inputs.nix-index-database.nixosModules.nix-index
     ../common
     ./audio.nix
     ./bluetooth.nix

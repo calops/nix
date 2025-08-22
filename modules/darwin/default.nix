@@ -3,11 +3,13 @@
   pkgs,
   config,
   perSystem,
+  inputs,
   flake,
   ...
 }:
 {
   imports = [
+    inputs.nix-index-database.darwinModules.nix-index
     ../common/colors
     ../common/nix.nix
   ];
