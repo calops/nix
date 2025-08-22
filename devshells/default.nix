@@ -10,8 +10,6 @@ inputs.devenv.lib.mkShell {
           pkgs.nixd
           pkgs.lua-language-server
         ];
-
-        env.NVIM_LSP_SERVERS = "nil_ls nixd lua-language-server";
       }
     )
   ];
