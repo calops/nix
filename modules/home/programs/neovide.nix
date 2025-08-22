@@ -2,13 +2,14 @@
   lib,
   config,
   pkgs,
+  perSystem,
   ...
 }:
 {
   config = lib.mkIf config.my.roles.graphical.enable {
     programs.neovide = {
       enable = true;
-      # package = pkgs.my.neovide;
+      package = perSystem.self.neovide;
       settings =
         let
           symbols = {

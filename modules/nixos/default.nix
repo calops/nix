@@ -1,7 +1,6 @@
 {
   inputs,
   lib,
-  pkgs,
   config,
   perSystem,
   ...
@@ -42,6 +41,7 @@
     madness.enable = true;
     environment.sessionVariables.EDITOR = "nvim";
 
+    nixpkgs.config.allowUnfree = true;
     nix = {
       optimise.automatic = true;
       gc = {
@@ -59,7 +59,7 @@
     console = {
       font = "ter-124b";
       keyMap = lib.mkDefault "fr";
-      packages = [ pkgs.terminus_font ];
+      packages = [ perSystem.self.fonts.terminus.package ];
       earlySetup = true;
     };
 

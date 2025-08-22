@@ -157,18 +157,15 @@ in
       pkgs.waypipe
       pkgs.wl-clipboard
     ])
-    ++ (
-      # if cfg.installAllFonts then
-      #   lib.attrsets.mapAttrsToList (name: font: font.package) fonts
-      # else
-        [
-          cfg.fonts.monospace.package
-          cfg.fonts.serif.package
-          cfg.fonts.sansSerif.package
-          cfg.fonts.emoji.package
-          cfg.fonts.symbols.package
-        ]
-    );
+    ++ [
+      cfg.fonts.monospace.package
+      cfg.fonts.serif.package
+      cfg.fonts.sansSerif.package
+      cfg.fonts.emoji.package
+      cfg.fonts.symbols.package
+      fonts.aporetic-sans.package
+      fonts.iosevka.package
+    ];
 
     programs.mpv = {
       enable = pkgs.stdenv.isLinux;
