@@ -5,6 +5,10 @@
     # Upstream nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    # Flake framework
+    blueprint.url = "github:numtide/blueprint";
+    blueprint.inputs.nixpkgs.follows = "nixpkgs";
+
     # Theming framework for nixos and home-manager
     stylix.url = "github:danth/stylix";
     stylix.inputs.nur.follows = "nur";
@@ -25,8 +29,8 @@
     madness.url = "github:antithesishq/madness";
 
     # Nix-darwin modules
-    darwin.url = "github:LnL7/nix-darwin";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     # Precompiled nix-index database
     nix-index-database.url = "github:nix-community/nix-index-database";
@@ -45,10 +49,6 @@
     # Home-manager modules
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Flake framework to reduce boilerplate
-    snowfall-lib.url = "github:snowfallorg/lib";
-    snowfall-lib.inputs.nixpkgs.follows = "nixpkgs";
 
     # App launcher
     anyrun.url = "github:Kirottu/anyrun";
@@ -88,15 +88,12 @@
 
   outputs =
     inputs:
-    inputs.snowfall-lib.mkFlake {
+    inputs.blueprint {
       inherit inputs;
-      src = builtins.path {
-        path = ./.;
-        name = "source";
-      };
-      snowfall.namespace = "my";
-      channels-config.allowUnfree = true;
-      channels-config.allowBroken = true; # for _1password-gui on darwin
-      outputs-builder = channels: { formatter = channels.nixpkgs.nixfmt-rfc-style; };
+
+      nixpkgs.config.allowUnfree = true;
+      nixpkgs.overlays = [
+        inputs.firefox-darwin.overlay
+      ];
     };
 }

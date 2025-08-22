@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-pkgs.stdenv.mkDerivation {
+{ pkgs }: pkgs.stdenv.mkDerivation {
   name = "catppuccin-mocha-swaync-theme";
 
   src = pkgs.fetchurl {

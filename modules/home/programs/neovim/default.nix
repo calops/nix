@@ -2,12 +2,14 @@
   config,
   lib,
   pkgs,
+  perSystem,
+  inputs,
   ...
 }:
 let
   nvimDir = "${config.my.configDir}/modules/home/programs/neovim";
 
-  rustToolchain = pkgs.fenix.complete.withComponents [
+  rustToolchain = perSystem.fenix.complete.withComponents [
     "cargo"
     "clippy"
     "rust-src"
@@ -27,7 +29,7 @@ in
     programs.neovim = {
       enable = true;
       defaultEditor = true;
-      package = pkgs.my.neovim;
+      package = perSystem.self.neovim;
       extraPackages = [
         # Formatters
         pkgs.prettierd # Multi-language
@@ -124,7 +126,7 @@ in
     stylix.targets.neovim.enable = false;
 
     home.activation.neovim =
-      lib.home-manager.hm.dag.entryAfter [ "writeBoundary" ] # bash
+      inputs.home-manager.lib.hm.dag.entryAfter [ "writeBoundary" ] # bash
         ''
           LOCK_FILE=$(readlink -f ~/.config/nvim/lazy-lock.json)
           [ ! -f "$LOCK_FILE" ] && echo "No lock file found, skipping" && exit 0

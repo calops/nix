@@ -1,7 +1,13 @@
-{ pkgs, ... }:
+{ perSystem, ... }:
 {
+  imports = [
+    ./aerospace.nix
+    ./sketchybar
+    ./skhd.nix
+  ];
+
   home.packages = [
-    pkgs.darwin-rebuild
-    pkgs.darwin-option
+    perSystem.nix-darwin.darwin-rebuild
+    perSystem.nix-darwin.darwin-option
   ];
 }

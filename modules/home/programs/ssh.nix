@@ -18,7 +18,8 @@
           hostname = "tocards.net";
           user = "calops";
         };
-      } // config.my.roles.terminal.ssh.hosts;
+      }
+      // config.my.roles.terminal.ssh.hosts;
     };
   };
 }

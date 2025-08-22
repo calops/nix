@@ -1,7 +1,7 @@
 {
-  pkgs,
   lib,
   config,
+  perSystem,
   ...
 }:
 {
@@ -26,8 +26,8 @@
     useXkbConfig = true;
     fonts = [
       {
-        name = pkgs.fonts.terminess.name;
-        package = pkgs.fonts.terminess.package;
+        name = perSystem.self.fonts.terminess.name;
+        package = perSystem.self.fonts.terminess.package;
       }
     ];
   };

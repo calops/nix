@@ -4,6 +4,7 @@
   pkgs,
   nixosConfig ? null,
   darwinConfig ? null,
+  perSystem,
   ...
 }:
 {
@@ -70,7 +71,7 @@
     };
     programs.nh = lib.mkIf (config.my.configType == "standalone") {
       enable = true;
-      package = pkgs.my.nh;
+      package = perSystem.self.nh;
       flake = config.my.configDir;
     };
 

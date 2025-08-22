@@ -1,9 +1,28 @@
-{ lib, ... }:
+{ ... }:
 {
-  imports = lib.snowfall.fs.get-non-default-nix-files (
-    builtins.path {
-      path = ./.;
-      name = "source";
-    }
-  );
+  imports = [
+    ./ags
+    ./element
+    ./firefox
+    ./neovim
+    ./quickshell
+    ./shaderbg
+    ./wezterm
+    ./1password.nix
+    ./anyrun.nix
+    ./bat.nix
+    ./fish.nix
+    ./fzf.nix
+    ./git.nix
+    ./gtk.nix
+    ./kitty.nix
+    ./misc_cli.nix
+    ./mopidy.nix
+    ./neovide.nix
+    ./niri.nix
+    ./nixcord.nix
+    ./ssh.nix
+    ./swaync.nix
+    ./zellij.nix
+  ];
 }

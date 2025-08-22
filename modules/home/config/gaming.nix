@@ -3,11 +3,12 @@
   pkgs,
   config,
   nixosConfig ? null,
-  inputs,
+  perSystem,
   ...
 }:
 let
   palette = config.my.colors.palette.asHex;
+  fonts = perSystem.self.fonts;
 in
 {
   options.my.roles.gaming.enable = lib.mkOption {
@@ -23,7 +24,7 @@ in
       pkgs.steam-run
       pkgs.wineWowPackages.waylandFull
       pkgs.winetricks
-      inputs.nix-gaming.packages.${pkgs.system}.star-citizen
+      perSystem.nix-gaming.star-citizen
     ];
 
     programs.mangohud = {
@@ -41,7 +42,7 @@ in
 
         # Text
         font_size=14
-        font_file=${pkgs.fonts.aporetic-sans-mono.package}/share/fonts/TTF/aporetic-sans-mono-normalregularupright.ttf
+        font_file=${fonts.aporetic-sans-mono.package}/share/fonts/TTF/aporetic-sans-mono-normalregularupright.ttf
         text_outline
         text_color=${palette.text}
 

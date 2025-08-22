@@ -2,11 +2,13 @@
   lib,
   config,
   nixosConfig ? null,
+  perSystem,
   pkgs,
   ...
 }:
 let
   cfg = config.my.roles.graphical;
+  fonts = perSystem.self.fonts;
   my.types = with lib; {
     font = types.submodule {
       options = {
@@ -53,27 +55,27 @@ in
       fonts = {
         monospace = lib.mkOption {
           type = my.types.font;
-          default = pkgs.fonts.aporetic-sans-mono;
+          default = fonts.aporetic-sans-mono;
           description = "Monospace font";
         };
         serif = lib.mkOption {
           type = my.types.font;
-          default = pkgs.fonts.noto-serif;
+          default = fonts.noto-serif;
           description = "Serif font";
         };
         sansSerif = lib.mkOption {
           type = my.types.font;
-          default = pkgs.fonts.noto-sans;
+          default = fonts.noto-sans;
           description = "Sans-serif font";
         };
         emoji = lib.mkOption {
           type = my.types.font;
-          default = pkgs.fonts.noto-emoji;
+          default = fonts.noto-emoji;
           description = "Emoji font";
         };
         symbols = lib.mkOption {
           type = my.types.font;
-          default = pkgs.fonts.nerdfont-symbols;
+          default = fonts.nerdfont-symbols;
           description = "Symbols font";
         };
         hinting = lib.mkOption {
@@ -145,29 +147,28 @@ in
   config = lib.mkIf cfg.enable {
     fonts.fontconfig.enable = true;
 
-    home.packages =
-      [
-        pkgs.libnotify
-        pkgs.slack
-      ]
-      ++ (lib.lists.optionals (!pkgs.stdenv.isDarwin) [
-        pkgs.google-chrome
-        pkgs.rquickshare
-        pkgs.waypipe
-        pkgs.wl-clipboard
-      ])
-      ++ (
-        if cfg.installAllFonts then
-          lib.attrsets.mapAttrsToList (name: font: font.package) pkgs.fonts
-        else
-          [
-            cfg.fonts.monospace.package
-            cfg.fonts.serif.package
-            cfg.fonts.sansSerif.package
-            cfg.fonts.emoji.package
-            cfg.fonts.symbols.package
-          ]
-      );
+    home.packages = [
+      pkgs.libnotify
+      pkgs.slack
+    ]
+    ++ (lib.lists.optionals (!pkgs.stdenv.isDarwin) [
+      pkgs.google-chrome
+      pkgs.rquickshare
+      pkgs.waypipe
+      pkgs.wl-clipboard
+    ])
+    ++ (
+      # if cfg.installAllFonts then
+      #   lib.attrsets.mapAttrsToList (name: font: font.package) fonts
+      # else
+        [
+          cfg.fonts.monospace.package
+          cfg.fonts.serif.package
+          cfg.fonts.sansSerif.package
+          cfg.fonts.emoji.package
+          cfg.fonts.symbols.package
+        ]
+    );
 
     programs.mpv = {
       enable = pkgs.stdenv.isLinux;

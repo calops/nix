@@ -3,22 +3,25 @@
   lib,
   pkgs,
   config,
+  perSystem,
   ...
 }:
 {
-  imports =
-    [
-      ../common
-      inputs.stylix.nixosModules.stylix
-      inputs.madness.nixosModules.madness
-      inputs.determinate.nixosModules.default
-    ]
-    ++ (lib.snowfall.fs.get-non-default-nix-files (
-      builtins.path {
-        path = ./.;
-        name = "source";
-      }
-    ));
+  imports = [
+    inputs.stylix.nixosModules.stylix
+    inputs.madness.nixosModules.madness
+    inputs.determinate.nixosModules.default
+    ../common
+    ./audio.nix
+    ./bluetooth.nix
+    ./boot.nix
+    ./gaming.nix
+    ./graphics.nix
+    ./monitoring.nix
+    ./nvidia.nix
+    ./printing.nix
+    ./yubikey.nix
+  ];
 
   options = {
     my.configDir = lib.mkOption {
@@ -88,7 +91,7 @@
     };
 
     programs.nh = {
-      package = pkgs.my.nh;
+      package = perSystem.self.nh;
       enable = true;
       clean.enable = false;
       clean.extraArgs = "--keep-since 14d --keep 5";

@@ -2,6 +2,7 @@
   lib,
   pkgs,
   config,
+  perSystem,
   ...
 }:
 let
@@ -32,7 +33,7 @@ in
       style =
         # css
         ''
-          @import url("file://${pkgs.my.catppuccin-mocha-swaync-theme}/style.css");
+          @import url("file://${perSystem.self.catppuccin-mocha-swaync-theme}/style.css");
 
           * {
             font-family: ${config.my.roles.graphical.fonts.monospace.name};

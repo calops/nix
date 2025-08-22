@@ -1,6 +1,0 @@
-{ ... }:
-{
-  services.skhd = {
-    enable = false;
-  };
-}

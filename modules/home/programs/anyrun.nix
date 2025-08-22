@@ -1,12 +1,12 @@
 {
   config,
   lib,
-  inputs,
+  perSystem,
   pkgs,
   ...
 }:
 let
-  package = inputs.anyrun.packages.${pkgs.system}.anyrun-with-all-plugins;
+  package = perSystem.anyrun.anyrun-with-all-plugins;
   palette = config.my.colors.palette.asGtkCss;
 in
 {

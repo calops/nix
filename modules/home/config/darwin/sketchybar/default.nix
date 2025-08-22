@@ -29,7 +29,7 @@
           text = "${config.my.roles.graphical.fonts.monospace.name}",
           symbols = "${config.my.roles.graphical.fonts.symbols.name}",
         },
-        palette = ${lib.my.asLua config.my.colors.palette.asHex},
+        palette = ${lib.generators.toLua {} config.my.colors.palette.asHex},
       }
     '';
 

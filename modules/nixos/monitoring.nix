@@ -25,16 +25,15 @@ in
     services.promtail.enable = true;
     services.grafana.enable = true;
 
-    services.nginx =
-      {
-        enable = true;
-        recommendedProxySettings = true;
-        recommendedOptimisation = true;
-        recommendedGzipSettings = true;
-      }
-      // mkNginxHost "grafana" 8010
-      // mkNginxHost "prometheus" 8020
-      // mkNginxHost "loki" 8030
-      // mkNginxHost "promtail" 8031;
+    services.nginx = {
+      enable = true;
+      recommendedProxySettings = true;
+      recommendedOptimisation = true;
+      recommendedGzipSettings = true;
+    }
+    // mkNginxHost "grafana" 8010
+    // mkNginxHost "prometheus" 8020
+    // mkNginxHost "loki" 8030
+    // mkNginxHost "promtail" 8031;
   };
 }

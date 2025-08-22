@@ -2,10 +2,11 @@
   pkgs,
   config,
   lib,
+  perSystem,
   ...
 }:
 let
-  addons = pkgs.nur.repos.rycee.firefox-addons;
+  addons = perSystem.self.nur.repos.rycee.firefox-addons;
   package =
     if pkgs.stdenv.isDarwin then
       pkgs.firefox-beta

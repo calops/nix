@@ -175,7 +175,7 @@ return {
 				{ "<leader>gl", function() Snacks.lazygit.log() end, desc = "Lazygit Log (cwd)" },
 				{ "<leader>gb", function() Snacks.git.blame_line() end, desc = "Git Blame Line" },
 				{ "<leader>ds", function() Snacks.profiler.scratch() end, desc = "Profiler Scratch Bufer" },
-				{ "<C-p>", picker("smart", { multi = { "buffers", "files" }, hidden = true }), desc = "Find files" },
+				{ "<C-p>", picker("smart", { multi = { "files" }, hidden = true }), desc = "Find files" },
 				{ "<leader>fb", picker("buffers"), desc = "Find buffers" },
 				{ "<leader>fs", picker("grep"), desc = "Find string" },
 				{ "<leader>fr", picker("resume"), desc = "Resume latest search" },

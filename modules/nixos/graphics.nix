@@ -3,6 +3,7 @@
   config,
   inputs,
   pkgs,
+  perSystem,
   ...
 }:
 {
@@ -19,7 +20,7 @@
     # Window manager
     programs.niri = {
       enable = true;
-      package = pkgs.my.niri;
+      package = perSystem.self.niri;
     };
 
     # Polkit agent

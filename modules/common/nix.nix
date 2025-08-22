@@ -1,8 +1,8 @@
-{ lib, ... }:
+{ flake, ... }:
 {
   nix.settings = {
-    extra-substituters = lib.my.caches.substituters;
-    extra-trusted-public-keys = lib.my.caches.trustedPublicKeys;
+    extra-substituters = flake.lib.caches.substituters;
+    extra-trusted-public-keys = flake.lib.caches.trustedPublicKeys;
 
     experimental-features = [
       "flakes"
