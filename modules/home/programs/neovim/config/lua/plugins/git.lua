@@ -32,7 +32,9 @@ return {
 			local function g() return require("gitsigns") end
 			return {
 				{ "<leader>gu", function() g().stage_hunk() end, desc = 'Undo "stage hunk"' },
+				---@diagnostic disable-next-line: param-type-mismatch (false positive)
 				{ "<leader>gn", function() g().nav_hunk("next") end, desc = "Next hunk" },
+				---@diagnostic disable-next-line: param-type-mismatch (false positive)
 				{ "<leader>gN", function() g().nav_hunk("prev") end, desc = "Previous hunk" },
 				{ "<leader>gp", function() g().preview_hunk_inline() end, desc = "Preview hunk" },
 				{ "<leader>gs", function() g().stage_hunk() end, desc = "Stage hunk", mode = { "n" } },
