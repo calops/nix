@@ -7,10 +7,10 @@
 }:
 let
   anyrunPkgs = perSystem.anyrun;
-  palette = config.my.colors.palette.asGtkCss;
+  palette = config.my.colors.palette.asRgbIntTuple;
 in
 {
-  config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
+  config = lib.mkIf (config.my.roles.graphical.enable && pkgs.stdenv.isLinux) {
     programs.anyrun = {
       package = anyrunPkgs.anyrun;
       enable = true;
@@ -29,18 +29,15 @@ in
         ];
       };
 
-      extraCss =
-        # css
+      extraCss = # css
         ''
-          @import url("${palette}");
-
           #window {
-            background-color: rgba(30, 30, 46, 0.4); /* palette.base */
+            background-color: rgba(${palette.base}, 0.4);
           }
 
           box#main {
             border-radius: 10px;
-            background-color: @palette-mantle;
+            background-color: rgb(${palette.mantle});
           }
 
           box#plugin {
