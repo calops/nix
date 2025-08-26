@@ -6,25 +6,26 @@
   ...
 }:
 let
-  package = perSystem.anyrun.anyrun-with-all-plugins;
+  anyrunPkgs = perSystem.anyrun;
   palette = config.my.colors.palette.asGtkCss;
 in
 {
-  # imports = [ inputs.anyrun.homeManagerModules.default ];
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.anyrun = {
-      inherit package;
+      package = anyrunPkgs.anyrun;
       enable = true;
 
       config = {
         y.fraction = 0.3;
         plugins = [
-          "${package}/lib/libapplications.so"
-          "${package}/lib/librink.so"
-          "${package}/lib/libshell.so"
-          "${package}/lib/libdictionary.so"
-          "${package}/lib/libsymbols.so"
-          "${package}/lib/libtranslate.so"
+          anyrunPkgs.applications
+          anyrunPkgs.rink
+          anyrunPkgs.shell
+          anyrunPkgs.dictionary
+          anyrunPkgs.symbols
+          anyrunPkgs.translate
+          anyrunPkgs.niri-focus
+          anyrunPkgs.nix-run
         ];
       };
 
@@ -51,6 +52,16 @@ in
             background-color: none;
             border-radius: 10px;
           }
+        '';
+
+      extraConfigFiles."nix-run.ron".text = # ron
+        ''
+          Config(
+            prefix: ", ",
+            allow_unfree: true,
+            channel: "nixpkgs-unstable",
+            max_entries: 3,
+          )
         '';
     };
   };
