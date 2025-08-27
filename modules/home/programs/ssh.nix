@@ -13,7 +13,10 @@
   config = {
     programs.ssh = {
       enable = config.my.roles.terminal.enable;
+      enableDefaultConfig = false;
       matchBlocks = {
+        "*" = { };
+
         tocards = {
           hostname = "tocards.net";
           user = "calops";

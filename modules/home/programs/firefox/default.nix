@@ -7,16 +7,12 @@
 }:
 let
   addons = perSystem.self.nur.repos.rycee.firefox-addons;
-  package =
-    if pkgs.stdenv.isDarwin then
-      pkgs.firefox-beta
-    else
-      pkgs.firefox-beta.override {
-        nativeMessagingHosts = [
-          pkgs.tridactyl-native
-          pkgs.vdhcoapp
-        ];
-      };
+  package = pkgs.firefox-beta.override {
+    nativeMessagingHosts = [
+      pkgs.tridactyl-native
+    ]
+    ++ lib.optional pkgs.stdenv.isLinux pkgs.vdhcoapp;
+  };
 in
 {
   config = lib.mkIf config.my.roles.graphical.enable {

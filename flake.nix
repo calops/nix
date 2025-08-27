@@ -22,10 +22,6 @@
     ags.url = "github:Aylur/ags";
     ags.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Firefox package for darwin
-    firefox-darwin.url = "github:bandithedoge/nixpkgs-firefox-darwin";
-    firefox-darwin.inputs.nixpkgs.follows = "nixpkgs";
-
     # Support dynamically linked binaries for generic Linux (nix-ld alternative)
     madness.url = "github:antithesishq/madness";
 
@@ -95,8 +91,5 @@
       inherit inputs;
 
       nixpkgs.config.allowUnfree = true;
-      nixpkgs.overlays = [
-        inputs.firefox-darwin.overlay
-      ];
     };
 }

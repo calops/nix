@@ -48,8 +48,7 @@ return {
 				on_attach = function(_, bufnr) vim.lsp.document_color.enable(true, bufnr, { style = "virtual" }) end,
 			})
 
-			-- TODO: enable when nvim-nightly is updated
-			-- vim.lsp.inline_completion.enable(true)
+			vim.lsp.inline_completion.enable(true)
 		end,
 	},
 
