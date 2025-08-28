@@ -13,15 +13,15 @@
 
       gaps = {
         outer = {
-          left = 10;
-          bottom = 10;
-          top = 10;
-          right = 10;
+          left = 9;
+          bottom = 9;
+          top = 9;
+          right = 9;
         };
 
         inner = {
-          horizontal = 10;
-          vertical = 10;
+          horizontal = 9;
+          vertical = 9;
         };
       };
 

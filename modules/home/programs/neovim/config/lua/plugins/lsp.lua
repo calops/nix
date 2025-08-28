@@ -80,14 +80,12 @@ return {
 		"folke/lazydev.nvim",
 		ft = "lua",
 		dependencies = {
-			"justinsgithub/wezterm-types",
 			"Bilal2453/luvit-meta",
 		},
 		opts = {
 			library = {
 				"snacks.nvim",
 				{ path = "luvit-meta/library", words = { "vim%.uv" } },
-				{ path = "wezterm-types", mods = { "wezterm" } },
 				{ path = "~/.local/share/lua", mods = { "palette" } },
 			},
 		},

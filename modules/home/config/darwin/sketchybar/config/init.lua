@@ -6,16 +6,16 @@ sbar.begin_config()
 sbar.hotload(true)
 
 sbar.bar {
-	height = 44,
+	height = 41,
 	color = "0xdd" .. palette.base,
 	shadow = "on",
 	position = "top",
 	sticky = "on",
-	padding_right = 10,
-	padding_left = 10,
-	corner_radius = 10,
-	y_offset = -10,
-	margin = 10,
+	padding_right = 9,
+	padding_left = 9,
+	corner_radius = 9,
+	y_offset = -9,
+	margin = 9,
 	blur_radius = 40,
 	notch_width = 200,
 	display = "main",

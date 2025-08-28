@@ -14,7 +14,21 @@ return {
 		---@type blink.cmp.Config
 		opts = {
 			appearance = { use_nvim_cmp_as_default = true },
-			cmdline = { completion = { ghost_text = { enabled = false } } },
+			cmdline = {
+				completion = {
+					list = {
+						selection = {
+							preselect = false,
+							auto_insert = true,
+						},
+					},
+					menu = {
+						auto_show = true,
+						preselect = false,
+					},
+					ghost_text = { enabled = false },
+				},
+			},
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer", "lazydev" },
 				per_filetype = {
@@ -43,7 +57,7 @@ return {
 				list = {
 					selection = {
 						preselect = false,
-						auto_insert = function(ctx) return ctx.mode == "cmdline" end,
+						auto_insert = false,
 					},
 				},
 				menu = {

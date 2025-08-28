@@ -19,39 +19,26 @@
         in
         {
           frame = if pkgs.stdenv.isDarwin then "buttonless" else "none";
-          font = {
-            size = config.my.roles.graphical.fonts.sizes.terminal;
-            edging = "subpixelantialias";
-            hinting = "full";
-            normal = [
-              {
-                family = config.my.roles.graphical.fonts.monospace.name;
-                style = "Normal";
-              }
-              symbols
-            ];
-            bold = [
-              {
-                family = config.my.roles.graphical.fonts.monospace.name;
-                style = "Bold";
-              }
-              symbols
-            ];
-            italic = [
-              {
-                family = config.my.roles.graphical.fonts.monospace.name;
-                style = "Italic";
-              }
-              symbols
-            ];
-            bold_italic = [
-              {
-                family = config.my.roles.graphical.fonts.monospace.name;
-                style = "Bold Italic";
-              }
-              symbols
-            ];
-          };
+          title-hidden = true;
+          font =
+            let
+              mkFonts = style: [
+                {
+                  inherit style;
+                  family = config.my.roles.graphical.fonts.monospace.name;
+                }
+                (symbols // { inherit style; })
+              ];
+            in
+            {
+              size = config.my.roles.graphical.fonts.sizes.terminal;
+              edging = "subpixelantialias";
+              hinting = "full";
+              normal = mkFonts "Normal";
+              bold = mkFonts "Bold";
+              italic = mkFonts "Italic";
+              bold_italic = mkFonts "Bold Italic";
+            };
         };
     };
 
