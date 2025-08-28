@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  perSystem,
   ...
 }:
 {
@@ -23,7 +24,7 @@
       pkgs.pastel
       pkgs.jaq
       pkgs.devenv
-      pkgs.gemini-cli
+      perSystem.self.gemini-cli
     ]
     ++ lib.optionals (!pkgs.stdenv.isDarwin) [
       pkgs.dtrx
