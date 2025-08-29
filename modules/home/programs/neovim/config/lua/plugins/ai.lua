@@ -30,11 +30,13 @@ return {
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = {
 			adapters = {
-				gemini = function()
-					return require("codecompanion.adapters").extend("gemini", {
-						env = { api_key = [[cmd:op read "op://Private/Gemini API key/password"]] },
-					})
-				end,
+				http = {
+					gemini = function()
+						return require("codecompanion.adapters").extend("gemini", {
+							env = { api_key = [[cmd:op read "op://Private/Gemini API key/password"]] },
+						})
+					end,
+				},
 			},
 			strategies = {
 				chat = { adapter = "gemini" },

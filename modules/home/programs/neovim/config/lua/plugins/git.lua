@@ -54,7 +54,7 @@ return {
 			}
 		end,
 		opts = {
-			preview_config = { border = "rounded" },
+			preview_config = { border = vim.g.floating_border },
 			signs = {
 				add = { text = "┃" },
 				change = { text = "┃" },

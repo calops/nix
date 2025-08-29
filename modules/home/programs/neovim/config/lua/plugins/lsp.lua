@@ -9,18 +9,22 @@ return {
 			"mason-org/mason-lspconfig.nvim",
 		},
 		keys = {
-			{ "H", function() vim.diagnostic.open_float { border = "rounded" } end, desc = "Show diagnostics" },
+			{
+				"H",
+				function() vim.diagnostic.open_float { border = vim.g.floating_border } end,
+				desc = "Show diagnostics",
+			},
 			{ "<C-k>", vim.lsp.buf.signature_help, desc = "Interactive signature help" },
 			{ "<space>n", vim.lsp.buf.rename, desc = "Interactive rename" },
 			{ "<space>F", vim.lsp.buf.format, desc = "Format code with LSP" },
 			{
 				"<space>d",
-				function() vim.diagnostic.jump { count = 1, float = { border = "rounded" } } end,
+				function() vim.diagnostic.jump { count = 1, float = { border = vim.g.floating_border } } end,
 				desc = "Jump to next diagnostic",
 			},
 		},
 		config = function()
-			require("mason").setup { ui = { border = "rounded" } }
+			require("mason").setup { ui = { border = vim.g.floating_border } }
 			require("mason-lspconfig").setup {
 				ensure_installed = {},
 				automatic_installation = false,

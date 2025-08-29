@@ -48,6 +48,7 @@ vim.opt.listchars = {
 	precedes = "«",
 	extends = "»",
 }
+vim.g.floating_border = "rounded"
 
 -- Indentation
 vim.o.autoindent = true
@@ -80,10 +81,11 @@ if pcall(require, "nix") then
 	vim.defer_fn(function() vim.notify("Nix environment detected", "info") end, 500)
 end
 
+require("neovide")
+
 require("lazy").setup {
 	spec = { { import = "plugins" } },
-	ui = { border = "rounded" },
+	ui = { border = vim.g.floating_border },
 }
 
-require("neovide")
 require("diagnostics")

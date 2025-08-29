@@ -25,3 +25,5 @@ end
 vim.keymap.set("n", "<C-+>", function() set_scale(vim.g.neovide_scale_factor + 0.1) end)
 vim.keymap.set("n", "<C-->", function() set_scale(vim.g.neovide_scale_factor - 0.1) end)
 vim.keymap.set("n", "<C-0>", function() set_scale(1.0) end)
+
+vim.g.floating_border = "none"

@@ -61,21 +61,21 @@ return {
 					},
 				},
 				menu = {
-					border = "rounded",
+					border = vim.g.floating_border,
 					max_height = 15,
 				},
 				documentation = {
 					auto_show = true,
 					auto_show_delay_ms = 50,
 					window = {
-						border = "rounded",
+						border = vim.g.floating_border,
 						max_width = 80,
 					},
 				},
 			},
 			signature = {
 				enabled = true,
-				window = { border = "rounded" },
+				window = { border = vim.g.floating_border },
 			},
 		},
 	},

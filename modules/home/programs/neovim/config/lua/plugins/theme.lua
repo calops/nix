@@ -1,5 +1,10 @@
 local function hl_override(palette)
 	local colors = require("core.colors")
+	local floating_background = palette.base
+
+	if vim.g.floating_border == "none" then
+		floating_background = palette.surface0
+	end
 
 	return {
 		Error = { fg = palette.red },
@@ -18,7 +23,7 @@ local function hl_override(palette)
 		CursorLineNr = { fg = palette.lavender, bg = palette.surface0 },
 		ColorColumn = { bg = palette.mantle },
 
-		NormalFloat = { bg = palette.base },
+		NormalFloat = { bg = floating_background },
 		FloatBorder = { fg = palette.mauve },
 		TermFloatBorder = { fg = palette.red },
 
@@ -182,8 +187,7 @@ return {
 			noice = true,
 			diffview = true,
 			gitsigns = true,
-			mini = true,
-			snacks = true,
+			snacks = { enabled = true },
 			lsp_trouble = true,
 			which_key = true,
 			native_lsp = {

@@ -101,6 +101,9 @@ return {
 					enabled = true,
 					ui_select = true,
 					db = { sqlite3_path = vim.g.sqlite_clib_path },
+					layout = {
+						border = vim.g.floating_border,
+					},
 					previewers = {
 						diff = {
 							builtin = false,

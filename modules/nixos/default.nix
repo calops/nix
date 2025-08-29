@@ -39,7 +39,7 @@
     virtualisation.docker.enable = true;
     stylix.homeManagerIntegration.autoImport = false;
     home-manager.backupFileExtension = "hm-backup";
-    madness.enable = true;
+    madness.enable = false; # FIXME: not building anymore, wait for upstream
     environment.sessionVariables.EDITOR = "nvim";
 
     nixpkgs.config.allowUnfree = true;

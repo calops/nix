@@ -107,7 +107,7 @@ in
               options = {
                 nixos = { expr = { '(${flake}).nixosConfigurations.tocardstation.options' } },
                 homeManager = { expr = { '(${flake}).homeConfigurations.tocardstation.options' }, },
-                darwin = { expr = { '(${flake}).darwinConfigurations.rlabeyrie-sonio.options' }, },
+                darwin = { expr = { '(${flake}).darwinConfigurations.remilabeyrie-kiro.options' }, },
               }
             },
           }

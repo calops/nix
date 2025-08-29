@@ -25,7 +25,7 @@ return {
 		},
 		opts = {
 			direction = "vertical",
-			float_opts = { border = "rounded" },
+			float_opts = { border = vim.g.floating_border },
 			size = function() return vim.o.columns * 0.3 end,
 			highlights = {
 				Normal = { link = "Normal" },
