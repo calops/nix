@@ -3,7 +3,7 @@ local utils = require("core.utils")
 return {
 	-- Comment commands
 	{
-		"echasnovski/mini.comment",
+		"nvim-mini/mini.comment",
 		event = "VeryLazy",
 		opts = {},
 	},
@@ -135,7 +135,7 @@ return {
 	},
 	-- Move stuff around
 	{
-		"echasnovski/mini.move",
+		"nvim-mini/mini.move",
 		event = "VeryLazy",
 		opts = {
 			mappings = {
@@ -166,7 +166,7 @@ return {
 	},
 	-- Align stuff
 	{
-		"echasnovski/mini.align",
+		"nvim-mini/mini.align",
 		event = "VeryLazy",
 		config = true,
 	},
@@ -205,7 +205,7 @@ return {
 		end,
 	},
 	{
-		"echasnovski/mini.operators",
+		"nvim-mini/mini.operators",
 		opts = {
 			evaluate = { prefix = "g=" },
 			exchange = { prefix = "gR" },

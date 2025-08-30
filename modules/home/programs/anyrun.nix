@@ -18,13 +18,13 @@ in
       config = {
         y.fraction = 0.3;
         plugins = [
-          anyrunPkgs.applications
+          anyrunPkgs.niri-focus
           anyrunPkgs.rink
+          anyrunPkgs.applications
           anyrunPkgs.shell
           anyrunPkgs.dictionary
           anyrunPkgs.symbols
           anyrunPkgs.translate
-          anyrunPkgs.niri-focus
           anyrunPkgs.nix-run
         ];
       };

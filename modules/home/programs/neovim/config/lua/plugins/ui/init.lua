@@ -246,7 +246,7 @@ return {
 		},
 	},
 	{
-		"echasnovski/mini.hipatterns",
+		"nvim-mini/mini.hipatterns",
 		event = "VeryLazy",
 		config = function()
 			local hipatterns = require("mini.hipatterns")
@@ -358,7 +358,7 @@ return {
 	},
 	-- Icons
 	{
-		"echasnovski/mini.icons",
+		"nvim-mini/mini.icons",
 		lazy = true,
 		specs = {
 			{ "nvim-tree/nvim-web-devicons", enabled = false, optional = true },

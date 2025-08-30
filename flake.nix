@@ -5,6 +5,10 @@
     # Upstream nixpkgs
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    # nixpkgs fork specifically for howdy
+    # TODO: remove when upstreamed
+    howdy-nixpkgs.url = "github:fufexan/nixpkgs/howdy";
+
     # Flake framework
     blueprint.url = "github:numtide/blueprint";
     blueprint.inputs.nixpkgs.follows = "nixpkgs";
