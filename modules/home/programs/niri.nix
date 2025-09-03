@@ -47,6 +47,12 @@ in
                 }
             }
 
+            // TODO: proper nix options for this
+            output "DP-3" {
+              mode "3440x1440@170.000"
+              variable-refresh-rate
+            }
+
             layout {
                 gaps 16
                 focus-ring { off; }
