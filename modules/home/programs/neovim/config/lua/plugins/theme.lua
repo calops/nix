@@ -122,6 +122,8 @@ local function hl_override(palette)
 		CustomTablineGitBranch = { fg = palette.peach, bg = colors.darken(palette.peach, 0.33) },
 		CustomTablineGitIcon = { fg = palette.base, bg = palette.peach },
 
+		LspSignatureActiveParameter = { bg = colors.darken(palette.red, 0.33) },
+
 		CopilotSuggestion = { fg = colors.darken(palette.peach, 0.8), style = { "italic" } },
 
 		AvanteSidebarNormal = { bg = palette.mantle, fg = palette.text },

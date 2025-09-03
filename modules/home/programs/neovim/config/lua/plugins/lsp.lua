@@ -14,9 +14,13 @@ return {
 				function() vim.diagnostic.open_float { border = vim.g.floating_border } end,
 				desc = "Show diagnostics",
 			},
-			{ "<C-k>", vim.lsp.buf.signature_help, desc = "Interactive signature help" },
 			{ "<space>n", vim.lsp.buf.rename, desc = "Interactive rename" },
 			{ "<space>F", vim.lsp.buf.format, desc = "Format code with LSP" },
+			{
+				"<C-s>",
+				function() vim.lsp.buf.signature_help { border = vim.g.floating_border } end,
+				desc = "Interactive LSP signature help",
+			},
 			{
 				"<space>d",
 				function() vim.diagnostic.jump { count = 1, float = { border = vim.g.floating_border } } end,
@@ -53,6 +57,7 @@ return {
 			})
 
 			vim.lsp.inline_completion.enable(true)
+			vim.lsp.on_type_formatting.enable(true)
 		end,
 	},
 
