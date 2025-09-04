@@ -90,6 +90,9 @@
 
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
+
+    zuban.url = "github:zubanls/zuban";
+    zuban.flake = false;
   };
 
   outputs =
