@@ -77,9 +77,14 @@ return {
 		opts = {
 			provider = "copilot",
 			auto_suggestions_provider = "gemini",
-			providers = {
-				gemini = {
-					model = "gemini-2.5-pro-exp-03-25",
+			acp_providers = {
+				["gemini-cli"] = {
+					command = "gemini",
+					args = { "--experimental-acp" },
+					env = {
+						NODE_NO_WARNINGS = "1",
+						-- GEMINI_API_KEY = vim.fn.system('op read "op://Private/Gemini API key/password"'),
+					},
 				},
 			},
 			hints = { enabled = false },
