@@ -31,23 +31,51 @@ in
 
       extraCss = # css
         ''
-          #window {
-            background-color: rgba(${palette.base}, 0.4);
-          }
-
-          box#main {
-            border-radius: 10px;
+          window {
+            border: 2px solid rgb(${palette.red});
             background-color: rgb(${palette.mantle});
+            border-radius: 8px;
           }
 
-          box#plugin {
-            border-radius: 10px;
-            background-color: none;
+          .main {
+            margin: 5px;
           }
 
-          box#match {
-            background-color: none;
-            border-radius: 10px;
+          text {
+            padding: 5px;
+            margin: 5px;
+            background-color: rgb(${palette.surface1});
+            border-radius: 4px;
+          }
+
+          box.plugin {
+            margin: 5px;
+            padding: 5px;
+            border-radius: 4px;
+            background-color: rgb(${palette.base});
+          }
+
+          box.plugin.info {
+            min-width: 150px;
+          }
+
+          box.plugin .info box.horizontal label {
+            padding-left: 5px;
+            border-radius: 4px;
+          }
+
+          box.plugin list {
+             background-color: ${palette.base};
+          }
+
+          box.plugin list .match .title,
+          box.plugin list .match .description {
+            padding: 5px;
+          }
+
+          list.plugin .match:selected {
+            background-color: rgb(${palette.overlay0});
+            border-radius: 4px;
           }
         '';
 
@@ -57,7 +85,7 @@ in
             prefix: ", ",
             allow_unfree: true,
             channel: "nixpkgs-unstable",
-            max_entries: 3,
+            max_entries: 5,
           )
         '';
     };
