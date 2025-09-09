@@ -30,10 +30,11 @@ return {
 				},
 			},
 			sources = {
-				default = { "lsp", "path", "snippets", "buffer", "lazydev" },
+				default = { "lsp", "path", "snippets", "buffer" },
 				per_filetype = {
 					codecompanion = { "codecompanion" },
 					AvanteInput = { "avante" },
+					lua = { "lsp", "path", "lazydev", "snippets", "buffer" },
 				},
 				providers = {
 					lazydev = {

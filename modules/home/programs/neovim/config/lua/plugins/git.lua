@@ -125,5 +125,8 @@ return {
 	{
 		"andrewradev/linediff.vim",
 		cmd = { "Linediff" },
+		keys = {
+			{ "<leader>gL", "<cmd>LinediffAdd<cr>", desc = "Compare lines" },
+		},
 	},
 }
