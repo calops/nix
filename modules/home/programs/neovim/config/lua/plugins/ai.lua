@@ -8,6 +8,7 @@ return {
 		keys = {
 			{ "<leader>ac", "<cmd>CodeCompanionChat toggle<cr>", desc = "Code companion", mode = { "n", "x" } },
 			{ "<leader>aa", "<cmd>CodeCompanion<cr>", desc = "Code companion", mode = { "n", "x" } },
+			{ "<leader>ax", "<cmd>CodeCompanionActions<cr>", desc = "Code companion actions palette" },
 		},
 		cmd = { "CodeCompanion", "CodeCompanionChat", "CodeCompanionActions" },
 		init = function()

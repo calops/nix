@@ -167,17 +167,6 @@ in
       fonts.iosevka.package
     ];
 
-    programs.mpv = {
-      enable = pkgs.stdenv.isLinux;
-      # FIXME: this mess
-      scripts = [
-        # pkgs.mpvScripts.sponsorblock
-        # pkgs.mpvScripts.thumbfast
-        # pkgs.mpvScripts.mpv-webm
-        # pkgs.mpvScripts.uosc
-      ];
-    };
-
     programs.zathura = {
       enable = true;
       options.font = cfg.fonts.monospace.name;
