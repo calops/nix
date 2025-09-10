@@ -24,5 +24,7 @@
     ./ssh.nix
     ./swaync.nix
     ./zellij.nix
+    ./mpv.nix
+    ./walker.nix
   ];
 }

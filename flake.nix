@@ -52,7 +52,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # App launcher
-    anyrun.url = "github:Kirottu/anyrun";
+    anyrun.url = "github:Kirottu/anyrun/anyrun-provider";
     anyrun.inputs.nixpkgs.follows = "nixpkgs";
 
     # Vencord settings module (discord mod)
@@ -91,8 +91,11 @@
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
 
-    zuban.url = "github:zubanls/zuban";
-    zuban.flake = false;
+    walker.url = "github:abenz1267/walker";
+    walker.inputs.nixpkgs.follows = "nixpkgs";
+
+    niri-caelestia-shell.url = "github:jutraim/niri-caelestia-shell";
+    niri-caelestia-shell.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =

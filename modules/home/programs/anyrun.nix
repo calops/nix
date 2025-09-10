@@ -3,6 +3,8 @@
   lib,
   perSystem,
   pkgs,
+  inputs,
+  modulesPath,
   ...
 }:
 let
@@ -10,6 +12,9 @@ let
   palette = config.my.colors.palette.asRgbIntTuple;
 in
 {
+  imports = [ inputs.anyrun.homeManagerModules.default ];
+  disabledModules = [ "${modulesPath}/programs/anyrun.nix" ];
+
   config = lib.mkIf (config.my.roles.graphical.enable && pkgs.stdenv.isLinux) {
     programs.anyrun = {
       package = anyrunPkgs.anyrun;

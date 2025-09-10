@@ -18,8 +18,21 @@
 
     programs.steam = {
       enable = true;
+      gamescopeSession.enable = true;
       remotePlay.openFirewall = true;
       extraCompatPackages = [ pkgs.proton-ge-bin ];
+    };
+
+    programs.gamescope = {
+      enable = true;
+      capSysNice = true;
+      args = [
+        "--hdr-enabled"
+        "--hdr-itm-enable"
+        "--hide-cursor-delay=3000"
+        "--fade-out-duration=200"
+        "--xwayland-count=2"
+      ];
     };
 
     hardware.graphics = {
@@ -32,7 +45,6 @@
     environment.systemPackages = [
       pkgs.protontricks
       pkgs.i2c-tools
-      # pkgs.nexusmods-app-unfree
     ];
 
     # OpenRGB

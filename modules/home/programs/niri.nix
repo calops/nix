@@ -102,7 +102,7 @@ in
             }
 
             environment {
-                "DISPLAY" ":0"
+                // "DISPLAY" ":0"
                 "ELECTRON_OZONE_PLATFORM_HINT" "auto"
                 "GBM_BACKEND" "nvidia-drm"
                 "LIBVA_DRIVER_NAME" "nvidia"
@@ -265,24 +265,25 @@ in
     home.packages = [
       pkgs.swww
       pkgs.nautilus
+      pkgs.xwayland-satellite
     ];
 
-    systemd.user.services.xwayland-satellite = {
-      Unit = {
-        Description = "XWayland Satellite";
-        PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session.target" ];
-      };
-
-      Service = {
-        ExecStart = lib.getExe pkgs.xwayland-satellite;
-        Restart = "on-failure";
-        KillMode = "mixed";
-      };
-
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
-    };
+    # systemd.user.services.xwayland-satellite = {
+    #   Unit = {
+    #     Description = "XWayland Satellite";
+    #     PartOf = [ "graphical-session.target" ];
+    #     After = [ "graphical-session.target" ];
+    #   };
+    #
+    #   Service = {
+    #     ExecStart = lib.getExe pkgs.xwayland-satellite;
+    #     Restart = "on-failure";
+    #     KillMode = "mixed";
+    #   };
+    #
+    #   Install = {
+    #     WantedBy = [ "graphical-session.target" ];
+    #   };
+    # };
   };
 }
