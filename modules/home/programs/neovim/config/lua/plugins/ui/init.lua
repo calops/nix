@@ -85,6 +85,7 @@ return {
 	{
 		"folke/snacks.nvim",
 		priority = 1000,
+		version = "2.21.0",
 		lazy = false,
 		opts = function()
 			---@type snacks.Config
