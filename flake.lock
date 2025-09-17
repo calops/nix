@@ -977,22 +977,6 @@
         "type": "github"
       }
     },
-    "howdy-nixpkgs": {
-      "locked": {
-        "lastModified": 1755938789,
-        "narHash": "sha256-IbGHxIacNdAIzw4JTIq3yp5bE0pxmO9fe1cegocmRqk=",
-        "owner": "fufexan",
-        "repo": "nixpkgs",
-        "rev": "2bd93f0ec5f6e27175df45b0a1aa3e5fe520b72b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "fufexan",
-        "ref": "howdy",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "iosevka-upstream": {
       "flake": false,
       "locked": {
@@ -1518,7 +1502,6 @@
         "fenix": "fenix",
         "fish-tide": "fish-tide",
         "home-manager": "home-manager",
-        "howdy-nixpkgs": "howdy-nixpkgs",
         "madness": "madness",
         "neovim-nightly": "neovim-nightly",
         "nh": "nh",

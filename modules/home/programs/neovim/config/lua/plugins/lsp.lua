@@ -128,7 +128,10 @@ return {
 	-- Tests
 	{
 		"nvim-neotest/neotest",
-		dependencies = { "nvim-neotest/nvim-nio" },
+		dependencies = {
+			"nvim-neotest/nvim-nio",
+			"nvim-neotest/neotest-python",
+		},
 		cmd = "Neotest",
 		keys = function()
 			utils.map {
@@ -150,7 +153,10 @@ return {
 			require("neotest").setup {
 				adapters = {
 					require("rustaceanvim.neotest"),
+					require("neotest-python"),
 				},
+				---@diagnostic disable-next-line: missing-fields
+				floating = { border = vim.g.floating_border },
 			}
 		end,
 	},

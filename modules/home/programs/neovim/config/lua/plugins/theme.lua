@@ -24,7 +24,7 @@ local function hl_override(palette)
 		ColorColumn = { bg = palette.mantle },
 
 		NormalFloat = { bg = floating_background },
-		FloatBorder = { fg = palette.mauve },
+		FloatBorder = { fg = palette.mauve, bg = floating_background },
 		TermFloatBorder = { fg = palette.red },
 
 		SnacksPickerMatch = { sp = palette.peach, fg = palette.peach, style = { "underline" } },

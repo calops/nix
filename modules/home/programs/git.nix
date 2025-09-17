@@ -54,6 +54,7 @@ in
         ".aws"
         ".direnv"
         ".envrc"
+        ".devenv"
         ".lsp.lua"
         ".venv"
         ".vim"
