@@ -48,7 +48,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # App launcher
-    anyrun.url = "github:Kirottu/anyrun/anyrun-provider";
+    anyrun.url = "github:Kirottu/anyrun/anyrun-provider-rebase";
     anyrun.inputs.nixpkgs.follows = "nixpkgs";
 
     # Vencord settings module (discord mod)

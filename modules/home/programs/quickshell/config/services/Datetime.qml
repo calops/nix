@@ -23,8 +23,4 @@ Singleton {
         time = date.toTimeString();
         [hours, minutes, seconds] = time.split(":");
     }
-
-    Component.onCompleted: {
-        updateDate();
-    }
 }

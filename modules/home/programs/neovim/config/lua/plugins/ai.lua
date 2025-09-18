@@ -16,6 +16,7 @@ return {
 				{ "<leader>a", group = "ai", icon = " ", mode = { "n", "x" } },
 			}
 		end,
+		---@type codecompanion.Config
 		opts = {
 			adapters = {
 				acp = {

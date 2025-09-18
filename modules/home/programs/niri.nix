@@ -107,9 +107,6 @@ in
                 "GBM_BACKEND" "nvidia-drm"
                 "LIBVA_DRIVER_NAME" "nvidia"
                 "NIXOS_OZONE_WL" "1"
-                "NVD_BACKEND" "direct"
-                "__GLX_VENDOR_LIBRARY_NAME" "nvidia"
-                "GSK_RENDERER" "ngl" // FIXME: needed with the current nvidia drivers, remove when fixed
             }
 
             binds {

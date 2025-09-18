@@ -39,8 +39,14 @@
     virtualisation.docker.enable = true;
     stylix.homeManagerIntegration.autoImport = false;
     home-manager.backupFileExtension = "hm-backup";
-    madness.enable = false; # FIXME: not building anymore, wait for upstream
-    environment.sessionVariables.EDITOR = "nvim";
+    madness.enable = false; # FIXME: broken
+
+    environment.sessionVariables = {
+      EDITOR = "nvim";
+      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+      GSK_RENDERER = "ngl"; # TODO: needed with the current nvidia drivers, remove when fixed
+      NVD_BACKEND = "direct";
+    };
 
     nixpkgs.config.allowUnfree = true;
     nix = {

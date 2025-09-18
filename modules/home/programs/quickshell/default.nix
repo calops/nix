@@ -20,7 +20,7 @@ in
     };
 
     programs.caelestia = {
-      enable = true;
+      enable = false;
       cli.enable = true;
       cli.settings.theme.enableGtk = false;
       settings = {
@@ -60,11 +60,11 @@ in
             enabled = true;
           }
           {
-            id = "clock";
+            id = "idleInhibitor";
             enabled = true;
           }
           {
-            id = "idleInhibitor";
+            id = "clock";
             enabled = true;
           }
         ];
@@ -73,12 +73,15 @@ in
         bar.status.showMicrophone = true;
         bar.status.showAudio = true;
         bar.tray.background = true;
+        bar.tray.recolour = false;
         bar.workspaces.windowIconSize = 20;
         bar.workspaces.focusedWindowBlob = false;
       };
     };
 
-    # xdg.configFile."quickshell".source =
-    #   config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/programs/quickshell/config";
+    home.file."Pictures/Wallpapers/main.png".source = config.stylix.image;
+
+    xdg.configFile."quickshell".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/programs/quickshell/config";
   };
 }

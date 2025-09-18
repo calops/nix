@@ -31,16 +31,30 @@
         "systems": "systems"
       },
       "locked": {
+<<<<<<< HEAD
         "lastModified": 1757574740,
         "narHash": "sha256-xUU2HQiL3VXNNitqPbboj+aiV+ouDwu3OWv8isk9dZw=",
+||||||| parent of 6011545 (start working on quickshell)
+        "lastModified": 1757417467,
+        "narHash": "sha256-J01g4UkOOrkQSc0HgDhqInAqXDBELVIuk7qlLIOy5mI=",
+=======
+        "lastModified": 1758123696,
+        "narHash": "sha256-UJEY97Qm6EK5orNAiGc3nXsatIGCp5CulzseUZ/+B2g=",
+>>>>>>> 6011545 (start working on quickshell)
         "owner": "Kirottu",
         "repo": "anyrun",
+<<<<<<< HEAD
         "rev": "da438318bf7c0b0a0a45952170e077ad8c017546",
+||||||| parent of 6011545 (start working on quickshell)
+        "rev": "c05060e78f4a14fdd5f38bc0fd795036660c6c4c",
+=======
+        "rev": "63d11ea724fcae2c86786a10722a05c53fe0f100",
+>>>>>>> 6011545 (start working on quickshell)
         "type": "github"
       },
       "original": {
         "owner": "Kirottu",
-        "ref": "anyrun-provider",
+        "ref": "anyrun-provider-rebase",
         "repo": "anyrun",
         "type": "github"
       }
@@ -53,11 +67,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1757413486,
-        "narHash": "sha256-RLzs1REAk2l6sfJfZXIgoWKGkASUizU3+gNm09JCjU0=",
+        "lastModified": 1758040471,
+        "narHash": "sha256-jsFBGoLiciAFRs5Fi4eOvbsXtf2tLyYh+OiRhV6BGI4=",
         "owner": "anyrun-org",
         "repo": "anyrun-provider",
-        "rev": "b936a7c8856e3476e47bd2604ed9551c4d5d982c",
+        "rev": "6631af0ecb8f245cbf88e972d1522f747d6cd883",
         "type": "github"
       },
       "original": {
