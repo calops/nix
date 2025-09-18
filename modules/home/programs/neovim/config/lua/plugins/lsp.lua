@@ -50,6 +50,9 @@ return {
 
 				-- QML
 				"qmlls",
+
+				-- JSON
+				"jsonls",
 			}
 
 			vim.lsp.config("*", {

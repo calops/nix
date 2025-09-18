@@ -26,5 +26,7 @@
     ./zellij.nix
     ./mpv.nix
     ./walker.nix
+    ./nushell.nix
+    ./oh-my-posh.nix
   ];
 }

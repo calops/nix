@@ -46,6 +46,7 @@ in
         pkgs.vtsls # typescript / javascript
         pkgs.fish-lsp
         pkgs.kdePackages.qtdeclarative # for qmlls
+        pkgs.nodePackages.vscode-json-languageserver
         rustToolchain # rust
 
         # Tools
