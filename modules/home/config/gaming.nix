@@ -24,7 +24,6 @@ in
       pkgs.steam-run
       pkgs.wineWowPackages.waylandFull
       pkgs.winetricks
-      perSystem.nix-gaming.star-citizen
     ];
 
     programs.mangohud = {

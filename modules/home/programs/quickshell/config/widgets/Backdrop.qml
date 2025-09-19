@@ -1,6 +1,5 @@
 import QtQuick
 import "../services"
-import "../animations/"
 
 Rectangle {
     id: root
@@ -20,7 +19,7 @@ Rectangle {
         }
 
         GradientStop {
-            position: 0.5
+            position: 0.6
             color: Colors.alpha(Colors.palette.crust, 0.65)
         }
 

@@ -2,7 +2,6 @@
   lib,
   config,
   inputs,
-  pkgs,
   perSystem,
   ...
 }:
@@ -27,7 +26,7 @@
     systemd.user.services.niri-flake-polkit.enable = false;
     security.soteria.enable = true;
 
-    # Disply manager
+    # Display manager
     services = {
       xserver.enable = true;
       displayManager.gdm.enable = true;

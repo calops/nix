@@ -33,6 +33,7 @@ let
         {
           alignment = "left";
           type = "prompt";
+          newline = true;
           segments = builtins.map mkLeftSegment [
             {
               type = "session";
@@ -48,11 +49,11 @@ let
             }
             {
               type = "path";
-              foreground = palette.green;
+              foreground = palette.turquoise;
               properties = {
                 style = "agnoster_full";
-                right_format = "<b>%s</b>";
-                gitdir_format = "<b>%s</b>";
+                right_format = "<${palette.mint}><b>%s</b></>";
+                gitdir_format = "<${palette.teal}><b>%s</b></>";
               };
               template = " {{ .Path }}";
             }
@@ -69,25 +70,20 @@ let
                 branch_template = "{{ trunc 25 .Branch }}";
                 fetch_status = true;
                 fetch_upstream_icon = true;
-                status_formats = {
-                  Added = " %d";
-                  Modified = " %d";
-                  Deleted = " %d";
-                  Untracked = " %d";
-                };
-                git_icon = " ";
+                git_icon = "";
                 branch_icon = "";
                 branch_identical_icon = "";
-                branch_ahead_icon = " ";
-                branch_behind_icon = " ";
+                branch_ahead_icon = "";
+                branch_behind_icon = "";
                 branch_gone_icon = "";
+                github_icon = "";
               };
               template = builtins.concatStringsSep "" [
                 "{{ .UpstreamIcon }} {{ .HEAD }}"
                 "{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}"
-                "{{ if gt .StashCount 0 }}  {{ .StashCount }}{{ end }}"
-                "{{ if .Staging.Changed }}  {{ add add add .Staging.Added .Staging.Modified .Staging.Deleted }}{{ end }}"
-                "{{ if .Working.Changed }} {{ .Working.String }}{{ end }}"
+                "{{ if gt .StashCount 0 }} <${palette.purple}> {{ .StashCount }}</>{{ end }}"
+                "{{ if .Staging.Changed }} <${palette.green}> {{ add add add .Staging.Added .Staging.Modified .Staging.Deleted }}</>{{ end }}"
+                "{{ if .Working.Changed }} <${palette.sand}> {{ add add add .Working.Untracked .Working.Modified .Working.Deleted }}</>{{ end }}"
               ];
             }
           ];

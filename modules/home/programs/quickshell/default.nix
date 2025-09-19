@@ -19,66 +19,6 @@ in
       systemd.enable = true;
     };
 
-    programs.caelestia = {
-      enable = false;
-      cli.enable = true;
-      cli.settings.theme.enableGtk = false;
-      settings = {
-        appearance.transparency.enabled = false;
-        font.family.mono = config.my.roles.graphical.fonts.monospace.name;
-        general.apps.terminal = config.my.roles.graphical.terminal;
-        background.enabled = true;
-        background.visualiser.enabled = true;
-        background.desktopClock.enabled = true;
-        bar.entries = [
-          {
-            id = "logo";
-            enabled = true;
-          }
-          {
-            id = "statusIcons";
-            enabled = true;
-          }
-          {
-            id = "tray";
-            enabled = true;
-          }
-          {
-            id = "spacer";
-            enabled = true;
-          }
-          {
-            id = "workspaces";
-            enabled = true;
-          }
-          {
-            id = "spacer";
-            enabled = true;
-          }
-          {
-            id = "power";
-            enabled = true;
-          }
-          {
-            id = "idleInhibitor";
-            enabled = true;
-          }
-          {
-            id = "clock";
-            enabled = true;
-          }
-        ];
-        bar.persistent = true;
-        bar.status.showBattery = false;
-        bar.status.showMicrophone = true;
-        bar.status.showAudio = true;
-        bar.tray.background = true;
-        bar.tray.recolour = false;
-        bar.workspaces.windowIconSize = 20;
-        bar.workspaces.focusedWindowBlob = false;
-      };
-    };
-
     home.file."Pictures/Wallpapers/main.png".source = config.stylix.image;
 
     xdg.configFile."quickshell".source =

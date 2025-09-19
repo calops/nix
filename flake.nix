@@ -3,7 +3,7 @@
 
   inputs = {
     # Upstream nixpkgs
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Flake framework
     blueprint.url = "github:numtide/blueprint";
