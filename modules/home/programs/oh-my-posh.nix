@@ -73,8 +73,8 @@ let
                 git_icon = "";
                 branch_icon = "";
                 branch_identical_icon = "";
-                branch_ahead_icon = "";
-                branch_behind_icon = "";
+                branch_ahead_icon = " ";
+                branch_behind_icon = " ";
                 branch_gone_icon = "";
                 github_icon = "";
               };
