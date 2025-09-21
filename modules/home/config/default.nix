@@ -68,6 +68,7 @@
       NH_FLAKE = config.my.configDir;
       # Determinate nix removes flakes and command from experimental features, which NH checks for
       NH_NO_CHECKS = "1";
+      NIX_CONFIG_TYPE = config.my.configType;
     };
     programs.nh = lib.mkIf (config.my.configType == "standalone") {
       enable = true;

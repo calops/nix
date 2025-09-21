@@ -125,7 +125,7 @@ let
                 style = "austin";
                 threshold = 300;
               };
-              template = "{ { .FormattedMs }}";
+              template = " {{ .FormattedMs }} ";
             }
             {
               type = "status";

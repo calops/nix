@@ -74,88 +74,12 @@ in
           # function fish_command_not_found
           #   command-not-found $argv
           # end
-        '';
 
-      plugins = [
-        {
-          name = "tide";
-          src = inputs.fish-tide;
-        }
-      ];
+          oh-my-posh init fish --config ${config.my.oh-my-posh.theme} | source
+        '';
     };
 
-    home.activation.tide =
-      let
-        tideConfigure =
-          pkgs.writeText "tide-configure" # fish
-            ''
-              tide configure \
-                --auto \
-                --style=Lean \
-                --prompt_colors='True color' \
-                --show_time=No \
-                --lean_prompt_height='Two lines' \
-                --prompt_connection=Disconnected \
-                --prompt_spacing=Sparse \
-                --icons='Many icons' \
-                --transient=No
-
-              set -U tide_git_icon_stash "  "
-              set -U tide_git_icon_staged "  "
-              set -U tide_git_icon_dirty "  "
-              set -U tide_git_icon_untracked "  "
-              set -U tide_git_icon_upstream_behind '  '
-              set -U tide_git_icon_upstream_ahead '  '
-
-              set -U tide_aws_color                ${palette.yellow}
-              set -U tide_bun_color                ${palette.flamingo}
-              set -U tide_character_color          ${palette.green}
-              set -U tide_character_color_failure  ${palette.red}
-              set -U tide_cmd_duration_color       ${palette.overlay0}
-              set -U tide_context_color_default    ${palette.text}
-              set -U tide_context_color_root       ${palette.cherry}
-              set -U tide_context_color_ssh        ${palette.tangerine}
-              set -U tide_crystal_color            ${palette.overlay2}
-              set -U tide_distrobox_color          ${palette.coral}
-              set -U tide_direnv_color             ${palette.gold}
-              set -U tide_docker_color             ${palette.blue}
-              set -U tide_elixir_color             ${palette.purple}
-              set -U tide_git_color_branch         ${palette.lime}
-              set -U tide_git_color_conflicted     ${palette.red}
-              set -U tide_git_color_dirty          ${palette.sand}
-              set -U tide_git_color_operation      ${palette.tangerine}
-              set -U tide_git_color_staged         ${palette.green}
-              set -U tide_git_color_stash          ${palette.peach}
-              set -U tide_git_color_untracked      ${palette.teal}
-              set -U tide_git_color_upstream       ${palette.navy}
-              set -U tide_go_color                 ${palette.sky}
-              set -U tide_java_color               ${palette.orange}
-              set -U tide_jobs_color               ${palette.pink}
-              set -U tide_kubectl_color            ${palette.blue}
-              set -U tide_nix_shell_color          ${palette.navy}
-              set -U tide_node_color               ${palette.forest}
-              set -U tide_php_color                ${palette.blue}
-              set -U tide_private_mode_color       ${palette.purple}
-              set -U tide_pulumi_color             ${palette.mauve}
-              set -U tide_pwd_color_anchors        ${palette.mint}
-              set -U tide_pwd_color_dirs           ${palette.turquoise}
-              set -U tide_pwd_color_truncated_dirs ${palette.turquoise}
-              set -U tide_python_color             ${palette.yellow}
-              set -U tide_ruby_color               ${palette.pink}
-              set -U tide_rustc_color              ${palette.orange}
-              set -U tide_status_color             ${palette.green}
-              set -U tide_status_color_failure     ${palette.red}
-              set -U tide_terraform_color          ${palette.navy}
-              set -U tide_time_color               ${palette.surface2}
-              set -U tide_toolbox_color            ${palette.purple}
-              set -U tide_zig_color                ${palette.gold}
-            '';
-      in
-      lib.hm.dag.entryAfter [ "writeBoundary" ] # bash
-        ''
-          echo "Configuring tide prompt"
-          $DRY_RUN_CMD ${config.programs.fish.package}/bin/fish ${tideConfigure}
-        '';
+    programs.carapace.enableFishIntegration = false;
 
     home.packages = [ pkgs.oh-my-fish ];
   };

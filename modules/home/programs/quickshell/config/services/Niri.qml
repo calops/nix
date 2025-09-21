@@ -103,7 +103,7 @@ Singleton {
         case "chat":
             return "";
         case "games":
-            return "";
+            return "󰊗";
         case "web":
             return "󰖟";
         default:

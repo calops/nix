@@ -15,27 +15,36 @@ in
       extraConfig =
         #nu
         ''
-          $env.config.show_banner = false
-
-          # direnv hook
           $env.config.hooks.env_change.PWD = (
             append (source ${nuScripts}/nu-hooks/nu-hooks/direnv/config.nu)
           )
 
-          # no table borders
-          $env.config.table.mode = "none"
+          source ./extraConfig.nu
 
-          # shell prompt
           oh-my-posh init nu --config ${config.my.oh-my-posh.theme}
         '';
 
       plugins = [
         pkgs.nushellPlugins.highlight
+        pkgs.nushellPlugins.skim
       ];
     };
+
+    xdg.configFile."nushell/extraConfig.nu".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/programs/nushell/config.nu";
 
     home.packages = [
       pkgs.oh-my-posh
     ];
+
+    programs.carapace = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
+    programs.vivid = {
+      enable = true;
+      activeTheme = "catppuccin-mocha";
+    };
   };
 }
