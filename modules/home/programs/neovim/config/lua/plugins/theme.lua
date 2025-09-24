@@ -25,6 +25,7 @@ local function hl_override(palette)
 
 		NormalFloat = { bg = floating_background },
 		FloatBorder = { fg = palette.mauve, bg = floating_background },
+		FloatTitle = { fg = palette.yellow, bg = floating_background },
 		TermFloatBorder = { fg = palette.red },
 
 		SnacksPickerMatch = { sp = palette.peach, fg = palette.peach, style = { "underline" } },
