@@ -205,11 +205,15 @@ local tabs = {
 					local buffer = vim.api.nvim_win_get_buf(win)
 					local buffer_name = vim.api.nvim_buf_get_name(buffer) or ""
 					local file_name = vim.fs.basename(buffer_name)
-					local filetype = vim.api.nvim_get_option_value("filetype", { buf = buffer })
-					local buftype = vim.api.nvim_get_option_value("buftype", { buf = buffer })
+					local filetype = vim.bo[buffer].filetype
+					local buftype = vim.bo[buffer].buftype
 
 					if filetype and buftype ~= "nofile" then
 						local icon, icon_hl = require("mini.icons").get("filetype", filetype)
+						if filetype == "Fyler" then
+							-- FIXME: this should be set in mini.icons but it's not working
+							icon = " "
+						end
 						if icon and icon_hl then
 							table.insert(icons, {
 								provider = icon,
@@ -234,8 +238,6 @@ local tabs = {
 
 					modified = modified or vim.api.nvim_get_option_value("modified", { buf = buffer })
 				end
-
-				table.insert(icons, { provider = " " })
 
 				local diags = require("core.diagnostics")
 				local diag_pills = {}

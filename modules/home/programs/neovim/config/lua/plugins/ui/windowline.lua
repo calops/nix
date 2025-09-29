@@ -10,9 +10,7 @@ return {
 	config = function()
 		local function f(color) return string.format("#%06x", color) end
 
-		local incline = require("incline")
-
-		incline.setup {
+		require("incline").setup {
 			render = function(props)
 				local buftype = vim.bo[props.buf].buftype
 				local filename_modifier = buftype == "help" and ":t" or ":."
@@ -32,6 +30,12 @@ return {
 					filename = vim.b[props.buf].term_title
 					icon = " "
 					icon_hl = "TermFloatBorder"
+				end
+
+				if filetype == "Fyler" then
+					-- FIXME: this icon should be set in mini.icons but it's not working
+					icon = " "
+					filename = string.gsub(filename, "fyler://" .. vim.fn.getcwd() .. "/", "")
 				end
 
 				local icon_color = {
@@ -80,10 +84,9 @@ return {
 			end,
 
 			hide = { cursorline = true },
-
 			ignore = {
 				unlisted_buffers = false,
-				buftypes = function(_, buftype) return buftype ~= "" and buftype ~= "help" and buftype ~= "terminal" end,
+				buftypes = {},
 			},
 
 			window = {

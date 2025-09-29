@@ -117,21 +117,20 @@ return {
 	},
 	-- Edit filesystem as a buffer
 	{
-		"stevearc/oil.nvim",
-		lazy = false,
+		"A7Lavinraj/fyler.nvim",
+		dependencies = { "nvim-mini/mini.icons" },
+		cmd = { "Fyler" },
 		keys = {
-			{ "<leader>o", "<cmd>Oil<cr>", desc = "Edit filesystem as a buffer" },
+			{
+				"<leader>o",
+				-- function() vim.cmd.Fyler("dir=" .. vim.fn.expand("%:p:h")) end,
+				function() vim.cmd.Fyler() end,
+				desc = "Edit filesystem as a buffer",
+			},
 		},
 		opts = {
-			columns = { "icon" },
-			view_options = {
-				show_hidden = true,
-			},
-			float = {
-				padding = 5,
-				max_width = 120,
-				max_height = 200,
-			},
+			default_explorer = true,
+			win = { win_opts = { relativenumber = false } },
 		},
 	},
 	-- Move stuff around

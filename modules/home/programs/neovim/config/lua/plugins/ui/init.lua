@@ -367,7 +367,6 @@ return {
 		init = function()
 			---@diagnostic disable-next-line: duplicate-set-field
 			package.preload["nvim-web-devicons"] = function()
-				-- needed since it will be false when loading and mini will fail
 				package.loaded["nvim-web-devicons"] = {}
 				require("mini.icons").mock_nvim_web_devicons()
 				return package.loaded["nvim-web-devicons"]
@@ -375,6 +374,9 @@ return {
 		end,
 		opts = {
 			-- wider icons
+			default = {
+				file = { glyph = " " },
+			},
 			filetype = {
 				docker = { glyph = " " },
 				gitattributes = { glyph = " " },
@@ -392,6 +394,7 @@ return {
 				typescript = { glyph = " " },
 				typescriptreact = { glyph = " " },
 				yaml = { glyph = " " },
+				Fyler = { glyph = " " },
 			},
 		},
 	},
