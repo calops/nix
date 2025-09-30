@@ -48,7 +48,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # App launcher
-    anyrun.url = "github:Kirottu/anyrun/anyrun-provider-rebase";
+    anyrun.url = "github:Kirottu/anyrun";
     anyrun.inputs.nixpkgs.follows = "nixpkgs";
 
     # Vencord settings module (discord mod)
@@ -92,6 +92,9 @@
 
     niri-caelestia-shell.url = "github:jutraim/niri-caelestia-shell";
     niri-caelestia-shell.inputs.nixpkgs.follows = "nixpkgs";
+
+    stasis.url = "github:saltnpepper97/stasis";
+    stasis.flake = false;
   };
 
   outputs =

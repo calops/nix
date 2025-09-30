@@ -4,14 +4,23 @@ import "../animations"
 import "../services"
 
 Text {
-    id: self
+    id: root
     font.family: "Aporetic Sans Mono"
     font.pixelSize: 20
     color: Colors.palette.text
+    x: parent.width / 2 - width / 2
 
     Behavior on text {
         FadeReduceAnimation {
-            target: self
+            target: root
+        }
+    }
+
+    Behavior on color {
+        PropertyAnimation {
+            target: root
+            property: "color"
+            easing.type: Easing.OutQuad
         }
     }
 

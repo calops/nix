@@ -28,5 +28,6 @@
     ./walker.nix
     ./nushell
     ./oh-my-posh.nix
+    ./stasis.nix
   ];
 }

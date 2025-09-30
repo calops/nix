@@ -33,6 +33,19 @@
     bluetooth.enable = true;
   };
 
+  # Adjust audio sample rate
+  # services.pipewire.extraConfig.pipewire.adjust-sample-rate = {
+  #   "context.properties" = {
+  #     "default.clock.rate" = 92000;
+  #     "default.clock.allowed-rates" = [
+  #       44100
+  #       48000
+  #       92000
+  #       192000
+  #     ];
+  #   };
+  # };
+
   # Last known kernel with working wifi driver
   boot.kernelPackages = pkgs.linuxPackages_latest;
 

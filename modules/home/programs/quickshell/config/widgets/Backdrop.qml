@@ -30,10 +30,10 @@ Rectangle {
     }
 
     Behavior on opacity {
-        NumberAnimation {
+        PropertyAnimation {
             target: root
             property: "opacity"
-            easing.type: Easing.Quad
+            easing.type: Easing.OutQuad
         }
     }
 }

@@ -19,6 +19,13 @@ alias sr = steam-run
 alias x = dtrx
 alias dl = curl -O
 
+def --wrapped ez [...args] {
+	eza -l --icons=always --color=always ...$args
+	| parse --regex "^(?P<modes>[^ ]+) +(?P<inode>[^ ]+) +(?P<user>[^ ]+) +(?P<modified>.*) +(?P<file>[^ ]+ +.*)$"
+	| reject inode
+	| table --theme=none
+}
+
 def ns [] {
 	if ("NIX_CONFIG_TYPE" in $env) {
 		match $env.NIX_CONFIG_TYPE {

@@ -15,7 +15,9 @@ Singleton {
         overlay1: "#7f849c",
         overlay0: "#6c7086",
         crust: "#11111b",
-        mantle: "#1e1e2e"
+        mantle: "#1e1e2e",
+        peach: "#f2b48b",
+        yellow: "#f9e2af"
     })
 
     function alpha(color, alpha) {

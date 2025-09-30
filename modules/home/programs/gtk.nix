@@ -20,10 +20,10 @@
           }
         );
       };
-      iconTheme = lib.mkIf pkgs.stdenv.isLinux {
-        name = "Papirus";
-        package = pkgs.papirus-icon-theme;
-      };
+      # iconTheme = lib.mkIf pkgs.stdenv.isLinux {
+      #   name = "Papirus";
+      #   package = pkgs.papirus-icon-theme;
+      # };
     };
 
     qt = lib.mkIf (!pkgs.stdenv.isDarwin) {

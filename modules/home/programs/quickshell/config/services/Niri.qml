@@ -11,7 +11,7 @@ Singleton {
     property var workspaceWindows: {}
     property var windows: {}
 
-    property var focusedWorkspace: {}
+    property int focusedWorkspaceId: 0
     property var focusedWindow: {}
 
     property bool hasLeftOverflow: false
@@ -29,7 +29,7 @@ Singleton {
                 const event = Object.keys(messageObject)[0];
                 const payload = Object.values(messageObject)[0];
 
-                var handler = niri["on" + event];
+                var handler = niri["onNiri" + event];
                 if (typeof handler === "function") {
                     handler(payload);
                 }
@@ -37,19 +37,22 @@ Singleton {
         }
     }
 
-    function onWorkspacesChanged(payload) {
-        workspaces = {};
+    function onNiriWorkspacesChanged(payload) {
+        var newWorkspaces = {};
+
         for (const workspace of payload.workspaces) {
             workspace.icon = _mapWorkspaceNameToIcon(workspace.name);
-            workspaces[workspace.id] = workspace;
+            newWorkspaces[workspace.id] = workspace;
 
             if (workspace.is_focused) {
-                focusedWorkspace = workspace;
+                focusedWorkspaceId = workspace.id;
             }
         }
+
+        workspaces = newWorkspaces;
     }
 
-    function onWindowsChanged(payload) {
+    function onNiriWindowsChanged(payload) {
         workspaceWindows = {};
 
         for (const win of payload.windows) {
@@ -62,25 +65,27 @@ Singleton {
         }
     }
 
-    function onWorkspaceActivated(payload) {
+    function onNiriWorkspaceActivated(payload) {
         if (payload.focused) {
-            focusedWorkspace = workspaces[payload.id];
+            workspaces[focusedWorkspaceId].is_focused = false;
+            focusedWorkspaceId = payload.id;
+            workspaces[focusedWorkspaceId].is_focused = true;
         }
     }
 
-    function onWindowOpenedOrChanged(payload) {
+    function onNiriWindowOpenedOrChanged(payload) {
         workspaceWindows[payload.window.workspace_id][payload.window.id] = payload.window;
     }
 
-    function onWindowFocusChanged(payload) {
-        focusedWindow = workspaceWindows[focusedWorkspace.id][payload.id];
+    function onNiriWindowFocusChanged(payload) {
+        focusedWindow = workspaceWindows?.get(focusedWorkspaceId)?.get(payload.id);
     }
 
     onFocusedWindowChanged: {
         _computeOverflows();
     }
 
-    onFocusedWorkspaceChanged: {
+    onFocusedWorkspaceIdChanged: {
         _computeOverflows();
     }
 
@@ -114,22 +119,25 @@ Singleton {
     function _computeOverflows() {
         var newHasLeftOverflow = false;
         var newHasRightOverflow = false;
+        var windows = workspaceWindows?.get(focusedWorkspaceId);
 
-        for (const win of Object.values(workspaceWindows[focusedWorkspace.id])) {
-            if (win.layout.tile_pos_in_workspace_view) {
-                if (win.layout.tile_pos_in_workspace_view[0] < 56) {
-                    newHasLeftOverflow = true;
-                } else if (win.layout.tile_pos_in_workspace_view[0] > (3440 - 56)) {
-                    newHasRightOverflow = true;
+        if (windows) {
+            for (const win of Object.values(windows)) {
+                if (win.layout.tile_pos_in_workspace_view) {
+                    if (win.layout.tile_pos_in_workspace_view[0] < 56) {
+                        newHasLeftOverflow = true;
+                    } else if (win.layout.tile_pos_in_workspace_view[0] > (3440 - 56)) {
+                        newHasRightOverflow = true;
+                    }
                 }
             }
-        }
 
-        if (focusedWindow?.layout?.pos_in_scrolling_layout?.[0] > 0) {
-            newHasLeftOverflow = true;
-        }
+            if (focusedWindow?.layout?.pos_in_scrolling_layout?.[0] > 0) {
+                newHasLeftOverflow = true;
+            }
 
-        hasLeftOverflow = newHasLeftOverflow;
-        hasRightOverflow = newHasRightOverflow;
+            hasLeftOverflow = newHasLeftOverflow;
+            hasRightOverflow = newHasRightOverflow;
+        }
     }
 }

@@ -90,6 +90,13 @@
     services.udisks2.enable = true;
     services.openssh.enable = true;
 
+    # Brightness control
+    services.acpid.enable = true;
+    hardware.acpilight.enable = true;
+    services.udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="backlight", KERNEL=="kbd_backlight", GROUP="video", MODE="0664"
+    '';
+
     programs.fish.enable = true;
     programs.mtr.enable = true;
     programs.gnupg.agent = {
@@ -107,6 +114,9 @@
 
     programs._1password.enable = true;
     programs._1password-gui.enable = true;
+    environment.etc."1password/custom_allowed_browsers".text = ''
+      firefox-beta
+    '';
 
     security.polkit.enable = true;
   };

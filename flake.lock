@@ -31,16 +31,15 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1758123696,
-        "narHash": "sha256-UJEY97Qm6EK5orNAiGc3nXsatIGCp5CulzseUZ/+B2g=",
+        "lastModified": 1758645700,
+        "narHash": "sha256-7VHPjP/FDqx3EctIXqUssh8GC9ldXq/eNMX21uVkI8c=",
         "owner": "Kirottu",
         "repo": "anyrun",
-        "rev": "63d11ea724fcae2c86786a10722a05c53fe0f100",
+        "rev": "8cf7bd9de48e50cf1d662a56af28c0d13da91761",
         "type": "github"
       },
       "original": {
         "owner": "Kirottu",
-        "ref": "anyrun-provider-rebase",
         "repo": "anyrun",
         "type": "github"
       }
@@ -1518,6 +1517,7 @@
         "nixpkgs": "nixpkgs_3",
         "nur": "nur",
         "solaar": "solaar",
+        "stasis": "stasis",
         "stylix": "stylix",
         "walker": "walker"
       }
@@ -1604,6 +1604,22 @@
         "owner": "Svenum",
         "ref": "main",
         "repo": "Solaar-Flake",
+        "type": "github"
+      }
+    },
+    "stasis": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1759092220,
+        "narHash": "sha256-vcivN2JIAA854uszaBYbpOlLHCTj4i71iJccDUyoaM4=",
+        "owner": "saltnpepper97",
+        "repo": "stasis",
+        "rev": "d17b96f901cbc9bfc000ece31bd3f5f9944af178",
+        "type": "github"
+      },
+      "original": {
+        "owner": "saltnpepper97",
+        "repo": "stasis",
         "type": "github"
       }
     },

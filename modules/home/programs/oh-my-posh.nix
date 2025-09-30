@@ -42,7 +42,7 @@ let
                 "{{if .SSHSession }}${palette.peach}{{end}}"
                 "{{if .Root }}${palette.red}{{end}}"
               ];
-              template = lib.concatStringsSep "" [
+              template = builtins.concatStringsSep "" [
                 "{{ if or .SSHSession .Root }} {{ .UserName }}{{ end }}"
                 "{{ if .SSHSession }}  {{ .Hostname }}{{end}}"
               ];
@@ -95,13 +95,12 @@ let
             {
               type = "nix-shell";
               foreground = palette.blue;
-              template = " {{ if eq .Type \"pure\" }} {{end}}{{.Env.name}}";
+              template = "{{ if .Env.name }} {{ if eq .Type \"pure\" }} {{ end }}{{ .Env.name }}{{ end }}";
             }
-
             {
               type = "python";
               foreground = palette.yellow;
-              template = lib.concatStringsSep "" [
+              template = builtins.concatStringsSep "" [
                 " {{ .Full }}"
                 "{{ if .Venv }} ({{ .Venv }}){{ end }}"
               ];

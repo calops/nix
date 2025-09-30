@@ -174,13 +174,7 @@ in
       '';
 
       asLua = pkgs.writeText "palette.lua" ''
-        return {
-          ${lib.concatStringsSep "\n" (
-            builtins.attrValues (
-              builtins.mapAttrs (name: value: "  " + name + " = \"" + value + "\",") asHexWithHashtag
-            )
-          )}
-        }
+        return ${lib.generators.toLua { } asHexWithHashtag}
       '';
     };
   };

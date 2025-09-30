@@ -22,11 +22,25 @@ Scope {
             color: "transparent"
 
             mask: Region {
-                item: clock
+                Region {
+                    item: clock
+                }
+                Region {
+                    item: workspaces
+                }
+                Region {
+                    item: tray
+                }
             }
 
             Backdrop {
                 enabled: Niri.hasLeftOverflow
+            }
+
+            SysTray {
+                id: tray
+                x: parent.width / 2 - width / 2
+                y: 10
             }
 
             Workspaces {
