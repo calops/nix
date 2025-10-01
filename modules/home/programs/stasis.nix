@@ -7,7 +7,7 @@
   ...
 }:
 {
-  config = lib.mkIf config.my.roles.graphical.enable {
+  config = lib.mkIf (pkgs.stdenv.isLinux && config.my.roles.graphical.enable) {
     home.packages = [
       perSystem.self.stasis
       pkgs.brightnessctl

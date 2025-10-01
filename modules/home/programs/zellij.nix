@@ -2,8 +2,8 @@
 {
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.zellij = {
-      # FIXME: why the fuck is it opening by default?
-      enable = false;
+      enable = true;
+      enableFishIntegration = false;
       settings = {
         ui.pane_frames.rounded_corners = true;
         mouse_mode = true;

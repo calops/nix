@@ -26,6 +26,10 @@ return {
 				function() vim.diagnostic.jump { count = 1, float = { border = vim.g.floating_border } } end,
 				desc = "Jump to next diagnostic",
 			},
+			-- {
+			-- 	"<M-CR>",
+			-- 	function() vim.lsp.inline_completion.get() end,
+			-- },
 		},
 		config = function()
 			require("mason").setup { ui = { border = vim.g.floating_border } }
@@ -35,31 +39,21 @@ return {
 			}
 
 			vim.lsp.enable {
-				-- Lua
 				"lua_ls",
-
-				-- JavaScript/TypeScript
 				"vtsls",
-
-				-- Fish
 				"fish_lsp",
-
-				-- Nix
 				"nil_ls",
 				"nixd",
-
-				-- QML
 				"qmlls",
-
-				-- JSON
 				"jsonls",
+				"copilot",
 			}
 
 			vim.lsp.config("*", {
 				on_attach = function(_, bufnr) vim.lsp.document_color.enable(true, bufnr, { style = "virtual" }) end,
 			})
 
-			vim.lsp.inline_completion.enable(true)
+			-- vim.lsp.inline_completion.enable(true)
 			vim.lsp.on_type_formatting.enable(true)
 		end,
 	},
