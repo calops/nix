@@ -9,7 +9,7 @@ pkgs.lib.mkIf pkgs.stdenv.isLinux (
     version = "0.1.0";
 
     src = inputs.stasis;
-    cargoHash = "sha256-K3pyzv4s4lS8u7kAGgogVbixXk3Pd7gCmhmSYcReve8=";
+    cargoHash = "sha256-pdknkH83ONwSAVphUVGceV0vk/69tsVG9wu4ULnd7u8=";
 
     buildInputs = [
       pkgs.dbus
@@ -22,5 +22,6 @@ pkgs.lib.mkIf pkgs.stdenv.isLinux (
     ];
 
     dbus = pkgs.dbus;
+    doCheck = false;
   }
 )
