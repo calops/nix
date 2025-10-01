@@ -17,7 +17,8 @@ Singleton {
         crust: "#11111b",
         mantle: "#1e1e2e",
         peach: "#f2b48b",
-        yellow: "#f9e2af"
+        yellow: "#f9e2af",
+        red: "#f38ba8"
     })
 
     function alpha(color, alpha) {

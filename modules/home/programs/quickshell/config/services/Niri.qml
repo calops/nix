@@ -37,6 +37,10 @@ Singleton {
         }
     }
 
+    function focusWorkspace(id) {
+        Quickshell.execDetached(["niri", "msg", "action", "focus-workspace", id]);
+    }
+
     function onNiriWorkspacesChanged(payload) {
         var newWorkspaces = {};
 
