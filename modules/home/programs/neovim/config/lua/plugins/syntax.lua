@@ -8,7 +8,7 @@ return {
 		build = ":TSUpdate",
 		dependencies = {},
 		keys = {
-			{ "<leader>T", ":Inspect<CR>", desc = "Show highlighting groups and captures" },
+			{ "<leader>T", vim.show_pos, desc = "Show highlighting groups and captures" },
 		},
 		opts = {},
 	},
