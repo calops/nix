@@ -3,10 +3,7 @@ return {
 	{
 		"saghen/blink.cmp",
 		event = "VeryLazy",
-		dependencies = {
-			"rafamadriz/friendly-snippets",
-			"Kaiser-Yang/blink-cmp-avante",
-		},
+		dependencies = { "rafamadriz/friendly-snippets" },
 		build = "cargo build --release",
 		opts_extend = { "sources.default" },
 
@@ -33,7 +30,6 @@ return {
 				default = { "lsp", "path", "snippets", "buffer" },
 				per_filetype = {
 					codecompanion = { "codecompanion" },
-					AvanteInput = { "avante" },
 					lua = { "lsp", "path", "lazydev", "snippets", "buffer" },
 				},
 				providers = {
@@ -41,10 +37,6 @@ return {
 						name = "LazyDev",
 						module = "lazydev.integrations.blink",
 						fallbacks = { "lsp" },
-					},
-					avante = {
-						module = "blink-cmp-avante",
-						name = "Avante",
 					},
 				},
 			},

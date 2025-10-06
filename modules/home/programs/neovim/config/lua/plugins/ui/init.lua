@@ -85,7 +85,6 @@ return {
 	{
 		"folke/snacks.nvim",
 		priority = 1000,
-		version = "2.21.0",
 		lazy = false,
 		opts = function()
 			---@type snacks.Config
@@ -99,7 +98,6 @@ return {
 				input = { enabled = true },
 				image = { enabled = true },
 				picker = {
-					enabled = true,
 					ui_select = true,
 					db = { sqlite3_path = vim.g.sqlite_clib_path },
 					layout = {
@@ -128,7 +126,6 @@ return {
 					refresh = 50,
 				},
 				dashboard = {
-					enabled = true,
 					sections = {
 						{ section = "keys", gap = 1, padding = 1 },
 						{
@@ -401,9 +398,9 @@ return {
 	-- Markdown rendering
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
-		ft = { "markdown", "Avante", "codecompanion" },
+		ft = { "markdown", "codecompanion" },
 		opts = {
-			file_types = { "markdown", "Avante", "codecompanion" },
+			file_types = { "markdown", "codecompanion" },
 		},
 	},
 }
