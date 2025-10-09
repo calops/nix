@@ -1,6 +1,5 @@
 {
   substituters = [
-    "https://ags.cachix.org"
     "https://anyrun.cachix.org"
     "https://cache.garnix.io"
     "https://cache.nixos.org"
@@ -13,7 +12,6 @@
   ];
 
   trustedPublicKeys = [
-    "ags.cachix.org-1:naAvMrz0CuYqeyGNyLgE010iUiuf/qx6kYrUv3NwAJ8="
     "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
     "cache.flakehub.com-3:hJuILl5sVK4iKm86JzgdXW12Y2Hwd5G07qKtHTOcDCM="
     "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="

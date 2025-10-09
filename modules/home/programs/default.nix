@@ -1,7 +1,6 @@
 { ... }:
 {
   imports = [
-    ./ags
     ./element
     ./firefox
     ./neovim
