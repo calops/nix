@@ -188,16 +188,14 @@ return {
 			snacks = { enabled = true },
 			lsp_trouble = true,
 			which_key = true,
-			native_lsp = {
-				enabled = true,
-				inlay_hints = { background = false },
-				underlines = {
-					errors = { "undercurl" },
-					hints = { "undercurl" },
-					warnings = { "undercurl" },
-					information = { "undercurl" },
-					ok = { "underline" },
-				},
+		},
+		lsp_styles = {
+			underlines = {
+				errors = { "undercurl" },
+				hints = { "undercurl" },
+				warnings = { "undercurl" },
+				information = { "undercurl" },
+				ok = { "underline" },
 			},
 		},
 		compile = {
