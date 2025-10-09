@@ -19,6 +19,8 @@
     xdg.configFile."colors/palette.scss".source = config.my.colors.palette.asScss;
     xdg.dataFile."lua/palette.lua".source = config.my.colors.palette.asLua;
 
+    stylix.overlays.enable = false;
+
     home.packages = [
       perSystem.nix-index-database.nix-index-with-db
     ];

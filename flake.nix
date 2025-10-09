@@ -2,8 +2,8 @@
   description = "Home-manager configuration";
 
   inputs = {
-    # Upstream nixpkgs
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # Upstream nixpkgs, last working commit of nixos-unstable for darwin
+    nixpkgs.url = "github:NixOS/nixpkgs/6c3c3951fb76343e5f8589db3ab0f82cea1d8f30";
 
     # Flake framework
     blueprint.url = "github:numtide/blueprint";
@@ -17,10 +17,6 @@
     # Nix user repository
     nur.url = "github:nix-community/NUR";
     nur.inputs.nixpkgs.follows = "nixpkgs";
-
-    # AGS linux GUI utilities
-    ags.url = "github:Aylur/ags";
-    ags.inputs.nixpkgs.follows = "nixpkgs";
 
     # Support dynamically linked binaries for generic Linux (nix-ld alternative)
     madness.url = "github:antithesishq/madness";
