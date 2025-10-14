@@ -8,10 +8,9 @@ Singleton {
     id: niri
 
     property var workspaces: {}
-    property var workspaceWindows: {}
     property var windows: {}
 
-    property int focusedWorkspaceId: 0
+    property var focusedWorkspace: {}
     property var focusedWindow: {}
 
     property bool hasLeftOverflow: false
@@ -37,72 +36,91 @@ Singleton {
         }
     }
 
-    function focusWorkspace(id) {
-        Quickshell.execDetached(["niri", "msg", "action", "focus-workspace", id]);
-    }
-
     function onNiriWorkspacesChanged(payload) {
         var newWorkspaces = {};
 
         for (const workspace of payload.workspaces) {
-            workspace.icon = _mapWorkspaceNameToIcon(workspace.name);
-            newWorkspaces[workspace.id] = workspace;
+            workspace.icon = _mapWorkspaceToIcon(workspace);
 
             if (workspace.is_focused) {
-                focusedWorkspaceId = workspace.id;
+                focusedWorkspace = workspace;
             }
+
+            newWorkspaces[workspace.id] = workspace;
         }
 
         workspaces = newWorkspaces;
+
+        _computeOverflows();
     }
 
     function onNiriWindowsChanged(payload) {
-        workspaceWindows = {};
+        var newWindows = {};
 
         for (const win of payload.windows) {
-            workspaceWindows[win.workspace_id] = {};
-            workspaceWindows[win.workspace_id][win.id] = win;
-
+            newWindows[win.id] = win;
             if (win.is_focused) {
                 focusedWindow = win;
             }
         }
+
+        windows = newWindows;
+
+        _computeOverflows();
     }
 
     function onNiriWorkspaceActivated(payload) {
         if (payload.focused) {
-            workspaces[focusedWorkspaceId].is_focused = false;
-            focusedWorkspaceId = payload.id;
-            workspaces[focusedWorkspaceId].is_focused = true;
+            focusedWorkspace.is_focused = false;
+            workspaces[payload.id].is_focused = true;
+            focusedWorkspace = workspaces[payload.id];
         }
+        _computeOverflows();
     }
 
     function onNiriWindowOpenedOrChanged(payload) {
-        workspaceWindows[payload.window.workspace_id][payload.window.id] = payload.window;
+        const win = payload.window;
+        windows[win.id] = win;
+        _computeOverflows();
+    }
+
+    function onNiriWindowClosed(payload) {
+        delete windows[payload.id];
+        _computeOverflows();
     }
 
     function onNiriWindowFocusChanged(payload) {
-        focusedWindow = workspaceWindows?.get(focusedWorkspaceId)?.get(payload.id);
-    }
-
-    onFocusedWindowChanged: {
+        if (payload.id && payload.id in windows) {
+            focusedWindow.is_focused = false;
+            windows[payload.id].is_focused = true;
+            focusedWindow = windows[payload.id];
+        }
         _computeOverflows();
     }
 
-    onFocusedWorkspaceIdChanged: {
+    function onNiriWindowLayoutsChanged(payload) {
+        for (const change of payload.changes) {
+            const [window_id, layout] = change;
+            if (window_id in windows) {
+                windows[window_id].layout = layout;
+            }
+        }
         _computeOverflows();
     }
 
-    onWorkspaceWindowsChanged: {
-        _computeOverflows();
+    function focusWorkspace(workspaceId) {
+        Quickshell.execDetached(["niri", "msg", "action", "focus-workspace", workspaceId]);
     }
 
-    onWorkspacesChanged: {
-        _computeOverflows();
+    function sortedWorkspaces() {
+        if (workspaces) {
+            return Object.values(workspaces).sort((w1, w2) => w1.id - w2.id);
+        }
+        return [];
     }
 
-    function _mapWorkspaceNameToIcon(name) {
-        switch (name) {
+    function _mapWorkspaceToIcon(workspace) {
+        switch (workspace.name) {
         case "work":
             return "";
         case "dev":
@@ -116,17 +134,24 @@ Singleton {
         case "web":
             return "󰖟";
         default:
-            return name;
+            return workspace.id;
         }
+    }
+
+    function getWorkspaceWindows(workspaceId) {
+        if (windows) {
+            return Object.values(windows).filter(win => win.workspace_id == workspaceId);
+        }
+        return [];
     }
 
     function _computeOverflows() {
         var newHasLeftOverflow = false;
         var newHasRightOverflow = false;
-        var windows = workspaceWindows?.get(focusedWorkspaceId);
 
-        if (windows) {
-            for (const win of Object.values(windows)) {
+        var wins = getWorkspaceWindows(focusedWorkspace?.id);
+        if (wins) {
+            for (const win of Object.values(wins)) {
                 if (win.layout.tile_pos_in_workspace_view) {
                     if (win.layout.tile_pos_in_workspace_view[0] < 56) {
                         newHasLeftOverflow = true;
@@ -135,12 +160,24 @@ Singleton {
                     }
                 }
             }
+        }
 
-            if (focusedWindow?.layout?.pos_in_scrolling_layout?.[0] > 0) {
-                newHasLeftOverflow = true;
+        if (focusedWindow?.layout?.pos_in_scrolling_layout?.[0] > 1) {
+            newHasLeftOverflow = true;
+        }
+
+        for (const win of getWorkspaceWindows(focusedWorkspace?.id)) {
+            if (win.layout.tile_pos_in_workspace_view > focusedWindow.layout.tile_pos_in_workspace_view) {
+                newHasRightOverflow = true;
+                break;
             }
+        }
 
+        if (newHasLeftOverflow != hasLeftOverflow) {
             hasLeftOverflow = newHasLeftOverflow;
+        }
+
+        if (newHasRightOverflow != hasRightOverflow) {
             hasRightOverflow = newHasRightOverflow;
         }
     }

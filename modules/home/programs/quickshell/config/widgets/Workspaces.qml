@@ -17,7 +17,7 @@ ColumnLayout {
         width: 27
         height: 27
         Layout.alignment: Qt.AlignCenter
-        y: 25 * (Niri.focusedWorkspaceId ? Niri.focusedWorkspaceId : 0) + 1
+        y: 25 * (Niri.focusedWorkspace?.id ? Niri.focusedWorkspace.id : 0) + 1
         color: Colors.palette.peach
         radius: 500
 
@@ -31,7 +31,7 @@ ColumnLayout {
     }
 
     Repeater {
-        model: Object.values(Niri.workspaces ? Niri.workspaces : {})
+        model: Niri.sortedWorkspaces()
 
         WrapperMouseArea {
             id: mouseArea
