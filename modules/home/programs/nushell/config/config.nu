@@ -7,6 +7,8 @@ $env.config.table.index_mode = "auto"
 $env.config.table.mode = "rounded"
 $env.LS_COLORS = (vivid generate catppuccin-mocha)
 
+source ./completion.nu
+
 alias _ls = ls
 # def --wrapped ls [...args] { _ls --long ...$args | select name mode user group size modified }
 alias ll = _ls --long

@@ -19,7 +19,7 @@ in
             append (source ${nuScripts}/nu-hooks/nu-hooks/direnv/config.nu)
           )
 
-          source ./extraConfig.nu
+          source ./config/config.nu
 
           oh-my-posh init nu --config ${config.my.oh-my-posh.theme}
         '';
@@ -30,8 +30,8 @@ in
       ];
     };
 
-    xdg.configFile."nushell/extraConfig.nu".source =
-      config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/programs/nushell/config.nu";
+    xdg.configFile."nushell/config".source =
+      config.lib.file.mkOutOfStoreSymlink "${config.my.configDir}/modules/home/programs/nushell/config";
 
     home.packages = [
       pkgs.oh-my-posh
@@ -39,7 +39,7 @@ in
 
     programs.carapace = {
       enable = true;
-      enableNushellIntegration = true;
+      enableNushellIntegration = false;
     };
 
     programs.vivid = {

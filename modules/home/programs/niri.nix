@@ -4,6 +4,7 @@
   pkgs,
   nixosConfig ? null,
   inputs,
+  perSystem,
   ...
 }:
 let
@@ -20,7 +21,7 @@ in
 
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.niri = {
-      package = if pkgs.stdenv.isDarwin then null else nixosConfig.programs.niri.package;
+      package = nixosConfig.programs.niri.package or perSystem.self.niri;
       config =
         if pkgs.stdenv.isDarwin then
           null

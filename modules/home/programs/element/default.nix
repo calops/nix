@@ -54,21 +54,23 @@ in
               togglesw-off-color = "${palette.overlay2}";
               other-user-pill-bg-color = "${palette.tangerine}";
             };
-            compound = lib.mapAttrs' (name: value: lib.nameValuePair "--cpd-color-${name}" value) {
-              text-decorative-1 = "${palette.blue}";
-              text-decorative-2 = "${palette.green}";
-              text-decorative-3 = "${palette.mauve}";
-              text-decorative-4 = "${palette.teal}";
-              text-decorative-5 = "${palette.coral}";
-              text-decorative-6 = "${palette.peach}";
+            compound =
+              {
+                text-decorative-1 = "${palette.blue}";
+                text-decorative-2 = "${palette.green}";
+                text-decorative-3 = "${palette.mauve}";
+                text-decorative-4 = "${palette.teal}";
+                text-decorative-5 = "${palette.coral}";
+                text-decorative-6 = "${palette.peach}";
 
-              bg-decorative-1 = "${palette.forest}";
-              bg-decorative-2 = "${palette.navy}";
-              bg-decorative-3 = "${palette.violet}";
-              bg-decorative-4 = "${palette.turquoise}";
-              bg-decorative-5 = "${palette.cherry}";
-              bg-decorative-6 = "${palette.tangerine}";
-            };
+                bg-decorative-1 = "${palette.forest}";
+                bg-decorative-2 = "${palette.navy}";
+                bg-decorative-3 = "${palette.violet}";
+                bg-decorative-4 = "${palette.turquoise}";
+                bg-decorative-5 = "${palette.cherry}";
+                bg-decorative-6 = "${palette.tangerine}";
+              }
+              |> lib.mapAttrs' (name: value: lib.nameValuePair "--cpd-color-${name}" value);
           }
         ];
 

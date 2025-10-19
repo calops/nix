@@ -43,9 +43,6 @@
 
     environment.sessionVariables = {
       EDITOR = "nvim";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      GSK_RENDERER = "ngl"; # TODO: needed with the current nvidia drivers, remove when fixed
-      NVD_BACKEND = "direct";
     };
 
     nixpkgs.config.allowUnfree = true;

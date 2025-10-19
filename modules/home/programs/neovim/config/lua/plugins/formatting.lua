@@ -62,33 +62,19 @@ return {
 				lua = { "stylua" },
 				sh = { "shfmt" },
 				sql = { "sqlfluff" },
+
+				nix = { "injected", lsp_format = "first", timeout_ms = 10000 },
+				markdown = { "injected", lsp_format = "first" },
 			},
 			default_format_opts = {
 				lsp_format = "fallback",
+				timeout_ms = 500,
 			},
 			format_on_save = function(bufnr)
-				if
-					not vim.g.disable_autoformat
-					and not vim.b[bufnr].disable_autoformat
-					and vim.bo[bufnr].filetype ~= "nix"
-				then
-					return {
-						lsp_format = "fallback",
-						timeout_ms = 500,
-					}
+				if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+					return nil
 				end
-			end,
-			-- Format nix files asyncrhonously, because `nix fmt` requires slow evaluation
-			format_after_save = function(bufnr)
-				if
-					not vim.g.disable_autoformat
-					and not vim.b[bufnr].disable_autoformat
-					and vim.bo[bufnr].filetype == "nix"
-				then
-					return {
-						lsp_format = "fallback",
-					}
-				end
+				return {}
 			end,
 			formatters = {
 				sqlfluff = {

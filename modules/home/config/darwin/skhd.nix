@@ -10,9 +10,9 @@ let
 
   mkSkhdrc =
     mappings:
-    lib.strings.concatStrings (
-      lib.attrsets.mapAttrsToList (name: value: "${name}: ${value}\n") mappings
-    );
+    mappings
+    |> lib.attrsets.mapAttrsToList (name: value: "${name}: ${value}\n")
+    |> lib.strings.concatStrings;
 in
 {
   config = lib.mkIf pkgs.stdenv.isDarwin {

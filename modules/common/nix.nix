@@ -4,9 +4,11 @@
     extra-substituters = flake.lib.caches.substituters;
     extra-trusted-public-keys = flake.lib.caches.trustedPublicKeys;
 
-    experimental-features = [
+    extra-experimental-features = [
       "flakes"
       "nix-command"
+      "pipe-operators"
+      "ca-derivations"
     ];
 
     trusted-users = [

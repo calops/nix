@@ -36,6 +36,8 @@
       extra-substituters = ${builtins.concatStringsSep " " (flake.lib.caches.substituters)}
 
       extra-trusted-public-keys = ${builtins.concatStringsSep " " (flake.lib.caches.trustedPublicKeys)}
+
+      extra-experimental-features = ${builtins.concatStringsSep " " config.nix.settings.extra-experimental-features}
     '';
 
     environment = {
