@@ -20,8 +20,6 @@ in
           )
 
           source ./config/config.nu
-
-          oh-my-posh init nu --config ${config.my.oh-my-posh.theme}
         '';
 
       plugins = [
@@ -36,6 +34,8 @@ in
     home.packages = [
       pkgs.oh-my-posh
     ];
+
+    programs.oh-my-posh.enableNushellIntegration = true;
 
     programs.carapace = {
       enable = true;

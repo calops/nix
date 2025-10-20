@@ -108,6 +108,7 @@ local function hl_override(palette)
 		DiffDeleteVirtLn = { fg = colors.darken(palette.red, 0.3) },
 		DiffviewDiffDeleteDim = { fg = palette.surface0 },
 		DiffviewWinSeparator = { fg = palette.crust },
+		DiffviewDiffDelete = { link = "DiffviewDiffDeleteDim" },
 
 		CustomTabline = { fg = palette.mauve, bg = colors.darken(palette.mauve, 0.33) },
 		CustomTablineSel = { fg = palette.base, bg = palette.mauve },

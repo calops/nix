@@ -2,12 +2,8 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }:
-let
-  palette = config.my.colors.palette.asHex;
-in
 {
   config = lib.mkIf config.my.roles.terminal.enable {
     programs.fish = {
@@ -65,21 +61,11 @@ in
       interactiveShellInit = # fish
         ''
           set fish_greeting
-
-          if test -e ~/.nix-profile/etc/profile.d/nix.fish
-            source ~/.nix-profile/etc/profile.d/nix.fish
-          end
-
-          # The builtin fish integration uses the wrong command-not-found instead of the faster one from nix-index-db
-          # function fish_command_not_found
-          #   command-not-found $argv
-          # end
-
-          oh-my-posh init fish --config ${config.my.oh-my-posh.theme} | source
         '';
     };
 
     programs.carapace.enableFishIntegration = false;
+    programs.oh-my-posh.enableFishIntegration = true;
 
     home.packages = [ pkgs.oh-my-fish ];
   };
