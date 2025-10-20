@@ -3,7 +3,7 @@
 
   inputs = {
     # Upstream nixpkgs, last working commit of nixos-unstable for darwin
-    nixpkgs.url = "github:NixOS/nixpkgs/6c3c3951fb76343e5f8589db3ab0f82cea1d8f30";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 
     # Flake framework
     blueprint.url = "github:numtide/blueprint";
@@ -85,7 +85,7 @@
     niri-caelestia-shell.url = "github:jutraim/niri-caelestia-shell";
     niri-caelestia-shell.inputs.nixpkgs.follows = "nixpkgs";
 
-    stasis.url = "github:saltnpepper97/stasis";
+    stasis.url = "github:saltnpepper97/stasis/v0.4.0";
     stasis.flake = false;
   };
 
