@@ -392,6 +392,7 @@ return {
 				typescriptreact = { glyph = " " },
 				yaml = { glyph = " " },
 				Fyler = { glyph = " " },
+				nu = { glyph = " " },
 			},
 		},
 	},

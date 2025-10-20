@@ -29,6 +29,8 @@ let
     builtins.toJSON {
       version = 3;
       final_space = false;
+      shell_integration = true;
+      async = true;
       blocks = [
         {
           alignment = "left";
@@ -117,6 +119,13 @@ let
           type = "prompt";
           newline = true;
           segments = [
+            {
+              type = "shell";
+              properties.mapped_shell_names = {
+                fish = " ";
+                nu = " ";
+              };
+            }
             {
               type = "executiontime";
               foreground = palette.overlay0;
