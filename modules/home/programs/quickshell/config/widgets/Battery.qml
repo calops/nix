@@ -82,7 +82,7 @@ Item {
         if (p === PowerProfile.PowerSaver) return Colors.light.green;
         if (p === PowerProfile.Balanced) return Colors.light.blue;
         if (p === PowerProfile.Performance) return Colors.light.red;
-        return Colors.light.subtext0;
+        return Colors.dark.subtext0;
     }
 
     MouseArea {
@@ -165,8 +165,8 @@ Item {
                                         text: modelData.icon
                                         font.pixelSize: 14
                                         anchors.centerIn: parent
-                                        color: root.profileStepIndex === index ? root.activeProfileColor : Colors.light.subtext0
-                                        opacity: root.profileStepIndex === index ? 1.0 : 0.4
+                                        color: root.profileStepIndex === index ? root.activeProfileColor : Colors.dark.subtext0
+                                        opacity: 1.0
                                         Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
                                     }
                                     MouseArea {
@@ -193,7 +193,7 @@ Item {
                                     width: parent.width
                                     height: 4
                                     radius: 2
-                                    color: Colors.light.subtext1
+                                    color: Colors.dark.subtext1
                                     anchors.centerIn: parent
                                 }
 
@@ -201,7 +201,7 @@ Item {
                                     model: 3
                                     Rectangle {
                                         width: 8; height: 8; radius: 4
-                                        color: Colors.light.subtext1
+                                        color: Colors.dark.subtext1
                                         anchors.verticalCenter: parent.verticalCenter
                                         x: index * (parent.width - width) / 2
                                     }
@@ -229,7 +229,7 @@ Item {
                         StyledText {
                             text: root.powerProfileText + " Mode"
                             font.pixelSize: 10
-                            color: Colors.light.subtext1
+                            color: Colors.dark.subtext1
                             anchors.horizontalCenter: parent.horizontalCenter
                             height: 12
                             verticalAlignment: Text.AlignVCenter
@@ -248,7 +248,7 @@ Item {
                         id: percentageText
                         text: Math.round(root.batteryPercentage) + "%"
                         font.pixelSize: 20
-                        color: Colors.light.text // Light theme text
+                        color: Colors.dark.text
                         anchors.right: parent.right
                     }
                     
@@ -256,7 +256,7 @@ Item {
                         id: timeText
                         text: root.timeEstimate
                         font.pixelSize: 12
-                        color: Colors.light.subtext1
+                        color: Colors.dark.subtext1
                         anchors.right: parent.right
                         visible: root.timeEstimate !== ""
                     }
@@ -388,9 +388,9 @@ Item {
             }
             PropertyChanges {
                 target: root
-                animIconColor: Colors.light.text
+                animIconColor: Colors.dark.text
                 animRedColor: Colors.light.red
-                animChargingColor: Colors.light.base
+                animChargingColor: Colors.dark.base
             }
         }
     ]

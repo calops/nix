@@ -10,15 +10,21 @@ Item {
     property string blurGroupId: ""
     property real radius: 10
 
-    Rectangle {
+    ShaderEffect {
         id: bgRect
         anchors.fill: parent
-        radius: root.radius
-        color: Colors.light.base
         
-        // This is the actual transparency cutoff of the backdrop color
-        opacity: 0.50
+        property real radius: root.radius
+        // Passing baseColor with alpha so the shader can determine transparency
+        property color baseColor: Colors.alpha(Colors.light.teal, 0.50)
+        property real uWidth: width
+        property real uHeight: height
         
+        // This opacity determines the overall visible alpha of the entire effect over the background
+        opacity: 1.0
+
+        fragmentShader: Qt.resolvedUrl("shaders/glass.frag.qsb")
+
         layer.enabled: true
         layer.effect: MultiEffect {
             shadowEnabled: true

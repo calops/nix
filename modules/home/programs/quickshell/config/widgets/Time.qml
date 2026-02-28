@@ -144,9 +144,9 @@ Item {
             }
             PropertyChanges {
                 target: root
-                animTextColor: Colors.light.text
-                animSubtextColor: Colors.light.subtext1
-                animOverlayColor: Colors.light.subtext0
+                animTextColor: Colors.dark.text
+                animSubtextColor: Colors.dark.subtext1
+                animOverlayColor: Colors.dark.subtext0
             }
         }
     ]

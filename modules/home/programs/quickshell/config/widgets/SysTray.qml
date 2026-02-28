@@ -270,7 +270,7 @@ Item {
                             layer.enabled: isSymbolic
                             layer.effect: MultiEffect {
                                 colorization: 1.0
-                                colorizationColor: (root.expanded || root.hoveredItem === itemRoot) ? Colors.palette.base : Colors.palette.text
+                                colorizationColor: (root.expanded || root.hoveredItem === itemRoot) ? Colors.dark.text : Colors.palette.text
                                 brightness: 1.0
                                 contrast: 1.0
                             }
@@ -281,7 +281,7 @@ Item {
                         text: root.getDisplayName(itemRoot.modelData)
                         Layout.fillWidth: true
                         Layout.rightMargin: 12
-                        color: root.hoveredItem === itemRoot ? Colors.light.text : (root.expanded ? Colors.light.text : Colors.dark.text)
+                        color: Colors.dark.text
                         font.pixelSize: 14
                         font.bold: true
                         elide: Text.ElideRight

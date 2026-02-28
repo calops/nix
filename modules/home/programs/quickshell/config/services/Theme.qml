@@ -13,4 +13,7 @@ Singleton {
     readonly property int animationDuration: 300
     readonly property int animationDurationOut: 250
     readonly property int animationDurationFast: 150
+    
+    // Feature toggles
+    property bool enableThemeSwitchOnHover: false
 }

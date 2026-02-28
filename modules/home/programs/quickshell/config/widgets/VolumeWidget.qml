@@ -132,8 +132,8 @@ Item {
                         id: volumeTrack
                         height: 4
                         radius: 2
-                        color: Colors.light.subtext1
-                        opacity: 0.3
+                        color: Colors.alpha(Colors.dark.subtext1, 0.3)
+                        opacity: 1.0
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.verticalCenter: parent.verticalCenter
@@ -197,7 +197,7 @@ Item {
                     StyledText {
                         text: isMuted ? "Muted" : Math.round(root.localVolume * 100) + "%"
                         font.pixelSize: 20
-                        color: Colors.light.text
+                        color: Colors.dark.text
                         anchors.right: parent.right
                     }
                 }
@@ -310,7 +310,7 @@ Item {
             }
             PropertyChanges {
                 target: root
-                animIconColor: Colors.light.text
+                animIconColor: Colors.dark.text
                 animBarColor: Colors.light.mauve
             }
         }
