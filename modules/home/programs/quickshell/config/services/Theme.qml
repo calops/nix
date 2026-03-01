@@ -14,6 +14,9 @@ Singleton {
     readonly property int animationDurationOut: 250
     readonly property int animationDurationFast: 150
     
+    // Layout constants
+    readonly property int widgetScreenPadding: 15
+
     // Feature toggles
     property bool enableThemeSwitchOnHover: false
 }

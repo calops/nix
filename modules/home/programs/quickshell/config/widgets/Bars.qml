@@ -98,45 +98,53 @@ Scope {
                         anchors.left: parent.left
                     }
 
-                    SysTray {
-                        id: tray
-                        anchors.left: parent.left
-                        y: 10
-                        
-                        menuRect: {
-                            if (!mainTrayMenu.shouldShow || !hoveredItem) return Qt.rect(0, 0, 0, 0);
-                            var pos = hoveredItem.mapToItem(leftPanel.contentItem, 0, 0);
-                            // Increase overlap (248 < 260) for a smoother bridge transition
-                            var menuX = tray.expanded ? 248 : 45;
-                            // Align perfectly with the tray item top (pos.y) instead of offseting by -2
-                            return Qt.rect(menuX, pos.y, mainTrayMenu.baseWidth, mainTrayMenu.baseHeight);
+                    ColumnLayout {
+                        id: leftBarLayout
+                        anchors.fill: parent
+                        anchors.topMargin: Theme.widgetScreenPadding
+                        anchors.bottomMargin: Theme.widgetScreenPadding
+                        spacing: 0
+
+                        SysTray {
+                            id: tray
+                            Layout.alignment: Qt.AlignLeft
+                            
+                            menuRect: {
+                                if (!mainTrayMenu.shouldShow || !hoveredItem) return Qt.rect(0, 0, 0, 0);
+                                var pos = hoveredItem.mapToItem(leftPanel.contentItem, 0, 0);
+                                // Increase overlap (248 < 260) for a smoother bridge transition
+                                var menuX = tray.expanded ? 248 : 45;
+                                // Align perfectly with the tray item top (pos.y) instead of offseting by -2
+                                return Qt.rect(menuX, pos.y, mainTrayMenu.baseWidth, mainTrayMenu.baseHeight);
+                            }
                         }
-                    }
 
-                    Workspaces {
-                        id: workspaces
-                        width: 56
-                        anchors.left: parent.left
-                        anchors.leftMargin: 0
-                        y: parent.height / 2 - height / 2
-                    }
+                        Item { Layout.fillHeight: true }
 
-                    Column {
-                        anchors.left: parent.left
-                        anchors.bottom: parent.bottom
-                        anchors.bottomMargin: 15
-                        spacing: Niri.overviewActive ? 17 : 0
+                        Workspaces {
+                            id: workspaces
+                            Layout.preferredWidth: 56
+                            Layout.alignment: Qt.AlignLeft
+                        }
 
-                        Behavior on spacing { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
+                        Item { Layout.fillHeight: true }
 
-                        Item {
-                            id: clockContainer
-                            width: Theme.widgetExpandedWidth
-                            height: 80
+                        Column {
+                            id: clockContainerColumn
+                            Layout.alignment: Qt.AlignLeft
+                            spacing: Niri.overviewActive ? 17 : 0
 
-                            Time {
-                                id: clock
-                                anchors.left: parent.left
+                            Behavior on spacing { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
+
+                            Item {
+                                id: clockContainer
+                                width: Theme.widgetExpandedWidth
+                                height: 80
+
+                                Time {
+                                    id: clock
+                                    anchors.left: parent.left
+                                }
                             }
                         }
                     }
@@ -244,38 +252,45 @@ Scope {
                     }
                 }
 
-                Column {
-                    anchors.bottom: parent.bottom
-                    anchors.bottomMargin: 10
-                    anchors.right: parent.right
-                    spacing: Niri.overviewActive ? 17 : 0
+                ColumnLayout {
+                    id: rightBarLayout
+                    anchors.fill: parent
+                    anchors.bottomMargin: Theme.widgetScreenPadding
+                    spacing: 0
 
-                    Behavior on spacing { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
+                    Item { Layout.fillHeight: true }
 
-                    Item {
-                        width: Theme.widgetExpandedWidth
-                        height: volume.height
-                        Widgets.VolumeWidget {
-                            id: volume
-                            anchors.right: parent.right
+                    Column {
+                        Layout.alignment: Qt.AlignRight
+                        spacing: Niri.overviewActive ? 17 : 0
+
+                        Behavior on spacing { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
+
+                        Item {
+                            width: Theme.widgetExpandedWidth
+                            height: volume.height
+                            Widgets.VolumeWidget {
+                                id: volume
+                                anchors.right: parent.right
+                            }
                         }
-                    }
 
-                    Item {
-                        width: Theme.widgetExpandedWidth
-                        height: brightness.height
-                        Widgets.BrightnessWidget {
-                            id: brightness
-                            anchors.right: parent.right
+                        Item {
+                            width: Theme.widgetExpandedWidth
+                            height: brightness.height
+                            Widgets.BrightnessWidget {
+                                id: brightness
+                                anchors.right: parent.right
+                            }
                         }
-                    }
 
-                    Item {
-                        width: Theme.widgetExpandedWidth
-                        height: battery.height
-                        Battery {
-                            id: battery
-                            anchors.right: parent.right
+                        Item {
+                            width: Theme.widgetExpandedWidth
+                            height: battery.height
+                            Battery {
+                                id: battery
+                                anchors.right: parent.right
+                            }
                         }
                     }
                 }

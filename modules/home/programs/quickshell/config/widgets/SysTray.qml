@@ -265,12 +265,12 @@ Item {
                             height: 22
                             smooth: true
 
-                            // Maintain original logic but apply to expanded state as requested
-                            property bool isSymbolic: String(itemRoot.modelData.icon).includes("-symbolic") || root.expanded || root.hoveredItem === itemRoot
+                            // Only colorize if the icon is explicitly symbolic
+                            property bool isSymbolic: String(itemRoot.modelData.icon).includes("-symbolic")
                             layer.enabled: isSymbolic
                             layer.effect: MultiEffect {
                                 colorization: 1.0
-                                colorizationColor: (root.expanded || root.hoveredItem === itemRoot) ? Colors.dark.text : Colors.palette.text
+                                colorizationColor: Colors.palette.text
                                 brightness: 1.0
                                 contrast: 1.0
                             }
