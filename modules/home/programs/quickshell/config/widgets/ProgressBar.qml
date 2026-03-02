@@ -18,17 +18,19 @@ Item {
     readonly property alias pressed: mouseArea.pressed
     readonly property alias containsMouse: mouseArea.containsMouse
     
-    // Transition point: center of the handle
-    readonly property real centerPos: (width - handleSize) * root.value + handleSize / 2
+    // Flatten the entire component into a single layer.
+    // This allows children to occlude each other (if they are opaque) 
+    // before the entire combined result is rendered with the specified opacity.
+    layer.enabled: true
+    opacity: contentOpacity
     
     implicitHeight: Math.max(trackHeight, handleSize)
     implicitWidth: 100
     
-    // Inactive Part (Track) - starts from the center of the handle to avoid overlap
+    // 1. Inactive Part (Track) - full width
     Rectangle {
         id: track
-        x: root.centerPos
-        width: Math.max(0, parent.width - x)
+        width: parent.width
         height: root.trackHeight
         radius: height / 2
         color: root.trackColor
@@ -36,33 +38,25 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
     }
     
-    // Active Part (Fill + Handle) - flattened to allow unified transparency
-    Item {
-        id: progressLayer
-        anchors.fill: parent
-        opacity: root.contentOpacity
-        layer.enabled: true
-        
-        // Fill portion - ends at the center of the handle
-        Rectangle {
-            id: fill
-            width: root.centerPos
-            height: root.trackHeight
-            radius: height / 2
-            color: root.color
-            anchors.verticalCenter: parent.verticalCenter
-        }
-        
-        // Handle (Dot)
-        Rectangle {
-            id: handle
-            width: root.handleSize
-            height: root.handleSize
-            radius: width / 2
-            color: root.color
-            anchors.verticalCenter: parent.verticalCenter
-            x: (parent.width - width) * root.value
-        }
+    // 2. Active Part (Fill) - opaque to occlude the track underneath
+    Rectangle {
+        id: fill
+        width: (parent.width - root.handleSize) * root.value + root.handleSize / 2
+        height: root.trackHeight
+        radius: height / 2
+        color: root.color
+        anchors.verticalCenter: parent.verticalCenter
+    }
+    
+    // 3. Handle (Dot) - opaque to occlude both track and fill
+    Rectangle {
+        id: handle
+        width: root.handleSize
+        height: root.handleSize
+        radius: width / 2
+        color: root.color
+        anchors.verticalCenter: parent.verticalCenter
+        x: (parent.width - width) * root.value
     }
     
     MouseArea {
