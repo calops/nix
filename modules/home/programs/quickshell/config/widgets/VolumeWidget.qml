@@ -23,11 +23,20 @@ Item {
     property color animBarColor: Colors.dark.mauve // Using mauve for volume
     property color animBgColor: Colors.dark.surface0
 
+    PwObjectTracker {
+        objects: [Pipewire.defaultAudioSink]
+    }
+
     readonly property real systemVolume: {
-        let v = Pipewire.defaultAudioSink?.audio?.volume;
-        return (v === undefined || isNaN(v)) ? 0 : v;
+        let sink = Pipewire.defaultAudioSink;
+        if (!sink || !sink.audio) return 0;
+        let v = sink.audio.volume;
+        return isNaN(v) ? 0 : v;
     }
     readonly property bool isMuted: Pipewire.defaultAudioSink?.audio?.muted ?? false
+    property real mutedFactor: isMuted ? 1.0 : 0.0
+    Behavior on mutedFactor { NumberAnimation { duration: 300; easing.type: Easing.OutQuad } }
+
     property real localVolume: systemVolume
     readonly property int percentage: Math.round(systemVolume * 100)
     property bool isInteracting: false
@@ -132,7 +141,7 @@ Item {
                         id: volumeTrack
                         height: 4
                         radius: 2
-                        color: Colors.alpha(Colors.dark.subtext1, 0.3)
+                        color: Colors.alpha(Colors.dark.subtext1, 0.3 - (root.mutedFactor * 0.2))
                         opacity: 1.0
                         anchors.left: parent.left
                         anchors.right: parent.right
@@ -143,7 +152,7 @@ Item {
                             width: parent.width * Math.min(1.0, root.localVolume)
                             height: parent.height
                             radius: 2
-                            color: root.animBarColor
+                            color: Colors.alpha(root.animBarColor, 1.0 - (root.mutedFactor * 0.6))
                         }
                     }
                     
@@ -153,7 +162,7 @@ Item {
                         width: 12
                         height: 12
                         radius: 6
-                        color: root.animBarColor
+                        color: Colors.alpha(root.animBarColor, 1.0 - (root.mutedFactor * 0.6))
                         anchors.verticalCenter: parent.verticalCenter
                         x: (parent.width - width) * Math.min(1.0, root.localVolume)
                     }
@@ -195,9 +204,9 @@ Item {
                     Layout.preferredWidth: 45
                     
                     StyledText {
-                        text: isMuted ? "Muted" : Math.round(root.localVolume * 100) + "%"
+                        text: Math.round(root.localVolume * 100) + "%"
                         font.pixelSize: 20
-                        color: Colors.dark.text
+                        color: Colors.alpha(Colors.dark.text, 1.0 - (root.mutedFactor * 0.6))
                         anchors.right: parent.right
                     }
                 }
@@ -239,7 +248,7 @@ Item {
                     // Fill for the cone part
                     ShapePath {
                         strokeWidth: 0
-                        fillColor: Services.Colors.alpha(root.animIconColor, isMuted ? 0.3 : 1.0)
+                        fillColor: Services.Colors.alpha(root.animIconColor, 1.0 - (root.mutedFactor * 0.7))
                         
                         startX: 2; startY: 8
                         PathLine { x: 6; y: 8 }
@@ -252,7 +261,7 @@ Item {
                 }
                 Item {
                     anchors.fill: parent
-                    visible: !isMuted
+                    opacity: 1.0 - root.mutedFactor
                     
                     Repeater {
                         model: 5 // More segments for smoother progression
@@ -284,7 +293,7 @@ Item {
                 // Mute Cross (Diagonal Line)
                 Shape {
                     anchors.fill: parent
-                    visible: isMuted
+                    opacity: root.mutedFactor
                     
                     ShapePath {
                         strokeWidth: 2
