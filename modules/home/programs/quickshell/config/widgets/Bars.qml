@@ -59,7 +59,7 @@ Scope {
                     } else {
                         for (var i = 0; i < items.length; i++) {
                             blurStr += "    property var item" + i + ": leftPanel.registeredBlurItems[" + i + "];\n";
-                            blurStr += "    Region { item: item" + i + "; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
+                            blurStr += "    Region { item: item" + i + " || offscreenAnchorLeft; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
                         }
                     }
                     blurStr += "}";
@@ -68,19 +68,19 @@ Scope {
                     
                     // Window Mask (includes static widgets + registered items)
                     var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-                    maskStr += "    Region { item: clock }\n";
-                    maskStr += "    Region { item: workspaces }\n";
-                    maskStr += "    Region { item: tray }\n";
+                    maskStr += "    Region { item: clock || offscreenAnchorLeft }\n";
+                    maskStr += "    Region { item: workspaces || offscreenAnchorLeft }\n";
+                    maskStr += "    Region { item: tray || offscreenAnchorLeft }\n";
                     maskStr += "    Region {\n";
                     // Need to use integer bindings for Region custom rects
-                    maskStr += "        x: Math.round(tray.menuRect.x)\n";
-                    maskStr += "        y: Math.round(tray.menuRect.y)\n";
-                    maskStr += "        width: Math.round(tray.menuRect.width)\n";
-                    maskStr += "        height: Math.round(tray.menuRect.height)\n";
+                    maskStr += "        x: Math.round(tray ? tray.menuRect.x : 0)\n";
+                    maskStr += "        y: Math.round(tray ? tray.menuRect.y : 0)\n";
+                    maskStr += "        width: Math.round(tray ? tray.menuRect.width : 0)\n";
+                    maskStr += "        height: Math.round(tray ? tray.menuRect.height : 0)\n";
                     maskStr += "    }\n";
                     for (var j = 0; j < items.length; j++) {
                         maskStr += "    property var item" + j + ": leftPanel.registeredBlurItems[" + j + "];\n";
-                        maskStr += "    Region { item: item" + j + "; radius: typeof item" + j + " !== 'undefined' && item" + j + " ? (item" + j + ".radius || 0) : 0 }\n";
+                        maskStr += "    Region { item: item" + j + " || offscreenAnchorLeft; radius: typeof item" + j + " !== 'undefined' && item" + j + " ? (item" + j + ".radius || 0) : 0 }\n";
                     }
                     maskStr += "}";
                     if (leftPanel.mask) leftPanel.mask.destroy();
@@ -202,7 +202,7 @@ Scope {
                 } else {
                     for (var i = 0; i < items.length; i++) {
                         blurStr += "    property var item" + i + ": rightPanel.registeredBlurItems[" + i + "];\n";
-                        blurStr += "    Region { item: item" + i + "; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
+                        blurStr += "    Region { item: item" + i + " || offscreenAnchorRight; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
                     }
                 }
                 blurStr += "}";
@@ -211,12 +211,12 @@ Scope {
 
                 // Window Mask (static base items + dynamic bounds)
                 var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-                maskStr += "    Region { item: battery }\n";
-                maskStr += "    Region { item: brightness }\n";
-                maskStr += "    Region { item: volume }\n";
+                maskStr += "    Region { item: battery || offscreenAnchorRight }\n";
+                maskStr += "    Region { item: brightness || offscreenAnchorRight }\n";
+                maskStr += "    Region { item: volume || offscreenAnchorRight }\n";
                 for (var i = 0; i < items.length; i++) {
                     maskStr += "    property var item" + i + ": rightPanel.registeredBlurItems[" + i + "];\n";
-                    maskStr += "    Region { item: item" + i + "; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
+                    maskStr += "    Region { item: item" + i + " || offscreenAnchorRight; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
                 }
                 maskStr += "}";
                 if (rightPanel.mask) rightPanel.mask.destroy();
