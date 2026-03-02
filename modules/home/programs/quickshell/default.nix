@@ -3,6 +3,7 @@
   config,
   lib,
   inputs,
+  perSystem,
   ...
 }:
 let
@@ -21,7 +22,7 @@ in
       # Necessary for tray icons detection
       package = pkgs.symlinkJoin {
         name = "quickshell";
-        paths = [ pkgs.quickshell ];
+        paths = [ perSystem.quickshell.default ];
         nativeBuildInputs = [ pkgs.makeWrapper ];
         postBuild = ''
           wrapProgram $out/bin/quickshell --set QT_QPA_PLATFORMTHEME gtk3
