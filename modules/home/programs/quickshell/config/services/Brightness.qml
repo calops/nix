@@ -10,6 +10,7 @@ Singleton {
     property int percentage: 0
     property int maxBrightness: 0
     property int currentBrightness: 0
+    property bool isReady: false
 
     // Parsing helper
     function updateFromCsv(csv) {
@@ -26,6 +27,7 @@ Singleton {
                 permStr = permStr.substring(0, permStr.length - 1);
             }
             root.percentage = parseInt(permStr);
+            root.isReady = true;
         }
     }
 

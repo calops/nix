@@ -66,7 +66,7 @@ Item {
     ReactiveExpansion {
         id: reactive
         watchValue: systemVolume + ":" + isMuted + ":" + (Pipewire.defaultAudioSink ? Pipewire.defaultAudioSink.id : "null")
-        ignore: hovered || isInteracting
+        ignore: hovered || isInteracting || !Pipewire.defaultAudioSink
     }
 
     // Combine hover states to prevent widget collapsing when interacting with slider
