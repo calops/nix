@@ -68,7 +68,7 @@ Scope {
                     
                     // Window Mask (includes static widgets + registered items)
                     var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-                    maskStr += "    Region { item: clockContainer }\n";
+                    maskStr += "    Region { item: clock }\n";
                     maskStr += "    Region { item: workspaces }\n";
                     maskStr += "    Region { item: tray }\n";
                     maskStr += "    Region {\n";
@@ -98,53 +98,45 @@ Scope {
                         anchors.left: parent.left
                     }
 
-                    ColumnLayout {
-                        id: leftBarLayout
-                        anchors.fill: parent
-                        anchors.topMargin: Theme.widgetScreenPadding
-                        anchors.bottomMargin: Theme.widgetScreenPadding
-                        spacing: 0
-
-                        SysTray {
-                            id: tray
-                            Layout.alignment: Qt.AlignLeft
-                            
-                            menuRect: {
-                                if (!mainTrayMenu.shouldShow || !hoveredItem) return Qt.rect(0, 0, 0, 0);
-                                var pos = hoveredItem.mapToItem(leftPanel.contentItem, 0, 0);
-                                // Increase overlap (248 < 260) for a smoother bridge transition
-                                var menuX = tray.expanded ? 248 : 45;
-                                // Align perfectly with the tray item top (pos.y) instead of offseting by -2
-                                return Qt.rect(menuX, pos.y, mainTrayMenu.baseWidth, mainTrayMenu.baseHeight);
-                            }
+                    SysTray {
+                        id: tray
+                        anchors.left: parent.left
+                        y: 10
+                        
+                        menuRect: {
+                            if (!mainTrayMenu.shouldShow || !hoveredItem) return Qt.rect(0, 0, 0, 0);
+                            var pos = hoveredItem.mapToItem(leftPanel.contentItem, 0, 0);
+                            // Increase overlap (248 < 260) for a smoother bridge transition
+                            var menuX = tray.expanded ? 248 : 45;
+                            // Align perfectly with the tray item top (pos.y) instead of offseting by -2
+                            return Qt.rect(menuX, pos.y, mainTrayMenu.baseWidth, mainTrayMenu.baseHeight);
                         }
+                    }
 
-                        Item { Layout.fillHeight: true }
+                    Workspaces {
+                        id: workspaces
+                        width: 56
+                        anchors.left: parent.left
+                        anchors.leftMargin: 0
+                        y: parent.height / 2 - height / 2
+                    }
 
-                        Workspaces {
-                            id: workspaces
-                            Layout.preferredWidth: 56
-                            Layout.alignment: Qt.AlignLeft
-                        }
+                    Column {
+                        anchors.left: parent.left
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 15
+                        spacing: Niri.overviewActive ? 17 : 0
 
-                        Item { Layout.fillHeight: true }
+                        Behavior on spacing { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
 
-                        Column {
-                            id: clockContainerColumn
-                            Layout.alignment: Qt.AlignLeft
-                            spacing: Niri.overviewActive ? 17 : 0
+                        Item {
+                            id: clockContainer
+                            width: Theme.widgetExpandedWidth
+                            height: 80
 
-                            Behavior on spacing { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
-
-                            Item {
-                                id: clockContainer
-                                width: Theme.widgetExpandedWidth
-                                height: 80
-
-                                Time {
-                                    id: clock
-                                    anchors.left: parent.left
-                                }
+                            Time {
+                                id: clock
+                                anchors.left: parent.left
                             }
                         }
                     }
@@ -252,45 +244,38 @@ Scope {
                     }
                 }
 
-                ColumnLayout {
-                    id: rightBarLayout
-                    anchors.fill: parent
-                    anchors.bottomMargin: Theme.widgetScreenPadding
-                    spacing: 0
+                Column {
+                    anchors.bottom: parent.bottom
+                    anchors.bottomMargin: 10
+                    anchors.right: parent.right
+                    spacing: Niri.overviewActive ? 17 : 0
 
-                    Item { Layout.fillHeight: true }
+                    Behavior on spacing { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
 
-                    Column {
-                        Layout.alignment: Qt.AlignRight
-                        spacing: Niri.overviewActive ? 17 : 0
-
-                        Behavior on spacing { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
-
-                        Item {
-                            width: Theme.widgetExpandedWidth
-                            height: volume.height
-                            Widgets.VolumeWidget {
-                                id: volume
-                                anchors.right: parent.right
-                            }
+                    Item {
+                        width: Theme.widgetExpandedWidth
+                        height: volume.height
+                        Widgets.VolumeWidget {
+                            id: volume
+                            anchors.right: parent.right
                         }
+                    }
 
-                        Item {
-                            width: Theme.widgetExpandedWidth
-                            height: brightness.height
-                            Widgets.BrightnessWidget {
-                                id: brightness
-                                anchors.right: parent.right
-                            }
+                    Item {
+                        width: Theme.widgetExpandedWidth
+                        height: brightness.height
+                        Widgets.BrightnessWidget {
+                            id: brightness
+                            anchors.right: parent.right
                         }
+                    }
 
-                        Item {
-                            width: Theme.widgetExpandedWidth
-                            height: battery.height
-                            Battery {
-                                id: battery
-                                anchors.right: parent.right
-                            }
+                    Item {
+                        width: Theme.widgetExpandedWidth
+                        height: battery.height
+                        Battery {
+                            id: battery
+                            anchors.right: parent.right
                         }
                     }
                 }
