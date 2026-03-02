@@ -18,13 +18,17 @@ Item {
     readonly property alias pressed: mouseArea.pressed
     readonly property alias containsMouse: mouseArea.containsMouse
     
+    // Transition point: center of the handle
+    readonly property real centerPos: (width - handleSize) * root.value + handleSize / 2
+    
     implicitHeight: Math.max(trackHeight, handleSize)
     implicitWidth: 100
     
-    // Background Track
+    // Inactive Part (Track) - starts from the center of the handle to avoid overlap
     Rectangle {
         id: track
-        width: parent.width
+        x: root.centerPos
+        width: Math.max(0, parent.width - x)
         height: root.trackHeight
         radius: height / 2
         color: root.trackColor
@@ -32,17 +36,17 @@ Item {
         anchors.verticalCenter: parent.verticalCenter
     }
     
-    // Fill and Handle (Layered to merge transparency)
+    // Active Part (Fill + Handle) - flattened to allow unified transparency
     Item {
         id: progressLayer
         anchors.fill: parent
         opacity: root.contentOpacity
         layer.enabled: true
         
-        // Fill portion
+        // Fill portion - ends at the center of the handle
         Rectangle {
             id: fill
-            width: parent.width * Math.min(1.0, Math.max(0.0, root.value))
+            width: root.centerPos
             height: root.trackHeight
             radius: height / 2
             color: root.color
@@ -57,7 +61,7 @@ Item {
             radius: width / 2
             color: root.color
             anchors.verticalCenter: parent.verticalCenter
-            x: (parent.width - width) * Math.min(1.0, Math.max(0.0, root.value))
+            x: (parent.width - width) * root.value
         }
     }
     
