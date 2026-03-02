@@ -54,6 +54,10 @@ Item {
         enabled: !root.isDragging
         NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
     }
+    
+    Binding { target: root; property: "isDragging"; value: volumeSlider.pressed }
+    Binding { target: root; property: "isInteracting"; value: true; when: volumeSlider.pressed }
+    onIsDraggingChanged: if (!isDragging) syncTimer.restart()
 
     Timer {
         id: syncTimer
@@ -70,7 +74,7 @@ Item {
     }
 
     // Combine hover states to prevent widget collapsing when interacting with slider
-    property bool hovered: mouseArea.containsMouse || sliderMouseArea.containsMouse
+    property bool hovered: mouseArea.containsMouse || volumeSlider.containsMouse || volumeSlider.pressed
 
     MouseArea {
         id: mouseArea
@@ -137,68 +141,21 @@ Item {
                 Behavior on opacity { NumberAnimation { duration: 300; easing.type: Easing.OutQuad } }
 
                 // Volume Slider
-                Item {
-                    id: sliderContainer
+                ProgressBar {
+                    id: volumeSlider
                     Layout.fillWidth: true
                     Layout.preferredHeight: 26
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                     
-                    // Track
-                    Rectangle {
-                        id: volumeTrack
-                        height: 4
-                        radius: 2
-                        color: Colors.alpha(Colors.dark.subtext1, 0.3 - (root.mutedFactor * 0.2))
-                        opacity: 1.0
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        
-                        // Fill
-                        Rectangle {
-                            width: parent.width * Math.min(1.0, root.localVolume)
-                            height: parent.height
-                            radius: 2
-                            color: Colors.alpha(root.animBarColor, 1.0 - (root.mutedFactor * 0.6))
-                        }
-                    }
+                    value: root.localVolume
+                    color: root.animBarColor
+                    contentOpacity: 1.0 - (root.mutedFactor * 0.6)
+                    trackOpacity: 0.3 - (root.mutedFactor * 0.2)
                     
-                    // Handle
-                    Rectangle {
-                        id: volumeHandle
-                        width: 12
-                        height: 12
-                        radius: 6
-                        color: Colors.alpha(root.animBarColor, 1.0 - (root.mutedFactor * 0.6))
-                        anchors.verticalCenter: parent.verticalCenter
-                        x: (parent.width - width) * Math.min(1.0, root.localVolume)
-                    }
-
-                    MouseArea {
-                        id: sliderMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true 
-                        onPressed: (mouse) => {
-                            isInteracting = true;
-                            isDragging = true;
-                            syncTimer.stop();
-                            updateVolume(mouse);
-                        }
-                        onPositionChanged: (mouse) => {
-                            if (pressed) updateVolume(mouse);
-                        }
-                        onReleased: {
-                            isDragging = false;
-                            syncTimer.restart();
-                        }
-                        
-                        function updateVolume(mouse) {
-                            let val = mouse.x / width;
-                            val = Math.max(0, Math.min(1, val));
-                            root.localVolume = val;
-                            if (Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio) {
-                                Pipewire.defaultAudioSink.audio.volume = val;
-                            }
+                    onMoved: (val) => {
+                        root.localVolume = val;
+                        if (Pipewire.defaultAudioSink && Pipewire.defaultAudioSink.audio) {
+                            Pipewire.defaultAudioSink.audio.volume = val;
                         }
                     }
                 }

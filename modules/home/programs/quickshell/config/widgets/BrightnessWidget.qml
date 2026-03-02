@@ -41,6 +41,10 @@ Item {
         NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad }
     }
 
+    Binding { target: root; property: "isDragging"; value: brightnessSlider.pressed }
+    Binding { target: root; property: "isInteracting"; value: true; when: brightnessSlider.pressed }
+    onIsDraggingChanged: if (!isDragging) syncTimer.restart()
+
     Timer {
         id: syncTimer
         interval: 1000
@@ -56,7 +60,7 @@ Item {
     }
 
     // Combine hover states to prevent widget collapsing when interacting with slider
-    property bool hovered: mouseArea.containsMouse || sliderMouseArea.containsMouse
+    property bool hovered: mouseArea.containsMouse || brightnessSlider.containsMouse || brightnessSlider.pressed
 
     MouseArea {
         id: mouseArea
@@ -116,67 +120,19 @@ Item {
                 Behavior on opacity { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
 
                 // Brightness Slider
-                Item {
-                    id: sliderContainer
+                ProgressBar {
+                    id: brightnessSlider
                     Layout.fillWidth: true
                     Layout.preferredHeight: 26
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                     
-                    // Track
-                    Rectangle {
-                        id: track
-                        height: 4
-                        radius: 2
-                        color: Colors.alpha(Colors.dark.subtext1, 0.3)
-                        opacity: 1.0
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.verticalCenter: parent.verticalCenter
-                        
-                        // Fill
-                        Rectangle {
-                            width: parent.width * (root.localPercentage / 100.0)
-                            height: parent.height
-                            radius: 2
-                            color: root.animBarColor
-                        }
-                    }
+                    value: root.localPercentage / 100.0
+                    color: root.animBarColor
                     
-                    // Handle
-                    Rectangle {
-                        id: handle
-                        width: 12
-                        height: 12
-                        radius: 6
-                        color: root.animBarColor
-                        anchors.verticalCenter: parent.verticalCenter
-                        x: (parent.width - width) * (root.localPercentage / 100.0)
-                    }
-
-                    MouseArea {
-                        id: sliderMouseArea
-                        anchors.fill: parent
-                        hoverEnabled: true // Enable to keep widget open
-                        onPressed: (mouse) => {
-                            isInteracting = true;
-                            isDragging = true;
-                            syncTimer.stop();
-                            updateBrightness(mouse);
-                        }
-                        onPositionChanged: (mouse) => {
-                            if (pressed) updateBrightness(mouse);
-                        }
-                        onReleased: {
-                            isDragging = false;
-                            syncTimer.restart();
-                        }
-                        
-                        function updateBrightness(mouse) {
-                            let val = mouse.x / width * 100;
-                            val = Math.max(0, Math.min(100, val));
-                            root.localPercentage = val;
-                            Services.Brightness.setBrightness(Math.round(val));
-                        }
+                    onMoved: (val) => {
+                        let pct = val * 100;
+                        root.localPercentage = pct;
+                        Services.Brightness.setBrightness(Math.round(pct));
                     }
                 }
 
