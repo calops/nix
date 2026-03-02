@@ -12,6 +12,17 @@ QtObject {
     // Duration the expansion stays active
     property int duration: 2000
 
+    // Grace period on startup where changes are ignored
+    property int startupGracePeriod: 1500
+    property bool _isInitializing: true
+
+    property Timer startupTimer: Timer {
+        id: startupTimer
+        interval: startupGracePeriod
+        running: true
+        onTriggered: _isInitializing = false
+    }
+
     // Read-only state indicating if the expansion should be active
     readonly property bool active: timer.running
 
@@ -20,7 +31,7 @@ QtObject {
 
     onWatchValueChanged: {
         // Only trigger if we have a previous value and it's different and not ignored
-        if (!ignore && _lastValue !== undefined && watchValue !== _lastValue) {
+        if (!ignore && !_isInitializing && _lastValue !== undefined && watchValue !== _lastValue) {
             timer.restart();
         }
         _lastValue = watchValue;

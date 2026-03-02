@@ -52,7 +52,7 @@ Item {
     ReactiveExpansion {
         id: reactive
         watchValue: percentage
-        ignore: hovered || isInteracting || !Services.Brightness.isReady
+        ignore: hovered || isInteracting
     }
 
     // Combine hover states to prevent widget collapsing when interacting with slider
