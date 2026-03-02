@@ -6,10 +6,11 @@ import Quickshell
 import Quickshell.Io
 import "../services"
 import "../services" as Services
+import "."
 
 Item {
     id: root
-    width: hovered || Niri.overviewActive ? expandedWidth : iconWidth
+    width: hovered || Niri.overviewActive || (reactive && reactive.active) ? expandedWidth : iconWidth
     height: 50
 
     property int iconWidth: Theme.iconWidth
@@ -46,6 +47,12 @@ Item {
         onTriggered: {
             isInteracting = false;
         }
+    }
+
+    ReactiveExpansion {
+        id: reactive
+        watchValue: percentage
+        ignore: hovered || isInteracting
     }
 
     // Combine hover states to prevent widget collapsing when interacting with slider
@@ -105,7 +112,7 @@ Item {
                 anchors.rightMargin: 4
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 2
-                opacity: root.hovered || Niri.overviewActive ? 1.0 : 0.0
+                opacity: root.hovered || Niri.overviewActive || (reactive && reactive.active) ? 1.0 : 0.0
                 Behavior on opacity { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
 
                 // Brightness Slider
@@ -261,7 +268,7 @@ Item {
     states: [
         State {
             name: "hovered"
-            when: root.hovered || Niri.overviewActive
+            when: root.hovered || Niri.overviewActive || (reactive && reactive.active)
             PropertyChanges {
                 target: background
                 opacity: 1.0

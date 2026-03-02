@@ -6,10 +6,11 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.UPower
 import "../services"
+import "."
 
 Item {
     id: root
-    width: hovered || Niri.overviewActive ? expandedWidth : iconWidth
+    width: hovered || Niri.overviewActive || (reactive && reactive.active) ? expandedWidth : iconWidth
     height: 50
 
     property int iconWidth: Theme.iconWidth
@@ -93,6 +94,12 @@ Item {
         onExited: root.hovered = false
     }
 
+    ReactiveExpansion {
+        id: reactive
+        watchValue: Math.round(batteryPercentage) + ":" + isCharging
+        ignore: hovered
+    }
+
     // Shared backdrop component
     HoverBackdrop {
         id: background
@@ -129,7 +136,7 @@ Item {
                 anchors.rightMargin: 4
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 2
-                opacity: root.hovered || Niri.overviewActive ? 1.0 : 0.0
+                opacity: root.hovered || Niri.overviewActive || (reactive && reactive.active) ? 1.0 : 0.0
                 Behavior on opacity { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
                 
                 // Power Profile Slider Selector
@@ -381,7 +388,7 @@ Item {
     states: [
         State {
             name: "hovered"
-            when: root.hovered || Niri.overviewActive
+            when: root.hovered || Niri.overviewActive || (reactive && reactive.active)
             PropertyChanges {
                 target: background
                 opacity: 1.0
