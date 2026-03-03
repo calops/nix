@@ -7,6 +7,7 @@ import Quickshell.Io
 import "../services"
 import "../services" as Services
 import "."
+import "../components"
 
 Item {
     id: root

@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Wayland
 import "../services/"
 import "." as Widgets
+import "../components"
 
 Scope {
     id: root
@@ -144,7 +145,7 @@ Scope {
             }
 
             // Replaced manual hardcoded menuWin & subMenuWin with reusable unified TrayMenu
-            Widgets.TrayMenu {
+            TrayMenu {
                 id: mainTrayMenu
                 isSubmenu: false
                 tray: tray

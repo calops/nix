@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import "../services"
+import "../components"
 
 Item {
     id: root

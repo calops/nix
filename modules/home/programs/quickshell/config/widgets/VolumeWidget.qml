@@ -8,6 +8,7 @@ import Quickshell.Services.Pipewire
 import "../services"
 import "../services" as Services
 import "."
+import "../components"
 
 Item {
     id: root

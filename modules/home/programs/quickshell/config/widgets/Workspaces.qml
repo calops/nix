@@ -5,6 +5,7 @@ import QtQuick.Controls
 import QtQuick
 import "../services"
 import "../widgets"
+import "../components"
 
 ColumnLayout {
     id: root

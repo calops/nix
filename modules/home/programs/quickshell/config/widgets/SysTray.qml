@@ -5,6 +5,7 @@ import Quickshell
 import Quickshell.Services.SystemTray
 import "../services"
 import "../data/AppMappings.js" as AppMappings
+import "../components"
 
 Item {
     id: root
@@ -177,7 +178,7 @@ Item {
             NumberAnimation { duration: root.isHovered ? Theme.animationDuration : Theme.animationDurationOut; easing.type: root.isHovered ? Easing.OutQuad : Easing.InQuad }
         }
 
-        fragmentShader: Qt.resolvedUrl("shaders/bubble.frag.qsb")
+        fragmentShader: Qt.resolvedUrl("../components/shaders/bubble.frag.qsb")
 
         layer.enabled: true
         layer.effect: MultiEffect {

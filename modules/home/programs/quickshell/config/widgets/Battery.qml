@@ -7,7 +7,7 @@ import Quickshell.Io
 import Quickshell.Services.UPower
 import "../services"
 import "."
-
+import "../components"
 Item {
     id: root
     width: hovered || Niri.overviewActive || (reactive && reactive.active) ? expandedWidth : iconWidth
