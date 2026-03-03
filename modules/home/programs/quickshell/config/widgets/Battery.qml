@@ -27,7 +27,10 @@ Item {
 
 
     // Hover state handling
-    property bool hovered: false
+    property bool hovered: mouseArea.containsMouse || 
+                           (profileRepeater.itemAt(0) && profileRepeater.itemAt(0).isHovered) ||
+                           (profileRepeater.itemAt(1) && profileRepeater.itemAt(1).isHovered) ||
+                           (profileRepeater.itemAt(2) && profileRepeater.itemAt(2).isHovered)
 
     // UPower integration: Mapping built-in service to UI variables
     readonly property real batteryPercentage: (UPower.displayDevice?.percentage ?? 0) * 100
@@ -62,14 +65,6 @@ Item {
         return h + "h " + m + "m";
     }
 
-    readonly property string powerProfileText: {
-        const p = PowerProfiles.profile;
-        if (p === PowerProfile.PowerSaver) return "Power Saver";
-        if (p === PowerProfile.Balanced) return "Balanced";
-        if (p === PowerProfile.Performance) return "Performance";
-        return "";
-    }
-
     readonly property int profileStepIndex: {
         const p = PowerProfiles.profile;
         if (p === PowerProfile.PowerSaver) return 0;
@@ -78,20 +73,10 @@ Item {
         return 1;
     }
 
-    readonly property color activeProfileColor: {
-        const p = PowerProfiles.profile;
-        if (p === PowerProfile.PowerSaver) return Colors.light.green;
-        if (p === PowerProfile.Balanced) return Colors.light.blue;
-        if (p === PowerProfile.Performance) return Colors.light.red;
-        return Colors.dark.subtext0;
-    }
-
     MouseArea {
         id: mouseArea
         anchors.fill: background // Constrain hover area to the visual backdrop
         hoverEnabled: true
-        onEntered: root.hovered = true
-        onExited: root.hovered = false
     }
 
     ReactiveExpansion {
@@ -124,9 +109,9 @@ Item {
         // Percentage, Time, and Profile Selector Container
         Item {
             id: textContainer
-            width: root.width - iconContainer.width
+            width: Math.max(0, root.width - iconContainer.width)
             height: parent.height
-            clip: false
+            clip: true
             
             RowLayout {
                 id: expandedContent
@@ -139,107 +124,92 @@ Item {
                 opacity: root.hovered || Niri.overviewActive || (reactive && reactive.active) ? 1.0 : 0.0
                 Behavior on opacity { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
                 
-                // Power Profile Slider Selector
-                Item {
-                    id: profileSelector
+                // Power Profile Buttons
+                RowLayout {
+                    id: profileButtons
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                     Layout.fillWidth: true
-                    height: parent.height
-                    clip: false
+                    spacing: 4
+                    
+                    Repeater {
+                        id: profileRepeater
+                        model: [
+                            { icon: "", name: "Power", profile: PowerProfile.PowerSaver, color: Colors.dark.green },
+                            { icon: "⚖", name: "Bal.", profile: PowerProfile.Balanced, color: Colors.dark.blue },
+                            { icon: "", name: "Perf.", profile: PowerProfile.Performance, color: Colors.dark.red }
+                        ]
+                        
+                        Rectangle {
+                            id: button
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 36
+                            radius: 8
 
-                    Column {
-                        anchors.centerIn: parent
-                        width: parent.width
-                        spacing: 0 // Reduced from 2 for tighter layout
-
-                        Item {
-                            width: parent.width
-                            height: 14 // Reduced from 16
                             
-                            Repeater {
-                                model: [
-                                    { icon: "", profile: PowerProfile.PowerSaver },
-                                    { icon: "⚖", profile: PowerProfile.Balanced },
-                                    { icon: "", profile: PowerProfile.Performance }
-                                ]
-                                Item {
-                                    width: 30
-                                    height: parent.height
-                                    // Center precisely on the dot positions (dots are 8px wide)
-                                    x: (index * (parent.width - 8) / 2 + 4) - width/2
-                                    
-                                    StyledText {
-                                        text: modelData.icon
-                                        font.pixelSize: 14
-                                        anchors.centerIn: parent
-                                        color: root.profileStepIndex === index ? root.activeProfileColor : Colors.dark.subtext0
-                                        opacity: 1.0
-                                        Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
-                                    }
-                                    MouseArea {
-                                        anchors.fill: parent
-                                        onClicked: PowerProfiles.profile = modelData.profile
-                                    }
-                                }
-                            }
-                        }
-
-                        // Row 2: Slider Line (Track, Dots, Handle)
-                        Item {
-                            width: parent.width
-                            height: 12
-
-                            // Line and Dots (Background Layer)
-                            Item {
-                                anchors.fill: parent
-                                opacity: 0.2
-                                layer.enabled: true
-                                
-                                Rectangle {
-                                    id: sliderTrack
-                                    width: parent.width
-                                    height: 4
-                                    radius: 2
-                                    color: Colors.dark.subtext1
-                                    anchors.centerIn: parent
-                                }
-
-                                Repeater {
-                                    model: 3
-                                    Rectangle {
-                                        width: 8; height: 8; radius: 4
-                                        color: Colors.dark.subtext1
-                                        anchors.verticalCenter: parent.verticalCenter
-                                        x: index * (parent.width - width) / 2
-                                    }
-                                }
-                            }
-
-                            // Moving Handle (Foreground Layer)
+                            readonly property bool isActive: root.profileStepIndex === index
+                            property bool isHovered: btnMouseArea.containsMouse
+                            
+                            // Glass Neumorphic Base
+                            color: Colors.alpha("#ffffff", isActive ? 0.2 : (isHovered ? 0.22 : 0.08))
+                            
+                            // Define the glass edges with a subtle white border
                             Rectangle {
-                                id: sliderCursor
-                                width: 12; height: 12; radius: 6
-                                color: root.activeProfileColor
-                                anchors.verticalCenter: parent.verticalCenter
-                                // Center precisely on the dot positions
-                                x: (root.profileStepIndex * (parent.width - 8) / 2 + 4) - width/2
-                                
-                                Behavior on x { 
-                                    enabled: !widthAnim.running
-                                    NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutBack } 
-                                }
-                                Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
+                                anchors.fill: parent
+                                radius: parent.radius
+                                color: "transparent"
+                                border.width: 1
+                                border.color: Colors.alpha("#ffffff", isActive ? 0.15 : (isHovered ? 0.45 : 0.25))
                             }
-                        }
 
-                        // Row 3: Mode Text
-                        StyledText {
-                            text: root.powerProfileText + " Mode"
-                            font.pixelSize: 10
-                            color: Colors.dark.subtext1
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            height: 12
-                            verticalAlignment: Text.AlignVCenter
+                            // True Neumorphic Relief (LIGHT-ONLY SHEBANG)
+                            Rectangle {
+                                anchors.fill: parent
+                                radius: parent.radius
+                                opacity: 0.5
+                                gradient: Gradient {
+                                    // Inactive (Raised): Bright Top, Soft White Bottom
+                                    // Active (Inset): Soft White Top, Bright Bottom
+                                    GradientStop { 
+                                        position: 0.0
+                                        color: button.isActive ? Colors.alpha("#ffffff", 0.1) : Colors.alpha("#ffffff", 0.8) 
+                                    }
+                                    GradientStop { position: 0.5; color: "transparent" }
+                                    GradientStop { 
+                                        position: 1.0
+                                        color: button.isActive ? Colors.alpha("#ffffff", 0.8) : Colors.alpha("#ffffff", 0.1) 
+                                    }
+                                }
+                            }
+                            
+                            Column {
+                                anchors.centerIn: parent
+                                spacing: 0
+                                
+                                StyledText {
+                                    text: modelData.icon
+                                    font.pixelSize: 14
+                                    color: button.isActive ? modelData.color : Colors.dark.text
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
+                                }
+                                
+                                StyledText {
+                                    text: modelData.name
+                                    font.pixelSize: 8
+                                    color: button.isActive ? modelData.color : Colors.dark.text
+                                    anchors.horizontalCenter: parent.horizontalCenter
+                                    opacity: 0.8
+                                    Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
+                                }
+                            }
+                            
+                            MouseArea {
+                                id: btnMouseArea
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                onClicked: PowerProfiles.profile = modelData.profile
+                            }
+                            Behavior on color { ColorAnimation { duration: Theme.animationDurationFast } }
                         }
                     }
                 }
@@ -263,7 +233,7 @@ Item {
                         id: timeText
                         text: root.timeEstimate
                         font.pixelSize: 12
-                        color: Colors.dark.subtext1
+                        color: Colors.dark.text
                         anchors.right: parent.right
                         visible: root.timeEstimate !== ""
                     }
@@ -396,7 +366,7 @@ Item {
             PropertyChanges {
                 target: root
                 animIconColor: Colors.dark.text
-                animRedColor: Colors.light.red
+                animRedColor: Colors.dark.red
                 animChargingColor: Colors.dark.base
             }
         }
