@@ -222,16 +222,36 @@ Scope {
                             height: 48
                             
                             Rectangle {
+                                id: delegateBg
                                 anchors.fill: parent
                                 anchors.margins: 4
-                                radius: 6
-                                color: ListView.isCurrentItem ? Colors.palette.surface0 : "transparent"
+                                radius: 8
+                                
+                                property bool isHovered: mouseArea.containsMouse
+                                property bool isActive: ListView.isCurrentItem
+                                
+                                // Glass highlights
+                                color: Colors.alpha("#ffffff", isActive ? 0.2 : (isHovered ? 0.22 : 0.08))
                                 
                                 Behavior on color {
                                     ColorAnimation { duration: Theme.animationDurationFast }
                                 }
                                 
+                                // Subtle white border
+                                Rectangle {
+                                    anchors.fill: parent
+                                    radius: parent.radius
+                                    color: "transparent"
+                                    border.width: 1
+                                    border.color: Colors.alpha("#ffffff", isActive ? 0.15 : (isHovered ? 0.45 : 0.25))
+                                    
+                                    Behavior on border.color {
+                                        ColorAnimation { duration: Theme.animationDurationFast }
+                                    }
+                                }
+                                
                                 MouseArea {
+                                    id: mouseArea
                                     anchors.fill: parent
                                     hoverEnabled: true
                                     onEntered: resultsList.currentIndex = index
