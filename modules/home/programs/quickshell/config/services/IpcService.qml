@@ -53,10 +53,10 @@ Item {
             const sink = Pipewire.defaultAudioSink;
             if (!sink || !sink.audio) return;
 
-            if (typeof state === "string") {
-                sink.audio.muted = state === "true";
+            if (state === "toggle") {
+                sink.audio.muted = !sink.audio.muted;
             } else {
-                sink.audio.muted = !!state;
+                sink.audio.muted = state === "true";
             }
         }
     }

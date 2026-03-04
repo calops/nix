@@ -29,5 +29,6 @@
     ./oh-my-posh.nix
     ./stasis.nix
     ./zed.nix
+    ./ai-dev.nix
   ];
 }

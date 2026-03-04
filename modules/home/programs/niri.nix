@@ -177,12 +177,11 @@ in
                 Mod+WheelScrollRight cooldown-ms=150 { focus-column-right;   }
                 Mod+WheelScrollUp    cooldown-ms=150 { focus-workspace-up;   }
 
-                XF86AudioLowerVolume allow-when-locked=true { spawn-sh "swayosd-client --output-volume lower";       }
-                XF86AudioMute        allow-when-locked=true { spawn-sh "swayosd-client --output-volume mute-toggle"; }
-                XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "swayosd-client --output-volume raise";       }
-                XF86AudioNext        allow-when-locked=true { spawn-sh "swayosd-client --playerctl next";        }
-                XF86AudioPrev        allow-when-locked=true { spawn-sh "swayosd-client --playerctl prev";        }
-                XF86AudioPlay        allow-when-locked=true { spawn-sh "swayosd-client --playerctl play-pause";  }
+                XF86AudioRaiseVolume  { spawn-sh "shell setVolume +0.05"; }
+                XF86AudioLowerVolume  { spawn-sh "shell setVolume -0.05"; }
+                XF86AudioMute         { spawn-sh "shell setMuted toggle"; }
+                XF86MonBrightnessUp   { spawn-sh "shell setBrightness +0.05"; }
+                XF86MonBrightnessDown { spawn-sh "shell setBrightness -0.05"; }
             }
 
             workspace "web"
@@ -225,6 +224,15 @@ in
                 match app-id="^discord$"
                 default-column-width { proportion 0.500000; }
                 open-on-workspace "chat"
+            }
+
+            layer-rule {
+              match namespace="quickshell"
+
+              background-effect {
+                xray false
+                blur true
+              }
             }
           '';
     };
