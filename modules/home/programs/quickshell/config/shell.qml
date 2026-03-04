@@ -5,4 +5,5 @@ import "services"
 ShellRoot {
     IpcService {}
     Bars {}
+    Runner {}
 }

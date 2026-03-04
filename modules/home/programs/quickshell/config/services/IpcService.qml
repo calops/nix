@@ -59,5 +59,11 @@ Item {
                 sink.audio.muted = state === "true";
             }
         }
+
+        function toggleRunner(state: string) {
+            if (state === "true") AnyrunService.runnerVisible = true;
+            else if (state === "false") AnyrunService.runnerVisible = false;
+            else AnyrunService.toggleRunner();
+        }
     }
 }

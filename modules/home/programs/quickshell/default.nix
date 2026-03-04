@@ -32,6 +32,7 @@ in
 
     home.packages = [
       pkgs.ddcutil
+      pkgs.anyrun-provider
       (pkgs.writeShellScriptBin "shell" ''
         exec quickshell ipc call actions "$@"
       '')
