@@ -4,13 +4,19 @@ If Quickshell widgets or services are behaving unexpectedly, you can check the s
 
 ## Check Logs
 
-Run the following command to see the latest 50 lines of logs:
+To see the latest 50 lines of logs using journalctl:
 
 ```bash
 journalctl --user -u quickshell -n 50 --no-pager
 ```
 
-To follow the logs in real-time:
+To follow the logs in real-time or see debug output:
+
+```bash
+quickshell log | tail -f
+```
+
+Alternatively, use journalctl to follow logs:
 
 ```bash
 journalctl --user -u quickshell -f

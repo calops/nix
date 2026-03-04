@@ -33,7 +33,7 @@
     fenix.inputs.nixpkgs.follows = "nixpkgs";
 
     # Niri window manager
-    niri-src.url = "github:yalter/niri";
+    niri-src.url = "github:yalter/niri?ref=wip/branch";
     niri.url = "github:sodiboo/niri-flake/";
     niri.inputs.nixpkgs.follows = "nixpkgs";
     niri.inputs.niri-unstable.follows = "niri-src";
@@ -85,6 +85,10 @@
     stasis.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    quickshell.url = "github:bbedward/quickshell?ref=ext-bg-effect";
+    quickshell.inputs.nixpkgs.follows = "nixpkgs";
+
   };
 
   outputs =

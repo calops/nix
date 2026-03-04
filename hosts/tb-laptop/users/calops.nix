@@ -32,12 +32,13 @@
     {
       condition = "gitdir:~/terabase/";
       contents = {
+        core.sshCommand = "ssh -i ~/.ssh/terabase-bitbucket.pub";
+
         user = {
           name = "Rémi Labeyrie";
           email = "remilabeyrie@terabase.energy";
+          signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIK4tZxLZ9PwBd0IrOhzSFMlqW5aB9sKboCszPya4B7n";
         };
-
-        core.sshCommand = "ssh -i ~/.ssh/terabase-bitbucket.pub";
       };
     }
   ];

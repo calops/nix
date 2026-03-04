@@ -150,6 +150,7 @@ in
     home.packages = [
       pkgs.libnotify
       pkgs.slack
+      # perSystem.self.nur.repos.bandithedoge.sable
     ]
     ++ (lib.lists.optionals (!pkgs.stdenv.isDarwin) [
       pkgs.google-chrome
@@ -173,7 +174,7 @@ in
     };
 
     services.clipman.enable = !pkgs.stdenv.isDarwin;
-    services.swayosd.enable = !pkgs.stdenv.isDarwin;
+
 
     stylix = {
       fonts = {

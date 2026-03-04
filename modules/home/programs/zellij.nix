@@ -8,6 +8,7 @@
         ui.pane_frames.rounded_corners = true;
         mouse_mode = true;
         default_layout = "default";
+        show_startup_tips = false;
       };
     };
 

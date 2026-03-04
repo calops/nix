@@ -30,6 +30,12 @@ in
       };
     };
 
+    home.packages = [
+      (pkgs.writeShellScriptBin "shell" ''
+        exec quickshell ipc call actions "$@"
+      '')
+    ];
+
     home.file."Pictures/Wallpapers/main.png".source = config.stylix.image;
 
     xdg.configFile."quickshell".source =

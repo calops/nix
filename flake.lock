@@ -913,15 +913,16 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1771182017,
-        "narHash": "sha256-lrXBx91NQAVoFeFUNZi46ZWP9M6tbBmT5BNsqSh8QOY=",
+        "lastModified": 1771749270,
+        "narHash": "sha256-ZJCM1XOHIdud6Jfpl4jYQOzbOJId9wmXT+hNJ1IPBIY=",
         "owner": "yalter",
         "repo": "niri",
-        "rev": "1fa0338a172a69b05a1a35d55b291693ff1bc29f",
+        "rev": "734d86ec061d15d1980c5b940b2f4dc9aee80cf5",
         "type": "github"
       },
       "original": {
         "owner": "yalter",
+        "ref": "wip/branch",
         "repo": "niri",
         "type": "github"
       }
@@ -1287,6 +1288,27 @@
         "url": "https://git.outfoxxed.me/outfoxxed/quickshell"
       }
     },
+    "quickshell_2": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1771253284,
+        "narHash": "sha256-9FlKj+sjLly6/ADg5O10nKrINkQx6l7OIfvC1e437zg=",
+        "owner": "bbedward",
+        "repo": "quickshell",
+        "rev": "204b9202fb861f45a954c541faad37b92ea95429",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bbedward",
+        "ref": "ext-bg-effect",
+        "repo": "quickshell",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "anyrun": "anyrun",
@@ -1309,6 +1331,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_3",
         "nur": "nur",
+        "quickshell": "quickshell_2",
         "solaar": "solaar",
         "stasis": "stasis",
         "stylix": "stylix",

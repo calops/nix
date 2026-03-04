@@ -36,13 +36,7 @@
           font_family = config.my.roles.graphical.fonts.monospace.name;
         };
 
-        lsp = {
-          nix = {
-            binary = {
-              path_lookup = true;
-            };
-          };
-        };
+        mcp.linear.url = "https://mcp.linear.app/mcp";
 
         vim_mode = true;
         load_direnv = "shell_hook";
@@ -50,5 +44,6 @@
         show_whitespaces = "all";
       };
     };
+
   };
 }
