@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Services.UPower
 import "../services/"
 import "." as Widgets
 import "../components"
@@ -212,7 +213,7 @@ Scope {
 
                 // Window Mask (static base items + dynamic bounds)
                 var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-                maskStr += "    Region { item: battery || offscreenAnchorRight }\n";
+                maskStr += "    Region { item: batteryLoader.item || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: brightness || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: volume || offscreenAnchorRight }\n";
                 for (var i = 0; i < items.length; i++) {
@@ -271,12 +272,14 @@ Scope {
                         }
                     }
 
-                    Item {
+                    Loader {
+                        id: batteryLoader
+                        active: UPower.displayDevice != null && UPower.displayDevice.percentage > 0
                         width: Theme.widgetExpandedWidth
-                        height: battery.height
-                        Battery {
-                            id: battery
-                            anchors.right: parent.right
+                        sourceComponent: Component {
+                            Battery {
+                                anchors.right: parent.right
+                            }
                         }
                     }
                 }

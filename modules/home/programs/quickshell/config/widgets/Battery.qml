@@ -33,6 +33,7 @@ Item {
                            (profileRepeater.itemAt(2) && profileRepeater.itemAt(2).isHovered)
 
     // UPower integration: Mapping built-in service to UI variables
+    readonly property bool hasBattery: UPower.displayDevice !== null && UPower.displayDevice !== undefined
     readonly property real batteryPercentage: (UPower.displayDevice?.percentage ?? 0) * 100
     readonly property bool isCharging: {
         const state = UPower.displayDevice?.state;

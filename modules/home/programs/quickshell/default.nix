@@ -31,6 +31,7 @@ in
     };
 
     home.packages = [
+      pkgs.ddcutil
       (pkgs.writeShellScriptBin "shell" ''
         exec quickshell ipc call actions "$@"
       '')
