@@ -143,12 +143,12 @@ Scope {
                 
                 ColumnLayout {
                     width: parent.width
-                    height: runnerContainer.targetBackgroundHeight
+                    // Fixed height to avoid jitter
+                    height: 800
                     clip: true
                     anchors.top: parent.top
-                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.margins: 15
-                    spacing: 12
+                    spacing: 8
                     
                     // Search field container
                     Rectangle {
@@ -256,8 +256,9 @@ Scope {
                         opacity: AnyrunService.resultsModel.count > 0 ? 1.0 : 0.0
                         Behavior on opacity { NumberAnimation { duration: 150 } }
                         visible: opacity > 0
-                        Layout.leftMargin: 4
-                        Layout.rightMargin: 4
+                        // Match children margins
+                        Layout.leftMargin: 12
+                        Layout.rightMargin: 12
                     }
 
                     // Empty state
@@ -284,12 +285,11 @@ Scope {
                         
                         delegate: Item {
                             width: ListView.view.width
-                            height: 48
+                            height: model.description ? 56 : 48
                             
                             Rectangle {
                                 id: delegateBg
                                 anchors.fill: parent
-                                anchors.margins: 4
                                 radius: 8
                                 
                                 property bool isHovered: mouseArea.containsMouse
@@ -329,8 +329,8 @@ Scope {
                                 
                                 RowLayout {
                                     anchors.fill: parent
-                                    anchors.leftMargin: 10
-                                    anchors.rightMargin: 10
+                                    anchors.leftMargin: 12
+                                    anchors.rightMargin: 12
                                     spacing: 12
                                     
                                     Image {
