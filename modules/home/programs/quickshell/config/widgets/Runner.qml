@@ -79,54 +79,54 @@ Scope {
             Item {
                 id: runnerContainer
                 width: 600
+                // Fixed large height to avoid surface reconfiguration
+                height: 800
+                // Stay stationary at ~20% of screen height
+                y: parent.height * 0.2
+                anchors.horizontalCenter: parent.horizontalCenter
                 
-                // Debounced height update to prevent jitter
-                property real actualTargetHeight: 80 
+                // Track the "visible" height for the background and clipping
+                property real contentHeight: 80 
                     + (AnyrunService.resultsModel.count > 0 ? Math.min(AnyrunService.resultsModel.count * 48, 500) + 20 : 0)
                     + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 60 : 0)
-                property real targetHeight: 80
-                height: targetHeight
+                
+                property real targetBackgroundHeight: 80
                 
                 Timer {
                     id: heightDebounce
                     interval: 100
-                    onTriggered: runnerContainer.targetHeight = runnerContainer.actualTargetHeight
+                    onTriggered: runnerContainer.targetBackgroundHeight = runnerContainer.contentHeight
                 }
                 
-                onActualTargetHeightChanged: {
-                    if (actualTargetHeight > targetHeight) {
-                        // Grow immediately for better responsiveness
-                        targetHeight = actualTargetHeight;
+                onContentHeightChanged: {
+                    if (contentHeight > targetBackgroundHeight) {
+                        targetBackgroundHeight = contentHeight;
                         heightDebounce.stop();
                     } else {
-                        // Debounce shrinking to avoid flicker
                         heightDebounce.restart();
                     }
                 }
                 
-                Behavior on height {
-                    NumberAnimation {
-                        duration: Theme.animationDuration
-                        easing.type: Easing.OutQuad
-                        onRunningChanged: if (!running) runnerWindow.updateWaylandEffects();
-                    }
-                }
-                
-                onHeightChanged: {
-                    runnerWindow.updateWaylandEffects();
-                }
-                
-                anchors.centerIn: parent
-
-                // Glassmorphic background
+                // Glassmorphic background follows the target height
                 ShaderEffect {
                     id: glassBackground
-                    anchors.fill: parent
+                    width: parent.width
+                    height: runnerContainer.targetBackgroundHeight
                     
-                property real radius: 10
-                property color baseColor: Colors.alpha(Colors.light.teal, 0.50)
-                property real uWidth: width
-                property real uHeight: height
+                    Behavior on height {
+                        NumberAnimation {
+                            duration: Theme.animationDuration
+                            easing.type: Easing.OutQuad
+                            onRunningChanged: if (!running) runnerWindow.updateWaylandEffects();
+                        }
+                    }
+                    
+                    onHeightChanged: runnerWindow.updateWaylandEffects();
+                    
+                    property real radius: 10
+                    property color baseColor: Colors.alpha(Colors.light.teal, 0.50)
+                    property real uWidth: width
+                    property real uHeight: height
 
                     fragmentShader: Qt.resolvedUrl("../components/shaders/glass.frag.qsb")
 
@@ -142,7 +142,11 @@ Scope {
                 }
                 
                 ColumnLayout {
-                    anchors.fill: parent
+                    width: parent.width
+                    height: runnerContainer.targetBackgroundHeight
+                    clip: true
+                    anchors.top: parent.top
+                    anchors.horizontalCenter: parent.horizontalCenter
                     anchors.margins: 15
                     spacing: 12
                     
