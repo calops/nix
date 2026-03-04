@@ -81,7 +81,9 @@ Scope {
                 width: 600
                 
                 // Debounced height update to prevent jitter
-                property real actualTargetHeight: 80 + (AnyrunService.resultsModel.count > 0 ? Math.min(AnyrunService.resultsModel.count * 48, 500) + 20 : 0)
+                property real actualTargetHeight: 80 
+                    + (AnyrunService.resultsModel.count > 0 ? Math.min(AnyrunService.resultsModel.count * 48, 500) + 20 : 0)
+                    + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 60 : 0)
                 property real targetHeight: 80
                 height: targetHeight
                 
@@ -142,61 +144,102 @@ Scope {
                 ColumnLayout {
                     anchors.fill: parent
                     anchors.margins: 15
-                    spacing: 10
+                    spacing: 12
                     
-                    RowLayout {
+                    // Search field container
+                    Rectangle {
+                        id: searchField
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 30
-                        spacing: 10
+                        Layout.preferredHeight: 44
+                        radius: 12
+                        color: Colors.alpha("#ffffff", 0.08)
+                        border.width: 1
+                        border.color: searchInput.activeFocus ? Colors.alpha("#ffffff", 0.25) : Colors.alpha("#ffffff", 0.15)
                         
-                        StyledText {
-                            text: ""
-                            font.pixelSize: 16
-                            color: Colors.palette.text
-                        }
-                        
-                        TextInput {
-                            id: searchInput
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            verticalAlignment: TextInput.AlignVCenter
-                            font.pixelSize: 18
-                            color: Colors.palette.text
-                            selectionColor: Colors.palette.surface2
-                            selectedTextColor: Colors.palette.text
+                        Behavior on border.color { ColorAnimation { duration: 150 } }
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.leftMargin: 12
+                            anchors.rightMargin: 12
+                            spacing: 12
                             
-                            onTextChanged: {
-                                AnyrunService.query(text);
-                                resultsList.currentIndex = 0;
+                            StyledText {
+                                text: ""
+                                font.pixelSize: 18
+                                color: searchInput.text !== "" ? Colors.palette.text : Colors.palette.subtext0
+                                Behavior on color { ColorAnimation { duration: 150 } }
                             }
                             
-                            Keys.onDownPressed: {
-                                if (resultsList.count > 0) {
-                                    resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsList.count;
+                            TextInput {
+                                id: searchInput
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                verticalAlignment: TextInput.AlignVCenter
+                                font.pixelSize: 18
+                                color: Colors.palette.text
+                                selectionColor: Colors.palette.surface2
+                                selectedTextColor: Colors.palette.text
+                                clip: true
+                                
+                                StyledText {
+                                    text: "Search anything..."
+                                    font.pixelSize: 18
+                                    color: Colors.palette.overlay0
+                                    visible: searchInput.text === ""
+                                    anchors.fill: parent
+                                    verticalAlignment: Text.AlignVCenter
+                                    opacity: 0.5
+                                }
+
+                                onTextChanged: {
+                                    AnyrunService.query(text);
+                                    resultsList.currentIndex = 0;
+                                }
+                                
+                                Keys.onDownPressed: {
+                                    if (resultsList.count > 0) {
+                                        resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsList.count;
+                                    }
+                                }
+                                Keys.onUpPressed: {
+                                    if (resultsList.count > 0) {
+                                        resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsList.count) % resultsList.count;
+                                    }
+                                }
+                                Keys.onReturnPressed: {
+                                    if (resultsList.count > 0 && resultsList.currentIndex >= 0) {
+                                        const match = AnyrunService.resultsModel.get(resultsList.currentIndex);
+                                        AnyrunService.execute(match.rawPlugin, match.rawMatch);
+                                    }
+                                }
+                                Keys.onEscapePressed: {
+                                    AnyrunService.toggleRunner(false);
+                                }
+                                Keys.onTabPressed: {
+                                    if (resultsList.count > 0) {
+                                        resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsList.count;
+                                    }
+                                }
+                                Keys.onBacktabPressed: {
+                                    if (resultsList.count > 0) {
+                                        resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsList.count) % resultsList.count;
+                                    }
                                 }
                             }
-                            Keys.onUpPressed: {
-                                if (resultsList.count > 0) {
-                                    resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsList.count) % resultsList.count;
-                                }
-                            }
-                            Keys.onReturnPressed: {
-                                if (resultsList.count > 0 && resultsList.currentIndex >= 0) {
-                                    const match = AnyrunService.resultsModel.get(resultsList.currentIndex);
-                                    AnyrunService.execute(match.rawPlugin, match.rawMatch);
-                                }
-                            }
-                            Keys.onEscapePressed: {
-                                AnyrunService.toggleRunner(false);
-                            }
-                            Keys.onTabPressed: {
-                                if (resultsList.count > 0) {
-                                    resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsList.count;
-                                }
-                            }
-                            Keys.onBacktabPressed: {
-                                if (resultsList.count > 0) {
-                                    resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsList.count) % resultsList.count;
+
+                            StyledText {
+                                text: ""
+                                font.pixelSize: 14
+                                color: Colors.palette.subtext0
+                                visible: searchInput.text !== ""
+                                
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        searchInput.text = "";
+                                        searchInput.forceActiveFocus();
+                                    }
                                 }
                             }
                         }
@@ -205,8 +248,26 @@ Scope {
                     Rectangle {
                         Layout.fillWidth: true
                         height: 1
-                        color: Colors.palette.surface1
-                        visible: AnyrunService.resultsModel.count > 0
+                        color: Colors.alpha("#ffffff", 0.1)
+                        opacity: AnyrunService.resultsModel.count > 0 ? 1.0 : 0.0
+                        Behavior on opacity { NumberAnimation { duration: 150 } }
+                        visible: opacity > 0
+                        Layout.leftMargin: 4
+                        Layout.rightMargin: 4
+                    }
+
+                    // Empty state
+                    StyledText {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: 60
+                        text: "No results matched your search"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        color: Colors.palette.subtext0
+                        visible: searchInput.text !== "" && AnyrunService.resultsModel.count === 0
+                        font.pixelSize: 14
+                        font.italic: true
+                        opacity: 0.8
                     }
                     
                     ListView {
