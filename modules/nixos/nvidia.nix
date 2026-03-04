@@ -19,7 +19,7 @@
       open = true; # Open-source kernel drivers
       nvidiaSettings = true;
       # FIXME: bugged
-      # package = config.boot.kernelPackages.nvidiaPackages.beta;
+      package = config.boot.kernelPackages.nvidiaPackages.beta;
     };
 
     environment.sessionVariables = {

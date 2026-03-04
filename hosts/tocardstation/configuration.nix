@@ -33,8 +33,8 @@
     bluetooth.enable = true;
   };
 
-  # FIXME: on latest kernel, stable nvidia fails to compile and beta nvidia is buggy
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # FIXME: on latest kernel, nvidia fails to build
+  # boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # SSD periodic trimming
   services.fstrim.enable = true;
@@ -89,6 +89,11 @@
     "1.1.1.1"
     "1.0.0.1"
   ];
+
+  services.logind.extraConfig = ''
+    # don’t shutdown when power button is short-pressed
+    HandlePowerKey=ignore
+  '';
 
   # Virtualisation
   # virtualisation.waydroid.enable = true;
