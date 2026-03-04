@@ -90,11 +90,6 @@
     "1.0.0.1"
   ];
 
-  services.logind.extraConfig = ''
-    # don’t shutdown when power button is short-pressed
-    HandlePowerKey=ignore
-  '';
-
   # Virtualisation
   # virtualisation.waydroid.enable = true;
   # virtualisation.virtualbox = {
