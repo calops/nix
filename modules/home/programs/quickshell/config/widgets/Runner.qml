@@ -311,10 +311,13 @@ Scope {
                             opacity: 0.0
                             Component.onCompleted: delegateEnterAnim.start()
                             
-                            ParallelAnimation {
+                            SequentialAnimation {
                                 id: delegateEnterAnim
-                                NumberAnimation { target: delegateRoot; property: "opacity"; to: 1.0; duration: 150 }
-                                NumberAnimation { target: delegateRoot; property: "scale"; from: 0.95; to: 1.0; duration: 150; easing.type: Easing.OutBack }
+                                PauseAnimation { duration: index * 15 }
+                                ParallelAnimation {
+                                    NumberAnimation { target: delegateRoot; property: "opacity"; to: 1.0; duration: 150 }
+                                    NumberAnimation { target: delegateRoot; property: "scale"; from: 0.95; to: 1.0; duration: 150; easing.type: Easing.OutBack }
+                                }
                             }
                             
                             // Organic Y-movement
