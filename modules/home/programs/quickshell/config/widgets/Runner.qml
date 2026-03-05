@@ -189,7 +189,7 @@ Scope {
                             StyledText {
                                 text: ""
                                 font.pixelSize: 18
-                                color: searchInput.text !== "" ? Colors.palette.text : Colors.palette.subtext0
+                                color: Colors.palette.text
                                 Behavior on color { ColorAnimation { duration: 150 } }
                             }
                             
@@ -207,11 +207,11 @@ Scope {
                                 StyledText {
                                     text: "Search anything..."
                                     font.pixelSize: 18
-                                    color: Colors.palette.overlay0
+                                    color: Colors.palette.subtext1
                                     visible: searchInput.text === ""
                                     anchors.fill: parent
                                     verticalAlignment: Text.AlignVCenter
-                                    opacity: 0.5
+                                    opacity: 1.0
                                 }
 
                                 onTextChanged: {
@@ -286,11 +286,11 @@ Scope {
                         text: "No results matched your search"
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
-                        color: Colors.palette.subtext0
+                        color: Colors.palette.subtext1
                         visible: searchInput.text !== "" && AnyrunService.resultsModel.count === 0
                         font.pixelSize: 14
                         font.italic: true
-                        opacity: 0.8
+                        opacity: 1.0
                     }
                     
                     ListView {
@@ -394,7 +394,7 @@ Scope {
                                             Layout.fillWidth: true
                                             text: (model.description || "").replace(/&/g, '')
                                             font.pixelSize: 11
-                                            color: Colors.palette.subtext0
+                                            color: Colors.light.teal
                                             visible: text !== ""
                                             elide: Text.ElideRight
                                         }
@@ -403,7 +403,7 @@ Scope {
                                     StyledText {
                                         text: model.pluginName
                                         font.pixelSize: 10
-                                        color: Colors.palette.overlay0
+                                        color: Colors.light.teal
                                     }
                                 }
                             }
