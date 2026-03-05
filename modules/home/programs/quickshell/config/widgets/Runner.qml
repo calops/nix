@@ -296,9 +296,9 @@ Scope {
                     ListView {
                         id: resultsList
                         Layout.fillWidth: true
-                        Layout.preferredHeight: AnyrunService.resultsModel.count > 0 ? contentHeight : 0
+                        Layout.fillHeight: true
                         model: AnyrunService.resultsModel
-                        clip: true
+                        clip: false
                         interactive: false
                         spacing: 4
                         
@@ -309,6 +309,7 @@ Scope {
                         
                         remove: Transition {
                             NumberAnimation { property: "opacity"; to: 0; duration: 150 }
+                            NumberAnimation { property: "scale"; to: 0.8; duration: 150; easing.type: Easing.InBack }
                         }
                         
                         displaced: Transition {
