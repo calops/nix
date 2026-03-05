@@ -301,37 +301,24 @@ Scope {
                         clip: true
                         interactive: false
                         spacing: 4
-                        
-                        add: Transition {
-                            NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 150 }
-                            NumberAnimation { property: "scale"; from: 0.8; to: 1.0; duration: 150; easing.type: Easing.OutBack }
-                        }
-                        
-                        remove: Transition {
-                            NumberAnimation { property: "opacity"; to: 0; duration: 150 }
-                            NumberAnimation { property: "scale"; to: 0.8; duration: 150; easing.type: Easing.InBack }
-                        }
-                        
-                        displaced: Transition {
-                            NumberAnimation { properties: "x,y"; duration: 150; easing.type: Easing.OutQuad }
-                        }
-                        
-                        addDisplaced: Transition {
-                            NumberAnimation { properties: "x,y"; duration: 150; easing.type: Easing.OutQuad }
-                        }
-                        
-                        moveDisplaced: Transition {
-                            NumberAnimation { properties: "x,y"; duration: 150; easing.type: Easing.OutQuad }
-                        }
-                        
-                        move: Transition {
-                            NumberAnimation { properties: "x,y"; duration: 150; easing.type: Easing.OutQuad }
-                        }
-                        
+                        // Native transitions removed: AnyrunService model resets cause zombie items
                         delegate: Item {
                             id: delegateRoot
                             width: ListView.view.width
                             height: 48
+                            
+                            // Delegate-level entrance animations that won't orphan the item
+                            opacity: 0.0
+                            Component.onCompleted: delegateEnterAnim.start()
+                            
+                            ParallelAnimation {
+                                id: delegateEnterAnim
+                                NumberAnimation { target: delegateRoot; property: "opacity"; to: 1.0; duration: 150 }
+                                NumberAnimation { target: delegateRoot; property: "scale"; from: 0.95; to: 1.0; duration: 150; easing.type: Easing.OutBack }
+                            }
+                            
+                            // Organic Y-movement
+                            Behavior on y { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
                             
                             Rectangle {
                                 id: delegateBg
