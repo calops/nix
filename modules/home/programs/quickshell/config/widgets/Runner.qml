@@ -86,9 +86,12 @@ Scope {
                 anchors.horizontalCenter: parent.horizontalCenter
                 
                 // Track the "visible" height for the background and clipping
-                property real contentHeight: 80 
-                    + (AnyrunService.resultsModel.count > 0 ? Math.min(AnyrunService.resultsModel.count * 48, 500) + 20 : 0)
-                    + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 60 : 0)
+                // Base: 15 (top margin) + 44 (search bar) + 15 (bottom margin) = 74
+                // Divider: 8 (spacing) + 1 (line) = 9
+                // Empty state: 8 (spacing) + 60 (text) = 68
+                property real contentHeight: 74 
+                    + (AnyrunService.resultsModel.count > 0 ? Math.min(AnyrunService.resultsModel.count * 56, 500) + 9 : 0)
+                    + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 68 : 0)
                 
                 property real targetBackgroundHeight: 80
                 
@@ -142,12 +145,13 @@ Scope {
                 }
                 
                 ColumnLayout {
-                    width: parent.width
+                    anchors.top: parent.top
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.margins: 15
                     // Fixed height to avoid jitter
                     height: 800
                     clip: true
-                    anchors.top: parent.top
-                    anchors.margins: 15
                     spacing: 8
                     
                     // Search field container
@@ -309,7 +313,8 @@ Scope {
                                     radius: parent.radius
                                     color: "transparent"
                                     border.width: 1
-                                    border.color: Colors.alpha("#ffffff", isActive ? 0.15 : (isHovered ? 0.45 : 0.25))
+                                    border.color: Colors.alpha("#ffffff", delegateBg.isActive ? 0.15 : (delegateBg.isHovered ? 0.45 : 0.25))
+
                                     
                                     Behavior on border.color {
                                         ColorAnimation { duration: Theme.animationDurationFast }
