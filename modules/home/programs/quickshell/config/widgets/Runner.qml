@@ -90,7 +90,7 @@ Scope {
                 // Divider: 8 (spacing) + 1 (line) = 9
                 // Empty state: 8 (spacing) + 60 (text) = 68
                 property real contentHeight: 74 
-                    + (AnyrunService.resultsModel.count > 0 ? (AnyrunService.resultsModel.count * 56) + 9 : 0)
+                    + (AnyrunService.resultsModel.count > 0 ? resultsList.contentHeight + 9 : 0)
                     + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 68 : 0)
                 
                 property real targetBackgroundHeight: 80
@@ -282,15 +282,16 @@ Scope {
                     ListView {
                         id: resultsList
                         Layout.fillWidth: true
-                        Layout.preferredHeight: AnyrunService.resultsModel.count > 0 ? (AnyrunService.resultsModel.count * 56) : 0
+                        Layout.preferredHeight: AnyrunService.resultsModel.count > 0 ? contentHeight : 0
                         model: AnyrunService.resultsModel
                         clip: true
                         interactive: false
+                        spacing: 4
                         
                         delegate: Item {
                             id: delegateRoot
                             width: ListView.view.width
-                            height: model.description ? 56 : 48
+                            height: model.description ? 48 : 38
                             
                             Rectangle {
                                 id: delegateBg
@@ -313,8 +314,7 @@ Scope {
                                     radius: parent.radius
                                     color: "transparent"
                                     border.width: 1
-                                    border.color: Colors.alpha("#ffffff", delegateBg.isActive ? 0.15 : (delegateBg.isHovered ? 0.45 : 0.25))
-
+                                    border.color: delegateBg.isActive ? Colors.alpha("#ffffff", 0.20) : (delegateBg.isHovered ? Colors.alpha("#ffffff", 0.15) : "transparent")
                                     
                                     Behavior on border.color {
                                         ColorAnimation { duration: Theme.animationDurationFast }
