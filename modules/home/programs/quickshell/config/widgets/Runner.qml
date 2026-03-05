@@ -298,7 +298,7 @@ Scope {
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         model: AnyrunService.resultsModel
-                        clip: false
+                        clip: true
                         interactive: false
                         spacing: 4
                         
@@ -313,6 +313,14 @@ Scope {
                         }
                         
                         displaced: Transition {
+                            NumberAnimation { properties: "x,y"; duration: 150; easing.type: Easing.OutQuad }
+                        }
+                        
+                        addDisplaced: Transition {
+                            NumberAnimation { properties: "x,y"; duration: 150; easing.type: Easing.OutQuad }
+                        }
+                        
+                        moveDisplaced: Transition {
                             NumberAnimation { properties: "x,y"; duration: 150; easing.type: Easing.OutQuad }
                         }
                         
