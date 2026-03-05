@@ -302,6 +302,20 @@ Scope {
                         interactive: false
                         spacing: 4
                         
+                        add: Transition {
+                            NumberAnimation { property: "opacity"; from: 0; to: 1.0; duration: 150 }
+                            NumberAnimation { property: "scale"; from: 0.8; to: 1.0; duration: 150; easing.type: Easing.OutBack }
+                        }
+                        
+                        remove: Transition {
+                            NumberAnimation { property: "opacity"; to: 0; duration: 150 }
+                            NumberAnimation { property: "scale"; to: 0.8; duration: 150; easing.type: Easing.InBack }
+                        }
+                        
+                        displaced: Transition {
+                            NumberAnimation { properties: "x,y"; duration: 150; easing.type: Easing.OutQuad }
+                        }
+                        
                         delegate: Item {
                             id: delegateRoot
                             width: ListView.view.width
