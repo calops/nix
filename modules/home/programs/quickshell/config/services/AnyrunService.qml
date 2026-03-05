@@ -122,7 +122,7 @@ Singleton {
             }
         } else if (msg.Handled) {
             console.log("Anyrun handled selection");
-            root.runnerVisible = false;
+            // Closed by UI to allow for validation animations
         }
     }
 

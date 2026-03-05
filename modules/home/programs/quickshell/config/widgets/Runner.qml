@@ -23,17 +23,19 @@ Scope {
         
         // This is a full-screen transparent overlay
         color: "transparent"
-        visible: AnyrunService.runnerVisible || runnerContainer.opacity > 0
+        visible: AnyrunService.runnerVisible || mainContent.opacity > 0.01
         
         // Don't reserve space for other windows
         exclusionMode: ExclusionMode.Ignore
 
-        // Request keyboard focus from the compositor
+        // Request keyboard focus from the compositor only while actively open and not exiting
         focusable: true
-        WlrLayershell.keyboardFocus: WlrLayershell.Exclusive
+        WlrLayershell.keyboardFocus: (AnyrunService.runnerVisible && !runnerContainer.isExiting) ? WlrLayershell.Exclusive : WlrLayershell.None
 
         onVisibleChanged: {
             if (visible) {
+                runnerContainer.chosenIndex = -1;
+                runnerContainer.isExiting = false;
                 searchInput.forceActiveFocus();
                 searchInput.text = "";
                 AnyrunService.query("");
@@ -46,45 +48,54 @@ Scope {
             onClicked: AnyrunService.toggleRunner(false)
         }
 
-        // Animated blur mask region for the glassmorphic effect
-        property var blurRegion
-        property var mask
-
-        function updateWaylandEffects() {
-            if (!runnerWindow.visible) return;
-            
-            var blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n" +
-                          "    Region { item: glassBackground; radius: 10 }\n" +
-                          "}";
-            if (runnerWindow.BackgroundEffect.blurRegion) runnerWindow.BackgroundEffect.blurRegion.destroy();
-            runnerWindow.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, runnerWindow, "runnerBlurRegion");
-            
-            var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n" +
-                          "    Region { item: glassBackground; radius: 10 }\n" +
-                          "}";
-            if (runnerWindow.mask) runnerWindow.mask.destroy();
-            runnerWindow.mask = Qt.createQmlObject(maskStr, runnerWindow, "runnerMask");
+        Item {
+            id: offscreenAnchor
+            x: -9999; y: -9999; width: 1; height: 1
+            visible: true; opacity: 0.0
         }
 
+        Region {
+            id: hiddenBlurRegion
+            Region { item: offscreenAnchor; radius: 0 }
+        }
+
+        // Background effect strictly linked to backdrop geometry
+        Region {
+            id: runnerBlurRegion
+            Region { 
+                item: glassBackground
+                radius: 0
+            }
+        }
+        
+        property var activeRegion: (runnerWindow.visible && runnerContainer.backdropOpacity > 0.01) ? runnerBlurRegion : hiddenBlurRegion
+        BackgroundEffect.blurRegion: activeRegion
+        // No explicit mask needed since the blur region restricts the effect and input is handled by the whole window
+
         Item {
+            id: mainContent
             anchors.fill: parent
             focus: true
+            clip: false
+            
+            opacity: (AnyrunService.runnerVisible && (!runnerContainer.isExiting || runnerContainer.chosenIndex !== -1)) ? 1.0 : 0.0
+            Behavior on opacity {
+                NumberAnimation {
+                    duration: Theme.animationDurationFast
+                    easing.type: Easing.InOutQuad
+                }
+            }
             
             onActiveFocusChanged: {
-                if (!activeFocus && runnerWindow.visible) {
+                if (!activeFocus && runnerWindow.visible && runnerContainer.chosenIndex === -1) {
                     AnyrunService.toggleRunner(false);
                 }
             }
 
             Item {
                 id: runnerContainer
-                opacity: AnyrunService.runnerVisible ? 1.0 : 0.0
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: Theme.animationDurationFast
-                        easing.type: Easing.InOutQuad
-                    }
-                }
+                clip: false
+                // Opacity is now handled by the window for a unified fade including blur
                 width: 600
                 // Fixed large height to avoid surface reconfiguration
                 height: 1200
@@ -92,15 +103,35 @@ Scope {
                 y: parent.height * 0.2
                 anchors.horizontalCenter: parent.horizontalCenter
                 
+                property int chosenIndex: -1
+                property bool isExiting: false
+                
+                property real backdropOpacity: (AnyrunService.runnerVisible && !isExiting) ? 1.0 : 0.0
+                
+                Behavior on backdropOpacity {
+                    NumberAnimation {
+                        duration: isExiting ? 300 : Theme.animationDurationFast
+                        easing.type: Easing.InOutQuad
+                    }
+                }
+                
+                Timer {
+                    id: exitTimer
+                    interval: 850
+                    onTriggered: {
+                        AnyrunService.toggleRunner(false);
+                    }
+                }
+                
                 // Track the "visible" height for the background and clipping
                 // Base: 15 (top margin) + 44 (search bar) + 15 (bottom margin) = 74
                 // Divider gap: 8 (spacing) + 1 (line) + 8 (spacing) = 17
                 // Empty state gap: 8 (spacing) + 60 (text) = 68
-                property real contentHeight: 74 
-                    + (AnyrunService.runnerVisible && AnyrunService.resultsModel.count > 0 ? resultsList.contentHeight + 17 : 0)
-                    + (AnyrunService.runnerVisible && AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 68 : 0)
+                property real contentHeight: (AnyrunService.runnerVisible && !isExiting) ? (74 
+                    + (AnyrunService.resultsModel.count > 0 ? resultsList.contentHeight + 17 : 0)
+                    + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 68 : 0)) : 0
                 
-                property real targetBackgroundHeight: 80
+                property real targetBackgroundHeight: 0
                 
                 Timer {
                     id: heightDebounce
@@ -109,7 +140,7 @@ Scope {
                 }
                 
                 onContentHeightChanged: {
-                    if (contentHeight > targetBackgroundHeight || !AnyrunService.runnerVisible) {
+                    if (contentHeight > targetBackgroundHeight || (!AnyrunService.runnerVisible || isExiting)) {
                         targetBackgroundHeight = contentHeight;
                         heightDebounce.stop();
                     } else {
@@ -118,292 +149,310 @@ Scope {
                 }
                 
                 // Glassmorphic background follows the target height
-                ShaderEffect {
+                // Shader sibling for glass effect
+                Rectangle {
                     id: glassBackground
                     width: parent.width
                     height: runnerContainer.targetBackgroundHeight
+                    radius: 12
+                    color: "transparent"
+                    opacity: runnerContainer.backdropOpacity
                     
                     Behavior on height {
                         NumberAnimation {
                             duration: Theme.animationDuration
                             easing.type: Easing.OutQuad
-                            onRunningChanged: if (!running) runnerWindow.updateWaylandEffects();
                         }
                     }
-                    
-                    onHeightChanged: runnerWindow.updateWaylandEffects();
-                    
-                    property real radius: 10
-                    property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
-                    property real uWidth: width
-                    property real uHeight: height
 
-                    fragmentShader: Qt.resolvedUrl("../components/shaders/glass.frag.qsb")
-
-                    layer.enabled: true
-                    layer.effect: MultiEffect {
-                        shadowEnabled: true
-                        shadowColor: "black"
-                        shadowBlur: 1.0
-                        shadowOpacity: 0.5
-                        shadowVerticalOffset: 2
-                        shadowHorizontalOffset: 2
+                    ShaderEffect {
+                        id: glassShader
+                        anchors.fill: parent
+                        
+                        property real radius: parent.radius
+                        property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
+                        property real uWidth: width
+                        property real uHeight: height
+                        
+                        fragmentShader: Qt.resolvedUrl("../components/shaders/glass.frag.qsb")
+                        
+                        layer.enabled: true
+                        layer.effect: MultiEffect {
+                            shadowEnabled: true
+                            shadowColor: "black"
+                            shadowBlur: 1.0
+                            shadowOpacity: 0.5
+                            shadowVerticalOffset: 2
+                            shadowHorizontalOffset: 2
+                        }
                     }
                 }
                 
                 Item {
-                    anchors.top: parent.top
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: glassBackground.height
-                    clip: true
+                    anchors.fill: parent
+                    clip: false
+                    z: runnerContainer.isExiting ? 100 : 1
                     
                     ColumnLayout {
-                        anchors.top: parent.top
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                        anchors.fill: parent
                         anchors.margins: 15
-                    // Fixed height to avoid jitter
-                    height: 1200
-                    clip: true
-                    spacing: 8
-                    
-                    // Search field container
-                    Rectangle {
-                        id: searchField
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 44
-                        radius: 12
-                        color: Colors.alpha("#ffffff", 0.08)
-                        border.width: 1
-                        border.color: searchInput.activeFocus ? Colors.alpha("#ffffff", 0.25) : Colors.alpha("#ffffff", 0.15)
+                        spacing: 8
                         
-                        Behavior on border.color { ColorAnimation { duration: 150 } }
+                        Rectangle {
+                            id: searchField
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 44
+                            radius: 12
+                            color: Colors.alpha("#ffffff", 0.08)
+                            opacity: runnerContainer.backdropOpacity
+                            border.width: 1
+                            border.color: searchInput.activeFocus ? Colors.alpha("#ffffff", 0.25) : Colors.alpha("#ffffff", 0.15)
+                            
+                            Behavior on border.color { ColorAnimation { duration: 150 } }
 
-                        RowLayout {
-                            anchors.fill: parent
-                            anchors.leftMargin: 12
-                            anchors.rightMargin: 12
-                            spacing: 12
-                            
-                            StyledText {
-                                text: ""
-                                font.pixelSize: 18
-                                color: Colors.palette.text
-                                Behavior on color { ColorAnimation { duration: 150 } }
-                            }
-                            
-                            TextInput {
-                                id: searchInput
-                                Layout.fillWidth: true
-                                Layout.fillHeight: true
-                                verticalAlignment: TextInput.AlignVCenter
-                                font.pixelSize: 18
-                                color: Colors.palette.text
-                                selectionColor: Colors.palette.surface2
-                                selectedTextColor: Colors.palette.text
-                                clip: true
+                            RowLayout {
+                                anchors.fill: parent
+                                anchors.leftMargin: 12
+                                anchors.rightMargin: 12
+                                spacing: 12
                                 
                                 StyledText {
-                                    text: "Search anything..."
+                                    text: ""
                                     font.pixelSize: 18
-                                    color: Colors.palette.subtext1
-                                    visible: searchInput.text === ""
-                                    anchors.fill: parent
-                                    verticalAlignment: Text.AlignVCenter
-                                    opacity: 1.0
-                                }
-
-                                onTextChanged: {
-                                    AnyrunService.query(text);
-                                    resultsList.currentIndex = 0;
+                                    color: Colors.palette.text
+                                    Behavior on color { ColorAnimation { duration: 150 } }
                                 }
                                 
-                                Keys.onDownPressed: {
-                                    if (resultsList.count > 0) {
-                                        resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsList.count;
+                                TextInput {
+                                    id: searchInput
+                                    enabled: runnerContainer.chosenIndex === -1
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    verticalAlignment: TextInput.AlignVCenter
+                                    font.pixelSize: 18
+                                    color: Colors.palette.text
+                                    selectionColor: Colors.palette.surface2
+                                    selectedTextColor: Colors.palette.text
+                                    clip: false
+                                    
+                                    StyledText {
+                                        text: "Search anything..."
+                                        font.pixelSize: 18
+                                        color: Colors.palette.subtext1
+                                        visible: searchInput.text === ""
+                                        anchors.fill: parent
+                                        verticalAlignment: Text.AlignVCenter
+                                        opacity: 1.0
                                     }
-                                }
-                                Keys.onUpPressed: {
-                                    if (resultsList.count > 0) {
-                                        resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsList.count) % resultsList.count;
-                                    }
-                                }
-                                Keys.onReturnPressed: {
-                                    if (resultsList.count > 0 && resultsList.currentIndex >= 0) {
-                                        const match = AnyrunService.resultsModel.get(resultsList.currentIndex);
-                                        AnyrunService.execute(match.rawPlugin, match.rawMatch);
-                                    }
-                                }
-                                Keys.onEscapePressed: {
-                                    AnyrunService.toggleRunner(false);
-                                }
-                                Keys.onTabPressed: {
-                                    if (resultsList.count > 0) {
-                                        resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsList.count;
-                                    }
-                                }
-                                Keys.onBacktabPressed: {
-                                    if (resultsList.count > 0) {
-                                        resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsList.count) % resultsList.count;
-                                    }
-                                }
-                            }
 
-                            StyledText {
-                                text: ""
-                                font.pixelSize: 14
-                                color: Colors.palette.subtext0
-                                visible: searchInput.text !== ""
-                                
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        searchInput.text = "";
-                                        searchInput.forceActiveFocus();
+                                    onTextChanged: {
+                                        AnyrunService.query(text);
+                                        resultsList.currentIndex = 0;
+                                    }
+                                    
+                                    Keys.onDownPressed: {
+                                        if (resultsList.count > 0) {
+                                            resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsList.count;
+                                        }
+                                    }
+                                    Keys.onUpPressed: {
+                                        if (resultsList.count > 0) {
+                                            resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsList.count) % resultsList.count;
+                                        }
+                                    }
+                                    Keys.onReturnPressed: {
+                                        if (resultsList.count > 0 && resultsList.currentIndex >= 0 && runnerContainer.chosenIndex === -1) {
+                                            runnerContainer.chosenIndex = resultsList.currentIndex;
+                                            runnerContainer.isExiting = true;
+                                            const match = AnyrunService.resultsModel.get(resultsList.currentIndex);
+                                            AnyrunService.execute(match.rawPlugin, match.rawMatch);
+                                            exitTimer.start();
+                                        }
+                                    }
+                                    Keys.onEscapePressed: {
+                                        AnyrunService.toggleRunner(false);
+                                    }
+                                    Keys.onTabPressed: {
+                                        if (resultsList.count > 0) {
+                                            resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsList.count;
+                                        }
+                                    }
+                                    Keys.onBacktabPressed: {
+                                        if (resultsList.count > 0) {
+                                            resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsList.count) % resultsList.count;
+                                        }
+                                    }
+                                }
+
+                                StyledText {
+                                    text: ""
+                                    font.pixelSize: 14
+                                    color: Colors.palette.subtext0
+                                    visible: searchInput.text !== ""
+                                    
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            searchInput.text = "";
+                                            searchInput.forceActiveFocus();
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    
-                    Rectangle {
-                        Layout.fillWidth: true
-                        height: 1
-                        color: Colors.alpha("#ffffff", 0.1)
-                        opacity: AnyrunService.resultsModel.count > 0 ? 1.0 : 0.0
-                        Behavior on opacity { NumberAnimation { duration: 150 } }
-                        visible: opacity > 0
-                        // Match children margins
-                        Layout.leftMargin: 12
-                        Layout.rightMargin: 12
-                    }
-
-                    // Empty state
-                    StyledText {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 60
-                        text: "No results matched your search"
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        color: Colors.palette.subtext1
-                        visible: searchInput.text !== "" && AnyrunService.resultsModel.count === 0
-                        font.pixelSize: 14
-                        font.italic: true
-                        opacity: 1.0
-                    }
-                    
-                    ListView {
-                        id: resultsList
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        model: AnyrunService.resultsModel
-                        clip: true
-                        interactive: false
-                        spacing: 4
-                        // Native transitions removed: AnyrunService model resets cause zombie items
-                        delegate: Item {
-                            id: delegateRoot
-                            width: ListView.view.width
-                            height: 48
-                            
-                            // Delegate-level entrance animations that won't orphan the item
-                            opacity: 0.0
-                            Component.onCompleted: delegateEnterAnim.start()
-                            
-                            SequentialAnimation {
-                                id: delegateEnterAnim
-                                PauseAnimation { duration: index * 15 }
-                                ParallelAnimation {
-                                    NumberAnimation { target: delegateRoot; property: "opacity"; to: 1.0; duration: 150 }
-                                    NumberAnimation { target: delegateRoot; property: "scale"; from: 0.95; to: 1.0; duration: 150; easing.type: Easing.OutBack }
-                                }
-                            }
-                            
-                            // Organic Y-movement
-                            Behavior on y { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+                        
+                        Item {
+                            Layout.fillWidth: true
+                            Layout.topMargin: 0
+                            height: 1
+                            visible: separator.opacity > 0
+                            opacity: runnerContainer.backdropOpacity
                             
                             Rectangle {
-                                id: delegateBg
+                                id: separator
                                 anchors.fill: parent
-                                radius: 8
+                                color: Colors.alpha("#ffffff", 0.1)
+                                opacity: AnyrunService.resultsModel.count > 0 ? 1.0 : 0.0
+                                Behavior on opacity { NumberAnimation { duration: 150 } }
+                            }
+                        }
+                        
+                        ListView {
+                            id: resultsList
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            model: AnyrunService.resultsModel
+                            clip: false
+                            interactive: false
+                            spacing: 4
+                            delegate: Item {
+                                id: delegateRoot
+                                z: runnerContainer.chosenIndex === index ? 1000 : 0
+                                width: ListView.view.width
+                                height: 48
+                                clip: false
                                 
-                                property bool isHovered: mouseArea.containsMouse
-                                property bool isActive: delegateRoot.ListView.isCurrentItem
+                                // Blow out animation properties
+                                property real blowOutScale: 1.0
+                                property real blowOutOpacity: 1.0
                                 
-                                // Glass highlights
-                                color: Colors.alpha("#ffffff", isActive ? 0.2 : (isHovered ? 0.22 : 0.08))
+                                opacity: runnerContainer.chosenIndex === index ? blowOutOpacity : (runnerContainer.chosenIndex === -1 ? (runnerContainer.backdropOpacity * entranceOpacity) : 0.0)
+                                scale: runnerContainer.chosenIndex === index ? blowOutScale : entranceScale
                                 
-                                Behavior on color {
-                                    ColorAnimation { duration: Theme.animationDurationFast }
+                                property real entranceOpacity: 0.0
+                                property real entranceScale: 0.95
+                                
+                                states: [
+                                    State {
+                                        name: "chosen"
+                                        when: runnerContainer.chosenIndex === index
+                                        PropertyChanges { target: delegateRoot; blowOutScale: 1.5; blowOutOpacity: 0.0 }
+                                    }
+                                ]
+                                
+                                transitions: [
+                                     Transition {
+                                         from: ""; to: "chosen"
+                                         ParallelAnimation {
+                                             NumberAnimation { property: "blowOutScale"; duration: 800; easing.type: Easing.OutCubic }
+                                             NumberAnimation { property: "blowOutOpacity"; duration: 800 }
+                                         }
+                                     }
+                                ]
+                                
+                                Component.onCompleted: delegateEnterAnim.start()
+                                
+                                SequentialAnimation {
+                                    id: delegateEnterAnim
+                                    PauseAnimation { duration: index * 15 }
+                                    ParallelAnimation {
+                                        NumberAnimation { target: delegateRoot; property: "entranceOpacity"; to: 1.0; duration: 150 }
+                                        NumberAnimation { target: delegateRoot; property: "entranceScale"; from: 0.95; to: 1.0; duration: 150; easing.type: Easing.OutBack }
+                                    }
                                 }
                                 
-                                // Subtle white border
+                                Behavior on y { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+                                
                                 Rectangle {
+                                    id: delegateBg
                                     anchors.fill: parent
-                                    radius: parent.radius
-                                    color: "transparent"
-                                    border.width: 1
-                                    border.color: delegateBg.isActive ? Colors.alpha("#ffffff", 0.20) : (delegateBg.isHovered ? Colors.alpha("#ffffff", 0.15) : "transparent")
+                                    radius: 8
                                     
-                                    Behavior on border.color {
-                                        ColorAnimation { duration: Theme.animationDurationFast }
-                                    }
-                                }
-                                
-                                MouseArea {
-                                    id: mouseArea
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    onEntered: resultsList.currentIndex = index
-                                    onClicked: {
-                                        resultsList.currentIndex = index;
-                                        const match = AnyrunService.resultsModel.get(index);
-                                        AnyrunService.execute(match.rawPlugin, match.rawMatch);
-                                    }
-                                }
-                                
-                                RowLayout {
-                                    anchors.fill: parent
-                                    anchors.leftMargin: 12
-                                    anchors.rightMargin: 12
-                                    spacing: 12
+                                    property bool isHovered: mouseArea.containsMouse
+                                    property bool isActive: delegateRoot.ListView.isCurrentItem
                                     
-                                    Image {
-                                        source: model.iconPath || ""
-                                        Layout.preferredWidth: 24
-                                        Layout.preferredHeight: 24
-                                        sourceSize: Qt.size(24, 24)
-                                        fillMode: Image.PreserveAspectFit
-                                        visible: source != ""
+                                    color: Colors.alpha("#ffffff", isActive ? 0.2 : (isHovered ? 0.22 : 0.08))
+                                    
+                                    Behavior on color { ColorAnimation { duration: Theme.animationDurationFast } }
+                                    
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        radius: parent.radius
+                                        color: "transparent"
+                                        border.width: 1
+                                        border.color: delegateBg.isActive ? Colors.alpha("#ffffff", 0.20) : (delegateBg.isHovered ? Colors.alpha("#ffffff", 0.15) : "transparent")
+                                        Behavior on border.color { ColorAnimation { duration: Theme.animationDurationFast } }
                                     }
                                     
-                                    ColumnLayout {
-                                        Layout.fillWidth: true
-                                        spacing: 2
+                                    MouseArea {
+                                        id: mouseArea
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onEntered: resultsList.currentIndex = index
+                                        onClicked: {
+                                            if (runnerContainer.chosenIndex === -1) {
+                                                runnerContainer.chosenIndex = index;
+                                                runnerContainer.isExiting = true;
+                                                resultsList.currentIndex = index;
+                                                const match = AnyrunService.resultsModel.get(index);
+                                                AnyrunService.execute(match.rawPlugin, match.rawMatch);
+                                                exitTimer.start();
+                                            }
+                                        }
+                                    }
+                                    
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        anchors.leftMargin: 12
+                                        anchors.rightMargin: 12
+                                        spacing: 12
                                         
-                                        StyledText {
+                                        Image {
+                                            source: model.iconPath || ""
+                                            Layout.preferredWidth: 24
+                                            Layout.preferredHeight: 24
+                                            sourceSize: Qt.size(24, 24)
+                                            fillMode: Image.PreserveAspectFit
+                                            visible: source != ""
+                                        }
+                                        
+                                        ColumnLayout {
                                             Layout.fillWidth: true
-                                            text: (model.title || "").replace(/&/g, '')
-                                            font.pixelSize: 14
-                                            color: Colors.palette.text
-                                            elide: Text.ElideRight
+                                            spacing: 2
+                                            
+                                            StyledText {
+                                                Layout.fillWidth: true
+                                                text: (model.title || "").replace(/&/g, '')
+                                                font.pixelSize: 14
+                                                color: Colors.palette.text
+                                                elide: Text.ElideRight
+                                            }
+                                            
+                                            StyledText {
+                                                Layout.fillWidth: true
+                                                text: (model.description || "").replace(/&/g, '')
+                                                font.pixelSize: 11
+                                                color: Colors.light.teal
+                                                visible: text !== ""
+                                                elide: Text.ElideRight
+                                            }
                                         }
                                         
                                         StyledText {
-                                            Layout.fillWidth: true
-                                            text: (model.description || "").replace(/&/g, '')
-                                            font.pixelSize: 11
+                                            text: model.pluginName
+                                            font.pixelSize: 10
                                             color: Colors.light.teal
-                                            visible: text !== ""
-                                            elide: Text.ElideRight
                                         }
-                                    }
-                                    
-                                    StyledText {
-                                        text: model.pluginName
-                                        font.pixelSize: 10
-                                        color: Colors.light.teal
                                     }
                                 }
                             }
@@ -416,7 +465,6 @@ Scope {
                         Layout.fillWidth: true
                     }
                 }
-            }
             }
         }
     }
