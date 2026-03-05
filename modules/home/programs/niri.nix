@@ -166,7 +166,7 @@ in
                 Mod+Return          { spawn-sh "kitty"; }
                 Mod+Shift+Comma     { show-hotkey-overlay; }
                 Mod+Shift+E         { quit; }
-                Mod+Space           { spawn-sh "anyrun"; }
+                Mod+Space           { spawn-sh "shell toggleRunner \"\""; }
                 Mod+Shift+Space     { spawn-sh "1password --quick-access"; }
 
                 Mod+Shift+WheelScrollDown cooldown-ms=150 { focus-column-right; }
