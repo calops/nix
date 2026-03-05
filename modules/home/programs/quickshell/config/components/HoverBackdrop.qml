@@ -16,7 +16,7 @@ Item {
         
         property real radius: root.radius
         // Passing baseColor with alpha so the shader can determine transparency
-        property color baseColor: Colors.alpha(Colors.light.teal, 0.50)
+        property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
         property real uWidth: width
         property real uHeight: height
         

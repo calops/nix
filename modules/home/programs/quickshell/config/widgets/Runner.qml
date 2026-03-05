@@ -127,7 +127,7 @@ Scope {
                     onHeightChanged: runnerWindow.updateWaylandEffects();
                     
                     property real radius: 10
-                    property color baseColor: Colors.alpha(Colors.light.teal, 0.50)
+                    property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
                     property real uWidth: width
                     property real uHeight: height
 
