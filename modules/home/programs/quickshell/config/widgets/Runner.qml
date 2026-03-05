@@ -54,13 +54,13 @@ Scope {
             if (!runnerWindow.visible) return;
             
             var blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n" +
-                          "    Region { item: runnerContainer; radius: 10 }\n" +
+                          "    Region { item: glassBackground; radius: 10 }\n" +
                           "}";
             if (runnerWindow.BackgroundEffect.blurRegion) runnerWindow.BackgroundEffect.blurRegion.destroy();
             runnerWindow.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, runnerWindow, "runnerBlurRegion");
             
             var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n" +
-                          "    Region { item: runnerContainer; radius: 10 }\n" +
+                          "    Region { item: glassBackground; radius: 10 }\n" +
                           "}";
             if (runnerWindow.mask) runnerWindow.mask.destroy();
             runnerWindow.mask = Qt.createQmlObject(maskStr, runnerWindow, "runnerMask");
@@ -278,12 +278,13 @@ Scope {
                     ListView {
                         id: resultsList
                         Layout.fillWidth: true
-                        Layout.preferredHeight: AnyrunService.resultsModel.count > 0 ? Math.min(AnyrunService.resultsModel.count * 48, 500) : 0
+                        Layout.preferredHeight: AnyrunService.resultsModel.count > 0 ? Math.min(AnyrunService.resultsModel.count * 56, 500) : 0
                         model: AnyrunService.resultsModel
                         clip: true
                         interactive: false
                         
                         delegate: Item {
+                            id: delegateRoot
                             width: ListView.view.width
                             height: model.description ? 56 : 48
                             
@@ -293,7 +294,7 @@ Scope {
                                 radius: 8
                                 
                                 property bool isHovered: mouseArea.containsMouse
-                                property bool isActive: ListView.isCurrentItem
+                                property bool isActive: delegateRoot.ListView.isCurrentItem
                                 
                                 // Glass highlights
                                 color: Colors.alpha("#ffffff", isActive ? 0.2 : (isHovered ? 0.22 : 0.08))
@@ -372,6 +373,12 @@ Scope {
                                 }
                             }
                         }
+                    }
+                    
+                    // Spacer to push everything to the top of the ColumnLayout
+                    Item {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
                     }
                 }
             }
