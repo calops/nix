@@ -144,11 +144,18 @@ Scope {
                     }
                 }
                 
-                ColumnLayout {
+                Item {
                     anchors.top: parent.top
                     anchors.left: parent.left
                     anchors.right: parent.right
-                    anchors.margins: 15
+                    height: glassBackground.height
+                    clip: true
+                    
+                    ColumnLayout {
+                        anchors.top: parent.top
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.margins: 15
                     // Fixed height to avoid jitter
                     height: 1200
                     clip: true
@@ -386,6 +393,7 @@ Scope {
                         Layout.fillWidth: true
                     }
                 }
+            }
             }
         }
     }
