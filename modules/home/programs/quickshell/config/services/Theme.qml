@@ -15,7 +15,7 @@ Singleton {
     readonly property int animationDurationFast: 150
     
     // Unified Backdrop
-    property color backdropTint: Colors.palette.teal
+    property color backdropTint: Colors.light.teal
     property real backdropOpacity: 0.65
     
     // Feature toggles
