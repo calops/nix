@@ -80,7 +80,7 @@ Scope {
                 id: runnerContainer
                 width: 600
                 // Fixed large height to avoid surface reconfiguration
-                height: 800
+                height: 1200
                 // Stay stationary at ~20% of screen height
                 y: parent.height * 0.2
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -90,7 +90,7 @@ Scope {
                 // Divider: 8 (spacing) + 1 (line) = 9
                 // Empty state: 8 (spacing) + 60 (text) = 68
                 property real contentHeight: 74 
-                    + (AnyrunService.resultsModel.count > 0 ? Math.min(AnyrunService.resultsModel.count * 56, 500) + 9 : 0)
+                    + (AnyrunService.resultsModel.count > 0 ? (AnyrunService.resultsModel.count * 56) + 9 : 0)
                     + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 68 : 0)
                 
                 property real targetBackgroundHeight: 80
@@ -150,7 +150,7 @@ Scope {
                     anchors.right: parent.right
                     anchors.margins: 15
                     // Fixed height to avoid jitter
-                    height: 800
+                    height: 1200
                     clip: true
                     spacing: 8
                     
@@ -282,7 +282,7 @@ Scope {
                     ListView {
                         id: resultsList
                         Layout.fillWidth: true
-                        Layout.preferredHeight: AnyrunService.resultsModel.count > 0 ? Math.min(AnyrunService.resultsModel.count * 56, 500) : 0
+                        Layout.preferredHeight: AnyrunService.resultsModel.count > 0 ? (AnyrunService.resultsModel.count * 56) : 0
                         model: AnyrunService.resultsModel
                         clip: true
                         interactive: false
