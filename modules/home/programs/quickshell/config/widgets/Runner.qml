@@ -23,7 +23,7 @@ Scope {
         
         // This is a full-screen transparent overlay
         color: "transparent"
-        visible: AnyrunService.runnerVisible
+        visible: AnyrunService.runnerVisible || runnerContainer.opacity > 0
         
         // Don't reserve space for other windows
         exclusionMode: ExclusionMode.Ignore
@@ -78,6 +78,13 @@ Scope {
 
             Item {
                 id: runnerContainer
+                opacity: AnyrunService.runnerVisible ? 1.0 : 0.0
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.animationDurationFast
+                        easing.type: Easing.InOutQuad
+                    }
+                }
                 width: 600
                 // Fixed large height to avoid surface reconfiguration
                 height: 1200
@@ -90,8 +97,8 @@ Scope {
                 // Divider gap: 8 (spacing) + 1 (line) + 8 (spacing) = 17
                 // Empty state gap: 8 (spacing) + 60 (text) = 68
                 property real contentHeight: 74 
-                    + (AnyrunService.resultsModel.count > 0 ? resultsList.contentHeight + 17 : 0)
-                    + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 68 : 0)
+                    + (AnyrunService.runnerVisible && AnyrunService.resultsModel.count > 0 ? resultsList.contentHeight + 17 : 0)
+                    + (AnyrunService.runnerVisible && AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 68 : 0)
                 
                 property real targetBackgroundHeight: 80
                 
@@ -102,7 +109,7 @@ Scope {
                 }
                 
                 onContentHeightChanged: {
-                    if (contentHeight > targetBackgroundHeight) {
+                    if (contentHeight > targetBackgroundHeight || !AnyrunService.runnerVisible) {
                         targetBackgroundHeight = contentHeight;
                         heightDebounce.stop();
                     } else {
