@@ -87,10 +87,10 @@ Scope {
                 
                 // Track the "visible" height for the background and clipping
                 // Base: 15 (top margin) + 44 (search bar) + 15 (bottom margin) = 74
-                // Divider: 8 (spacing) + 1 (line) = 9
-                // Empty state: 8 (spacing) + 60 (text) = 68
+                // Divider gap: 8 (spacing) + 1 (line) + 8 (spacing) = 17
+                // Empty state gap: 8 (spacing) + 60 (text) = 68
                 property real contentHeight: 74 
-                    + (AnyrunService.resultsModel.count > 0 ? resultsList.contentHeight + 9 : 0)
+                    + (AnyrunService.resultsModel.count > 0 ? resultsList.contentHeight + 17 : 0)
                     + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 68 : 0)
                 
                 property real targetBackgroundHeight: 80
@@ -291,7 +291,7 @@ Scope {
                         delegate: Item {
                             id: delegateRoot
                             width: ListView.view.width
-                            height: model.description ? 48 : 38
+                            height: 48
                             
                             Rectangle {
                                 id: delegateBg
