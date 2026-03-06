@@ -275,7 +275,9 @@ Scope {
                     Loader {
                         id: batteryLoader
                         active: UPower.displayDevice != null && UPower.displayDevice.percentage > 0
-                        width: Theme.widgetExpandedWidth
+                        anchors.right: parent.right
+                        height: active ? 50 : 0
+                        visible: active
                         sourceComponent: Component {
                             Battery {
                                 anchors.right: parent.right

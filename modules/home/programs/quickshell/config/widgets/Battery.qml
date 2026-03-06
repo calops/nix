@@ -14,9 +14,9 @@ Item {
     height: 50
 
     property int iconWidth: Theme.iconWidth
-    property int expandedWidth: parent ? parent.width : Theme.widgetExpandedWidth
+    property int expandedWidth: Theme.widgetExpandedWidth
 
-    Behavior on width { NumberAnimation { id: widthAnim; duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
+    Behavior on width { NumberAnimation { duration: 300; easing.type: Easing.OutQuad } }
 
     // Dynamic theme switching: Animated colors
     property color animIconColor: Colors.dark.text
@@ -112,7 +112,7 @@ Item {
             id: textContainer
             width: Math.max(0, root.width - iconContainer.width)
             height: parent.height
-            clip: true
+            clip: false
             
             RowLayout {
                 id: expandedContent
