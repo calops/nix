@@ -20,7 +20,6 @@ Singleton {
 
     PanelWindow {
         id: runnerWindow
-        // Show on the first screen
         screen: Quickshell.screens[0]
 
         anchors {
@@ -30,14 +29,12 @@ Singleton {
             right: true
         }
 
-        // This is a full-screen transparent overlay
         color: "transparent"
-        visible: root.runnerVisible || mainContent.opacity > 0.01
+        // Keep visible while the backdrop is still fading out
+        visible: root.runnerVisible || runnerContainer.backdropOpacity > 0.01
 
-        // Don't reserve space for other windows
         exclusionMode: ExclusionMode.Ignore
 
-        // Request keyboard focus from the compositor only while actively open and not exiting
         focusable: true
         WlrLayershell.keyboardFocus: (root.runnerVisible && !runnerContainer.isExiting) ? WlrLayershell.Exclusive : WlrLayershell.None
 
@@ -51,12 +48,12 @@ Singleton {
             }
         }
 
-        // The background click-to-dismiss overlay
         MouseArea {
             anchors.fill: parent
             onClicked: root.toggleRunner(false)
         }
 
+        // Offscreen anchor used as a "null" blur region target: a null region blurs the whole screen
         Item {
             id: offscreenAnchor
             x: -9999
@@ -75,7 +72,6 @@ Singleton {
             }
         }
 
-        // Background effect strictly linked to backdrop geometry
         Region {
             id: runnerBlurRegion
             Region {
@@ -86,13 +82,11 @@ Singleton {
 
         property var activeRegion: (runnerWindow.visible && runnerContainer.backdropOpacity > 0.01) ? runnerBlurRegion : hiddenBlurRegion
         BackgroundEffect.blurRegion: activeRegion
-        // No explicit mask needed since the blur region restricts the effect and input is handled by the whole window
 
         Item {
             id: mainContent
             anchors.fill: parent
             focus: true
-            clip: false
 
             opacity: (root.runnerVisible && (!runnerContainer.isExiting || runnerContainer.chosenIndex !== -1)) ? 1.0 : 0.0
             Behavior on opacity {
@@ -110,23 +104,21 @@ Singleton {
 
             Item {
                 id: runnerContainer
-                clip: false
-                // Opacity is now handled by the window for a unified fade including blur
+                // Fixed large height to avoid surface reconfiguration while content grows
                 width: 600
-                // Fixed large height to avoid surface reconfiguration
                 height: 1200
-                // Stay stationary at ~20% of screen height
                 y: parent.height * 0.2
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 property int chosenIndex: -1
                 property bool isExiting: false
+                readonly property int resultsCount: AnyrunService.resultsModel.count
 
                 property real backdropOpacity: (root.runnerVisible && !isExiting) ? 1.0 : 0.0
 
                 Behavior on backdropOpacity {
                     NumberAnimation {
-                        duration: isExiting ? 300 : Theme.animationDurationFast
+                        duration: runnerContainer.isExiting ? 300 : Theme.animationDurationFast
                         easing.type: Easing.InOutQuad
                     }
                 }
@@ -134,16 +126,40 @@ Singleton {
                 Timer {
                     id: exitTimer
                     interval: 850
-                    onTriggered: {
-                        root.toggleRunner(false);
-                    }
+                    onTriggered: root.toggleRunner(false)
+                }
+
+                function selectNext() {
+                    if (resultsCount > 0)
+                        resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsCount;
+                }
+
+                function selectPrev() {
+                    if (resultsCount > 0)
+                        resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsCount) % resultsCount;
+                }
+
+                function executeMatch(idx) {
+                    chosenIndex = idx;
+                    isExiting = true;
+                    resultsList.currentIndex = idx;
+                    const match = AnyrunService.resultsModel.get(idx);
+                    AnyrunService.execute(match.rawPlugin, match.rawMatch);
+                    exitTimer.start();
                 }
 
                 // Track the "visible" height for the background and clipping
                 // Base: 15 (top margin) + 44 (search bar) + 15 (bottom margin) = 74
                 // Divider gap: 8 (spacing) + 1 (line) + 8 (spacing) = 17
-                // Empty state gap: 8 (spacing) + 60 (text) = 68
-                property real contentHeight: (root.runnerVisible && !isExiting) ? (74 + (AnyrunService.resultsModel.count > 0 ? resultsList.contentHeight + 17 : 0) + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 68 : 0)) : 0
+                // Empty state: 8 (spacing) + 60 (text) = 68
+                readonly property real baseHeight: 74
+                readonly property real separatorHeight: 17
+                readonly property real emptyStateHeight: 68
+
+                property real contentHeight: (!root.runnerVisible || isExiting) ? 0
+                    : baseHeight
+                    + (resultsCount > 0 ? resultsList.contentHeight + separatorHeight : 0)
+                    + (resultsCount === 0 && searchInput.text !== "" ? emptyStateHeight : 0)
 
                 property real targetBackgroundHeight: 0
 
@@ -162,8 +178,6 @@ Singleton {
                     }
                 }
 
-                // Glassmorphic background follows the target height
-                // Shader sibling for glass effect
                 Rectangle {
                     id: glassBackground
                     width: parent.width
@@ -204,7 +218,6 @@ Singleton {
 
                 Item {
                     anchors.fill: parent
-                    clip: false
                     z: runnerContainer.isExiting ? 100 : 1
 
                     ColumnLayout {
@@ -235,7 +248,7 @@ Singleton {
                                 spacing: 12
 
                                 StyledText {
-                                    text: ""
+                                    text: ""
                                     font.pixelSize: 18
                                     color: Colors.palette.text
                                     Behavior on color {
@@ -255,7 +268,6 @@ Singleton {
                                     color: Colors.palette.text
                                     selectionColor: Colors.palette.surface2
                                     selectedTextColor: Colors.palette.text
-                                    clip: false
 
                                     StyledText {
                                         text: "Search anything..."
@@ -264,7 +276,6 @@ Singleton {
                                         visible: searchInput.text === ""
                                         anchors.fill: parent
                                         verticalAlignment: Text.AlignVCenter
-                                        opacity: 1.0
                                     }
 
                                     onTextChanged: {
@@ -272,42 +283,22 @@ Singleton {
                                         resultsList.currentIndex = 0;
                                     }
 
-                                    Keys.onDownPressed: {
-                                        if (resultsList.count > 0) {
-                                            resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsList.count;
-                                        }
-                                    }
-                                    Keys.onUpPressed: {
-                                        if (resultsList.count > 0) {
-                                            resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsList.count) % resultsList.count;
-                                        }
-                                    }
+                                    Keys.onDownPressed: runnerContainer.selectNext()
+                                    Keys.onTabPressed: runnerContainer.selectNext()
+                                    Keys.onUpPressed: runnerContainer.selectPrev()
+                                    Keys.onBacktabPressed: runnerContainer.selectPrev()
+
                                     Keys.onReturnPressed: {
-                                        if (resultsList.count > 0 && resultsList.currentIndex >= 0 && runnerContainer.chosenIndex === -1) {
-                                            runnerContainer.chosenIndex = resultsList.currentIndex;
-                                            runnerContainer.isExiting = true;
-                                            const match = AnyrunService.resultsModel.get(resultsList.currentIndex);
-                                            AnyrunService.execute(match.rawPlugin, match.rawMatch);
-                                            exitTimer.start();
-                                        }
+                                        if (runnerContainer.resultsCount > 0 && resultsList.currentIndex >= 0 && runnerContainer.chosenIndex === -1)
+                                            runnerContainer.executeMatch(resultsList.currentIndex);
                                     }
                                     Keys.onEscapePressed: {
                                         root.toggleRunner(false);
                                     }
-                                    Keys.onTabPressed: {
-                                        if (resultsList.count > 0) {
-                                            resultsList.currentIndex = (resultsList.currentIndex + 1) % resultsList.count;
-                                        }
-                                    }
-                                    Keys.onBacktabPressed: {
-                                        if (resultsList.count > 0) {
-                                            resultsList.currentIndex = (resultsList.currentIndex - 1 + resultsList.count) % resultsList.count;
-                                        }
-                                    }
                                 }
 
                                 StyledText {
-                                    text: ""
+                                    text: ""
                                     font.pixelSize: 14
                                     color: Colors.palette.subtext0
                                     visible: searchInput.text !== ""
@@ -332,13 +323,12 @@ Singleton {
                             color: Colors.palette.text
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
-                            visible: AnyrunService.resultsModel.count === 0 && searchInput.text !== ""
+                            visible: runnerContainer.resultsCount === 0 && searchInput.text !== ""
                             opacity: runnerContainer.backdropOpacity
                         }
 
                         Item {
                             Layout.fillWidth: true
-                            Layout.topMargin: 0
                             height: 1
                             visible: separator.opacity > 0
                             opacity: runnerContainer.backdropOpacity
@@ -347,7 +337,7 @@ Singleton {
                                 id: separator
                                 anchors.fill: parent
                                 color: Colors.alpha("#ffffff", 0.1)
-                                opacity: AnyrunService.resultsModel.count > 0 ? 1.0 : 0.0
+                                opacity: runnerContainer.resultsCount > 0 ? 1.0 : 0.0
                                 Behavior on opacity {
                                     NumberAnimation {
                                         duration: 150
@@ -361,7 +351,6 @@ Singleton {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             model: AnyrunService.resultsModel
-                            clip: false
                             interactive: false
                             spacing: 4
                             delegate: Item {
@@ -369,17 +358,14 @@ Singleton {
                                 z: runnerContainer.chosenIndex === index ? 1000 : 0
                                 width: ListView.view.width
                                 height: 48
-                                clip: false
 
-                                // Blow out animation properties
                                 property real blowOutScale: 1.0
                                 property real blowOutOpacity: 1.0
+                                property real entranceOpacity: 0.0
+                                property real entranceScale: 0.95
 
                                 opacity: runnerContainer.chosenIndex === index ? blowOutOpacity : (runnerContainer.chosenIndex === -1 ? (runnerContainer.backdropOpacity * entranceOpacity) : 0.0)
                                 scale: runnerContainer.chosenIndex === index ? blowOutScale : entranceScale
-
-                                property real entranceOpacity: 0.0
-                                property real entranceScale: 0.95
 
                                 states: [
                                     State {
@@ -478,14 +464,8 @@ Singleton {
                                         hoverEnabled: true
                                         onEntered: resultsList.currentIndex = index
                                         onClicked: {
-                                            if (runnerContainer.chosenIndex === -1) {
-                                                runnerContainer.chosenIndex = index;
-                                                runnerContainer.isExiting = true;
-                                                resultsList.currentIndex = index;
-                                                const match = AnyrunService.resultsModel.get(index);
-                                                AnyrunService.execute(match.rawPlugin, match.rawMatch);
-                                                exitTimer.start();
-                                            }
+                                            if (runnerContainer.chosenIndex === -1)
+                                                runnerContainer.executeMatch(index);
                                         }
                                     }
 
@@ -510,7 +490,7 @@ Singleton {
 
                                             StyledText {
                                                 Layout.fillWidth: true
-                                                text: (model.title || "").replace(/&/g, '')
+                                                text: (model.title || "").replace(/&\w+;/g, '')
                                                 font.pixelSize: 14
                                                 color: Colors.palette.text
                                                 elide: Text.ElideRight
@@ -518,7 +498,7 @@ Singleton {
 
                                             StyledText {
                                                 Layout.fillWidth: true
-                                                text: (model.description || "").replace(/&/g, '')
+                                                text: (model.description || "").replace(/&\w+;/g, '')
                                                 font.pixelSize: 11
                                                 color: Colors.light.teal
                                                 visible: text !== ""
@@ -535,12 +515,6 @@ Singleton {
                                 }
                             }
                         }
-                    }
-
-                    // Spacer to push everything to the top of the ColumnLayout
-                    Item {
-                        Layout.fillHeight: true
-                        Layout.fillWidth: true
                     }
                 }
             }
