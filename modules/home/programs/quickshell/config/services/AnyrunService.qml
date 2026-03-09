@@ -48,30 +48,19 @@ Singleton {
 
     property var pluginArgs: []
 
-    Process {
-        id: configReader
-        running: true
-        command: ["sh", "-c", "grep -Eo '\"[^\"]*\\.so\"' ~/.config/anyrun/config.ron | tr -d '\"'"]
-
-        stdout: SplitParser {
-            onRead: data => {
-                if (!data) return;
-                const plugins = data.trim().split("\n").filter(p => p.length > 0);
-                if (plugins.length > 0) {
-                    const foundArgs = [];
-                    for (const p of plugins) {
-                        foundArgs.push("--plugins");
-                        foundArgs.push(p);
-                    }
-                    root.pluginArgs = root.pluginArgs.concat(foundArgs);
-                }
+    FileView {
+        id: configView
+        path: Quickshell.env("HOME") + "/.config/anyrun/config.ron"
+        onTextChanged: {
+            const data = configView.text();
+            if (!data) return;
+            const foundArgs = [];
+            for (const match of data.match(/"[^"]+\.so"/g) || []) {
+                foundArgs.push("--plugins", match.slice(1, -1));
             }
-        }
-        onRunningChanged: {
-            if (!running) {
-                console.log(`Anyrun: configReader finished. Plugins found: ${root.pluginArgs.length / 2}`);
-                providerProcess.running = true;
-            }
+            root.pluginArgs = foundArgs;
+            console.log(`Anyrun: FileView finished. Plugins found: ${root.pluginArgs.length / 2}`);
+            providerProcess.running = true;
         }
     }
 
