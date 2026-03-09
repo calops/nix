@@ -60,7 +60,7 @@ Singleton {
                 foundArgs.push("--plugins", match.slice(1, -1));
             }
             root.pluginArgs = foundArgs;
-            console.log(`Anyrun: FileView finished. Plugins found: ${root.pluginArgs.length / 2}`);
+            console.log(`Anyrun: Config parsing finished. Plugins found: ${root.pluginArgs.length / 2}`);
             providerProcess.running = true;
         }
     }
@@ -146,12 +146,7 @@ Singleton {
         activeConnection.flush();
     }
 
-    function reset() {
-        if (!activeConnection)
-            return;
-
+    function clear() {
         resultsModel.clear();
-        activeConnection.write(JSON.stringify("Reset") + "\n");
-        activeConnection.flush();
     }
 }

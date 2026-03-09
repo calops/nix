@@ -15,7 +15,7 @@ Singleton {
     function toggleRunner(requestedState = !runnerVisible) {
         runnerVisible = requestedState;
         if (!runnerVisible)
-            AnyrunService.reset();
+            AnyrunService.clear();
     }
 
     PanelWindow {
