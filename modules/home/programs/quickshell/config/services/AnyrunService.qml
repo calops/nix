@@ -46,16 +46,55 @@ Singleton {
         }
     }
 
+    property var pluginArgs: []
+
+    Process {
+        id: configReader
+        running: true
+        command: ["sh", "-c", "grep -Eo '\"[^\"]*\\.so\"' ~/.config/anyrun/config.ron | tr -d '\"'"]
+
+        stdout: SplitParser {
+            onRead: data => {
+                if (!data) return;
+                const plugins = data.trim().split("\n").filter(p => p.length > 0);
+                if (plugins.length > 0) {
+                    const foundArgs = [];
+                    for (const p of plugins) {
+                        foundArgs.push("--plugins");
+                        foundArgs.push(p);
+                    }
+                    root.pluginArgs = root.pluginArgs.concat(foundArgs);
+                }
+            }
+        }
+        onRunningChanged: {
+            if (!running) {
+                console.log(`Anyrun: configReader finished. Plugins found: ${root.pluginArgs.length / 2}`);
+                providerProcess.running = true;
+            }
+        }
+    }
+
+    Timer {
+        id: restartTimer
+        interval: 1000
+        onTriggered: providerProcess.running = true
+    }
+
     Process {
         id: providerProcess
-        running: true
-        command: ["sh", "-c", "sleep 0.1 && " + "PLUGINS=$(grep -Eo '\"[^\"]*\\.so\"' ~/.config/anyrun/config.ron | tr -d '\"'); " + "ARGS=\"\"; for p in $PLUGINS; do ARGS=\"$ARGS --plugins $p\"; done; " + "exec anyrun-provider $ARGS connect-to /tmp/quickshell-anyrun.sock"]
+        command: ["anyrun-provider", ...root.pluginArgs, "connect-to", "/tmp/quickshell-anyrun.sock"]
+        onRunningChanged: {
+            if (!running && root.pluginArgs.length > 0) {
+                restartTimer.restart();
+            }
+        }
 
         stdout: SplitParser {
             onRead: data => console.log("anyrun-provider:", data)
         }
         stderr: SplitParser {
-            onRead: data => console.log("anyrun-provider error:", data)
+            onRead: data => console.error("anyrun-provider error:", data)
         }
     }
 

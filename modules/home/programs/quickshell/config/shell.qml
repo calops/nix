@@ -5,4 +5,6 @@ import "services"
 ShellRoot {
     IpcService {}
     Bars {}
+
+    readonly property var _anyrunService: AnyrunService
 }
