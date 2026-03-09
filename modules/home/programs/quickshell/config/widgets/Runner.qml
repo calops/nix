@@ -402,7 +402,7 @@ Singleton {
                                 SequentialAnimation {
                                     id: delegateEnterAnim
                                     PauseAnimation {
-                                        duration: index * 15
+                                        duration: Math.max(0, index * 15)
                                     }
                                     ParallelAnimation {
                                         NumberAnimation {
