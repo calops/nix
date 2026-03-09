@@ -82,7 +82,7 @@ Item {
 
     ReactiveExpansion {
         id: reactive
-        watchValue: Math.round(batteryPercentage) + ":" + isCharging
+        watchValue: isCharging + ":" + PowerProfiles.profile
         ignore: hovered
     }
 
