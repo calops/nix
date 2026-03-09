@@ -1,3 +1,4 @@
+pragma Singleton
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
@@ -6,8 +7,16 @@ import Quickshell.Wayland
 import "../services"
 import "../components"
 
-Scope {
+Singleton {
     id: root
+
+    property bool runnerVisible: false
+
+    function toggleRunner(requestedState = !runnerVisible) {
+        runnerVisible = requestedState;
+        if (!runnerVisible)
+            AnyrunService.reset();
+    }
 
     PanelWindow {
         id: runnerWindow
@@ -23,14 +32,14 @@ Scope {
         
         // This is a full-screen transparent overlay
         color: "transparent"
-        visible: AnyrunService.runnerVisible || mainContent.opacity > 0.01
+        visible: root.runnerVisible || mainContent.opacity > 0.01
         
         // Don't reserve space for other windows
         exclusionMode: ExclusionMode.Ignore
 
         // Request keyboard focus from the compositor only while actively open and not exiting
         focusable: true
-        WlrLayershell.keyboardFocus: (AnyrunService.runnerVisible && !runnerContainer.isExiting) ? WlrLayershell.Exclusive : WlrLayershell.None
+        WlrLayershell.keyboardFocus: (root.runnerVisible && !runnerContainer.isExiting) ? WlrLayershell.Exclusive : WlrLayershell.None
 
         onVisibleChanged: {
             if (visible) {
@@ -45,7 +54,7 @@ Scope {
         // The background click-to-dismiss overlay
         MouseArea {
             anchors.fill: parent
-            onClicked: AnyrunService.toggleRunner(false)
+            onClicked: root.toggleRunner(false)
         }
 
         Item {
@@ -78,7 +87,7 @@ Scope {
             focus: true
             clip: false
             
-            opacity: (AnyrunService.runnerVisible && (!runnerContainer.isExiting || runnerContainer.chosenIndex !== -1)) ? 1.0 : 0.0
+            opacity: (root.runnerVisible && (!runnerContainer.isExiting || runnerContainer.chosenIndex !== -1)) ? 1.0 : 0.0
             Behavior on opacity {
                 NumberAnimation {
                     duration: Theme.animationDurationFast
@@ -88,7 +97,7 @@ Scope {
             
             onActiveFocusChanged: {
                 if (!activeFocus && runnerWindow.visible && runnerContainer.chosenIndex === -1) {
-                    AnyrunService.toggleRunner(false);
+                    root.toggleRunner(false);
                 }
             }
 
@@ -106,7 +115,7 @@ Scope {
                 property int chosenIndex: -1
                 property bool isExiting: false
                 
-                property real backdropOpacity: (AnyrunService.runnerVisible && !isExiting) ? 1.0 : 0.0
+                property real backdropOpacity: (root.runnerVisible && !isExiting) ? 1.0 : 0.0
                 
                 Behavior on backdropOpacity {
                     NumberAnimation {
@@ -119,7 +128,7 @@ Scope {
                     id: exitTimer
                     interval: 850
                     onTriggered: {
-                        AnyrunService.toggleRunner(false);
+                        root.toggleRunner(false);
                     }
                 }
                 
@@ -127,7 +136,7 @@ Scope {
                 // Base: 15 (top margin) + 44 (search bar) + 15 (bottom margin) = 74
                 // Divider gap: 8 (spacing) + 1 (line) + 8 (spacing) = 17
                 // Empty state gap: 8 (spacing) + 60 (text) = 68
-                property real contentHeight: (AnyrunService.runnerVisible && !isExiting) ? (74 
+                property real contentHeight: (root.runnerVisible && !isExiting) ? (74 
                     + (AnyrunService.resultsModel.count > 0 ? resultsList.contentHeight + 17 : 0)
                     + (AnyrunService.resultsModel.count === 0 && searchInput.text !== "" ? 68 : 0)) : 0
                 
@@ -140,7 +149,7 @@ Scope {
                 }
                 
                 onContentHeightChanged: {
-                    if (contentHeight > targetBackgroundHeight || (!AnyrunService.runnerVisible || isExiting)) {
+                    if (contentHeight > targetBackgroundHeight || (!root.runnerVisible || isExiting)) {
                         targetBackgroundHeight = contentHeight;
                         heightDebounce.stop();
                     } else {
@@ -270,7 +279,7 @@ Scope {
                                         }
                                     }
                                     Keys.onEscapePressed: {
-                                        AnyrunService.toggleRunner(false);
+                                        root.toggleRunner(false);
                                     }
                                     Keys.onTabPressed: {
                                         if (resultsList.count > 0) {

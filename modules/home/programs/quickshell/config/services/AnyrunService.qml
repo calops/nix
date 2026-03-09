@@ -7,22 +7,11 @@ import Quickshell.Io
 Singleton {
     id: root
 
-    property bool runnerVisible: false
-
-    function toggleRunner(requestedState) {
-        if (arguments.length === 0 || requestedState === undefined) {
-            runnerVisible = !runnerVisible;
-        } else {
-            runnerVisible = !!requestedState;
-        }
-
-        if (!runnerVisible) {
-            root.reset();
-        }
+    property alias resultsModel: resultsModel
+    ListModel {
+        id: resultsModel
     }
 
-    property alias resultsModel: resultsModel
-    ListModel { id: resultsModel }
     property var activeConnection: null
     property var plugins: ({})
 
@@ -36,24 +25,21 @@ Singleton {
 
             onConnectedChanged: {
                 if (connected) {
-                    root.activeConnection = clientSocket
-                    console.log("Anyrun provider connected")
-                } else {
-                    if (root.activeConnection === clientSocket) {
-                        root.activeConnection = null
-                    }
-                    console.log("Anyrun provider disconnected")
+                    root.activeConnection = clientSocket;
+                    console.log("Anyrun connected");
+                } else if (root.activeConnection === clientSocket) {
+                    root.activeConnection = null;
                 }
             }
 
             parser: SplitParser {
                 onRead: data => {
-                    if (!data) return;
+                    if (!data)
+                        return;
                     try {
-                        const message = JSON.parse(data);
-                        root.handleProviderMessage(message);
+                        root.handleProviderMessage(JSON.parse(data));
                     } catch (e) {
-                        console.error("Failed to parse Anyrun message ERROR: " + e + " DATA: " + data);
+                        console.error(`Anyrun parse error: ${e}\nData: ${data}`);
                     }
                 }
             }
@@ -63,104 +49,81 @@ Singleton {
     Process {
         id: providerProcess
         running: true
-        // Delay connection slightly to ensure the socket is listening
-        command: [
-            "sh", "-c",
-            "sleep 0.1 && " +
-            "PLUGINS=$(grep -Eo '\"[^\"]*\\.so\"' ~/.config/anyrun/config.ron | tr -d '\"')\n" +
-            "ARGS=\"\"\n" +
-            "for p in $PLUGINS; do\n" +
-            "  ARGS=\"$ARGS --plugins $p\"\n" +
-            "done\n" +
-            "exec anyrun-provider $ARGS connect-to /tmp/quickshell-anyrun.sock"
-        ]
-        
+        command: ["sh", "-c", "sleep 0.1 && " + "PLUGINS=$(grep -Eo '\"[^\"]*\\.so\"' ~/.config/anyrun/config.ron | tr -d '\"'); " + "ARGS=\"\"; for p in $PLUGINS; do ARGS=\"$ARGS --plugins $p\"; done; " + "exec anyrun-provider $ARGS connect-to /tmp/quickshell-anyrun.sock"]
+
         stdout: SplitParser {
-            onRead: data => console.log("anyrun-provider stdout:", data)
+            onRead: data => console.log("anyrun-provider:", data)
         }
         stderr: SplitParser {
-            onRead: data => console.log("anyrun-provider stderr:", data)
+            onRead: data => console.log("anyrun-provider error:", data)
         }
     }
 
     function handleProviderMessage(msg) {
         if (msg.Ready) {
-            console.log("Anyrun Ready with plugins:", msg.Ready.info.length);
-            for (let i = 0; i < msg.Ready.info.length; i++) {
-                const info = msg.Ready.info[i];
-                plugins[info.name] = info;
-            }
+            msg.Ready.info.forEach(info => plugins[info.name] = info);
         } else if (msg.Matches) {
-            const plugin = msg.Matches.plugin;
-            const matches = msg.Matches.matches;
-            
+            const {
+                plugin,
+                matches
+            } = msg.Matches;
+
+            // Clear existing results for this plugin
             for (let i = resultsModel.count - 1; i >= 0; i--) {
                 if (resultsModel.get(i).pluginName === plugin.name) {
-                    resultsModel.remove(i, 1);
+                    resultsModel.remove(i);
                 }
             }
-            
-            for (let i = 0; i < matches.length; i++) {
-                const match = matches[i];
+
+            matches.forEach(match => {
                 let icon = match.icon || "";
-                if (icon && !icon.includes("://")) {
-                    if (icon.startsWith("/") || icon.startsWith("~")) {
-                        // Keep absolute paths
-                    } else {
-                        icon = "image://icon/" + icon;
-                    }
+                if (icon && !icon.includes("://") && !icon.startsWith("/") && !icon.startsWith("~")) {
+                    icon = `image://icon/${icon}`;
                 }
-                
+
                 resultsModel.append({
-                    "pluginName": plugin.name,
-                    "title": match.title || "No Title",
-                    "description": match.description || "",
-                    "iconPath": icon,
-                    "rawMatch": match,
-                    "rawPlugin": plugin
+                    pluginName: plugin.name,
+                    title: (match.title || "No Title"),
+                    description: (match.description || ""),
+                    iconPath: icon,
+                    rawMatch: match,
+                    rawPlugin: plugin
                 });
-            }
-        } else if (msg.Handled) {
-            console.log("Anyrun handled selection");
-            // Closed by UI to allow for validation animations
+            });
         }
     }
 
     function query(text) {
-        if (!activeConnection) {
-            console.warn("Anyrun query: no active connection");
+        if (!activeConnection)
             return;
-        }
-        
-        console.log("Anyrun query: " + text);
-        // We don't clear the model here to prevent jitter.
-        // The provider-driven update in handleProviderMessage will clear 
-        // stale results per-plugin as they arrive.
-        
-        const req = { "Query": { "text": text } };
-        activeConnection.write(JSON.stringify(req) + "\n");
+
+        activeConnection.write(JSON.stringify({
+            Query: {
+                text
+            }
+        }) + "\n");
         activeConnection.flush();
     }
 
     function execute(rawPlugin, rawMatch) {
-        if (!activeConnection) return;
-        
-        const req = {
-            "Handle": {
-                "plugin": rawPlugin,
-                "selection": rawMatch
+        if (!activeConnection)
+            return;
+
+        activeConnection.write(JSON.stringify({
+            Handle: {
+                plugin: rawPlugin,
+                selection: rawMatch
             }
-        };
-        activeConnection.write(JSON.stringify(req) + "\n");
+        }) + "\n");
         activeConnection.flush();
     }
 
     function reset() {
-        if (!activeConnection) return;
-        
+        if (!activeConnection)
+            return;
+
         resultsModel.clear();
-        const req = "Reset";
-        activeConnection.write(JSON.stringify(req) + "\n");
+        activeConnection.write(JSON.stringify("Reset") + "\n");
         activeConnection.flush();
     }
 }

@@ -86,7 +86,6 @@ Item {
         ignore: hovered
     }
 
-    // Shared backdrop component
     HoverBackdrop {
         id: background
         anchors.fill: parent

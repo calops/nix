@@ -3,6 +3,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Pipewire
 import "."
+import "../widgets"
 
 Item {
     id: root
@@ -61,9 +62,9 @@ Item {
         }
 
         function toggleRunner(state: string) {
-            if (state === "true") AnyrunService.runnerVisible = true;
-            else if (state === "false") AnyrunService.runnerVisible = false;
-            else AnyrunService.toggleRunner();
+            if (state === "true") Runner.runnerVisible = true;
+            else if (state === "false") Runner.runnerVisible = false;
+            else Runner.toggleRunner();
         }
     }
 }
