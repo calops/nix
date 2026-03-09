@@ -53,7 +53,8 @@ Singleton {
         path: Quickshell.env("HOME") + "/.config/anyrun/config.ron"
         onTextChanged: {
             const data = configView.text();
-            if (!data) return;
+            if (!data)
+                return;
             const foundArgs = [];
             for (const match of data.match(/"[^"]+\.so"/g) || []) {
                 foundArgs.push("--plugins", match.slice(1, -1));
@@ -96,7 +97,6 @@ Singleton {
                 matches
             } = msg.Matches;
 
-            // Clear existing results for this plugin
             for (let i = resultsModel.count - 1; i >= 0; i--) {
                 if (resultsModel.get(i).pluginName === plugin.name) {
                     resultsModel.remove(i);
