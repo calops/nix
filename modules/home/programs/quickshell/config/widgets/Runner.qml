@@ -321,6 +321,7 @@ Singleton {
                             verticalAlignment: Text.AlignVCenter
                             visible: AnyrunService.resultsModel.count === 0 && searchInput.text !== ""
                             opacity: runnerContainer.backdropOpacity
+                        }
                         
                         Item {
                             Layout.fillWidth: true
@@ -488,6 +489,5 @@ Singleton {
                 }
             }
         }
-    }
     }
 }
