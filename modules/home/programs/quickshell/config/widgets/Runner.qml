@@ -310,6 +310,18 @@ Singleton {
                             }
                         }
                         
+                        StyledText {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 60
+                            text: "No results found"
+                            font.pixelSize: 16
+                            font.italic: true
+                            color: Colors.palette.text
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            visible: AnyrunService.resultsModel.count === 0 && searchInput.text !== ""
+                            opacity: runnerContainer.backdropOpacity
+                        
                         Item {
                             Layout.fillWidth: true
                             Layout.topMargin: 0
@@ -476,5 +488,6 @@ Singleton {
                 }
             }
         }
+    }
     }
 }
