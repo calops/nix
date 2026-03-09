@@ -50,7 +50,7 @@ Singleton {
 
     FileView {
         id: configView
-        path: Quickshell.env("HOME") + "/.config/anyrun/config.ron"
+        path: (Quickshell.env("XDG_CONFIG_HOME") || (Quickshell.env("HOME") + "/.config")) + "/anyrun/config.ron"
         onTextChanged: {
             const data = configView.text();
             if (!data)
