@@ -10,8 +10,8 @@ Singleton {
     property var workspaces: {}
     property var windows: {}
 
-    property var focusedWorkspace: {}
-    property var focusedWindow: {}
+    property var focusedWorkspace: null
+    property var focusedWindow: null
 
     property bool hasLeftOverflow: false
     property bool hasRightOverflow: false
@@ -23,8 +23,6 @@ Singleton {
         running: true
         stdout: SplitParser {
             onRead: message => {
-                // console.log("Niri: ", message);
-
                 const messageObject = JSON.parse(message);
                 const event = Object.keys(messageObject)[0];
                 const payload = Object.values(messageObject)[0];
@@ -37,20 +35,29 @@ Singleton {
         }
     }
 
+    // Full workspace refresh — called on WorkspacesChanged and after monitor events.
+    // This is the canonical way to keep workspace state consistent.
     function onNiriWorkspacesChanged(payload) {
         var newWorkspaces = {};
+        var newFocused = null;
 
         for (const workspace of payload.workspaces) {
             workspace.icon = _mapWorkspaceToIcon(workspace);
 
             if (workspace.is_focused) {
-                focusedWorkspace = workspace;
+                newFocused = workspace;
             }
 
             newWorkspaces[workspace.id] = workspace;
         }
 
         workspaces = newWorkspaces;
+
+        // Always re-derive focusedWorkspace from the fresh payload to avoid
+        // stale object references after monitor plug/unplug (workspace IDs can change).
+        if (newFocused !== null) {
+            focusedWorkspace = newFocused;
+        }
 
         _computeOverflows();
     }
@@ -72,9 +79,14 @@ Singleton {
 
     function onNiriWorkspaceActivated(payload) {
         if (payload.focused) {
-            focusedWorkspace.is_focused = false;
-            workspaces[payload.id].is_focused = true;
-            focusedWorkspace = workspaces[payload.id];
+            // Update is_focused flags on the existing objects
+            if (focusedWorkspace && focusedWorkspace.id in workspaces) {
+                workspaces[focusedWorkspace.id].is_focused = false;
+            }
+            if (payload.id in workspaces) {
+                workspaces[payload.id].is_focused = true;
+                focusedWorkspace = workspaces[payload.id];
+            }
         }
         _computeOverflows();
     }
@@ -82,10 +94,16 @@ Singleton {
     function onNiriWindowOpenedOrChanged(payload) {
         const win = payload.window;
         windows[win.id] = win;
+        if (win.is_focused) {
+            focusedWindow = win;
+        }
         _computeOverflows();
     }
 
     function onNiriWindowClosed(payload) {
+        if (focusedWindow && focusedWindow.id === payload.id) {
+            focusedWindow = null;
+        }
         delete windows[payload.id];
         _computeOverflows();
     }
@@ -97,6 +115,10 @@ Singleton {
             }
             windows[payload.id].is_focused = true;
             focusedWindow = windows[payload.id];
+        } else if (!payload.id) {
+            // Focus moved outside all windows
+            if (focusedWindow) focusedWindow.is_focused = false;
+            focusedWindow = null;
         }
         _computeOverflows();
     }
@@ -119,11 +141,25 @@ Singleton {
         Quickshell.execDetached(["niri", "msg", "action", "focus-workspace", workspaceId]);
     }
 
+    // Returns workspaces sorted by id (stable ordering across monitor changes)
     function sortedWorkspaces() {
         if (workspaces) {
             return Object.values(workspaces).sort((w1, w2) => w1.id - w2.id);
         }
         return [];
+    }
+
+    // Returns windows in the given workspace, sorted by their x position in the
+    // scrolling layout (leftmost first). Falls back to id ordering if no layout data.
+    function sortedWorkspaceWindows(workspaceId) {
+        if (!windows) return [];
+        return Object.values(windows)
+            .filter(win => win.workspace_id === workspaceId)
+            .sort((a, b) => {
+                const ax = a.layout?.pos_in_scrolling_layout?.[0] ?? a.id;
+                const bx = b.layout?.pos_in_scrolling_layout?.[0] ?? b.id;
+                return ax - bx;
+            });
     }
 
     function _mapWorkspaceToIcon(workspace) {
@@ -147,7 +183,7 @@ Singleton {
 
     function getWorkspaceWindows(workspaceId) {
         if (windows) {
-            return Object.values(windows).filter(win => win.workspace_id == workspaceId);
+            return Object.values(windows).filter(win => win.workspace_id === workspaceId);
         }
         return [];
     }
@@ -184,11 +220,11 @@ Singleton {
             }
         }
 
-        if (newHasLeftOverflow != hasLeftOverflow) {
+        if (newHasLeftOverflow !== hasLeftOverflow) {
             hasLeftOverflow = newHasLeftOverflow;
         }
 
-        if (newHasRightOverflow != hasRightOverflow) {
+        if (newHasRightOverflow !== hasRightOverflow) {
             hasRightOverflow = newHasRightOverflow;
         }
     }

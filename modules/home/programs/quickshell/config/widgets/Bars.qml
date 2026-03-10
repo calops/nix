@@ -117,9 +117,7 @@ Scope {
 
                     Workspaces {
                         id: workspaces
-                        width: 56
                         anchors.left: parent.left
-                        anchors.leftMargin: 0
                         y: parent.height / 2 - height / 2
                     }
 
