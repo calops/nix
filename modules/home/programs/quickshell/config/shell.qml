@@ -10,7 +10,7 @@ ShellRoot {
 
     IpcService {}
     Bars {}
-    // OverviewBackdrop { id: backdrop }
+    OverviewBackdrop { id: backdrop }
 
     readonly property var _anyrunService: AnyrunService
 }
