@@ -31,7 +31,7 @@ PanelWindow {
         
         property variant source: null
         property real uTime: 0
-        property color baseColor: Colors.palette.crust
+        property color baseColor: Colors.palette.base
         property color accentColor: Colors.palette.teal
         property color accentColor2: Colors.palette.mauve
         property color accentColor3: Colors.palette.sapphire

@@ -92,8 +92,8 @@ void main() {
     // Background texture - lowered from 0.08
     col += accentColor * iters * 0.04;
     
-    // Subtle darkening of the background outside the fractal
-    col = mix(ubuf.baseColor.rgb, col, smoothstep(-0.5, 0.5, iters + glow));
+    // Softer darkening of the background outside the fractal
+    col = mix(ubuf.baseColor.rgb, col, smoothstep(-1.0, 1.0, iters + glow));
     
     // Removed the aggressive vignette for edge-to-edge coverage
     // Just a very subtle fade at the extreme corners to avoid hard cutoffs
