@@ -127,9 +127,10 @@ Item {
 
                 // Peach glass shader
                 ShaderEffect {
-                    id: cursorShader
+                    id: glassEffect
                     anchors.fill: parent
-
+                    
+                    property variant source: null
                     property real radius: 16.0
 
                     // Alpha: subtle when collapsed, fully opaque when expanded
@@ -142,7 +143,7 @@ Item {
                     property real uWidth: width
                     property real uHeight: height
 
-                    fragmentShader: Qt.resolvedUrl("../components/shaders/glass.frag.qsb")
+                    fragmentShader: Shaders.glass ? "file://" + Shaders.glass : ""
                 }
             }
 

@@ -60,7 +60,7 @@ Singleton {
                 foundArgs.push("--plugins", match.slice(1, -1));
             }
             root.pluginArgs = foundArgs;
-            console.log(`Anyrun: Config parsing finished. Plugins found: ${root.pluginArgs.length / 2}`);
+            console.log(`Anyrun: User config parsed, ${root.pluginArgs.length / 2} plugins found`);
             providerProcess.running = true;
         }
     }
@@ -84,7 +84,7 @@ Singleton {
             onRead: data => console.log("anyrun-provider:", data)
         }
         stderr: SplitParser {
-            onRead: data => console.error("anyrun-provider error:", data)
+            onRead: data => console.warn("anyrun-provider error:", data)
         }
     }
 

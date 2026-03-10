@@ -194,15 +194,16 @@ Singleton {
                     }
 
                     ShaderEffect {
-                        id: glassShader
+                        id: glassEffect
                         anchors.fill: parent
-
+                        
+                        property variant source: null
                         property real radius: parent.radius
                         property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
                         property real uWidth: width
                         property real uHeight: height
 
-                        fragmentShader: Qt.resolvedUrl("../components/shaders/glass.frag.qsb")
+                        fragmentShader: Shaders.glass ? "file://" + Shaders.glass : ""
 
                         layer.enabled: true
                         layer.effect: MultiEffect {

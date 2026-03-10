@@ -14,6 +14,7 @@ Item {
         id: bgRect
         anchors.fill: parent
         
+        property variant source: null
         property real radius: root.radius
         // Passing baseColor with alpha so the shader can determine transparency
         property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
@@ -23,7 +24,7 @@ Item {
         // This opacity determines the overall visible alpha of the entire effect over the background
         opacity: 1.0
 
-        fragmentShader: Qt.resolvedUrl("shaders/glass.frag.qsb")
+        fragmentShader: Shaders.glass ? "file://" + Shaders.glass : ""
 
         layer.enabled: true
         layer.effect: MultiEffect {

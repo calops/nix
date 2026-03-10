@@ -75,6 +75,7 @@ Item {
 
     ShaderEffect {
         id: bubbleBackground
+        property variant source: null
         
         // Dynamically expand the shader bounds to cover both the tray icons and the menu
         // We must subtract root.y from menuRect.y to bring it into the tray's local coordinate system!
@@ -178,7 +179,7 @@ Item {
             NumberAnimation { duration: root.isHovered ? Theme.animationDuration : Theme.animationDurationOut; easing.type: root.isHovered ? Easing.OutQuad : Easing.InQuad }
         }
 
-        fragmentShader: Qt.resolvedUrl("../components/shaders/bubble.frag.qsb")
+        fragmentShader: Shaders.bubble ? "file://" + Shaders.bubble : ""
 
         layer.enabled: true
         layer.effect: MultiEffect {
@@ -270,6 +271,12 @@ Item {
                             property bool isSymbolic: String(itemRoot.modelData.icon).includes("-symbolic")
                             layer.enabled: isSymbolic
                             layer.effect: MultiEffect {
+                                shadowEnabled: true
+                                shadowColor: "black"
+                                shadowBlur: 1.0
+                                shadowOpacity: 0.5
+                                shadowVerticalOffset: 2
+                                shadowHorizontalOffset: 2
                                 colorization: 1.0
                                 colorizationColor: Colors.palette.text
                                 brightness: 1.0

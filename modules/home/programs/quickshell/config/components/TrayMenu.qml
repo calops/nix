@@ -95,6 +95,7 @@ PopupWindow {
             id: menuBlob
             anchors.fill: parent
             z: -1
+            property variant source: null
             visible: opacity > 0
             opacity: root.activeSubMenuData !== null ? 1.0 : 0.0
             
@@ -157,7 +158,7 @@ PopupWindow {
             property real uWidth: width
             property real uHeight: height
             
-            fragmentShader: Qt.resolvedUrl("shaders/bubble.frag.qsb")
+            fragmentShader: Shaders.bubble ? "file://" + Shaders.bubble : ""
 
             layer.enabled: true
             layer.effect: MultiEffect {
@@ -272,6 +273,7 @@ PopupWindow {
 
                                 layer.enabled: true
                                 layer.effect: MultiEffect {
+                                    property variant source: parent
                                     colorization: 1.0
                                     colorizationColor: modelData.enabled ? Colors.light.text : Colors.light.overlay0
                                     brightness: 1.0
