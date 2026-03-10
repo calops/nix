@@ -27,7 +27,7 @@ PanelWindow {
         id: bgEffect
         anchors.fill: parent
         // Only render when the backdrop is compiled AND we are either in overview or fading out
-        visible: Shaders.fractalReady && (Niri.overviewActive || opacity > 0.01)
+        visible: Shaders.isReady("fractal") && (Niri.overviewActive || opacity > 0.01)
         
         property variant source: null
         property real uTime: 0
@@ -42,7 +42,7 @@ PanelWindow {
         property real uHeight: height
         
         // The shader manages its own compiled state now within Shaders singleton
-        fragmentShader: Shaders.fractal ? "file://" + Shaders.fractal : ""
+        fragmentShader: Shaders.get("fractal") ? "file://" + Shaders.get("fractal") : ""
         
         // Disable animation when not visible to save resources
         NumberAnimation on uTime {

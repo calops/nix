@@ -8,49 +8,50 @@ Singleton {
     
     readonly property string dir: "/home/calops/.config/quickshell/assets/shaders"
     
-    property alias backdrop: backdropCompiler.compiledPath
-    property alias backdropReady: backdropCompiler.ready
-    
-    property alias bubble: bubbleCompiler.compiledPath
-    property alias bubbleReady: bubbleCompiler.ready
-    
-    property alias glass: glassCompiler.compiledPath
-    property alias glassReady: glassCompiler.ready
-    
-    property alias curves: curvesCompiler.compiledPath
-    property alias curvesReady: curvesCompiler.ready
-    
-    property alias fractal: fractalCompiler.compiledPath
-    property alias fractalReady: fractalCompiler.ready
+    // Explicit list of shaders to manage
+    // This is still much cleaner than duplicating ShaderCompiler blocks
+    readonly property var shaderList: [
+        "backdrop",
+        "bubble",
+        "glass",
+        "curves",
+        "fractal"
+    ]
 
-    ShaderCompiler {
-        id: backdropCompiler
-        name: "backdrop"
-        sourceFile: root.dir + "/backdrop.frag"
+    // A map of shader names to their results
+    property var all: ({})
+    property var readyStates: ({})
+
+    function get(name) {
+        return all[name] || "";
     }
 
-    ShaderCompiler {
-        id: bubbleCompiler
-        name: "bubble"
-        sourceFile: root.dir + "/bubble.frag"
+    function isReady(name) {
+        return !!readyStates[name];
     }
 
-    ShaderCompiler {
-        id: glassCompiler
-        name: "glass"
-        sourceFile: root.dir + "/glass.frag"
-    }
+    Instantiator {
+        model: root.shaderList
+        delegate: ShaderCompiler {
+            required property string modelData
+            name: modelData
+            sourceFile: root.dir + "/" + modelData + ".frag"
+            
+            Component.onCompleted: {
+                console.log("ShaderCompiler initialized for: " + name);
+            }
 
-    ShaderCompiler {
-        id: curvesCompiler
-        name: "curves"
-        sourceFile: root.dir + "/curves.frag"
+            onCompiledPathChanged: {
+                if (compiledPath !== "") {
+                    console.log("Shader compiled: " + name + " -> " + compiledPath);
+                    root.all = Object.assign({}, root.all, { [name]: compiledPath });
+                }
+            }
+            
+            onReadyChanged: {
+                console.log("Shader ready: " + name + " = " + ready);
+                root.readyStates = Object.assign({}, root.readyStates, { [name]: ready });
+            }
+        }
     }
-
-    ShaderCompiler {
-        id: fractalCompiler
-        name: "fractal"
-        sourceFile: root.dir + "/fractal.frag"
-    }
-
 }

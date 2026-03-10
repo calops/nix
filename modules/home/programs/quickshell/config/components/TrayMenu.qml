@@ -158,7 +158,7 @@ PopupWindow {
             property real uWidth: width
             property real uHeight: height
             
-            fragmentShader: Shaders.bubble ? "file://" + Shaders.bubble : ""
+            fragmentShader: Shaders.get("bubble") ? "file://" + Shaders.get("bubble") : ""
 
             layer.enabled: true
             layer.effect: MultiEffect {

@@ -143,7 +143,7 @@ Item {
                     property real uWidth: width
                     property real uHeight: height
 
-                    fragmentShader: Shaders.glass ? "file://" + Shaders.glass : ""
+                    fragmentShader: Shaders.get("glass") ? "file://" + Shaders.get("glass") : ""
                 }
             }
 

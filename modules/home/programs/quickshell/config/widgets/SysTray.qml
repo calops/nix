@@ -179,7 +179,7 @@ Item {
             NumberAnimation { duration: root.isHovered ? Theme.animationDuration : Theme.animationDurationOut; easing.type: root.isHovered ? Easing.OutQuad : Easing.InQuad }
         }
 
-        fragmentShader: Shaders.bubble ? "file://" + Shaders.bubble : ""
+        fragmentShader: Shaders.get("bubble") ? "file://" + Shaders.get("bubble") : ""
 
         layer.enabled: true
         layer.effect: MultiEffect {

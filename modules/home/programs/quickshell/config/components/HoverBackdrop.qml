@@ -24,7 +24,7 @@ Item {
         // This opacity determines the overall visible alpha of the entire effect over the background
         opacity: 1.0
 
-        fragmentShader: Shaders.glass ? "file://" + Shaders.glass : ""
+        fragmentShader: Shaders.get("glass") ? "file://" + Shaders.get("glass") : ""
 
         layer.enabled: true
         layer.effect: MultiEffect {

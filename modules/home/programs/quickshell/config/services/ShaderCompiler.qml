@@ -8,11 +8,14 @@ Item {
     property string sourceFile: ""
     property string name: ""
     
+    // The base name of the file without extension
+    readonly property string baseName: name !== "" ? name : (sourceFile.split("/").pop().split(".")[0])
+    
     property string compiledPath: ""
     property bool ready: false
 
     property string stateDir: (Quickshell.env("XDG_STATE_HOME") || (Quickshell.env("HOME") + "/.local/state")) + "/quickshell/shaders"
-    property string _outputFile: stateDir + "/" + root.name + ".frag.qsb"
+    property string _outputFile: stateDir + "/" + root.baseName + ".frag.qsb"
     
     // Cache bust by appending ?v=Date.now() to the URL so UI components reload the file
     property string _urlVersion: ""
