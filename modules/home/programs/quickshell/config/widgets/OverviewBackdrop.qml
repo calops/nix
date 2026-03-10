@@ -27,11 +27,11 @@ PanelWindow {
         id: bgEffect
         anchors.fill: parent
         // Only render when the backdrop is compiled AND we are either in overview or fading out
-        visible: Shaders.curvesReady && (Niri.overviewActive || opacity > 0.01)
+        visible: Shaders.fractalReady && (Niri.overviewActive || opacity > 0.01)
         
         property variant source: null
         property real uTime: 0
-        property color baseColor: Colors.palette.surface0
+        property color baseColor: Colors.palette.crust
         property color accentColor: Colors.palette.teal
         property color accentColor2: Colors.palette.mauve
         property color accentColor3: Colors.palette.sapphire
@@ -42,7 +42,7 @@ PanelWindow {
         property real uHeight: height
         
         // The shader manages its own compiled state now within Shaders singleton
-        fragmentShader: Shaders.curves ? "file://" + Shaders.curves : ""
+        fragmentShader: Shaders.fractal ? "file://" + Shaders.fractal : ""
         
         // Disable animation when not visible to save resources
         NumberAnimation on uTime {

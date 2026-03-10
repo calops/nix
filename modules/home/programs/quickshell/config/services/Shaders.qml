@@ -19,6 +19,9 @@ Singleton {
     
     property alias curves: curvesCompiler.compiledPath
     property alias curvesReady: curvesCompiler.ready
+    
+    property alias fractal: fractalCompiler.compiledPath
+    property alias fractalReady: fractalCompiler.ready
 
     ShaderCompiler {
         id: backdropCompiler
@@ -42,6 +45,12 @@ Singleton {
         id: curvesCompiler
         name: "curves"
         sourceFile: root.dir + "/curves.frag"
+    }
+
+    ShaderCompiler {
+        id: fractalCompiler
+        name: "fractal"
+        sourceFile: root.dir + "/fractal.frag"
     }
 
 }
