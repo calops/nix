@@ -103,7 +103,7 @@ Scope {
                     SysTray {
                         id: tray
                         anchors.left: parent.left
-                        y: 10
+                        y: 15
                         
                         menuRect: {
                             if (!mainTrayMenu.shouldShow || !hoveredItem) return Qt.rect(0, 0, 0, 0);
