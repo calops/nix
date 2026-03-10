@@ -89,11 +89,12 @@ void main() {
     float hits = smoothstep(0.0015, 0.0, d);
     col += accentColor * hits * 0.3; // Much dimmer
     
-    // Background texture - lowered from 0.08
-    col += accentColor * iters * 0.04;
+    // Background texture - slightly higher for more detail in dark areas
+    col += accentColor * iters * 0.05; // Increased from 0.04
     
     // Softer darkening of the background outside the fractal
-    col = mix(ubuf.baseColor.rgb, col, smoothstep(-1.0, 1.0, iters + glow));
+    // Raising the target to baseColor * 1.1 to lift shadows
+    col = mix(ubuf.baseColor.rgb * 1.1, col, smoothstep(-0.8, 1.2, iters + glow));
     
     // Removed the aggressive vignette for edge-to-edge coverage
     // Just a very subtle fade at the extreme corners to avoid hard cutoffs
