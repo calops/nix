@@ -75,22 +75,23 @@ Item {
     MenuBlob {
         id: bubbleBackground
         
-        property real targetMinY: root.menuRect.width > 0 ? Math.min(0, (root.menuRect.y - root.y) - 12) : 0
+        // We use a static minimum Y bound to prevent the ShaderEffect's coordinate origin
+        // from animating when moving between tray items (which causes intense visual stuttering
+        // because rect1 fights the shifting Y-axis). -30 is large enough to encompass the screen top.
+        property real targetMinY: -30
         property real targetMaxY: root.menuRect.width > 0 ? Math.max(parent.height, (root.menuRect.y - root.y) + root.menuRect.height + 12) : parent.height
         property real targetWidth: root.menuRect.width > 0 ? root.menuRect.x + root.menuRect.width + 12 : (root.expanded ? Theme.widgetExpandedWidth : 56)
         
-        property real cachedMinY: 0
+        property real cachedMinY: -30
         property real cachedMaxY: 0
         property real cachedWidth: 56
         
-        onTargetMinYChanged: if (root.menuRect.width > 0) cachedMinY = targetMinY
         onTargetMaxYChanged: if (root.menuRect.width > 0) cachedMaxY = targetMaxY
         onTargetWidthChanged: if (root.menuRect.width > 0) cachedWidth = targetWidth
         
         property real minY: root.menuRect.width > 0 ? targetMinY : cachedMinY
         property real maxY: root.menuRect.width > 0 ? targetMaxY : cachedMaxY
         
-        Behavior on minY { enabled: root.menuRect.width > 0; NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
         Behavior on maxY { enabled: root.menuRect.width > 0; NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
         
         x: 0
@@ -108,7 +109,7 @@ Item {
         property var activeItem: root.hoveredItem || root.lastHoveredItem
 
         targetR1X: 6
-        targetR1Y: activeItem ? activeItem.y - minY : 0
+        targetR1Y: activeItem ? activeItem.y - minY : -minY
         targetR1W: activeItem ? (root.expanded ? Theme.widgetExpandedWidth - 12 : activeItem.width + 12) : 0
         targetR1H: activeItem ? activeItem.height : 0
 
