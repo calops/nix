@@ -75,16 +75,29 @@ Item {
     MenuBlob {
         id: bubbleBackground
         
-        property real minY: root.menuRect.width > 0 ? Math.min(0, (root.menuRect.y - root.y) - 12) : 0
-        property real maxY: root.menuRect.width > 0 ? Math.max(parent.height, (root.menuRect.y - root.y) + root.menuRect.height + 12) : parent.height
+        property real targetMinY: root.menuRect.width > 0 ? Math.min(0, (root.menuRect.y - root.y) - 12) : 0
+        property real targetMaxY: root.menuRect.width > 0 ? Math.max(parent.height, (root.menuRect.y - root.y) + root.menuRect.height + 12) : parent.height
+        property real targetWidth: root.menuRect.width > 0 ? root.menuRect.x + root.menuRect.width + 12 : (root.expanded ? Theme.widgetExpandedWidth : 56)
         
-        Behavior on minY { NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
-        Behavior on maxY { NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
+        property real cachedMinY: 0
+        property real cachedMaxY: 0
+        property real cachedWidth: 56
+        
+        onTargetMinYChanged: if (root.menuRect.width > 0) cachedMinY = targetMinY
+        onTargetMaxYChanged: if (root.menuRect.width > 0) cachedMaxY = targetMaxY
+        onTargetWidthChanged: if (root.menuRect.width > 0) cachedWidth = targetWidth
+        
+        property real minY: root.menuRect.width > 0 ? targetMinY : cachedMinY
+        property real maxY: root.menuRect.width > 0 ? targetMaxY : cachedMaxY
+        
+        Behavior on minY { enabled: root.menuRect.width > 0; NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
+        Behavior on maxY { enabled: root.menuRect.width > 0; NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
         
         x: 0
         y: minY
-        width: root.menuRect.width > 0 ? root.menuRect.x + root.menuRect.width + 12 : (root.expanded ? root.width : 56)
-        Behavior on width { NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
+        width: root.menuRect.width > 0 ? targetWidth : cachedWidth
+        Behavior on width { enabled: root.menuRect.width > 0; NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
+        
         
         height: maxY - minY
         z: 2
@@ -96,7 +109,7 @@ Item {
 
         targetR1X: 6
         targetR1Y: activeItem ? activeItem.y - minY : 0
-        targetR1W: activeItem ? (root.expanded ? root.width - 12 : activeItem.width + 12) : 0
+        targetR1W: activeItem ? (root.expanded ? Theme.widgetExpandedWidth - 12 : activeItem.width + 12) : 0
         targetR1H: activeItem ? activeItem.height : 0
 
         targetR2X: root.menuRect.width > 0 ? root.menuRect.x : targetR1X

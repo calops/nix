@@ -73,11 +73,11 @@ ShaderEffect {
     property real r1w: expanded ? targetR1W : cachedR1W
     property real r1h: expanded ? targetR1H : cachedR1H
 
-    // IMPORTANT: On collapse, r2 shrinks back into r1 so the bubble retracts into its source!
-    property real r2x: expanded ? targetR2X : r1x
-    property real r2y: expanded ? targetR2Y : r1y
-    property real r2w: expanded ? targetR2W : r1w
-    property real r2h: expanded ? targetR2H : r1h
+    // On collapse, r2 simply uses its cached position so the bubble stays full size while fading out
+    property real r2x: expanded ? targetR2X : cachedR2X
+    property real r2y: expanded ? targetR2Y : cachedR2Y
+    property real r2w: expanded ? targetR2W : cachedR2W
+    property real r2h: expanded ? targetR2H : cachedR2H
 
     property rect rect1: Qt.rect(r1x, r1y, r1w, r1h)
     Behavior on rect1 {
