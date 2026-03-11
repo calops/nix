@@ -16,6 +16,8 @@ Item {
     property var activeMenuModel: null
     property alias bubbleBg: bubbleBackground
     
+    property var mainMenu: mainMenuLoader.item
+    
     // Remember the geometry of the last hovered item so we can animate from/to its center
     // when transitioning from/to the completely unhovered state
     property var lastHoveredItem: null
@@ -58,7 +60,8 @@ Item {
     // alongside the main menu.
     Timer {
         id: menuCloseTimer
-        interval: 150
+        // Reduced from 150ms. 50ms is enough to bridge tiny gaps when moving to the menu.
+        interval: 50
         running: !root.isHovered
         onTriggered: {
             if (root.activeMenuModel !== null) {
@@ -68,129 +71,47 @@ Item {
         }
     }
     property rect menuRect: Qt.rect(0, 0, 0, 0)
-
-
-
-
-
-    ShaderEffect {
+    
+    MenuBlob {
         id: bubbleBackground
-        property variant source: null
         
-        // Dynamically expand the shader bounds to cover both the tray icons and the menu
-        // We must subtract root.y from menuRect.y to bring it into the tray's local coordinate system!
         property real minY: root.menuRect.width > 0 ? Math.min(0, (root.menuRect.y - root.y) - 12) : 0
         property real maxY: root.menuRect.width > 0 ? Math.max(parent.height, (root.menuRect.y - root.y) + root.menuRect.height + 12) : parent.height
         
-        Behavior on minY { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
-        Behavior on maxY { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
+        Behavior on minY { NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
+        Behavior on maxY { NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
         
         x: 0
         y: minY
         width: root.menuRect.width > 0 ? root.menuRect.x + root.menuRect.width + 12 : (root.expanded ? root.width : 56)
-        Behavior on width { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
+        Behavior on width { NumberAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
         
         height: maxY - minY
         z: 2
-        visible: opacity > 0
-        property bool allowsAnimation: false
-        onVisibleChanged: {
-            if (visible) {
-                Qt.callLater(() => { allowsAnimation = true; });
-            } else {
-                allowsAnimation = false;
-            }
-        }
-
-        // Active item is only the currently hovered item, or the last one if we are fading out
-        property var activeItem: root.hoveredItem || root.lastHoveredItem
-        property rect rect1: {
-            if (!activeItem) return Qt.rect(0, 0, 0, 0);
-            
-            // If actively hovered, map perfectly to its bounds
-            if (root.hoveredItem !== null) {
-                return Qt.rect(6, activeItem.y - minY, 
-                              (root.expanded ? root.width - 12 : activeItem.width + 12), 
-                              activeItem.height);
-            }
-            
-            // If fading out or in transition gap, use the cached rectangle so it doesn't jump
-            // if the layout shifts or active item parameters become unstable
-            if (bubbleBackground.opacity > 0) {
-               return Qt.rect(6, root.lastHoveredRect.y - minY,
-                              (root.expanded ? root.width - 12 : root.lastHoveredRect.width + 12),
-                              root.lastHoveredRect.height);
-            }
-            
-            // Closed/Collapsed center dot state
-            return Qt.rect(root.lastHoveredRect.x + root.lastHoveredRect.width / 2,
-                           root.lastHoveredRect.y + root.lastHoveredRect.height / 2 - minY, 
-                           0, 0);
-        }
-            
-        Behavior on rect1 {
-            enabled: bubbleBackground.allowsAnimation
-            PropertyAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad }
-        }
-            
-        // When menu is closed, rect2 = rect1 so it smoothly grows out of/into the icon
-        property real targetR1X: {
-            if (!activeItem) return 0;
-            if (root.hoveredItem !== null) return 6;
-            if (bubbleBackground.opacity > 0) return 6;
-            return root.lastHoveredRect.x + root.lastHoveredRect.width / 2;
-        }
         
-        property real targetR1W: {
-            if (!activeItem) return 0;
-            if (root.hoveredItem !== null) return (root.expanded ? root.width - 12 : activeItem.width + 12);
-            if (bubbleBackground.opacity > 0) return (root.expanded ? root.width - 12 : root.lastHoveredRect.width + 12);
-            return 0;
-        }
-        
-        property real targetR1H: {
-            if (!activeItem) return 0;
-            if (root.hoveredItem !== null) return activeItem.height;
-            if (bubbleBackground.opacity > 0) return root.lastHoveredRect.height;
-            return 0;
-        }
-
-        property real r2x: (root.menuRect.width > 0 && bubbleBackground.allowsAnimation) ? root.menuRect.x : targetR1X
-        property real r2w: (root.menuRect.width > 0 && bubbleBackground.allowsAnimation) ? root.menuRect.width : targetR1W
-        property real r2h: (root.menuRect.width > 0 && bubbleBackground.allowsAnimation) ? root.menuRect.height : targetR1H
-
-        Behavior on r2x { enabled: bubbleBackground.allowsAnimation; PropertyAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
-        Behavior on r2w { enabled: bubbleBackground.allowsAnimation; PropertyAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
-        Behavior on r2h { enabled: bubbleBackground.allowsAnimation; PropertyAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
-
-        property rect rect2: Qt.rect(r2x, rect1.y, r2w, r2h)
-        property rect rect3: Qt.rect(0, 0, 0, 0)
-        property real radius1: 10
-        property real radius2: 10
-        property real radius3: 14
-        property real smoothness: 15.0
-        property color bubbleColor: "#ffffff"
-        property real uWidth: bubbleBackground.width
-        property real uHeight: bubbleBackground.height
-
-        // Entire visibility tied directly to isHovered to match subMenuBlob pattern
+        expanded: root.isHovered && root.menuRect.width > 0
         opacity: root.isHovered ? 1.0 : 0.0
-        Behavior on opacity {
-            NumberAnimation { duration: root.isHovered ? Theme.animationDuration : Theme.animationDurationOut; easing.type: root.isHovered ? Easing.OutQuad : Easing.InQuad }
-        }
+        
+        property var activeItem: root.hoveredItem || root.lastHoveredItem
 
-        fragmentShader: Shaders.get("bubble") ? "file://" + Shaders.get("bubble") : ""
+        targetR1X: 6
+        targetR1Y: activeItem ? activeItem.y - minY : 0
+        targetR1W: activeItem ? (root.expanded ? root.width - 12 : activeItem.width + 12) : 0
+        targetR1H: activeItem ? activeItem.height : 0
 
-        layer.enabled: true
-        layer.effect: MultiEffect {
-            shadowEnabled: true
-            shadowColor: "black"
-            shadowBlur: 1.0
-            shadowOpacity: 0.5
-            shadowVerticalOffset: 2
-            shadowHorizontalOffset: 2
-        }
+        targetR2X: root.menuRect.width > 0 ? root.menuRect.x : targetR1X
+        targetR2Y: root.menuRect.width > 0 ? root.menuRect.y - root.y - minY : targetR1Y
+        targetR2W: root.menuRect.width > 0 ? root.menuRect.width : targetR1W
+        targetR2H: root.menuRect.width > 0 ? root.menuRect.height : targetR1H
+        
+        radius1: 10
+        radius2: 10
+        radius3: 14 // SysTray flat side
+        bubbleColor: "#ffffff"
     }
+
+    // The menu Blob has been extracted to TrayMenu.qml!
+    // This allows both main menus and submenus to use the exact same fade logic.
 
     function getDisplayName(item) {
         if (!item) return "";
@@ -312,12 +233,9 @@ Item {
                     onContainsMouseChanged: {
                         if (containsMouse) {
                             root.iconHovered = true;
-                            if (bubbleBackground.opacity === 0) {
-                                root.lastHoveredItem = itemRoot;
-                                root.lastHoveredRect = Qt.rect(itemRoot.x, itemRoot.y, itemRoot.width, itemRoot.height);
-                            }
-                            root.hoveredItem = itemRoot;
+                            root.lastHoveredItem = itemRoot;
                             root.lastHoveredRect = Qt.rect(itemRoot.x, itemRoot.y, itemRoot.width, itemRoot.height);
+                            root.hoveredItem = itemRoot;
                             root.activeMenuModel = itemRoot.modelData.menu ?? null;
                         } else {
                             // Only un-set if THIS item was the one hovered
@@ -339,4 +257,38 @@ Item {
         }
     }
 
+    Loader {
+        id: mainMenuLoader
+    }
+
+    property bool mainMenuInstantiated: false
+    onActiveMenuModelChanged: {
+        if (activeMenuModel !== null) {
+            if (!mainMenuInstantiated) {
+                mainMenuInstantiated = true;
+                // Use relative path for component unification
+                mainMenuLoader.setSource("../components/TrayMenu.qml", {
+                    "isSubmenu": false,
+                    "tray": root,
+                    "sourceItem": null,
+                    "menuModel": null
+                });
+            }
+            
+            Qt.callLater(() => {
+                if (mainMenuLoader.item) {
+                    mainMenuLoader.item.sourceItem = root.hoveredItem;
+                    mainMenuLoader.item.menuModel = root.activeMenuModel;
+                }
+            });
+        } else if (mainMenuLoader.item) {
+            mainMenuLoader.item.menuModel = null;
+        }
+    }
+
+    onHoveredItemChanged: {
+        if (mainMenuLoader.item && hoveredItem && activeMenuModel !== null) {
+            mainMenuLoader.item.sourceItem = hoveredItem;
+        }
+    }
 }

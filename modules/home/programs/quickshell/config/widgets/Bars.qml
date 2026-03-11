@@ -74,7 +74,6 @@ Scope {
                     maskStr += "    Region { item: workspaces || offscreenAnchorLeft }\n";
                     maskStr += "    Region { item: tray || offscreenAnchorLeft }\n";
                     maskStr += "    Region {\n";
-                    // Need to use integer bindings for Region custom rects
                     maskStr += "        x: Math.round(tray ? tray.menuRect.x : 0)\n";
                     maskStr += "        y: Math.round(tray ? tray.menuRect.y : 0)\n";
                     maskStr += "        width: Math.round(tray ? tray.menuRect.width : 0)\n";
@@ -106,12 +105,10 @@ Scope {
                         y: 15
                         
                         menuRect: {
-                            if (!mainTrayMenu.shouldShow || !hoveredItem) return Qt.rect(0, 0, 0, 0);
+                            if (!mainMenu || !mainMenu.shouldShow || !hoveredItem) return Qt.rect(0, 0, 0, 0);
                             var pos = hoveredItem.mapToItem(leftPanel.contentItem, 0, 0);
-                            // Increase overlap (248 < 260) for a smoother bridge transition
                             var menuX = tray.expanded ? 248 : 45;
-                            // Align perfectly with the tray item top (pos.y) instead of offseting by -2
-                            return Qt.rect(menuX, pos.y, mainTrayMenu.baseWidth, mainTrayMenu.baseHeight);
+                            return Qt.rect(menuX, pos.y, mainMenu.baseWidth, mainMenu.baseHeight);
                         }
                     }
 
@@ -143,14 +140,6 @@ Scope {
                 }
             }
 
-            // Replaced manual hardcoded menuWin & subMenuWin with reusable unified TrayMenu
-            TrayMenu {
-                id: mainTrayMenu
-                isSubmenu: false
-                tray: tray
-                sourceItem: tray.hoveredItem
-                menuModel: tray.activeMenuModel
-            }
 
 
         }

@@ -26,8 +26,31 @@ PopupWindow {
     property real targetWidth: 0
     property real targetHeight: 0
     
+    property rect cachedAnchorRect: Qt.rect(0, 0, 0, 0)
+    
+    // (Merged with the one further below)
+    
+    Connections {
+        target: root.sourceItem
+        function onXChanged() { if (root.shouldShow) root.updateAnchorCache(); }
+        function onYChanged() { if (root.shouldShow) root.updateAnchorCache(); }
+        function onWidthChanged() { if (root.shouldShow) root.updateAnchorCache(); }
+        function onHeightChanged() { if (root.shouldShow) root.updateAnchorCache(); }
+    }
+    
+    function updateAnchorCache() {
+        if (!sourceItem || !leftPanel || !tray) return;
+        
+        if (isSubmenu) {
+            cachedAnchorRect = Qt.rect(sourceItem.x + 8 + sourceItem.width, sourceItem.y + 2, 0, 0);
+        } else {
+            var pos = sourceItem.mapToItem(leftPanel.contentItem, 0, 0);
+            cachedAnchorRect = Qt.rect(tray.expanded ? 248 : 45, pos.y, menuContent.implicitWidth + 16, menuContent.implicitHeight);
+        }
+    }
+
     anchor.rect: {
-        if (!sourceItem) return Qt.rect(0, 0, 0, 0);
+        if (!sourceItem || !shouldShow) return cachedAnchorRect;
         
         if (isSubmenu) {
             // Anchor to the RIGHT edge of the active item!
@@ -35,6 +58,9 @@ PopupWindow {
         } else {
             // Main menu anchors to the tray item
             var pos = sourceItem.mapToItem(leftPanel.contentItem, 0, 0);
+            
+            // Adjust the x offset dynamically to bridge the gap properly!
+            // When not expanded, it anchors near the left edge
             return Qt.rect(tray.expanded ? 248 : 45, pos.y, menuContent.implicitWidth + 16, menuContent.implicitHeight);
         }
     }
@@ -45,11 +71,39 @@ PopupWindow {
 
     // Decouple visibility from opacity to allow fade-out
     property bool shouldShow: menuModel !== null && sourceItem !== null
-    visible: shouldShow || menuFadeOut.running
+    
+    // Simplified visibility logic:
+    // Window is mapped if we have a model OR if we are still fading out.
+    visible: shouldShow || menuContentWrapper.opacity > 0
 
     // Calculate the base size required just for this menu's immediate content
-    property real baseWidth: Math.min(isSubmenu ? 250 : 300, menuContentWrapper.implicitWidth + 16)
-    property real baseHeight: menuContentWrapper.implicitHeight + 8
+    // We cache this because when menuModel becomes null, implicit sizes drop to 0 instantly,
+    // which breaks the fade-out geometry!
+    property real cachedBaseWidth: 0
+    property real cachedBaseHeight: 0
+    
+    // Update caches while the menu is active
+    onShouldShowChanged: {
+        if (shouldShow) {
+            updateAnchorCache();
+            updateSizeCache();
+        }
+    }
+    
+    Connections {
+        target: menuContentWrapper
+        function onImplicitWidthChanged() { if (root.shouldShow) root.updateSizeCache(); }
+        function onImplicitHeightChanged() { if (root.shouldShow) root.updateSizeCache(); }
+    }
+    
+    function updateSizeCache() {
+        if (!root.shouldShow) return;
+        cachedBaseWidth = Math.min(isSubmenu ? 250 : 300, menuContentWrapper.implicitWidth + 16);
+        cachedBaseHeight = menuContentWrapper.implicitHeight + 8;
+    }
+
+    property real baseWidth: shouldShow ? Math.min(isSubmenu ? 250 : 300, menuContentWrapper.implicitWidth + 16) : cachedBaseWidth
+    property real baseHeight: shouldShow ? (menuContentWrapper.implicitHeight + 8) : cachedBaseHeight
 
     // Expand the bounding Wayland surface to a fixed maximum size.
     // This provides a massive invisible canvas so the popup doesn't have to dynamically resize (and jitter)
@@ -75,103 +129,76 @@ PopupWindow {
         menu: root.menuModel || root.lastMenuModel
     }
 
+    // Track child menu hover state safely to fix the hover collapse!
+    property bool isChildMenuHovered: childMenu !== null && childMenu.isHovered
+    property bool isHovered: menuBgMouseArea.containsMouse || isChildMenuHovered
+    
+    Timer {
+        id: closeSubmenuTimer
+        // Reduced from 100ms. 40ms is just enough to catch diagonal mouse movements into the submenu
+        // without causing the text to artificially hang around when actually leaving.
+        interval: 40
+        onTriggered: {
+            if (root.activeSubMenuData !== null) {
+                let itemHovered = root.activeSubMenuItem !== null && root.activeSubMenuItem.itemHovered;
+                if (!root.isChildMenuHovered && !itemHovered) {
+                    root.activeSubMenuData = null;
+                    root.activeSubMenuItem = null;
+                }
+            }
+        }
+    }
+    
+    onIsChildMenuHoveredChanged: {
+        if (!isChildMenuHovered) closeSubmenuTimer.restart();
+    }
+
     Item {
         id: menuContentWrapper
-        anchors.fill: parent
-        opacity: root.shouldShow ? 1.0 : 0.0
+        // Force concrete sizes so the Wayland layout isn't a circular dependency that clips the bubble!
+        width: root.implicitWidth
+        height: root.implicitHeight
         implicitWidth: menuContent.implicitWidth
         implicitHeight: menuContent.implicitHeight
+        
+        opacity: root.shouldShow ? 1.0 : 0.0
 
         Behavior on opacity {
             NumberAnimation {
                 id: menuFadeOut
-                duration: root.shouldShow ? Theme.animationDuration : Theme.animationDurationOut
-                easing.type: root.shouldShow ? Easing.OutQuad : Easing.InQuad
+                // Fade in slightly slower than the bubble (150ms) to let it stretch,
+                // but fade out extremely fast (50ms) so text disappears before the bubble collapses.
+                duration: root.shouldShow ? 220 : 50
+                easing.type: root.shouldShow ? Easing.InOutQuad : Easing.OutQuad
             }
         }
 
-        // Background Blob
-        ShaderEffect {
-            id: menuBlob
-            anchors.fill: parent
+        // Background Blob connecting exactly this menu's active item to its child submenu
+        MenuBlob {
+            id: submenuBlob
+            width: root.implicitWidth
+            height: root.implicitHeight
             z: -1
-            property variant source: null
-            visible: opacity > 0
-            opacity: root.activeSubMenuData !== null ? 1.0 : 0.0
             
-            Behavior on opacity {
-                NumberAnimation { 
-                    duration: root.activeSubMenuData !== null ? Theme.animationDuration : Theme.animationDurationOut
-                    easing.type: root.activeSubMenuData !== null ? Easing.OutQuad : Easing.InQuad 
-                }
-            }
+            expanded: root.activeSubMenuData !== null && root.childMenu && root.childMenu.shouldShow
+            opacity: expanded ? 1.0 : 0.0
             
-            property bool allowsAnimation: false
-            onVisibleChanged: {
-                if (visible) Qt.callLater(() => { allowsAnimation = true; });
-                else allowsAnimation = false;
-            }
+            targetR1X: root.activeSubMenuItem ? root.activeSubMenuItem.x + 8 : 0
+            targetR1Y: root.activeSubMenuItem ? root.activeSubMenuItem.y + 2 : 0
+            targetR1W: root.activeSubMenuItem ? root.activeSubMenuItem.width : 0
+            targetR1H: root.activeSubMenuItem ? root.activeSubMenuItem.height : 0
             
-            property rect rect1: {
-                if (!root.activeSubMenuItem) return Qt.rect(0,0,0,0);
-                return Qt.rect(root.activeSubMenuItem.x + 8, root.activeSubMenuItem.y + 2, 
-                             root.activeSubMenuItem.width, root.activeSubMenuItem.height);
-            }
-                
-            Behavior on rect1 {
-                enabled: menuBlob.allowsAnimation
-                PropertyAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad }
-            }
-                
-            property real targetR1X: {
-                if (!root.activeSubMenuItem) return 0;
-                return root.activeSubMenuItem.x + 8;
-            }
-            property real targetR1W: {
-                if (!root.activeSubMenuItem) return 0;
-                return root.activeSubMenuItem.width;
-            }
-            property real targetR1H: {
-                if (!root.activeSubMenuItem) return 0;
-                return root.activeSubMenuItem.height;
-            }
-
-            property real r2x: (root.activeSubMenuItem && root.childMenu && root.childMenu.shouldShow && menuBlob.allowsAnimation)
-                ? root.activeSubMenuItem.x + 8 + root.activeSubMenuItem.width : targetR1X
-            property real r2w: (root.activeSubMenuItem && root.childMenu && root.childMenu.shouldShow && menuBlob.allowsAnimation)
-                ? root.childMenu.baseWidth : targetR1W
-            property real r2h: (root.activeSubMenuItem && root.childMenu && root.childMenu.shouldShow && menuBlob.allowsAnimation)
-                ? root.childMenu.baseHeight : targetR1H
-
-            Behavior on r2x { enabled: menuBlob.allowsAnimation; PropertyAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
-            Behavior on r2w { enabled: menuBlob.allowsAnimation; PropertyAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
-            Behavior on r2h { enabled: menuBlob.allowsAnimation; PropertyAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
-
-            property rect rect2: Qt.rect(r2x, rect1.y, r2w, r2h)
-
-            property rect rect3: Qt.rect(0, 0, 0, 0)
-            property real radius1: 8
-            property real radius2: 10
-            property real radius3: 0
-            property real smoothness: 15.0
-            property color bubbleColor: Qt.tint(Colors.light.base, Colors.alpha(Colors.light.text, 0.15))
-            property real uWidth: width
-            property real uHeight: height
+            targetR2X: (root.activeSubMenuItem && root.childMenu) ? root.activeSubMenuItem.x + 8 + root.activeSubMenuItem.width : targetR1X
+            targetR2Y: targetR1Y
+            // Ensure childMenu base dimensions are mapped securely
+            targetR2W: (root.childMenu && root.childMenu.baseWidth) ? root.childMenu.baseWidth : 0
+            targetR2H: (root.childMenu && root.childMenu.baseHeight) ? root.childMenu.baseHeight : 0
             
-            fragmentShader: Shaders.get("bubble") ? "file://" + Shaders.get("bubble") : ""
-
-            layer.enabled: true
-            layer.effect: MultiEffect {
-                shadowEnabled: true
-                shadowColor: "black"
-                shadowBlur: 1.0
-                shadowOpacity: 0.5
-                shadowVerticalOffset: 2
-                shadowHorizontalOffset: 2
-            }
+            radius3: 0
         }
 
         MouseArea {
+            id: menuBgMouseArea
             width: root.baseWidth
             height: root.baseHeight
             hoverEnabled: true
@@ -199,10 +226,10 @@ PopupWindow {
                 anchors.left: parent.left
                 anchors.top: parent.top
                 anchors.leftMargin: 8
-                anchors.topMargin: 0
                 spacing: isSubmenu ? 2 : 0
                 
                 opacity: 1.0
+                
                 NumberAnimation {
                     id: menuContentFadeIn
                     target: menuContent
@@ -216,7 +243,8 @@ PopupWindow {
                 Connections {
                     target: root
                     function onMenuModelChanged() {
-                        if (root.menuModel) {
+                        if (root.menuModel && root.shouldShow) {
+                            menuContent.opacity = 0.0;
                             menuContentFadeIn.restart();
                         }
                     }
@@ -228,6 +256,8 @@ PopupWindow {
                     delegate: Item {
                         id: menuItem
                         required property var modelData
+                        
+                        property bool itemHovered: itemMouse.containsMouse
                         
                         Layout.fillWidth: true
                         implicitHeight: modelData.isSeparator ? 9 : Math.max(isSubmenu ? 24 : 32, menuLabel.implicitHeight + 8)
@@ -306,14 +336,18 @@ PopupWindow {
                             hoverEnabled: true
                             enabled: !modelData.isSeparator && modelData.enabled && (tray ? tray.expanded : true)
                             onContainsMouseChanged: {
-                                if (containsMouse && modelData.hasChildren) {
-                                    root.activeSubMenuData = modelData;
-                                    root.activeSubMenuItem = menuItem;
-                                } else if (containsMouse && !modelData.hasChildren) {
-                                    root.activeSubMenuData = null;
-                                    root.activeSubMenuItem = null;
+                                if (containsMouse) {
+                                    if (modelData.hasChildren) {
+                                        root.activeSubMenuData = modelData;
+                                        root.activeSubMenuItem = menuItem;
+                                    } else {
+                                        closeSubmenuTimer.restart();
+                                    }
+                                } else {
+                                    closeSubmenuTimer.restart();
                                 }
                             }
+                            
                             onClicked: {
                                 if (!modelData.hasChildren) {
                                     modelData.triggered();
