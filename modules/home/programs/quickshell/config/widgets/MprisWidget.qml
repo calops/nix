@@ -91,6 +91,14 @@ Item {
         id: peakMonitor
         node: Pipewire.defaultAudioSink
         enabled: root.activePlayer !== null
+
+        readonly property real intensity: {
+            if (!peaks || peaks.length === 0) return 0;
+            let sum = 0;
+            let len = peaks.length;
+            for (let i = 0; i < len; i++) sum += peaks[i];
+            return sum / len;
+        }
     }
 
     HoverBackdrop {
@@ -130,25 +138,55 @@ Item {
                 spacing: 2
 
                 Repeater {
-                    model: Math.floor(equalizerContainer.height / 4)
+                    id: barsRepeater
+                    property int barCount: Math.floor(equalizerContainer.height / 4)
+                    model: barCount
                     Rectangle {
                         id: bar
                         height: 2
                         anchors.right: parent.right
 
-                        readonly property real basePeak: (peakMonitor.peaks && peakMonitor.peaks.length > 0) ? peakMonitor.peaks[index % peakMonitor.peaks.length] : 0
+                        // Total number of bars from the Repeater
+                        readonly property int total: barsRepeater.barCount
+                        
+                        // Normalized position (0.0 to 1.0) for the envelope
+                        readonly property real normPos: index / (total - 1)
+                        
+                        // Dynamic envelope power that expands/contracts with intensity
+                        // This makes the overall "eye" shape morph with the music
+                        readonly property real envelopePower: 1.2 + (peakMonitor.intensity * 2.0)
+                        readonly property real envelope: 1.0 - Math.pow(Math.abs(normPos - 0.5) * 2, envelopePower)
 
-                        // Ensure variance is always positive to avoid Math.pow(0, negative) = Infinity
-                        readonly property real variance: 0.5 + (Math.sin(index * 0.5) * 0.25)
-                        readonly property real finalPeak: basePeak > 0 ? Math.pow(basePeak, variance) : 0
+                        // Per-bar weight that morphs with audio intensity
+                        // This ensures bars are NOT "stuck" to a fixed shape
+                        readonly property real barWeight: 0.7 + (Math.abs(Math.sin(index * 24.5 + peakMonitor.intensity * 15.0)) * 0.5)
 
-                        width: 4 + (finalPeak * 42)
+                        // Chaotic Sampling:
+                        // We use a "hash-like" mapping to pick peaks from the array
+                        readonly property int peakIndex: {
+                            if (!peakMonitor.peaks || peakMonitor.peaks.length === 0) return 0;
+                            var x = index + 1;
+                            x = ((x >>> 16) ^ x) * 0x45d9f3b;
+                            x = ((x >>> 16) ^ x) * 0x45d9f3b;
+                            x = (x >>> 16) ^ x;
+                            return x % peakMonitor.peaks.length;
+                        }
+
+                        readonly property real basePeak: (peakMonitor.peaks && peakMonitor.peaks.length > 0) ? peakMonitor.peaks[peakIndex] : 0
+
+                        // Amplitude Scaling:
+                        // 1. Apply exponent (2.0 for sharper contrast)
+                        // 2. Apply unique morphing bar weight
+                        // 3. Apply dynamic envelope
+                        readonly property real scaledPeak: Math.pow(basePeak, 2.0) * barWeight * envelope
+                        
+                        width: 4 + (scaledPeak * 42)
                         radius: 1
                         color: "white"
 
                         Behavior on width {
                             NumberAnimation {
-                                duration: 80 + (index * 4)
+                                duration: 100 + (index % 5) * 20
                                 easing.type: Easing.OutQuad
                             }
                         }
