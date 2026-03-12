@@ -18,7 +18,10 @@ layout(std140, binding = 0) uniform buf {
     float radius2;
     float radius3;
     float smoothness;
+    float useImage;
 };
+
+layout(binding = 1) uniform sampler2D imageSource;
 
 float sdRoundRect(vec2 p, vec2 b, float r) {
     vec2 d = abs(p) - b + vec2(r);
@@ -81,6 +84,13 @@ void main() {
     }
 
     vec4 color = baseColor;
+    if (useImage > 0.5) {
+        vec4 imgColor = texture(imageSource, qt_TexCoord0);
+        // Blend image RGB with base color RGB using image alpha as weight,
+        // but strictly preserve the base color's alpha for transparency.
+        color.rgb = mix(color.rgb, imgColor.rgb, imgColor.a);
+        // We do NOT change color.a here to keep the glassy transparency
+    }
 
     // --- Glass Lighting Effect ---
     

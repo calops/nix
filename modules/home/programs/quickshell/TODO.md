@@ -17,3 +17,9 @@
     - [ ] Show ongoing track
     - [ ] Position in the middle of the right bar
     - [ ] Animated equalizer-live visualization of beats
+- [ ] System monitoring widget
+    - [ ] CPU usage
+    - [ ] Memory usage
+    - [ ] Disk usage
+    - [ ] Network usage
+

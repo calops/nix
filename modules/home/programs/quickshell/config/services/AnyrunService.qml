@@ -26,7 +26,7 @@ Singleton {
             onConnectedChanged: {
                 if (connected) {
                     root.activeConnection = clientSocket;
-                    console.log("Anyrun connected");
+                    console.info("Anyrun connected");
                 } else if (root.activeConnection === clientSocket) {
                     root.activeConnection = null;
                 }

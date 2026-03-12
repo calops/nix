@@ -203,6 +203,7 @@ Scope {
                 maskStr += "    Region { item: batteryLoader.item || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: brightness || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: volume || offscreenAnchorRight }\n";
+                maskStr += "    Region { item: mpris || offscreenAnchorRight }\n";
                 for (var i = 0; i < items.length; i++) {
                     maskStr += "    property var item" + i + ": rightPanel.registeredBlurItems[" + i + "];\n";
                     maskStr += "    Region { item: item" + i + " || offscreenAnchorRight; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
@@ -231,6 +232,12 @@ Scope {
                         GradientStop { position: 0.4; color: Colors.alpha(Colors.palette.crust, 0.65) }
                         GradientStop { position: 1.0; color: Colors.alpha(Colors.palette.crust, 1.0) }
                     }
+                }
+
+                Widgets.MprisWidget {
+                    id: mpris
+                    anchors.right: parent.right
+                    y: parent.height / 2 - height / 2
                 }
 
                 Column {

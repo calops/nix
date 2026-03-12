@@ -23,9 +23,6 @@ PopupWindow {
     // Directional anchoring: Main menus grow right from the tray, submenus grow right from the item
     anchor.window: isSubmenu ? parentMenu : parentWindow
 
-    onVisibleChanged: console.log("TrayMenu " + (isSubmenu ? "Submenu" : "Main") + " Window visible: " + visible)
-    Component.onCompleted: console.log("TrayMenu " + (isSubmenu ? "Submenu" : "Main") + " Component Completed")
-
     property rect cachedAnchorRect: Qt.rect(0, 0, 0, 0)
 
     Connections {
@@ -96,7 +93,6 @@ PopupWindow {
 
     // Update caches while the menu is active
     onShouldShowChanged: {
-        console.log("TrayMenu shouldShow: " + shouldShow + " (model: " + (menuModel ? "YES" : "NO") + ", source: " + (sourceItem ? "YES" : "NO") + ")");
         if (shouldShow) {
             updateAnchorCache();
             updateSizeCache();
@@ -227,9 +223,6 @@ PopupWindow {
 
             property real radius: 10
 
-            Component.onCompleted: {
-                console.log("TrayMenu MouseArea registering to " + root.blurGroupId);
-            }
             Component.onDestruction: {
                 if (containsMouse && tray) {
                     tray.menuHoverCount--;

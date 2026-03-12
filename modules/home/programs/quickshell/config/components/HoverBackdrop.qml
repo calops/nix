@@ -9,6 +9,14 @@ Item {
     opacity: 0.0
     property string blurGroupId: ""
     property real radius: 10
+    property alias baseColor: bgRect.baseColor
+    property variant imageSource: null
+
+    Image {
+        id: bgImage
+        source: root.imageSource || ""
+        visible: false
+    }
 
     ShaderEffect {
         id: bgRect
@@ -20,6 +28,8 @@ Item {
         property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
         property real uWidth: width
         property real uHeight: height
+        property variant imageSource: bgImage
+        property real useImage: root.imageSource && bgImage.status === Image.Ready ? 1.0 : 0.0
 
         // Multi-shape defaults (silence warnings)
         property rect rect1: Qt.rect(0, 0, 0, 0)

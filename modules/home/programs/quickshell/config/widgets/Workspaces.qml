@@ -181,6 +181,8 @@ Item {
                     property real radius2: 0
                     property real radius3: 0
                     property real smoothness: 0
+                    property real useImage: 0.0
+                    property variant imageSource: null
 
                     fragmentShader: Shaders.get("glass")
                 }
