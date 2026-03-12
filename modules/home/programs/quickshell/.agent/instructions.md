@@ -4,5 +4,8 @@ Whenever editing QML files, the configuration is automatically reloaded by Quick
 
 To see the errors, warnings, and debug statements, run:
 ```bash
-quickshell log | tail -n 20
+journalctl --user -u quickshell -n 20
 ```
+
+Important: remember to look at the latest logs at the end of ta task to check
+that your work doesn't produce errors or warnings.

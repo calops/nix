@@ -14,6 +14,8 @@ ShaderEffect {
     property bool expanded: false
     property bool allowsAnimation: false
     
+    property string blurGroupId: ""
+    
     // Visually bound to opacity so animations pause when fully invisible
     visible: opacity > 0
     Behavior on opacity {
@@ -26,6 +28,7 @@ ShaderEffect {
     onVisibleChanged: {
         if (visible) Qt.callLater(() => { allowsAnimation = true; });
         else allowsAnimation = false;
+        syncBlurRegistration();
     }
 
     // Input coordinates from parent
@@ -97,13 +100,14 @@ ShaderEffect {
     property real radius1: 8
     property real radius2: 10
     property real radius3: 0 // Used by SysTray main background
+    property real radius: 0 // Unused in bubble mode
     property real smoothness: 15.0
-    property color bubbleColor: Qt.tint(Colors.light.base, Colors.alpha(Colors.light.text, 0.15))
+    property color baseColor: Colors.alpha(Qt.tint(Colors.light.base, Colors.alpha(Colors.light.text, 0.15)), 0.8)
 
     property real uWidth: width
     property real uHeight: height
 
-    fragmentShader: Shaders.get("bubble") ? "file://" + Shaders.get("bubble") : ""
+    fragmentShader: Shaders.get("glass") ? "file://" + Shaders.get("glass") : ""
 
     layer.enabled: true
     layer.effect: MultiEffect {
@@ -113,5 +117,42 @@ ShaderEffect {
         shadowOpacity: 0.5
         shadowVerticalOffset: 2
         shadowHorizontalOffset: 2
+    }
+
+    property alias r1item: _r1item
+    property alias r2item: _r2item
+    property alias r3item: _r3item
+
+    // --- Blur Registration ---
+    // Extract individual rectangles into items for BlurRegistry
+    Item { id: _r1item; x: root.r1x; y: root.r1y; width: root.r1w; height: root.r1h; visible: width > 0 && height > 0; property real radius: root.radius1 }
+    Item { id: _r2item; x: root.r2x; y: root.r2y; width: root.r2w; height: root.r2h; visible: width > 0 && height > 0; property real radius: root.radius2 }
+    Item { id: _r3item; x: root.rect3.x; y: root.rect3.y; width: root.rect3.width; height: root.rect3.height; visible: width > 0 && height > 0; property real radius: root.radius3 }
+    
+    function syncBlurRegistration() {
+        if (!blurGroupId) return;
+        if (opacity > 0.05 && root.visible) {
+            console.log("MenuBlob registering to " + blurGroupId);
+            BlurRegistry.registerItem(blurGroupId, _r1item);
+            BlurRegistry.registerItem(blurGroupId, _r2item);
+            BlurRegistry.registerItem(blurGroupId, _r3item);
+        } else {
+            console.log("MenuBlob unregistering from " + blurGroupId);
+            BlurRegistry.unregisterItem(blurGroupId, _r1item);
+            BlurRegistry.unregisterItem(blurGroupId, _r2item);
+            BlurRegistry.unregisterItem(blurGroupId, _r3item);
+        }
+    }
+
+    onOpacityChanged: syncBlurRegistration()
+    onBlurGroupIdChanged: syncBlurRegistration()
+
+    Component.onCompleted: syncBlurRegistration()
+    Component.onDestruction: {
+        if (blurGroupId) {
+            BlurRegistry.unregisterItem(blurGroupId, _r1item);
+            BlurRegistry.unregisterItem(blurGroupId, _r2item);
+            BlurRegistry.unregisterItem(blurGroupId, _r3item);
+        }
     }
 }

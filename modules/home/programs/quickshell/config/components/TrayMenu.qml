@@ -2,31 +2,47 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
 import Quickshell
+import Quickshell.Wayland
 import "../services"
 
 // TrayMenu.qml
 // A recursive popup menu component for system tray items.
 PopupWindow {
     id: root
-    
+
     // Properties to define how this menu is anchored and what data it shows
     property var sourceItem: null // The visual QML Item this menu sprouts from
     property var menuModel: null  // The QsMenu data model
     property bool isSubmenu: false
     property var tray: null       // Reference to the main SysTray for state tracking
     property var parentMenu: null // The parent TrayMenu Window
+    property var parentWindow: null // The PanelWindow this menu anchors to
+    
+    property string blurGroupId: "trayMenu_" + root
     
     // Directional anchoring: Main menus grow right from the tray, submenus grow right from the item
-    anchor.window: isSubmenu ? parentMenu : leftPanel // leftPanel is assumed to be in scope from Bars.qml
-    // We attach a dynamic property to sourceItem to track the active submenu if needed
-    
-    // Position logic
-    property real targetX: 0
-    property real targetY: 0
-    property real targetWidth: 0
-    property real targetHeight: 0
-    
+    anchor.window: isSubmenu ? parentMenu : parentWindow
+
+    onVisibleChanged: console.log("TrayMenu " + (isSubmenu ? "Submenu" : "Main") + " Window visible: " + visible)
+    Component.onCompleted: console.log("TrayMenu " + (isSubmenu ? "Submenu" : "Main") + " Component Completed")
+
     property rect cachedAnchorRect: Qt.rect(0, 0, 0, 0)
+    
+    // Position the blur region at root for stability. 
+    // This is now stable because MenuBlob exposes its sub-items via aliases.
+    Region {
+        id: menuBlurRegion
+        Region {
+            item: menuBgMouseArea
+            radius: 10
+        }
+        // Include the connection blob regions
+        Region { item: submenuBlob.r1item; radius: submenuBlob.radius1 }
+        Region { item: submenuBlob.r2item; radius: submenuBlob.radius2 }
+        Region { item: submenuBlob.r3item; radius: submenuBlob.radius3 }
+    }
+
+    BackgroundEffect.blurRegion: root.shouldShow ? menuBlurRegion : null
     
     // (Merged with the one further below)
     
@@ -39,12 +55,12 @@ PopupWindow {
     }
     
     function updateAnchorCache() {
-        if (!sourceItem || !leftPanel || !tray) return;
+        if (!sourceItem || !parentWindow || !tray) return;
         
         if (isSubmenu) {
             cachedAnchorRect = Qt.rect(sourceItem.x + 8 + sourceItem.width, sourceItem.y + 2, 0, 0);
         } else {
-            var pos = sourceItem.mapToItem(leftPanel.contentItem, 0, 0);
+            var pos = sourceItem.mapToItem(parentWindow.contentItem, 0, 0);
             cachedAnchorRect = Qt.rect(tray.expanded ? 248 : 45, pos.y, menuContent.implicitWidth + 16, menuContent.implicitHeight);
         }
     }
@@ -57,7 +73,7 @@ PopupWindow {
             return Qt.rect(sourceItem.x + 8 + sourceItem.width, sourceItem.y + 2, 0, 0);
         } else {
             // Main menu anchors to the tray item
-            var pos = sourceItem.mapToItem(leftPanel.contentItem, 0, 0);
+            var pos = sourceItem.mapToItem(parentWindow.contentItem, 0, 0);
             
             // Adjust the x offset dynamically to bridge the gap properly!
             // When not expanded, it anchors near the left edge
@@ -84,6 +100,7 @@ PopupWindow {
     
     // Update caches while the menu is active
     onShouldShowChanged: {
+        console.log("TrayMenu shouldShow: " + shouldShow + " (model: " + (menuModel ? "YES" : "NO") + ", source: " + (sourceItem ? "YES" : "NO") + ")");
         if (shouldShow) {
             updateAnchorCache();
             updateSizeCache();
@@ -108,8 +125,8 @@ PopupWindow {
     // Expand the bounding Wayland surface to a fixed maximum size.
     // This provides a massive invisible canvas so the popup doesn't have to dynamically resize (and jitter)
     // when a submenu opens. The background wrapper uses `baseWidth`, leaving this extra padded space purely transparent!
-    implicitWidth: baseWidth + 260
-    implicitHeight: Math.max(baseHeight, 600)
+    implicitWidth: 1000
+    implicitHeight: Math.max(baseHeight, 800)
 
     // Track which submenu parent is active
     property var activeSubMenuData: null
@@ -195,6 +212,7 @@ PopupWindow {
             targetR2H: (root.childMenu && root.childMenu.baseHeight) ? root.childMenu.baseHeight : 0
             
             radius3: 0
+            blurGroupId: root.blurGroupId
         }
 
         MouseArea {
@@ -202,6 +220,19 @@ PopupWindow {
             width: root.baseWidth
             height: root.baseHeight
             hoverEnabled: true
+
+            property real radius: 10
+
+            Component.onCompleted: {
+                console.log("TrayMenu MouseArea registering to " + root.blurGroupId);
+                BlurRegistry.registerItem(root.blurGroupId, menuBgMouseArea);
+            }
+            Component.onDestruction: {
+                BlurRegistry.unregisterItem(root.blurGroupId, menuBgMouseArea);
+                if (containsMouse && tray) {
+                    tray.menuHoverCount--;
+                }
+            }
             // Extremely critical: if the parent tray's expanded state collapses, the Wayland anchor X coordinate 
             // recalculates instantly. If this shifts the fading surface under the user's cursor again, it creates an infinite feedback loop!
             enabled: tray ? tray.expanded : true
@@ -210,12 +241,6 @@ PopupWindow {
                 if (tray) {
                     if (containsMouse) tray.menuHoverCount++;
                     else tray.menuHoverCount--;
-                }
-            }
-
-            Component.onDestruction: {
-                if (containsMouse && tray) {
-                    tray.menuHoverCount--;
                 }
             }
             
@@ -385,6 +410,7 @@ PopupWindow {
                     "isSubmenu": true,
                     "tray": root.tray,
                     "parentMenu": root,
+                    "parentWindow": root.parentWindow,
                     "sourceItem": null,
                     "menuModel": null
                 });
@@ -401,12 +427,6 @@ PopupWindow {
             // Unlink the model so 'shouldShow' evaluates to false, triggering the fade OUT animation!
             // Do NOT wipe 'source' instantly, or the child component will be destroyed instantly instead of fading!
             childMenuLoader.item.menuModel = null;
-        }
-    }
-
-    onActiveSubMenuItemChanged: {
-        if (childMenuLoader.item && activeSubMenuItem && activeSubMenuData !== null) {
-            childMenuLoader.item.sourceItem = activeSubMenuItem;
         }
     }
 }

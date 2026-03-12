@@ -10,6 +10,14 @@ layout(std140, binding = 0) uniform buf {
     vec4 baseColor;
     float uWidth;
     float uHeight;
+    // Multi-shape properties (optional)
+    vec4 rect1;
+    vec4 rect2;
+    vec4 rect3;
+    float radius1;
+    float radius2;
+    float radius3;
+    float smoothness;
 };
 
 float sdRoundRect(vec2 p, vec2 b, float r) {
@@ -17,13 +25,53 @@ float sdRoundRect(vec2 p, vec2 b, float r) {
     return min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - r;
 }
 
+float smin(float a, float b, float k) {
+    float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+    return mix(b, a, h) - k * h * (1.0 - h);
+}
+
+float getDistance(vec2 pos, float r, vec2 center, vec2 halfSize, vec4 r1, vec4 r2, vec4 r3, float rad1, float rad2, float rad3, float sm) {
+    if (r1.z > 0.0) {
+        vec2 c1 = r1.xy + r1.zw * 0.5;
+        vec2 hs1 = r1.zw * 0.5;
+        float d = sdRoundRect(pos - c1, hs1, rad1);
+        if (r2.z > 0.0) {
+            vec2 c2 = r2.xy + r2.zw * 0.5;
+            vec2 hs2 = r2.zw * 0.5;
+            float d2 = sdRoundRect(pos - c2, hs2, rad2);
+            d = smin(d, d2, sm);
+            vec2 min12 = min(r1.xy, r2.xy);
+            vec2 max12 = max(r1.xy + r1.zw, r2.xy + r2.zw);
+            vec2 c12 = (min12 + max12) * 0.5;
+            vec2 h12 = (max12 - min12) * 0.5;
+            float dbb12 = sdRoundRect(pos - c12, h12, 0.0);
+            d = max(d, dbb12);
+            if (r3.z > 0.0) {
+                vec2 c3 = r3.xy + r3.zw * 0.5;
+                vec2 hs3 = r3.zw * 0.5;
+                float d3 = sdRoundRect(pos - c3, hs3, rad3);
+                d = smin(d, d3, sm);
+                vec2 min123 = min(min12, r3.xy);
+                vec2 max123 = max(max12, r3.xy + r3.zw);
+                vec2 c123 = (min123 + max123) * 0.5;
+                vec2 h123 = (max123 - min123) * 0.5;
+                float dbb123 = sdRoundRect(pos - c123, h123, 0.0);
+                d = max(d, dbb123);
+            }
+        }
+        return d;
+    } else {
+        return sdRoundRect(pos - center, halfSize, r);
+    }
+}
+
 void main() {
-    float r = max(radius, 0.0);
     vec2 p = qt_TexCoord0 * vec2(uWidth, uHeight);
     vec2 center = vec2(uWidth * 0.5, uHeight * 0.5);
     vec2 halfSize = vec2(uWidth * 0.5, uHeight * 0.5);
-    
-    float d = sdRoundRect(p - center, halfSize, r);
+    float r = max(radius, 0.0);
+
+    float d = getDistance(p, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness);
     
     // Antialiased edge of the shape
     float alphaMask = 1.0 - smoothstep(-1.0, 1.0, d);
@@ -33,44 +81,37 @@ void main() {
     }
 
     vec4 color = baseColor;
-    // Assume baseColor is passed as premultiplied RGBA from Qt
 
-    // Inner highlight (Bevel effect)
-    // -d represents the distance inside the shape. 0 at boundary, positive inside.
-    // Edge profile is 1.0 at the very edge, fading to 0.0 at 2 pixels inside.
+    // --- Glass Lighting Effect ---
+    
+    // Inner profile for highlights (fades inside the shape)
     float edgeProfile = smoothstep(2.0, 0.0, -d);
     
-    // Simple directional lighting
-    // Top-left light
-    vec2 pNorm = (p - center) / max(halfSize, vec2(1.0)); // roughly -1 to 1
-    // A soft faux normal pointing outwards from the center, bending more near edges
-    vec3 normal = normalize(vec3(pNorm * pow(clamp(-d/halfSize.x, 0.0, 1.0), 0.5), 0.5));
-    // light dir from top-left
-    vec3 lightDir = normalize(vec3(-1.0, -1.0, 1.0));
-    
-    // We can also just use the SDF gradient for accurate normals at the edge:
-    vec2 eps = vec2(1.0, 0.0);
-    float dx = sdRoundRect(p - center + eps.xy, halfSize, r) - sdRoundRect(p - center - eps.xy, halfSize, r);
-    float dy = sdRoundRect(p - center + eps.yx, halfSize, r) - sdRoundRect(p - center - eps.yx, halfSize, r);
+    // Calculate normals via SDF gradient for perfect accuracy
+    vec2 eps = vec2(0.5, 0.0);
+    float dx = getDistance(p + eps.xy, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness) - 
+               getDistance(p - eps.xy, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness);
+    float dy = getDistance(p + eps.yx, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness) - 
+               getDistance(p - eps.yx, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness);
     vec3 edgeNormal = normalize(vec3(dx, dy, 0.3));
 
-    // highlight at the edge where the normal faces the light
+    // Light dir from top-left
+    vec3 lightDir = normalize(vec3(-1.0, -1.0, 1.0));
+    
+    // High-quality directional highlights/shadows
     float highlight = edgeProfile * max(dot(edgeNormal, lightDir), 0.0);
-    // shadow at the opposite edge
     float shadow = edgeProfile * max(dot(edgeNormal, -lightDir), 0.0);
     
-    // Volumetric gradient (slightly lighter top-left, slightly darker bottom-right)
-    float volGradient = dot(qt_TexCoord0 - vec2(0.5), vec2(-1.0, -1.0)); // range -0.7 to 0.7
+    // Volumetric gradient (global across the whole coord space)
+    float volGradient = dot(qt_TexCoord0 - vec2(0.5), vec2(-1.0, -1.0));
     
-    // Apply volumetric gradient softly, bounded by alpha to keep premultiplication valid
+    // Apply effects
     color.rgb += vec3(volGradient * 0.1) * color.a;
-    
-    // Apply shiny edge highlight
-    color.rgb += vec3(1.0) * highlight * 0.4 * color.a;
-    
-    // Apply darker edge shadow, kept softer
+    color.rgb += vec3(1.0) * highlight * 0.35 * color.a;
     color.rgb -= vec3(1.0) * shadow * 0.15 * color.a;
 
-    // We output the mutated permultiplied color multiplied by our alpha mask and opacity
+    // Final output (respecting premultiplication)
     fragColor = color * alphaMask * qt_Opacity;
 }
+
+

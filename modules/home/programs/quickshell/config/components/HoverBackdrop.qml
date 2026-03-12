@@ -20,6 +20,15 @@ Item {
         property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
         property real uWidth: width
         property real uHeight: height
+
+        // Multi-shape defaults (silence warnings)
+        property rect rect1: Qt.rect(0,0,0,0)
+        property rect rect2: Qt.rect(0,0,0,0)
+        property rect rect3: Qt.rect(0,0,0,0)
+        property real radius1: 0
+        property real radius2: 0
+        property real radius3: 0
+        property real smoothness: 0
         
         // This opacity determines the overall visible alpha of the entire effect over the background
         opacity: 1.0

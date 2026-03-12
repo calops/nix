@@ -15,6 +15,7 @@ Item {
     property var hoveredItem: null
     property var activeMenuModel: null
     property alias bubbleBg: bubbleBackground
+    property var parentWindow: null
     
     property var mainMenu: mainMenuLoader.item
     
@@ -121,7 +122,8 @@ Item {
         radius1: 10
         radius2: 10
         radius3: 14 // SysTray flat side
-        bubbleColor: "#ffffff"
+        baseColor: Colors.alpha("#ffffff", 0.75)
+        blurGroupId: "leftBarScope"
     }
 
     // The menu Blob has been extracted to TrayMenu.qml!
@@ -284,6 +286,7 @@ Item {
                 mainMenuLoader.setSource("../components/TrayMenu.qml", {
                     "isSubmenu": false,
                     "tray": root,
+                    "parentWindow": root.parentWindow || leftPanel,
                     "sourceItem": null,
                     "menuModel": null
                 });
@@ -299,9 +302,21 @@ Item {
             mainMenuLoader.item.menuModel = null;
         }
     }
+    
+    Connections {
+        target: mainMenuLoader
+        function onStatusChanged() {
+            console.log("SysTray Menu Status: " + mainMenuLoader.status);
+            if (mainMenuLoader.status === Loader.Error) {
+                console.error("SysTray Loader Error: " + mainMenuLoader.errorString);
+                mainMenuInstantiated = false;
+            }
+        }
+    }
 
     onHoveredItemChanged: {
         if (mainMenuLoader.item && hoveredItem && activeMenuModel !== null) {
+            console.log("SysTray hoveredItem changed, updating menu sourceItem");
             mainMenuLoader.item.sourceItem = hoveredItem;
         }
     }

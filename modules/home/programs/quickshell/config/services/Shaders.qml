@@ -12,7 +12,6 @@ Singleton {
     // This is still much cleaner than duplicating ShaderCompiler blocks
     readonly property var shaderList: [
         "backdrop",
-        "bubble",
         "glass",
         "curves",
         "fractal"
