@@ -86,20 +86,8 @@ Item {
     readonly property real duration: activePlayer ? activePlayer.length : 0
     readonly property real progress: duration > 0 ? activePlayer.position / duration : 0
 
-    // Peak Monitor for Equalizer
-    PwNodePeakMonitor {
-        id: peakMonitor
-        node: Pipewire.defaultAudioSink
-        enabled: root.activePlayer !== null
-
-        readonly property real intensity: {
-            if (!peaks || peaks.length === 0) return 0;
-            let sum = 0;
-            let len = peaks.length;
-            for (let i = 0; i < len; i++) sum += peaks[i];
-            return sum / len;
-        }
-    }
+    // Intensity calculated from real frequencies
+    readonly property real intensity: CavaService.frequencies.length > 0 ? (CavaService.frequencies.reduce((a, b) => a + b, 0) / CavaService.frequencies.length) : 0
 
     HoverBackdrop {
         id: background
@@ -153,41 +141,30 @@ Item {
                         readonly property real normPos: index / (total - 1)
                         
                         // Dynamic envelope power that expands/contracts with intensity
-                        // This makes the overall "eye" shape morph with the music
-                        readonly property real envelopePower: 1.2 + (peakMonitor.intensity * 2.0)
+                        readonly property real envelopePower: 1.2 + (root.intensity * 2.5)
                         readonly property real envelope: 1.0 - Math.pow(Math.abs(normPos - 0.5) * 2, envelopePower)
 
-                        // Per-bar weight that morphs with audio intensity
-                        // This ensures bars are NOT "stuck" to a fixed shape
-                        readonly property real barWeight: 0.7 + (Math.abs(Math.sin(index * 24.5 + peakMonitor.intensity * 15.0)) * 0.5)
-
-                        // Chaotic Sampling:
-                        // We use a "hash-like" mapping to pick peaks from the array
-                        readonly property int peakIndex: {
-                            if (!peakMonitor.peaks || peakMonitor.peaks.length === 0) return 0;
-                            var x = index + 1;
-                            x = ((x >>> 16) ^ x) * 0x45d9f3b;
-                            x = ((x >>> 16) ^ x) * 0x45d9f3b;
-                            x = (x >>> 16) ^ x;
-                            return x % peakMonitor.peaks.length;
+                        // Real Frequency Data from Cava
+                        // Map our local bar index to the full spectrum of Cava frequencies
+                        readonly property real frequency: {
+                            let freqs = CavaService.frequencies;
+                            if (!freqs || freqs.length === 0) return 0;
+                            let cavaIndex = Math.min(Math.floor(normPos * (freqs.length - 1)), freqs.length - 1);
+                            return freqs[cavaIndex];
                         }
 
-                        readonly property real basePeak: (peakMonitor.peaks && peakMonitor.peaks.length > 0) ? peakMonitor.peaks[peakIndex] : 0
-
-                        // Amplitude Scaling:
-                        // 1. Apply exponent (2.0 for sharper contrast)
-                        // 2. Apply unique morphing bar weight
-                        // 3. Apply dynamic envelope
-                        readonly property real scaledPeak: Math.pow(basePeak, 2.0) * barWeight * envelope
+                        // Final Width Calculation:
+                        // Use Math.sqrt to boost smaller values for better visual response
+                        readonly property real scaledFreq: Math.sqrt(frequency) * envelope
                         
-                        width: 4 + (scaledPeak * 42)
+                        width: 4 + (scaledFreq * 42)
                         radius: 1
                         color: "white"
 
                         Behavior on width {
                             NumberAnimation {
-                                duration: 100 + (index % 5) * 20
-                                easing.type: Easing.OutQuad
+                                duration: 50
+                                easing.type: Easing.OutCubic
                             }
                         }
                     }

@@ -13,4 +13,5 @@ ShellRoot {
     OverviewBackdrop { id: backdrop }
 
     readonly property var _anyrunService: AnyrunService
+    readonly property var _cavaService: CavaService
 }
