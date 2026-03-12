@@ -16,19 +16,18 @@ PanelWindow {
         left: true
         right: true
     }
-    
+
     // Don't reserve space
     exclusionMode: ExclusionMode.Ignore
-    
+
     color: "transparent"
-    
 
     ShaderEffect {
         id: bgEffect
         anchors.fill: parent
         // Only render when the backdrop is compiled AND we are either in overview or fading out
         visible: Shaders.isReady("fractal") && (Niri.overviewActive || opacity > 0.01)
-        
+
         property variant source: null
         property real uTime: 0
         property color baseColor: Colors.palette.surface0
@@ -40,10 +39,10 @@ PanelWindow {
         property color accentColor6: Colors.palette.red
         property real uWidth: width
         property real uHeight: height
-        
+
         // The shader manages its own compiled state now within Shaders singleton
-        fragmentShader: Shaders.get("fractal") ? "file://" + Shaders.get("fractal") : ""
-        
+        fragmentShader: Shaders.get("fractal")
+
         // Disable animation when not visible to save resources
         NumberAnimation on uTime {
             from: 0
@@ -52,12 +51,15 @@ PanelWindow {
             loops: Animation.Infinite
             running: bgEffect.visible
         }
-        
+
         // Ensure standard opacity behavior
         // Fade in when overview is active
         opacity: Niri.overviewActive ? 1.0 : 0.0
         Behavior on opacity {
-            NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.InOutQuad }
+            NumberAnimation {
+                duration: Theme.animationDuration
+                easing.type: Easing.InOutQuad
+            }
         }
     }
 }

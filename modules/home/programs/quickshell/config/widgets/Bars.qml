@@ -102,7 +102,6 @@ Scope {
                     SysTray {
                         id: tray
                         anchors.left: parent.left
-                        parentWindow: leftPanel
                         y: 15
                         
                         menuRect: {

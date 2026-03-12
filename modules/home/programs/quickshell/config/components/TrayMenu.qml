@@ -17,9 +17,9 @@ PopupWindow {
     property var tray: null       // Reference to the main SysTray for state tracking
     property var parentMenu: null // The parent TrayMenu Window
     property var parentWindow: null // The PanelWindow this menu anchors to
-    
+
     property string blurGroupId: "trayMenu_" + root
-    
+
     // Directional anchoring: Main menus grow right from the tray, submenus grow right from the item
     anchor.window: isSubmenu ? parentMenu : parentWindow
 
@@ -27,36 +27,31 @@ PopupWindow {
     Component.onCompleted: console.log("TrayMenu " + (isSubmenu ? "Submenu" : "Main") + " Component Completed")
 
     property rect cachedAnchorRect: Qt.rect(0, 0, 0, 0)
-    
-    // Position the blur region at root for stability. 
-    // This is now stable because MenuBlob exposes its sub-items via aliases.
-    Region {
-        id: menuBlurRegion
-        Region {
-            item: menuBgMouseArea
-            radius: 10
-        }
-        // Include the connection blob regions
-        Region { item: submenuBlob.r1item; radius: submenuBlob.radius1 }
-        Region { item: submenuBlob.r2item; radius: submenuBlob.radius2 }
-        Region { item: submenuBlob.r3item; radius: submenuBlob.radius3 }
-    }
 
-    BackgroundEffect.blurRegion: root.shouldShow ? menuBlurRegion : null
-    
-    // (Merged with the one further below)
-    
     Connections {
         target: root.sourceItem
-        function onXChanged() { if (root.shouldShow) root.updateAnchorCache(); }
-        function onYChanged() { if (root.shouldShow) root.updateAnchorCache(); }
-        function onWidthChanged() { if (root.shouldShow) root.updateAnchorCache(); }
-        function onHeightChanged() { if (root.shouldShow) root.updateAnchorCache(); }
+        function onXChanged() {
+            if (root.shouldShow)
+                root.updateAnchorCache();
+        }
+        function onYChanged() {
+            if (root.shouldShow)
+                root.updateAnchorCache();
+        }
+        function onWidthChanged() {
+            if (root.shouldShow)
+                root.updateAnchorCache();
+        }
+        function onHeightChanged() {
+            if (root.shouldShow)
+                root.updateAnchorCache();
+        }
     }
-    
+
     function updateAnchorCache() {
-        if (!sourceItem || !parentWindow || !tray) return;
-        
+        if (!sourceItem || !parentWindow || !tray)
+            return;
+
         if (isSubmenu) {
             cachedAnchorRect = Qt.rect(sourceItem.x + 8 + sourceItem.width, sourceItem.y + 2, 0, 0);
         } else {
@@ -66,28 +61,29 @@ PopupWindow {
     }
 
     anchor.rect: {
-        if (!sourceItem || !shouldShow) return cachedAnchorRect;
-        
+        if (!sourceItem || !shouldShow)
+            return cachedAnchorRect;
+
         if (isSubmenu) {
             // Anchor to the RIGHT edge of the active item!
             return Qt.rect(sourceItem.x + 8 + sourceItem.width, sourceItem.y + 2, 0, 0);
         } else {
             // Main menu anchors to the tray item
             var pos = sourceItem.mapToItem(parentWindow.contentItem, 0, 0);
-            
+
             // Adjust the x offset dynamically to bridge the gap properly!
             // When not expanded, it anchors near the left edge
             return Qt.rect(tray.expanded ? 248 : 45, pos.y, menuContent.implicitWidth + 16, menuContent.implicitHeight);
         }
     }
-    
+
     anchor.gravity: Edges.Right | Edges.Bottom
     anchor.edges: Edges.Left | Edges.Top
     color: "transparent"
 
     // Decouple visibility from opacity to allow fade-out
     property bool shouldShow: menuModel !== null && sourceItem !== null
-    
+
     // Simplified visibility logic:
     // Window is mapped if we have a model OR if we are still fading out.
     visible: shouldShow || menuContentWrapper.opacity > 0
@@ -97,7 +93,7 @@ PopupWindow {
     // which breaks the fade-out geometry!
     property real cachedBaseWidth: 0
     property real cachedBaseHeight: 0
-    
+
     // Update caches while the menu is active
     onShouldShowChanged: {
         console.log("TrayMenu shouldShow: " + shouldShow + " (model: " + (menuModel ? "YES" : "NO") + ", source: " + (sourceItem ? "YES" : "NO") + ")");
@@ -106,15 +102,22 @@ PopupWindow {
             updateSizeCache();
         }
     }
-    
+
     Connections {
         target: menuContentWrapper
-        function onImplicitWidthChanged() { if (root.shouldShow) root.updateSizeCache(); }
-        function onImplicitHeightChanged() { if (root.shouldShow) root.updateSizeCache(); }
+        function onImplicitWidthChanged() {
+            if (root.shouldShow)
+                root.updateSizeCache();
+        }
+        function onImplicitHeightChanged() {
+            if (root.shouldShow)
+                root.updateSizeCache();
+        }
     }
-    
+
     function updateSizeCache() {
-        if (!root.shouldShow) return;
+        if (!root.shouldShow)
+            return;
         cachedBaseWidth = Math.min(isSubmenu ? 250 : 300, menuContentWrapper.implicitWidth + 16);
         cachedBaseHeight = menuContentWrapper.implicitHeight + 8;
     }
@@ -149,7 +152,7 @@ PopupWindow {
     // Track child menu hover state safely to fix the hover collapse!
     property bool isChildMenuHovered: childMenu !== null && childMenu.isHovered
     property bool isHovered: menuBgMouseArea.containsMouse || isChildMenuHovered
-    
+
     Timer {
         id: closeSubmenuTimer
         // Reduced from 100ms. 40ms is just enough to catch diagonal mouse movements into the submenu
@@ -165,9 +168,10 @@ PopupWindow {
             }
         }
     }
-    
+
     onIsChildMenuHoveredChanged: {
-        if (!isChildMenuHovered) closeSubmenuTimer.restart();
+        if (!isChildMenuHovered)
+            closeSubmenuTimer.restart();
     }
 
     Item {
@@ -177,7 +181,7 @@ PopupWindow {
         height: root.implicitHeight
         implicitWidth: menuContent.implicitWidth
         implicitHeight: menuContent.implicitHeight
-        
+
         opacity: root.shouldShow ? 1.0 : 0.0
 
         Behavior on opacity {
@@ -196,23 +200,23 @@ PopupWindow {
             width: root.implicitWidth
             height: root.implicitHeight
             z: -1
-            
+
             expanded: root.activeSubMenuData !== null && root.childMenu && root.childMenu.shouldShow
             opacity: expanded ? 1.0 : 0.0
-            
+
             targetR1X: root.activeSubMenuItem ? root.activeSubMenuItem.x + 8 : 0
             targetR1Y: root.activeSubMenuItem ? root.activeSubMenuItem.y + 2 : 0
             targetR1W: root.activeSubMenuItem ? root.activeSubMenuItem.width : 0
             targetR1H: root.activeSubMenuItem ? root.activeSubMenuItem.height : 0
-            
+
             targetR2X: (root.activeSubMenuItem && root.childMenu) ? root.activeSubMenuItem.x + 8 + root.activeSubMenuItem.width : targetR1X
             targetR2Y: targetR1Y
             // Ensure childMenu base dimensions are mapped securely
             targetR2W: (root.childMenu && root.childMenu.baseWidth) ? root.childMenu.baseWidth : 0
             targetR2H: (root.childMenu && root.childMenu.baseHeight) ? root.childMenu.baseHeight : 0
-            
+
             radius3: 0
-            blurGroupId: root.blurGroupId
+            blurGroupId: "toto"
         }
 
         MouseArea {
@@ -225,25 +229,25 @@ PopupWindow {
 
             Component.onCompleted: {
                 console.log("TrayMenu MouseArea registering to " + root.blurGroupId);
-                BlurRegistry.registerItem(root.blurGroupId, menuBgMouseArea);
             }
             Component.onDestruction: {
-                BlurRegistry.unregisterItem(root.blurGroupId, menuBgMouseArea);
                 if (containsMouse && tray) {
                     tray.menuHoverCount--;
                 }
             }
-            // Extremely critical: if the parent tray's expanded state collapses, the Wayland anchor X coordinate 
+            // Extremely critical: if the parent tray's expanded state collapses, the Wayland anchor X coordinate
             // recalculates instantly. If this shifts the fading surface under the user's cursor again, it creates an infinite feedback loop!
             enabled: tray ? tray.expanded : true
-            
+
             onContainsMouseChanged: {
                 if (tray) {
-                    if (containsMouse) tray.menuHoverCount++;
-                    else tray.menuHoverCount--;
+                    if (containsMouse)
+                        tray.menuHoverCount++;
+                    else
+                        tray.menuHoverCount--;
                 }
             }
-            
+
             acceptedButtons: Qt.NoButton
 
             ColumnLayout {
@@ -252,9 +256,9 @@ PopupWindow {
                 anchors.top: parent.top
                 anchors.leftMargin: 8
                 spacing: isSubmenu ? 2 : 0
-                
+
                 opacity: 1.0
-                
+
                 NumberAnimation {
                     id: menuContentFadeIn
                     target: menuContent
@@ -264,7 +268,7 @@ PopupWindow {
                     duration: Theme.animationDurationFast
                     easing.type: Easing.OutQuad
                 }
-                
+
                 Connections {
                     target: root
                     function onMenuModelChanged() {
@@ -274,16 +278,16 @@ PopupWindow {
                         }
                     }
                 }
-                
+
                 Repeater {
                     model: menuOpener.children
 
                     delegate: Item {
                         id: menuItem
                         required property var modelData
-                        
+
                         property bool itemHovered: itemMouse.containsMouse
-                        
+
                         Layout.fillWidth: true
                         implicitHeight: modelData.isSeparator ? 9 : Math.max(isSubmenu ? 24 : 32, menuLabel.implicitHeight + 8)
                         implicitWidth: Math.max(180, menuLabel.implicitWidth + 56)
@@ -346,7 +350,7 @@ PopupWindow {
                                 maximumLineCount: 3
                                 elide: Text.ElideRight
                             }
-                            
+
                             StyledText {
                                 text: "›"
                                 font.pixelSize: 13
@@ -372,7 +376,7 @@ PopupWindow {
                                     closeSubmenuTimer.restart();
                                 }
                             }
-                            
+
                             onClicked: {
                                 if (!modelData.hasChildren) {
                                     modelData.triggered();
@@ -395,7 +399,7 @@ PopupWindow {
     Loader {
         id: childMenuLoader
     }
-    
+
     // Provide a proxy property to reference the active child menu for anchors/sizing
     // MUST be var, because TrayMenu is a PopupWindow (Wayland Window), not a QQuickItem!
     property var childMenu: childMenuLoader.item
@@ -412,10 +416,11 @@ PopupWindow {
                     "parentMenu": root,
                     "parentWindow": root.parentWindow,
                     "sourceItem": null,
-                    "menuModel": null
+                    "menuModel": null,
+                    "blurGroupId": root.blurGroupId
                 });
             }
-            
+
             // Apply the properties on the next frame so it naturally triggers the fade IN animation!
             Qt.callLater(() => {
                 if (childMenuLoader.item) {

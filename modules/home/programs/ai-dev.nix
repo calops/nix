@@ -16,11 +16,19 @@
         type = "http";
         url = "https://api.githubcopilot.com/mcp/";
       };
+      context7 = {
+        type = "http";
+        url = "https://mcp.context7.com/mcp/oauth";
+      };
+      notion = {
+        type = "http";
+        url = "https://mcp.notion.com/mcp";
+      };
     };
   };
 
   programs.mcp = {
     enable = true;
-    servers.linear.url = "https://mcp.linear.app/mcp";
+    servers.context7.url = "https://mcp.context7.com/mcp/oauth";
   };
 }

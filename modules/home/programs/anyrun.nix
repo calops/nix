@@ -12,7 +12,10 @@ let
   palette = config.my.colors.palette.asRgbIntTuple;
 in
 {
-  imports = [ inputs.anyrun.homeManagerModules.default ];
+  imports = [
+    inputs.anyrun.homeManagerModules.default
+    inputs.kidex.homeModules.kidex
+  ];
   disabledModules = [ "${modulesPath}/programs/anyrun.nix" ];
 
   config = lib.mkIf (config.my.roles.graphical.enable && pkgs.stdenv.isLinux) {
@@ -23,14 +26,17 @@ in
       config = {
         y.fraction = 0.3;
         plugins = [
+          # Prefixed plugins come first
+          anyrunPkgs.nix-run
+
+          anyrunPkgs.actions
           anyrunPkgs.niri-focus
           anyrunPkgs.rink
           anyrunPkgs.applications
           anyrunPkgs.shell
           anyrunPkgs.dictionary
-          anyrunPkgs.symbols
           anyrunPkgs.translate
-          anyrunPkgs.nix-run
+          anyrunPkgs.kidex
         ];
       };
 
@@ -94,5 +100,7 @@ in
           )
         '';
     };
+
+    services.kidex.enable = true;
   };
 }

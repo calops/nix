@@ -228,11 +228,15 @@ in
 
             layer-rule {
               match namespace="quickshell"
-
               background-effect {
                 xray false
                 blur true
               }
+            }
+
+            layer-rule {
+              match namespace="niri-backdrop"
+              place-within-backdrop true
             }
           '';
     };

@@ -19,7 +19,10 @@ Item {
     height: workspaceColumn.height
 
     Behavior on width {
-        NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad }
+        NumberAnimation {
+            duration: Theme.animationDuration
+            easing.type: Easing.OutQuad
+        }
     }
 
     // --- Hover detection ---
@@ -47,18 +50,35 @@ Item {
         State {
             name: "expanded"
             when: root.expanded
-            PropertyChanges { target: backdrop; opacity: 1.0 }
+            PropertyChanges {
+                target: backdrop
+                opacity: 1.0
+            }
         }
     ]
 
     transitions: [
         Transition {
-            from: "*"; to: "expanded"
-            NumberAnimation { target: backdrop; property: "opacity"; to: 1.0; duration: Theme.animationDuration; easing.type: Easing.OutQuad }
+            from: "*"
+            to: "expanded"
+            NumberAnimation {
+                target: backdrop
+                property: "opacity"
+                to: 1.0
+                duration: Theme.animationDuration
+                easing.type: Easing.OutQuad
+            }
         },
         Transition {
-            from: "expanded"; to: "*"
-            NumberAnimation { target: backdrop; property: "opacity"; to: 0.0; duration: Theme.animationDurationOut; easing.type: Easing.InQuad }
+            from: "expanded"
+            to: "*"
+            NumberAnimation {
+                target: backdrop
+                property: "opacity"
+                to: 0.0
+                duration: Theme.animationDurationOut
+                easing.type: Easing.InQuad
+            }
         }
     ]
 
@@ -86,16 +106,21 @@ Item {
                 // Mirror cursor y with the same animation as the ShaderEffect
                 property real targetY: {
                     var sorted = Niri.sortedWorkspaces();
-                    if (!sorted || sorted.length === 0 || !Niri.focusedWorkspace) return 0;
+                    if (!sorted || sorted.length === 0 || !Niri.focusedWorkspace)
+                        return 0;
                     var idx = sorted.findIndex(w => w.id === Niri.focusedWorkspace.id);
-                    if (idx < 0) idx = 0;
+                    if (idx < 0)
+                        idx = 0;
                     return idx * 32;
                 }
 
                 y: targetY
 
                 Behavior on y {
-                    NumberAnimation { duration: 350; easing.type: Easing.OutCubic }
+                    NumberAnimation {
+                        duration: 350
+                        easing.type: Easing.OutCubic
+                    }
                 }
 
                 // Radius property required by BlurRegistry/Region
@@ -106,8 +131,10 @@ Item {
                 property string blurGroupId: ""
 
                 function findBlurGroupId(node) {
-                    if (!node) return "";
-                    if (node.blurGroupId) return node.blurGroupId;
+                    if (!node)
+                        return "";
+                    if (node.blurGroupId)
+                        return node.blurGroupId;
                     return findBlurGroupId(node.parent);
                 }
 
@@ -129,14 +156,17 @@ Item {
                 ShaderEffect {
                     id: glassEffect
                     anchors.fill: parent
-                    
+
                     property variant source: null
                     property real radius: 16.0
 
                     // Alpha: subtle when collapsed, fully opaque when expanded
                     property real cursorAlpha: root.expanded ? 0.75 : 0.45
                     Behavior on cursorAlpha {
-                        NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad }
+                        NumberAnimation {
+                            duration: Theme.animationDuration
+                            easing.type: Easing.OutQuad
+                        }
                     }
 
                     property color baseColor: Colors.alpha(Colors.palette.peach, cursorAlpha)
@@ -144,15 +174,15 @@ Item {
                     property real uHeight: height
 
                     // Multi-shape defaults (silence warnings)
-                    property rect rect1: Qt.rect(0,0,0,0)
-                    property rect rect2: Qt.rect(0,0,0,0)
-                    property rect rect3: Qt.rect(0,0,0,0)
+                    property rect rect1: Qt.rect(0, 0, 0, 0)
+                    property rect rect2: Qt.rect(0, 0, 0, 0)
+                    property rect rect3: Qt.rect(0, 0, 0, 0)
                     property real radius1: 0
                     property real radius2: 0
                     property real radius3: 0
                     property real smoothness: 0
 
-                    fragmentShader: Shaders.get("glass") ? "file://" + Shaders.get("glass") : ""
+                    fragmentShader: Shaders.get("glass")
                 }
             }
 
@@ -189,12 +219,18 @@ Item {
                             font.pixelSize: 16
 
                             color: {
-                                if (wsItem.isActive)       return Colors.palette.base;
-                                if (wma.containsMouse)     return Colors.palette.teal;
+                                if (wsItem.isActive)
+                                    return Colors.palette.base;
+                                if (wma.containsMouse)
+                                    return Colors.palette.teal;
                                 return Colors.palette.subtext0;
                             }
 
-                            Behavior on color { ColorAnimation { duration: Theme.animationDurationFast } }
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: Theme.animationDurationFast
+                                }
+                            }
                         }
                     }
                 }
@@ -210,7 +246,10 @@ Item {
 
             opacity: root.expanded ? 1.0 : 0.0
             Behavior on opacity {
-                NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad }
+                NumberAnimation {
+                    duration: Theme.animationDuration
+                    easing.type: Easing.OutQuad
+                }
             }
 
             // One row per workspace, vertically aligned with its icon

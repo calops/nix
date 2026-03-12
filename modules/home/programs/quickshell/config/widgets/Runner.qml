@@ -156,10 +156,7 @@ Singleton {
                 readonly property real separatorHeight: 17
                 readonly property real emptyStateHeight: 68
 
-                property real contentHeight: (!root.runnerVisible || isExiting) ? 0
-                    : baseHeight
-                    + (resultsCount > 0 ? resultsList.contentHeight + separatorHeight : 0)
-                    + (resultsCount === 0 && searchInput.text !== "" ? emptyStateHeight : 0)
+                property real contentHeight: (!root.runnerVisible || isExiting) ? 0 : baseHeight + (resultsCount > 0 ? resultsList.contentHeight + separatorHeight : 0) + (resultsCount === 0 && searchInput.text !== "" ? emptyStateHeight : 0)
 
                 property real targetBackgroundHeight: 0
 
@@ -196,7 +193,7 @@ Singleton {
                     ShaderEffect {
                         id: glassEffect
                         anchors.fill: parent
-                        
+
                         property variant source: null
                         property real radius: parent.radius
                         property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
@@ -204,15 +201,15 @@ Singleton {
                         property real uHeight: height
 
                         // Multi-shape defaults (silence warnings)
-                        property rect rect1: Qt.rect(0,0,0,0)
-                        property rect rect2: Qt.rect(0,0,0,0)
-                        property rect rect3: Qt.rect(0,0,0,0)
+                        property rect rect1: Qt.rect(0, 0, 0, 0)
+                        property rect rect2: Qt.rect(0, 0, 0, 0)
+                        property rect rect3: Qt.rect(0, 0, 0, 0)
                         property real radius1: 0
                         property real radius2: 0
                         property real radius3: 0
                         property real smoothness: 0
 
-                        fragmentShader: Shaders.get("glass") ? "file://" + Shaders.get("glass") : ""
+                        fragmentShader: Shaders.get("glass")
 
                         layer.enabled: true
                         layer.effect: MultiEffect {

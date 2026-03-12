@@ -46,6 +46,10 @@
     anyrun.url = "github:Kirottu/anyrun";
     anyrun.inputs.nixpkgs.follows = "nixpkgs";
 
+    # File indexer
+    kidex.url = "github:Kirottu/kidex";
+    kidex.inputs.nixpkgs.follows = "nixpkgs";
+
     # Vencord settings module (discord mod)
     nixcord.url = "github:kaylorben/nixcord";
     nixcord.inputs.nixpkgs.follows = "nixpkgs";

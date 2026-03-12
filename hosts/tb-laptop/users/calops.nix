@@ -36,7 +36,7 @@
 
         user = {
           name = "Rémi Labeyrie";
-          email = "remilabeyrie@terabase.energy";
+          email = "rlabeyrie@terabase.energy";
           signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIK4tZxLZ9PwBd0IrOhzSFMlqW5aB9sKboCszPya4B7n";
         };
       };

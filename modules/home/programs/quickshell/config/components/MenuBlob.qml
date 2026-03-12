@@ -13,21 +13,25 @@ ShaderEffect {
 
     property bool expanded: false
     property bool allowsAnimation: false
-    
+
     property string blurGroupId: ""
-    
+
     // Visually bound to opacity so animations pause when fully invisible
     visible: opacity > 0
     Behavior on opacity {
-        NumberAnimation { 
+        NumberAnimation {
             duration: root.expanded ? Theme.animationDurationFast : Theme.animationDurationOut
-            easing.type: root.expanded ? Easing.OutQuad : Easing.InQuad 
+            easing.type: root.expanded ? Easing.OutQuad : Easing.InQuad
         }
     }
-    
+
     onVisibleChanged: {
-        if (visible) Qt.callLater(() => { allowsAnimation = true; });
-        else allowsAnimation = false;
+        if (visible)
+            Qt.callLater(() => {
+                allowsAnimation = true;
+            });
+        else
+            allowsAnimation = false;
         syncBlurRegistration();
     }
 
@@ -47,26 +51,80 @@ ShaderEffect {
     property real cachedR1Y: 0
     property real cachedR1W: 0
     property real cachedR1H: 0
-    
+
     property real cachedR2X: 0
     property real cachedR2Y: 0
     property real cachedR2W: 0
     property real cachedR2H: 0
 
     // Keep cache updated while expanded
-    onTargetR1XChanged: { if (expanded) { cachedR1X = targetR1X; } else if (!allowsAnimation) { cachedR1X = targetR1X; } }
-    onTargetR1YChanged: { if (expanded) { cachedR1Y = targetR1Y; } else if (!allowsAnimation) { cachedR1Y = targetR1Y; } }
-    onTargetR1WChanged: { if (expanded) { cachedR1W = targetR1W; } else if (!allowsAnimation) { cachedR1W = targetR1W; } }
-    onTargetR1HChanged: { if (expanded) { cachedR1H = targetR1H; } else if (!allowsAnimation) { cachedR1H = targetR1H; } }
-    onTargetR2XChanged: { if (expanded) { cachedR2X = targetR2X; } else if (!allowsAnimation) { cachedR2X = targetR2X; } }
-    onTargetR2YChanged: { if (expanded) { cachedR2Y = targetR2Y; } else if (!allowsAnimation) { cachedR2Y = targetR2Y; } }
-    onTargetR2WChanged: { if (expanded) { cachedR2W = targetR2W; } else if (!allowsAnimation) { cachedR2W = targetR2W; } }
-    onTargetR2HChanged: { if (expanded) { cachedR2H = targetR2H; } else if (!allowsAnimation) { cachedR2H = targetR2H; } }
+    onTargetR1XChanged: {
+        if (expanded) {
+            cachedR1X = targetR1X;
+        } else if (!allowsAnimation) {
+            cachedR1X = targetR1X;
+        }
+    }
+    onTargetR1YChanged: {
+        if (expanded) {
+            cachedR1Y = targetR1Y;
+        } else if (!allowsAnimation) {
+            cachedR1Y = targetR1Y;
+        }
+    }
+    onTargetR1WChanged: {
+        if (expanded) {
+            cachedR1W = targetR1W;
+        } else if (!allowsAnimation) {
+            cachedR1W = targetR1W;
+        }
+    }
+    onTargetR1HChanged: {
+        if (expanded) {
+            cachedR1H = targetR1H;
+        } else if (!allowsAnimation) {
+            cachedR1H = targetR1H;
+        }
+    }
+    onTargetR2XChanged: {
+        if (expanded) {
+            cachedR2X = targetR2X;
+        } else if (!allowsAnimation) {
+            cachedR2X = targetR2X;
+        }
+    }
+    onTargetR2YChanged: {
+        if (expanded) {
+            cachedR2Y = targetR2Y;
+        } else if (!allowsAnimation) {
+            cachedR2Y = targetR2Y;
+        }
+    }
+    onTargetR2WChanged: {
+        if (expanded) {
+            cachedR2W = targetR2W;
+        } else if (!allowsAnimation) {
+            cachedR2W = targetR2W;
+        }
+    }
+    onTargetR2HChanged: {
+        if (expanded) {
+            cachedR2H = targetR2H;
+        } else if (!allowsAnimation) {
+            cachedR2H = targetR2H;
+        }
+    }
 
     onExpandedChanged: {
         if (expanded) {
-            cachedR1X = targetR1X; cachedR1Y = targetR1Y; cachedR1W = targetR1W; cachedR1H = targetR1H;
-            cachedR2X = targetR2X; cachedR2Y = targetR2Y; cachedR2W = targetR2W; cachedR2H = targetR2H;
+            cachedR1X = targetR1X;
+            cachedR1Y = targetR1Y;
+            cachedR1W = targetR1W;
+            cachedR1H = targetR1H;
+            cachedR2X = targetR2X;
+            cachedR2Y = targetR2Y;
+            cachedR2W = targetR2W;
+            cachedR2H = targetR2H;
         }
     }
 
@@ -85,17 +143,44 @@ ShaderEffect {
     property rect rect1: Qt.rect(r1x, r1y, r1w, r1h)
     Behavior on rect1 {
         enabled: root.allowsAnimation
-        PropertyAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad }
+        PropertyAnimation {
+            duration: Theme.animationDurationFast
+            easing.type: Easing.OutQuad
+        }
     }
 
-    Behavior on r2x { enabled: root.allowsAnimation; PropertyAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
-    Behavior on r2y { enabled: root.allowsAnimation; PropertyAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
-    Behavior on r2w { enabled: root.allowsAnimation; PropertyAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
-    Behavior on r2h { enabled: root.allowsAnimation; PropertyAnimation { duration: Theme.animationDurationFast; easing.type: Easing.OutQuad } }
+    Behavior on r2x {
+        enabled: root.allowsAnimation
+        PropertyAnimation {
+            duration: Theme.animationDurationFast
+            easing.type: Easing.OutQuad
+        }
+    }
+    Behavior on r2y {
+        enabled: root.allowsAnimation
+        PropertyAnimation {
+            duration: Theme.animationDurationFast
+            easing.type: Easing.OutQuad
+        }
+    }
+    Behavior on r2w {
+        enabled: root.allowsAnimation
+        PropertyAnimation {
+            duration: Theme.animationDurationFast
+            easing.type: Easing.OutQuad
+        }
+    }
+    Behavior on r2h {
+        enabled: root.allowsAnimation
+        PropertyAnimation {
+            duration: Theme.animationDurationFast
+            easing.type: Easing.OutQuad
+        }
+    }
 
     property rect rect2: Qt.rect(r2x, r2y, r2w, r2h)
     property rect rect3: Qt.rect(0, 0, 0, 0)
-    
+
     // Bubble styles
     property real radius1: 8
     property real radius2: 10
@@ -107,7 +192,7 @@ ShaderEffect {
     property real uWidth: width
     property real uHeight: height
 
-    fragmentShader: Shaders.get("glass") ? "file://" + Shaders.get("glass") : ""
+    fragmentShader: Shaders.get("glass")
 
     layer.enabled: true
     layer.effect: MultiEffect {
@@ -125,19 +210,42 @@ ShaderEffect {
 
     // --- Blur Registration ---
     // Extract individual rectangles into items for BlurRegistry
-    Item { id: _r1item; x: root.r1x; y: root.r1y; width: root.r1w; height: root.r1h; visible: width > 0 && height > 0; property real radius: root.radius1 }
-    Item { id: _r2item; x: root.r2x; y: root.r2y; width: root.r2w; height: root.r2h; visible: width > 0 && height > 0; property real radius: root.radius2 }
-    Item { id: _r3item; x: root.rect3.x; y: root.rect3.y; width: root.rect3.width; height: root.rect3.height; visible: width > 0 && height > 0; property real radius: root.radius3 }
-    
+    Item {
+        id: _r1item
+        x: root.r1x
+        y: root.r1y
+        width: root.r1w
+        height: root.r1h
+        visible: width > 0 && height > 0
+        property real radius: root.radius1
+    }
+    Item {
+        id: _r2item
+        x: root.r2x
+        y: root.r2y
+        width: root.r2w
+        height: root.r2h
+        visible: width > 0 && height > 0
+        property real radius: root.radius2
+    }
+    Item {
+        id: _r3item
+        x: root.rect3.x
+        y: root.rect3.y
+        width: root.rect3.width
+        height: root.rect3.height
+        visible: width > 0 && height > 0
+        property real radius: root.radius3
+    }
+
     function syncBlurRegistration() {
-        if (!blurGroupId) return;
+        if (!blurGroupId)
+            return;
         if (opacity > 0.05 && root.visible) {
-            console.log("MenuBlob registering to " + blurGroupId);
             BlurRegistry.registerItem(blurGroupId, _r1item);
             BlurRegistry.registerItem(blurGroupId, _r2item);
             BlurRegistry.registerItem(blurGroupId, _r3item);
         } else {
-            console.log("MenuBlob unregistering from " + blurGroupId);
             BlurRegistry.unregisterItem(blurGroupId, _r1item);
             BlurRegistry.unregisterItem(blurGroupId, _r2item);
             BlurRegistry.unregisterItem(blurGroupId, _r3item);

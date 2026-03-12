@@ -5,24 +5,19 @@ import Quickshell
 
 Singleton {
     id: root
-    
+
     readonly property string dir: "/home/calops/.config/quickshell/assets/shaders"
-    
+
     // Explicit list of shaders to manage
     // This is still much cleaner than duplicating ShaderCompiler blocks
-    readonly property var shaderList: [
-        "backdrop",
-        "glass",
-        "curves",
-        "fractal"
-    ]
+    readonly property var shaderList: ["backdrop", "glass", "curves", "fractal"]
 
     // A map of shader names to their results
     property var all: ({})
     property var readyStates: ({})
 
     function get(name) {
-        return all[name] || "";
+        return all[name] ? ("file://" + all[name]) : "";
     }
 
     function isReady(name) {
@@ -35,7 +30,7 @@ Singleton {
             required property string modelData
             name: modelData
             sourceFile: root.dir + "/" + modelData + ".frag"
-            
+
             Component.onCompleted: {
                 console.log("ShaderCompiler initialized for: " + name);
             }
@@ -43,13 +38,17 @@ Singleton {
             onCompiledPathChanged: {
                 if (compiledPath !== "") {
                     console.log("Shader compiled: " + name + " -> " + compiledPath);
-                    root.all = Object.assign({}, root.all, { [name]: compiledPath });
+                    root.all = Object.assign({}, root.all, {
+                        [name]: compiledPath
+                    });
                 }
             }
-            
+
             onReadyChanged: {
                 console.log("Shader ready: " + name + " = " + ready);
-                root.readyStates = Object.assign({}, root.readyStates, { [name]: ready });
+                root.readyStates = Object.assign({}, root.readyStates, {
+                    [name]: ready
+                });
             }
         }
     }

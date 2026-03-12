@@ -4,7 +4,7 @@ import "../services"
 
 Item {
     id: root
-    
+
     // Default opacity from widget bindings
     opacity: 0.0
     property string blurGroupId: ""
@@ -13,7 +13,7 @@ Item {
     ShaderEffect {
         id: bgRect
         anchors.fill: parent
-        
+
         property variant source: null
         property real radius: root.radius
         // Passing baseColor with alpha so the shader can determine transparency
@@ -22,18 +22,18 @@ Item {
         property real uHeight: height
 
         // Multi-shape defaults (silence warnings)
-        property rect rect1: Qt.rect(0,0,0,0)
-        property rect rect2: Qt.rect(0,0,0,0)
-        property rect rect3: Qt.rect(0,0,0,0)
+        property rect rect1: Qt.rect(0, 0, 0, 0)
+        property rect rect2: Qt.rect(0, 0, 0, 0)
+        property rect rect3: Qt.rect(0, 0, 0, 0)
         property real radius1: 0
         property real radius2: 0
         property real radius3: 0
         property real smoothness: 0
-        
+
         // This opacity determines the overall visible alpha of the entire effect over the background
         opacity: 1.0
 
-        fragmentShader: Shaders.get("glass") ? "file://" + Shaders.get("glass") : ""
+        fragmentShader: Shaders.get("glass")
 
         layer.enabled: true
         layer.effect: MultiEffect {
@@ -47,14 +47,17 @@ Item {
     }
 
     function findBlurGroupId(node) {
-        if (!node) return "";
-        if (node.blurGroupId) return node.blurGroupId;
+        if (!node)
+            return "";
+        if (node.blurGroupId)
+            return node.blurGroupId;
         return findBlurGroupId(node.parent);
     }
 
     function syncBlurRegistration() {
-        if (!blurGroupId) return;
-        // Use 0.05 instead of > 0.0 to prevent floating-point NumberAnimation 
+        if (!blurGroupId)
+            return;
+        // Use 0.05 instead of > 0.0 to prevent floating-point NumberAnimation
         // lingering bugs from permanently keeping the blur region registered.
         if (opacity > 0.05) {
             BlurRegistry.registerItem(blurGroupId, root);
