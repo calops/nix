@@ -115,6 +115,18 @@ Item {
         opacity: (activePlayer !== null && (root.hovered || Niri.overviewActive || reactive.active)) ? 1.0 : 0.0
         imageSource: root.activePlayer ? root.activePlayer.trackArtUrl : ""
 
+        // Legibility Gradient
+        Rectangle {
+            anchors.fill: parent
+            opacity: parent.opacity
+            gradient: Gradient {
+                GradientStop { position: 0.0; color: Colors.alpha(Colors.dark.base, 0.8) }
+                GradientStop { position: 0.4; color: Colors.alpha(Colors.dark.base, 0.2) }
+                GradientStop { position: 0.7; color: "transparent" }
+                GradientStop { position: 1.0; color: Colors.alpha(Colors.dark.base, 0.4) }
+            }
+        }
+
         Behavior on opacity {
             NumberAnimation {
                 duration: background.opacity > 0 ? Theme.animationDuration : Theme.animationDurationOut
@@ -189,7 +201,7 @@ Item {
                             // Smooth scaling without minimum width for seamless silence
                             width: scaledFreq * 46
                             radius: 1
-                            color: "white"
+                            color: Colors.palette.text
 
                             Behavior on width {
                                 NumberAnimation {
@@ -211,19 +223,20 @@ Item {
             clip: true
             opacity: root.width > iconWidth ? (root.width - iconWidth) / (expandedWidth - iconWidth) : 0
 
-            RowLayout {
+            ColumnLayout {
                 anchors.fill: parent
                 anchors.leftMargin: 12
-                anchors.rightMargin: 8
-                spacing: 12
+                anchors.rightMargin: 12
+                anchors.topMargin: 12
+                anchors.bottomMargin: 12
+                spacing: 0
                 visible: opacity > 0
 
-                // Metadata and Controls
+                // Metadata at the Top
                 ColumnLayout {
                     Layout.fillWidth: true
-                    Layout.alignment: Qt.AlignVCenter
-                    spacing: 4
-
+                    spacing: 2
+                    
                     StyledText {
                         text: root.activePlayer ? root.activePlayer.trackTitle : "No Media"
                         font.pixelSize: 14
@@ -238,76 +251,66 @@ Item {
                         color: Colors.palette.subtext0
                         Layout.fillWidth: true
                         elide: Text.ElideRight
+                        opacity: 0.9
+                    }
+                }
+
+                Item { Layout.fillHeight: true }
+
+                // Centered Playback Buttons
+                RowLayout {
+                    Layout.alignment: Qt.AlignHCenter
+                    spacing: 12
+                    Layout.bottomMargin: 12
+
+                    GlassIconButton {
+                        Layout.preferredWidth: 40
+                        Layout.preferredHeight: 32
+                        icon: "󰒮" // Previous
+                        iconSize: 16
+                        enabled: root.activePlayer && root.activePlayer.canGoPrevious
+                        opacity: enabled ? 1.0 : 0.3
+                        onClicked: if (root.activePlayer) root.activePlayer.previous()
                     }
 
-                    Item {
-                        Layout.fillHeight: true
-                        Layout.preferredHeight: 4
-                    }
-
-                    // Progress Slider
-                    ProgressBar {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 12
-                        value: root.progress
-                        color: Colors.palette.mauve
-                        trackHeight: 4
-                        handleSize: 10
-                        onMoved: val => {
-                            if (root.activePlayer && root.activePlayer.canSeek) {
-                                root.activePlayer.position = val * root.duration;
-                            }
+                    GlassIconButton {
+                        Layout.preferredWidth: 48
+                        Layout.preferredHeight: 38
+                        isActive: true
+                        icon: root.activePlayer && root.activePlayer.playbackState === MprisPlaybackState.Playing ? "󰏤" : "󰐊" // Play/Pause
+                        iconSize: 20
+                        enabled: root.activePlayer !== null
+                        onClicked: {
+                            if (!root.activePlayer) return;
+                            if (root.activePlayer.playbackState === MprisPlaybackState.Playing)
+                                root.activePlayer.pause();
+                            else
+                                root.activePlayer.play();
                         }
                     }
 
-                    Row {
-                        Layout.alignment: Qt.AlignHCenter
-                        spacing: 20
-                        Layout.topMargin: 2
+                    GlassIconButton {
+                        Layout.preferredWidth: 40
+                        Layout.preferredHeight: 32
+                        icon: "󰒭" // Next
+                        iconSize: 16
+                        enabled: root.activePlayer && root.activePlayer.canGoNext
+                        opacity: enabled ? 1.0 : 0.3
+                        onClicked: if (root.activePlayer) root.activePlayer.next()
+                    }
+                }
 
-                        // Previous
-                        Image {
-                            source: Quickshell.iconPath("media-skip-backward", 20)
-                            width: 20
-                            height: 20
-                            opacity: root.activePlayer && root.activePlayer.canGoPrevious ? 1.0 : 0.3
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: if (root.activePlayer)
-                                    root.activePlayer.previous()
-                            }
-                        }
-
-                        // Play/Pause
-                        Image {
-                            source: Quickshell.iconPath(root.activePlayer && root.activePlayer.playbackState === MprisPlaybackState.Playing ? "media-playback-pause" : "media-playback-start", 24)
-                            width: 24
-                            height: 24
-                            opacity: root.activePlayer ? 1.0 : 0.3
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    if (!root.activePlayer)
-                                        return;
-                                    if (root.activePlayer.playbackState === MprisPlaybackState.Playing)
-                                        root.activePlayer.pause();
-                                    else
-                                        root.activePlayer.play();
-                                }
-                            }
-                        }
-
-                        // Next
-                        Image {
-                            source: Quickshell.iconPath("media-skip-forward", 20)
-                            width: 20
-                            height: 20
-                            opacity: root.activePlayer && root.activePlayer.canGoNext ? 1.0 : 0.3
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: if (root.activePlayer)
-                                    root.activePlayer.next()
-                            }
+                // Full-width Seeker Bar
+                ProgressBar {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 12
+                    value: root.progress
+                    color: Colors.palette.mauve
+                    trackHeight: 4
+                    handleSize: 10
+                    onMoved: val => {
+                        if (root.activePlayer && root.activePlayer.canSeek) {
+                            root.activePlayer.position = val * root.duration;
                         }
                     }
                 }

@@ -139,78 +139,24 @@ Item {
                             { icon: "", name: "Perf.", profile: PowerProfile.Performance, color: Colors.dark.red }
                         ]
                         
-                        Rectangle {
-                            id: button
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 36
-                            radius: 8
-
-                            
-                            readonly property bool isActive: root.profileStepIndex === index
-                            property bool isHovered: btnMouseArea.containsMouse
-                            
-                            // Glass Neumorphic Base
-                            color: Colors.alpha("#ffffff", isActive ? 0.2 : (isHovered ? 0.22 : 0.08))
-                            
-                            // Define the glass edges with a subtle white border
-                            Rectangle {
-                                anchors.fill: parent
-                                radius: parent.radius
-                                color: "transparent"
-                                border.width: 1
-                                border.color: Colors.alpha("#ffffff", isActive ? 0.15 : (isHovered ? 0.45 : 0.25))
-                            }
-
-                            // True Neumorphic Relief (LIGHT-ONLY SHEBANG)
-                            Rectangle {
-                                anchors.fill: parent
-                                radius: parent.radius
-                                opacity: 0.5
-                                gradient: Gradient {
-                                    // Inactive (Raised): Bright Top, Soft White Bottom
-                                    // Active (Inset): Soft White Top, Bright Bottom
-                                    GradientStop { 
-                                        position: 0.0
-                                        color: button.isActive ? Colors.alpha("#ffffff", 0.1) : Colors.alpha("#ffffff", 0.8) 
-                                    }
-                                    GradientStop { position: 0.5; color: "transparent" }
-                                    GradientStop { 
-                                        position: 1.0
-                                        color: button.isActive ? Colors.alpha("#ffffff", 0.8) : Colors.alpha("#ffffff", 0.1) 
-                                    }
-                                }
-                            }
-                            
-                            Column {
-                                anchors.centerIn: parent
-                                spacing: 0
-                                
-                                StyledText {
-                                    text: modelData.icon
-                                    font.pixelSize: 14
-                                    color: button.isActive ? modelData.color : Colors.dark.text
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
-                                }
-                                
-                                StyledText {
-                                    text: modelData.name
-                                    font.pixelSize: 8
-                                    color: button.isActive ? modelData.color : Colors.dark.text
-                                    anchors.horizontalCenter: parent.horizontalCenter
-                                    opacity: 0.8
-                                    Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
-                                }
-                            }
-                            
-                            MouseArea {
-                                id: btnMouseArea
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                onClicked: PowerProfiles.profile = modelData.profile
-                            }
-                            Behavior on color { ColorAnimation { duration: Theme.animationDurationFast } }
+                    GlassIconButton {
+                        icon: modelData.icon
+                        isActive: root.profileStepIndex === index
+                        iconColor: isActive ? modelData.color : Colors.dark.text
+                        onClicked: PowerProfiles.profile = modelData.profile
+                        
+                        // Addition for the "Bal. / Power / Perf" labels
+                        StyledText {
+                            anchors.bottom: parent.bottom
+                            anchors.bottomMargin: 4
+                            anchors.horizontalCenter: parent.horizontalCenter
+                            text: modelData.name
+                            font.pixelSize: 8
+                            color: parent.isActive ? modelData.color : Colors.dark.text
+                            opacity: 0.8
+                            Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
                         }
+                    }
                     }
                 }
 
