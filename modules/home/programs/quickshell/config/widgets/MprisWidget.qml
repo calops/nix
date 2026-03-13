@@ -164,7 +164,7 @@ Item {
                         // Use Math.sqrt to boost smaller values for better visual response
                         readonly property real scaledFreq: Math.sqrt(frequency) * envelope
                         
-                        width: 4 + (scaledFreq * 42)
+                        width: scaledFreq > 0 ? 4 + (scaledFreq * 42) : 0
                         radius: 1
                         color: "white"
 
