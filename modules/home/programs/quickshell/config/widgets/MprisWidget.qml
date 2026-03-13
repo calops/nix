@@ -19,7 +19,7 @@ Item {
     Behavior on width {
         NumberAnimation {
             id: widthAnim
-            duration: 400
+            duration: root.width > iconWidth ? Theme.animationDuration : Theme.animationDurationOut
             easing.type: Easing.OutQuad
         }
     }
@@ -98,6 +98,13 @@ Item {
         anchors.leftMargin: 6
         opacity: root.hovered || Niri.overviewActive ? 1.0 : 0.0
         imageSource: root.activePlayer ? root.activePlayer.trackArtUrl : ""
+
+        Behavior on opacity {
+            NumberAnimation {
+                duration: background.opacity > 0 ? Theme.animationDuration : Theme.animationDurationOut
+                easing.type: Easing.Linear
+            }
+        }
     }
 
     MouseArea {
