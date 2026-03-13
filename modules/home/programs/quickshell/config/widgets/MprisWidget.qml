@@ -130,49 +130,55 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: 0
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 2
+                spacing: 0
 
                 Repeater {
                     id: barsRepeater
                     property int barCount: Math.floor(equalizerContainer.height / 4)
                     model: barCount
-                    Rectangle {
-                        id: bar
-                        height: 2
-                        anchors.right: parent.right
+                    Item {
+                        width: iconWidth
+                        height: 4
 
-                        // Total number of bars from the Repeater
-                        readonly property int total: barsRepeater.barCount
-                        
-                        // Normalized position (0.0 to 1.0) for the envelope
-                        readonly property real normPos: index / (total - 1)
-                        
-                        // Dynamic envelope power that expands/contracts with intensity
-                        readonly property real envelopePower: 1.2 + (root.intensity * 2.5)
-                        readonly property real envelope: 1.0 - Math.pow(Math.abs(normPos - 0.5) * 2, envelopePower)
+                        Rectangle {
+                            id: bar
+                            height: 2
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
 
-                        // Real Frequency Data from Cava
-                        // Map our local bar index to the full spectrum of Cava frequencies
-                        readonly property real frequency: {
-                            let freqs = CavaService.frequencies;
-                            if (!freqs || freqs.length === 0) return 0;
-                            let cavaIndex = Math.min(Math.floor(normPos * (freqs.length - 1)), freqs.length - 1);
-                            return freqs[cavaIndex];
-                        }
+                            // Total number of bars from the Repeater
+                            readonly property int total: barsRepeater.barCount
+                            
+                            // Normalized position (0.0 to 1.0) for the envelope
+                            readonly property real normPos: index / (total - 1)
+                            
+                            // Dynamic envelope power that expands/contracts with intensity
+                            readonly property real envelopePower: 1.2 + (root.intensity * 2.5)
+                            readonly property real envelope: 1.0 - Math.pow(Math.abs(normPos - 0.5) * 2, envelopePower)
 
-                        // Final Width Calculation:
-                        // Use Math.sqrt to boost smaller values for better visual response
-                        readonly property real scaledFreq: Math.sqrt(frequency) * envelope
-                        
-                        // Smooth scaling without minimum width for seamless silence
-                        width: scaledFreq * 46
-                        radius: 1
-                        color: "white"
+                            // Real Frequency Data from Cava
+                            // Map our local bar index to the full spectrum of Cava frequencies
+                            readonly property real frequency: {
+                                let freqs = CavaService.frequencies;
+                                if (!freqs || freqs.length === 0) return 0;
+                                let cavaIndex = Math.min(Math.floor(normPos * (freqs.length - 1)), freqs.length - 1);
+                                return freqs[cavaIndex];
+                            }
 
-                        Behavior on width {
-                            NumberAnimation {
-                                duration: 50
-                                easing.type: Easing.OutCubic
+                            // Final Width Calculation:
+                            // Use Math.sqrt to boost smaller values for better visual response
+                            readonly property real scaledFreq: Math.sqrt(frequency) * envelope
+                            
+                            // Smooth scaling without minimum width for seamless silence
+                            width: scaledFreq * 46
+                            radius: 1
+                            color: "white"
+
+                            Behavior on width {
+                                NumberAnimation {
+                                    duration: 50
+                                    easing.type: Easing.OutCubic
+                                }
                             }
                         }
                     }
