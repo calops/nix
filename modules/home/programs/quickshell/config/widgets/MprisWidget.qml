@@ -41,28 +41,39 @@ Item {
         }
 
         let players = Mpris.players.values || [];
-        console.log("MPRIS: Total players:", players.length);
+        // console.log("MPRIS: Total players:", players.length);
 
         let found = null;
+        // 1. Priority: If any player is actually PLAYING, that takes immediate precedence.
         for (let i = 0; i < players.length; i++) {
             let p = players[i];
-            console.log("MPRIS: Player", i, ":", p.identity, "State:", p.playbackState, "IsPlaying:", p.isPlaying);
             if (p.playbackState === MprisPlaybackState.Playing || p.isPlaying) {
                 found = p;
                 break;
             }
         }
 
+        // 2. Sticky Logic: If no player is playing, keep the current active player if it still exists.
+        if (!found && root.activePlayer !== null) {
+            for (let i = 0; i < players.length; i++) {
+                if (players[i] === root.activePlayer) {
+                    found = root.activePlayer;
+                    break;
+                }
+            }
+        }
+
+        // 3. Fallback: If current player is gone and none are playing, pick the first available.
         if (!found && players.length > 0) {
             found = players[0];
         }
 
-        if (activePlayer !== found) {
-            activePlayer = found;
+        if (root.activePlayer !== found) {
+            root.activePlayer = found;
             if (found)
                 console.log("MPRIS: Active player changed to:", found.identity);
             else
-                console.log("MPRIS: Active player set to null");
+                console.log("MPRIS: Active player set to null (No Media)");
         }
     }
 
@@ -75,7 +86,7 @@ Item {
     }
 
     Timer {
-        interval: 2000
+        interval: 500
         running: true
         repeat: true
         onTriggered: updateActivePlayer()
