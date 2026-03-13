@@ -24,7 +24,9 @@ Item {
         }
     }
 
-    property bool hovered: mouseArea.containsMouse
+    property bool hovered: mouseArea.containsMouse || 
+                           prevBtn.hovered || playBtn.hovered || nextBtn.hovered || 
+                           seeker.containsMouse || seeker.pressed
 
     // Player Selection
     property var activePlayer: null
@@ -265,6 +267,7 @@ Item {
                     Layout.bottomMargin: 12
 
                     GlassIconButton {
+                        id: prevBtn
                         Layout.preferredWidth: 40
                         Layout.preferredHeight: 32
                         icon: "󰒮" // Previous
@@ -275,6 +278,7 @@ Item {
                     }
 
                     GlassIconButton {
+                        id: playBtn
                         Layout.preferredWidth: 48
                         Layout.preferredHeight: 38
                         isActive: true
@@ -291,6 +295,7 @@ Item {
                     }
 
                     GlassIconButton {
+                        id: nextBtn
                         Layout.preferredWidth: 40
                         Layout.preferredHeight: 32
                         icon: "󰒭" // Next
@@ -303,6 +308,7 @@ Item {
 
                 // Full-width Seeker Bar
                 ProgressBar {
+                    id: seeker
                     Layout.fillWidth: true
                     Layout.preferredHeight: 12
                     value: root.progress
