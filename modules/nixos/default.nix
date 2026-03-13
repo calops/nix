@@ -79,7 +79,7 @@
         LC_NUMERIC = "fr_FR.UTF-8";
         LC_PAPER = "fr_FR.UTF-8";
         LC_TELEPHONE = "fr_FR.UTF-8";
-        LC_TIME = "en_FR.UTF-8";
+        LC_TIME = "fr_FR.UTF-8";
       };
     };
 
