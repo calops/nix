@@ -10,7 +10,7 @@ import "../components"
 
 Item {
     id: root
-    width: hovered || Niri.overviewActive ? expandedWidth : iconWidth
+    width: (activePlayer !== null && (hovered || Niri.overviewActive || reactive.active)) ? expandedWidth : iconWidth
     height: expandedWidth // Perfectly square when expanded, constant height
 
     property int iconWidth: Theme.iconWidth
@@ -92,6 +92,11 @@ Item {
         onTriggered: updateActivePlayer()
     }
 
+    ReactiveExpansion {
+        id: reactive
+        watchValue: activePlayer ? (activePlayer.trackTitle + ":" + activePlayer.playbackState) : ""
+    }
+
     Component.onCompleted: updateActivePlayer()
 
     readonly property real duration: activePlayer ? activePlayer.length : 0
@@ -107,7 +112,7 @@ Item {
         anchors.bottomMargin: -5
         anchors.rightMargin: 0 // Flush with screen edge
         anchors.leftMargin: 6
-        opacity: root.hovered || Niri.overviewActive ? 1.0 : 0.0
+        opacity: (activePlayer !== null && (root.hovered || Niri.overviewActive || reactive.active)) ? 1.0 : 0.0
         imageSource: root.activePlayer ? root.activePlayer.trackArtUrl : ""
 
         Behavior on opacity {
@@ -122,6 +127,7 @@ Item {
         id: mouseArea
         anchors.fill: background
         hoverEnabled: true
+        enabled: activePlayer !== null
     }
 
     // Main Layout
