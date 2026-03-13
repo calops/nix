@@ -23,7 +23,10 @@ in
       package = pkgs.symlinkJoin {
         name = "quickshell";
         paths = [ perSystem.quickshell.default ];
-        nativeBuildInputs = [ pkgs.makeWrapper pkgs.qt6.qtshadertools ];
+        nativeBuildInputs = [
+          pkgs.makeWrapper
+          pkgs.qt6.qtshadertools
+        ];
         postBuild = ''
           wrapProgram $out/bin/quickshell --set QT_QPA_PLATFORMTHEME gtk3
         '';
@@ -31,6 +34,7 @@ in
     };
 
     home.packages = [
+      pkgs.cava
       pkgs.ddcutil
       pkgs.anyrun-provider
       (pkgs.writeShellScriptBin "shell" ''
