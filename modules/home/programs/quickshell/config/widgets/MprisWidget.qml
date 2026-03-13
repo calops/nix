@@ -118,6 +118,7 @@ Item {
         // Legibility Gradient
         Rectangle {
             anchors.fill: parent
+            radius: parent.radius
             opacity: parent.opacity
             gradient: Gradient {
                 GradientStop { position: 0.0; color: Colors.alpha(Colors.dark.base, 0.8) }
