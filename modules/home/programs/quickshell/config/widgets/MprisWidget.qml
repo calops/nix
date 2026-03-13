@@ -164,7 +164,8 @@ Item {
                         // Use Math.sqrt to boost smaller values for better visual response
                         readonly property real scaledFreq: Math.sqrt(frequency) * envelope
                         
-                        width: scaledFreq > 0 ? 4 + (scaledFreq * 42) : 0
+                        // Smooth scaling without minimum width for seamless silence
+                        width: scaledFreq * 46
                         radius: 1
                         color: "white"
 
