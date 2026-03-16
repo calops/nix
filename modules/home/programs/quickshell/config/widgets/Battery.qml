@@ -8,15 +8,21 @@ import Quickshell.Services.UPower
 import "../services"
 import "."
 import "../components"
+
 Item {
     id: root
-    width: hovered || Niri.overviewActive || (reactive && reactive.active) ? expandedWidth : iconWidth
+    width: hovered || Niri.overviewActive || reactive?.active ? expandedWidth : iconWidth
     height: 50
 
     property int iconWidth: Theme.iconWidth
     property int expandedWidth: Theme.widgetExpandedWidth
 
-    Behavior on width { NumberAnimation { duration: 300; easing.type: Easing.OutQuad } }
+    Behavior on width {
+        NumberAnimation {
+            duration: 300
+            easing.type: Easing.OutQuad
+        }
+    }
 
     // Dynamic theme switching: Animated colors
     property color animIconColor: Colors.dark.text
@@ -25,12 +31,8 @@ Item {
     // animBoltColor is no longer used for a separate icon, but we keep it if needed or remove it.
     // The user requested monochrome inversion, so we'll strictly use iconColor and chargingColor (background).
 
-
     // Hover state handling
-    property bool hovered: mouseArea.containsMouse || 
-                           (profileRepeater.itemAt(0) && profileRepeater.itemAt(0).isHovered) ||
-                           (profileRepeater.itemAt(1) && profileRepeater.itemAt(1).isHovered) ||
-                           (profileRepeater.itemAt(2) && profileRepeater.itemAt(2).isHovered)
+    property bool hovered: hoverHandler.hovered
 
     // UPower integration: Mapping built-in service to UI variables
     readonly property bool hasBattery: UPower.displayDevice !== null && UPower.displayDevice !== undefined
@@ -47,16 +49,19 @@ Item {
             PowerProfiles.profile = PowerProfile.PowerSaver;
         }
     }
-    
+
     readonly property string timeEstimate: {
         const device = UPower.displayDevice;
-        if (!device) return "";
-        if (device.state === UPowerDeviceState.FullyCharged) return "Full";
-        
+        if (!device)
+            return "";
+        if (device.state === UPowerDeviceState.FullyCharged)
+            return "Full";
+
         // Use timeToFull if charging, otherwise fallback to timeToEmpty for discharge/pending
         let seconds = (device.state === UPowerDeviceState.Charging) ? device.timeToFull : device.timeToEmpty;
-        
-        if (seconds <= 0) return "";
+
+        if (seconds <= 0)
+            return "";
         return durationToText(seconds);
     }
 
@@ -68,16 +73,17 @@ Item {
 
     readonly property int profileStepIndex: {
         const p = PowerProfiles.profile;
-        if (p === PowerProfile.PowerSaver) return 0;
-        if (p === PowerProfile.Balanced) return 1;
-        if (p === PowerProfile.Performance) return 2;
+        if (p === PowerProfile.PowerSaver)
+            return 0;
+        if (p === PowerProfile.Balanced)
+            return 1;
+        if (p === PowerProfile.Performance)
+            return 2;
         return 1;
     }
 
-    MouseArea {
-        id: mouseArea
-        anchors.fill: background // Constrain hover area to the visual backdrop
-        hoverEnabled: true
+    HoverHandler {
+        id: hoverHandler
     }
 
     ReactiveExpansion {
@@ -99,10 +105,10 @@ Item {
         id: row
         anchors.right: parent.right
         anchors.rightMargin: 0
-        
+
         anchors.verticalCenter: parent.verticalCenter
         spacing: 0 // Spacing handled by text container margin
-        
+
         // Stabilize height to parent
         height: parent.height
 
@@ -112,7 +118,7 @@ Item {
             width: Math.max(0, root.width - iconContainer.width)
             height: parent.height
             clip: false
-            
+
             RowLayout {
                 id: expandedContent
                 anchors.left: parent.left
@@ -122,51 +128,74 @@ Item {
                 anchors.verticalCenter: parent.verticalCenter
                 spacing: 2
                 opacity: root.hovered || Niri.overviewActive || (reactive && reactive.active) ? 1.0 : 0.0
-                Behavior on opacity { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
-                
+                Behavior on opacity {
+                    NumberAnimation {
+                        duration: Theme.animationDuration
+                        easing.type: Easing.OutQuad
+                    }
+                }
+
                 // Power Profile Buttons
                 RowLayout {
                     id: profileButtons
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                     Layout.fillWidth: true
                     spacing: 4
-                    
+
                     Repeater {
                         id: profileRepeater
                         model: [
-                            { icon: "", name: "Power", profile: PowerProfile.PowerSaver, color: Colors.dark.green },
-                            { icon: "⚖", name: "Bal.", profile: PowerProfile.Balanced, color: Colors.dark.blue },
-                            { icon: "", name: "Perf.", profile: PowerProfile.Performance, color: Colors.dark.red }
+                            {
+                                icon: "",
+                                name: "Power",
+                                profile: PowerProfile.PowerSaver,
+                                color: Colors.dark.green
+                            },
+                            {
+                                icon: "⚖",
+                                name: "Bal.",
+                                profile: PowerProfile.Balanced,
+                                color: Colors.dark.blue
+                            },
+                            {
+                                icon: "",
+                                name: "Perf.",
+                                profile: PowerProfile.Performance,
+                                color: Colors.dark.red
+                            }
                         ]
-                        
-                    GlassIconButton {
-                        icon: modelData.icon
-                        isActive: root.profileStepIndex === index
-                        iconColor: isActive ? modelData.color : Colors.dark.text
-                        onClicked: PowerProfiles.profile = modelData.profile
-                        
-                        // Addition for the "Bal. / Power / Perf" labels
-                        StyledText {
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 4
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            text: modelData.name
-                            font.pixelSize: 8
-                            color: parent.isActive ? modelData.color : Colors.dark.text
-                            opacity: 0.8
-                            Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
+
+                        GlassIconButton {
+                            icon: modelData.icon
+                            isActive: root.profileStepIndex === index
+                            iconColor: isActive ? modelData.color : Colors.dark.text
+                            onClicked: PowerProfiles.profile = modelData.profile
+
+                            // Addition for the "Bal. / Power / Perf" labels
+                            StyledText {
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 4
+                                anchors.horizontalCenter: parent.horizontalCenter
+                                text: modelData.name
+                                font.pixelSize: 8
+                                color: parent.isActive ? modelData.color : Colors.dark.text
+                                opacity: 0.8
+                                Behavior on color {
+                                    ColorAnimation {
+                                        duration: Theme.animationDuration
+                                    }
+                                }
+                            }
                         }
                     }
-                    }
                 }
-
 
                 Column {
                     id: textColumn
                     Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                     Layout.preferredWidth: 45
                     spacing: 0
-                    
+
                     StyledText {
                         id: percentageText
                         text: Math.round(root.batteryPercentage) + "%"
@@ -174,7 +203,7 @@ Item {
                         color: Colors.dark.text
                         anchors.right: parent.right
                     }
-                    
+
                     StyledText {
                         id: timeText
                         text: root.timeEstimate
@@ -192,7 +221,7 @@ Item {
             id: iconContainer
             width: 56 // Standard bar width
             height: parent.height
-            
+
             // Layout: Row to hold Icon and Bolt side-by-side
             Row {
                 anchors.centerIn: parent
@@ -202,7 +231,7 @@ Item {
                 Item {
                     width: 14 // Width of body
                     height: 35 // Total height (tip + body + margin)
-                    
+
                     // Battery Tip (Top)
                     Rectangle {
                         id: tip
@@ -232,21 +261,44 @@ Item {
                             height: 18
                             // Remove visible binding to allow fade-out
                             opacity: root.isCharging ? 1.0 : 0.0
-                            Behavior on opacity { NumberAnimation { duration: Theme.animationDuration } }
-                            
+                            Behavior on opacity {
+                                NumberAnimation {
+                                    duration: Theme.animationDuration
+                                }
+                            }
+
                             ShapePath {
                                 strokeWidth: 0
                                 fillColor: root.animIconColor // Foreground color
                                 joinStyle: ShapePath.MiterJoin
                                 capStyle: ShapePath.RoundCap
-                                
-                                startX: 5; startY: 0
-                                PathLine { x: 0; y: 10 }
-                                PathLine { x: 3; y: 10 }
-                                PathLine { x: 1; y: 18 }
-                                PathLine { x: 8; y: 7 }
-                                PathLine { x: 4; y: 7 }
-                                PathLine { x: 5; y: 0 }
+
+                                startX: 5
+                                startY: 0
+                                PathLine {
+                                    x: 0
+                                    y: 10
+                                }
+                                PathLine {
+                                    x: 3
+                                    y: 10
+                                }
+                                PathLine {
+                                    x: 1
+                                    y: 18
+                                }
+                                PathLine {
+                                    x: 8
+                                    y: 7
+                                }
+                                PathLine {
+                                    x: 4
+                                    y: 7
+                                }
+                                PathLine {
+                                    x: 5
+                                    y: 0
+                                }
                             }
                         }
 
@@ -277,21 +329,44 @@ Item {
                                 height: 18
                                 // Remove visible binding to allow fade-out
                                 opacity: root.isCharging ? 1.0 : 0.0
-                                Behavior on opacity { NumberAnimation { duration: Theme.animationDuration } }
-                                
+                                Behavior on opacity {
+                                    NumberAnimation {
+                                        duration: Theme.animationDuration
+                                    }
+                                }
+
                                 ShapePath {
                                     strokeWidth: 0
                                     fillColor: root.animChargingColor // Background color (inverted)
                                     joinStyle: ShapePath.MiterJoin
                                     capStyle: ShapePath.RoundCap
-                                    
-                                    startX: 5; startY: 0
-                                    PathLine { x: 0; y: 10 }
-                                    PathLine { x: 3; y: 10 }
-                                    PathLine { x: 1; y: 18 }
-                                    PathLine { x: 8; y: 7 }
-                                    PathLine { x: 4; y: 7 }
-                                    PathLine { x: 5; y: 0 }
+
+                                    startX: 5
+                                    startY: 0
+                                    PathLine {
+                                        x: 0
+                                        y: 10
+                                    }
+                                    PathLine {
+                                        x: 3
+                                        y: 10
+                                    }
+                                    PathLine {
+                                        x: 1
+                                        y: 18
+                                    }
+                                    PathLine {
+                                        x: 8
+                                        y: 7
+                                    }
+                                    PathLine {
+                                        x: 4
+                                        y: 7
+                                    }
+                                    PathLine {
+                                        x: 5
+                                        y: 0
+                                    }
                                 }
                             }
                         }
@@ -324,10 +399,31 @@ Item {
             to: "hovered"
             // Colors switch
             ParallelAnimation {
-                NumberAnimation { target: background; property: "opacity"; to: 1.0; duration: Theme.animationDuration; easing.type: Easing.OutQuad }
-                ColorAnimation { target: root; property: "animIconColor"; duration: Theme.animationDuration; easing.type: Easing.OutQuad }
-                ColorAnimation { target: root; property: "animRedColor"; duration: Theme.animationDuration; easing.type: Easing.OutQuad }
-                ColorAnimation { target: root; property: "animChargingColor"; duration: Theme.animationDuration; easing.type: Easing.OutQuad }
+                NumberAnimation {
+                    target: background
+                    property: "opacity"
+                    to: 1.0
+                    duration: Theme.animationDuration
+                    easing.type: Easing.OutQuad
+                }
+                ColorAnimation {
+                    target: root
+                    property: "animIconColor"
+                    duration: Theme.animationDuration
+                    easing.type: Easing.OutQuad
+                }
+                ColorAnimation {
+                    target: root
+                    property: "animRedColor"
+                    duration: Theme.animationDuration
+                    easing.type: Easing.OutQuad
+                }
+                ColorAnimation {
+                    target: root
+                    property: "animChargingColor"
+                    duration: Theme.animationDuration
+                    easing.type: Easing.OutQuad
+                }
             }
         },
         Transition {
@@ -335,10 +431,31 @@ Item {
             to: "*"
             // Colors revert
             ParallelAnimation {
-                NumberAnimation { target: background; property: "opacity"; to: 0.0; duration: Theme.animationDurationOut; easing.type: Easing.InQuad }
-                ColorAnimation { target: root; property: "animIconColor"; duration: Theme.animationDurationOut; easing.type: Easing.InQuad }
-                ColorAnimation { target: root; property: "animRedColor"; duration: Theme.animationDurationOut; easing.type: Easing.InQuad }
-                ColorAnimation { target: root; property: "animChargingColor"; duration: Theme.animationDurationOut; easing.type: Easing.InQuad }
+                NumberAnimation {
+                    target: background
+                    property: "opacity"
+                    to: 0.0
+                    duration: Theme.animationDurationOut
+                    easing.type: Easing.InQuad
+                }
+                ColorAnimation {
+                    target: root
+                    property: "animIconColor"
+                    duration: Theme.animationDurationOut
+                    easing.type: Easing.InQuad
+                }
+                ColorAnimation {
+                    target: root
+                    property: "animRedColor"
+                    duration: Theme.animationDurationOut
+                    easing.type: Easing.InQuad
+                }
+                ColorAnimation {
+                    target: root
+                    property: "animChargingColor"
+                    duration: Theme.animationDurationOut
+                    easing.type: Easing.InQuad
+                }
             }
         }
     ]
