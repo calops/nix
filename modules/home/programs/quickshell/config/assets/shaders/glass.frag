@@ -119,12 +119,15 @@ void main() {
     // Volumetric gradient (global across the whole coord space)
     float volGradient = dot(qt_TexCoord0 - vec2(0.5), vec2(-1.0, -1.0));
     
-    // Apply effects
-    color.rgb += vec3(volGradient * 0.1) * color.a;
-    color.rgb += vec3(1.0) * highlight * 0.35 * color.a;
-    color.rgb -= vec3(1.0) * shadow * 0.15 * color.a;
+    // Apply effects at constant strength — independent of baseColor.a so the glass
+    // always looks equally "deep" regardless of the tint alpha.
+    // Constants are calibrated so a backdrop at baseColor.a ≈ 0.65 looks the same
+    // as the previous shader (old_constant × 0.65).
+    color.rgb += vec3(volGradient * 0.065);
+    color.rgb += vec3(1.0) * highlight * 0.22;
+    color.rgb -= vec3(1.0) * shadow * 0.10;
 
-    // Final output (respecting premultiplication)
+    // Final output
     fragColor = color * alphaMask * qt_Opacity;
 }
 

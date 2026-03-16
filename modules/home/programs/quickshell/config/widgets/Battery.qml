@@ -168,7 +168,9 @@ Item {
                         GlassIconButton {
                             icon: modelData.icon
                             isActive: root.profileStepIndex === index
-                            tintColor: isActive ? modelData.color : Colors.dark.text
+                            tintColor: modelData.color
+                            normalAlpha: 0.10
+                            hoveredAlpha: 0.22
                             activeAlpha: 0.45
                             onClicked: PowerProfiles.profile = modelData.profile
 

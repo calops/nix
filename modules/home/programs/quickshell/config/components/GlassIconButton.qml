@@ -14,8 +14,8 @@ Item {
     // Tint color and per-state alpha values — override to customise appearance
     property color tintColor: Colors.dark.text
     property real normalAlpha: 0.10
-    property real hoveredAlpha: 0.15
-    property real activeAlpha: 0.20
+    property real hoveredAlpha: 0.26
+    property real activeAlpha: 0.32
 
     signal clicked()
 
