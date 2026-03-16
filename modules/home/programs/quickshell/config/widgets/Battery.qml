@@ -155,7 +155,7 @@ Item {
                                 icon: "⚖",
                                 name: "Bal.",
                                 profile: PowerProfile.Balanced,
-                                color: Colors.dark.blue
+                                color: Colors.dark.peach
                             },
                             {
                                 icon: "",
@@ -168,7 +168,8 @@ Item {
                         GlassIconButton {
                             icon: modelData.icon
                             isActive: root.profileStepIndex === index
-                            iconColor: isActive ? modelData.color : Colors.dark.text
+                            tintColor: isActive ? modelData.color : Colors.dark.text
+                            activeAlpha: 0.45
                             onClicked: PowerProfiles.profile = modelData.profile
 
                             // Addition for the "Bal. / Power / Perf" labels
@@ -178,13 +179,8 @@ Item {
                                 anchors.horizontalCenter: parent.horizontalCenter
                                 text: modelData.name
                                 font.pixelSize: 8
-                                color: parent.isActive ? modelData.color : Colors.dark.text
+                                color: Colors.dark.text
                                 opacity: 0.8
-                                Behavior on color {
-                                    ColorAnimation {
-                                        duration: Theme.animationDuration
-                                    }
-                                }
                             }
                         }
                     }

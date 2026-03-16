@@ -281,7 +281,7 @@ Item {
                         id: playBtn
                         Layout.preferredWidth: 48
                         Layout.preferredHeight: 38
-                        isActive: true
+                        isActive: root.activePlayer?.playbackState === MprisPlaybackState.Playing ?? false
                         icon: root.activePlayer && root.activePlayer.playbackState === MprisPlaybackState.Playing ? "󰏤" : "󰐊" // Play/Pause
                         iconSize: 20
                         enabled: root.activePlayer !== null

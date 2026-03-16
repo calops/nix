@@ -39,6 +39,7 @@ Item {
         property real radius2: 0
         property real radius3: 0
         property real smoothness: 0
+        property real recessed: 0
 
         // This opacity determines the overall visible alpha of the entire effect over the background
         opacity: 1.0

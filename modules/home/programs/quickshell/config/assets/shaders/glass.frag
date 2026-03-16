@@ -19,6 +19,7 @@ layout(std140, binding = 0) uniform buf {
     float radius3;
     float smoothness;
     float useImage;
+    float recessed;
 };
 
 layout(binding = 1) uniform sampler2D imageSource;
@@ -108,9 +109,12 @@ void main() {
     // Light dir from top-left
     vec3 lightDir = normalize(vec3(-1.0, -1.0, 1.0));
     
+    // Invert normal for recessed (pressed-in) appearance
+    vec3 effectiveNormal = recessed > 0.5 ? -edgeNormal : edgeNormal;
+
     // High-quality directional highlights/shadows
-    float highlight = edgeProfile * max(dot(edgeNormal, lightDir), 0.0);
-    float shadow = edgeProfile * max(dot(edgeNormal, -lightDir), 0.0);
+    float highlight = edgeProfile * max(dot(effectiveNormal, lightDir), 0.0);
+    float shadow = edgeProfile * max(dot(effectiveNormal, -lightDir), 0.0);
     
     // Volumetric gradient (global across the whole coord space)
     float volGradient = dot(qt_TexCoord0 - vec2(0.5), vec2(-1.0, -1.0));

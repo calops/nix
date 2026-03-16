@@ -2,51 +2,53 @@ import QtQuick
 import QtQuick.Layouts
 import "../services"
 
-Rectangle {
+Item {
     id: root
-    
+
     property string icon: ""
     property color iconColor: Colors.dark.text
     property int iconSize: 14
     property bool isActive: false
     property alias hovered: btnMouseArea.containsMouse
-    
+
+    // Tint color and per-state alpha values — override to customise appearance
+    property color tintColor: Colors.dark.text
+    property real normalAlpha: 0.10
+    property real hoveredAlpha: 0.15
+    property real activeAlpha: 0.20
+
     signal clicked()
 
     Layout.fillWidth: true
     Layout.preferredHeight: 36
-    radius: 8
 
-    // Glass Neumorphic Base
-    color: Colors.alpha("#ffffff", isActive ? 0.2 : (hovered ? 0.22 : 0.08))
-    
-    // Define the glass edges with a subtle white border
-    Rectangle {
+    ShaderEffect {
         anchors.fill: parent
-        radius: parent.radius
-        color: "transparent"
-        border.width: 1
-        border.color: Colors.alpha("#ffffff", isActive ? 0.15 : (hovered ? 0.45 : 0.25))
+
+        property real radius: 8
+        property color baseColor: Colors.alpha(root.tintColor,
+            root.isActive ? root.activeAlpha : (root.hovered ? root.hoveredAlpha : root.normalAlpha))
+        property real uWidth: width
+        property real uHeight: height
+        property real recessed: (root.isActive || btnMouseArea.pressed) ? 1.0 : 0.0
+
+        // Multi-shape defaults (silence warnings)
+        property rect rect1: Qt.rect(0, 0, 0, 0)
+        property rect rect2: Qt.rect(0, 0, 0, 0)
+        property rect rect3: Qt.rect(0, 0, 0, 0)
+        property real radius1: 0
+        property real radius2: 0
+        property real radius3: 0
+        property real smoothness: 0
+        property variant imageSource: null
+        property real useImage: 0.0
+
+        fragmentShader: Shaders.get("glass")
+
+        Behavior on baseColor { ColorAnimation { duration: Theme.animationDurationFast } }
+        Behavior on recessed { NumberAnimation { duration: Theme.animationDurationFast } }
     }
 
-    // True Neumorphic Relief
-    Rectangle {
-        anchors.fill: parent
-        radius: parent.radius
-        opacity: 0.5
-        gradient: Gradient {
-            GradientStop { 
-                position: 0.0
-                color: root.isActive ? Colors.alpha("#ffffff", 0.1) : Colors.alpha("#ffffff", 0.8) 
-            }
-            GradientStop { position: 0.5; color: "transparent" }
-            GradientStop { 
-                position: 1.0
-                color: root.isActive ? Colors.alpha("#ffffff", 0.8) : Colors.alpha("#ffffff", 0.1) 
-            }
-        }
-    }
-    
     StyledText {
         anchors.centerIn: parent
         text: root.icon
@@ -54,13 +56,11 @@ Rectangle {
         color: root.iconColor
         Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
     }
-    
+
     MouseArea {
         id: btnMouseArea
         anchors.fill: parent
         hoverEnabled: true
         onClicked: root.clicked()
     }
-
-    Behavior on color { ColorAnimation { duration: Theme.animationDurationFast } }
 }
