@@ -76,7 +76,7 @@ Singleton {
             id: runnerBlurRegion
             Region {
                 item: glassBackground
-                radius: 0
+                radius: glassBackground.radius
             }
         }
 
