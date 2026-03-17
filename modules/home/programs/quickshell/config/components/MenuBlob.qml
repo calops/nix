@@ -9,8 +9,6 @@ import "../services"
 ShaderEffect {
     id: root
 
-    property variant source: null
-
     property bool expanded: false
     property bool allowsAnimation: false
 
@@ -188,6 +186,7 @@ ShaderEffect {
     property real radius: 0 // Unused in bubble mode
     property real smoothness: 15.0
     property real useImage: 0.0
+    property real recessed: 0
     property variant imageSource: null
     property color baseColor: Colors.alpha(Qt.tint(Colors.light.base, Colors.alpha(Colors.light.text, 0.15)), 0.8)
 

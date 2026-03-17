@@ -85,11 +85,11 @@ void main() {
     }
 
     vec4 color = baseColor;
-    if (useImage > 0.5) {
+    if (useImage > 0.0) {
         vec4 imgColor = texture(imageSource, qt_TexCoord0);
-        // Blend image RGB with base color RGB using image alpha as weight,
+        // Blend image RGB with base color RGB using image alpha and useImage as weight,
         // but strictly preserve the base color's alpha for transparency.
-        color.rgb = mix(color.rgb, imgColor.rgb, imgColor.a);
+        color.rgb = mix(color.rgb, imgColor.rgb, imgColor.a * useImage);
         // We do NOT change color.a here to keep the glassy transparency
     }
 

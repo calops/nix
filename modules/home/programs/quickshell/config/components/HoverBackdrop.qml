@@ -12,24 +12,70 @@ Item {
     property alias baseColor: bgRect.baseColor
     property variant imageSource: null
 
+    property string _pendingImageSource: ""
+
+    // Displayed image — drives the shader texture
     Image {
         id: bgImage
-        source: root.imageSource || ""
+        source: ""
         visible: false
+        // Fade in once the new source is decoded and ready
+        onStatusChanged: {
+            if (status === Image.Ready && source !== "")
+                bgRect.useImage = 1.0;
+        }
+    }
+
+    // Cache warmer: pre-fetches the next image so the swap timer hits cache
+    Image {
+        id: bgImagePreload
+        source: ""
+        visible: false
+        cache: true
+    }
+
+    // Mid-crossfade swap: replaces bgImage source after the fade-out has started.
+    // Because bgImagePreload already fetched the URL, this is a cache hit.
+    Timer {
+        id: imageSwapTimer
+        interval: Theme.animationDuration / 2
+        onTriggered: bgImage.source = root._pendingImageSource
+    }
+
+    onImageSourceChanged: {
+        root._pendingImageSource = root.imageSource || "";
+        if (!root._pendingImageSource) {
+            bgRect.useImage = 0.0;
+            bgImage.source = "";
+            bgImagePreload.source = "";
+            return;
+        }
+        // Warm the cache before the timer fires
+        bgImagePreload.source = root._pendingImageSource;
+        // Start the crossfade immediately
+        if (bgRect.useImage > 0.0) {
+            bgRect.useImage = 0.0;
+            imageSwapTimer.restart();
+        } else {
+            bgImage.source = root._pendingImageSource;
+        }
     }
 
     ShaderEffect {
         id: bgRect
         anchors.fill: parent
 
-        property variant source: null
         property real radius: root.radius
         // Passing baseColor with alpha so the shader can determine transparency
         property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
         property real uWidth: width
         property real uHeight: height
         property variant imageSource: bgImage
-        property real useImage: root.imageSource && bgImage.status === Image.Ready ? 1.0 : 0.0
+        property real useImage: 0.0
+
+        Behavior on useImage {
+            NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.InOutQuad }
+        }
 
         // Multi-shape defaults (silence warnings)
         property rect rect1: Qt.rect(0, 0, 0, 0)
@@ -84,6 +130,10 @@ Item {
         if (gid) {
             root.blurGroupId = gid;
             syncBlurRegistration();
+        }
+        if (root.imageSource) {
+            root._pendingImageSource = root.imageSource;
+            bgImage.source = root.imageSource;
         }
     }
 

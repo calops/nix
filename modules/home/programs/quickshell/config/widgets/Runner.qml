@@ -194,7 +194,6 @@ Singleton {
                         id: glassEffect
                         anchors.fill: parent
 
-                        property variant source: null
                         property real radius: parent.radius
                         property color baseColor: Colors.alpha(Theme.backdropTint, Theme.backdropOpacity)
                         property real uWidth: width
@@ -209,6 +208,7 @@ Singleton {
                         property real radius3: 0
                         property real smoothness: 0
                         property real useImage: 0.0
+                        property real recessed: 0
                         property variant imageSource: null
 
                         fragmentShader: Shaders.get("glass")

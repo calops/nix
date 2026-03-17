@@ -157,7 +157,6 @@ Item {
                     id: glassEffect
                     anchors.fill: parent
 
-                    property variant source: null
                     property real radius: 16.0
 
                     // Alpha: subtle when collapsed, fully opaque when expanded
@@ -182,6 +181,7 @@ Item {
                     property real radius3: 0
                     property real smoothness: 0
                     property real useImage: 0.0
+                    property real recessed: 0
                     property variant imageSource: null
 
                     fragmentShader: Shaders.get("glass")

@@ -10,11 +10,13 @@ import "../components"
 
 Item {
     id: root
-    width: (activePlayer !== null && (hovered || Niri.overviewActive || reactive.active)) ? expandedWidth : iconWidth
+    width: (hasTrack && (hovered || Niri.overviewActive || reactive.active)) ? expandedWidth : iconWidth
     height: expandedWidth // Perfectly square when expanded, constant height
 
     property int iconWidth: Theme.iconWidth
     property int expandedWidth: Theme.widgetExpandedWidth
+
+    readonly property bool hasTrack: activePlayer !== null && activePlayer.trackTitle !== ""
 
     Behavior on width {
         NumberAnimation {
@@ -24,9 +26,9 @@ Item {
         }
     }
 
-    property bool hovered: mouseArea.containsMouse || 
-                           prevBtn.hovered || playBtn.hovered || nextBtn.hovered || 
-                           seeker.containsMouse || seeker.pressed
+    property bool hovered: hasTrack && (mouseArea.containsMouse ||
+                           prevBtn.hovered || playBtn.hovered || nextBtn.hovered ||
+                           seeker.containsMouse || seeker.pressed)
 
     // Player Selection
     property var activePlayer: null
@@ -97,6 +99,7 @@ Item {
     ReactiveExpansion {
         id: reactive
         watchValue: activePlayer ? (activePlayer.trackTitle + ":" + activePlayer.playbackState) : ""
+        ignore: root.hovered
     }
 
     Component.onCompleted: updateActivePlayer()
@@ -114,14 +117,13 @@ Item {
         anchors.bottomMargin: -5
         anchors.rightMargin: 0 // Flush with screen edge
         anchors.leftMargin: 6
-        opacity: (activePlayer !== null && (root.hovered || Niri.overviewActive || reactive.active)) ? 1.0 : 0.0
+        opacity: (hasTrack && (root.hovered || Niri.overviewActive || reactive.active)) ? 1.0 : 0.0
         imageSource: root.activePlayer ? root.activePlayer.trackArtUrl : ""
 
         // Legibility Gradient
         Rectangle {
             anchors.fill: parent
             radius: parent.radius
-            opacity: parent.opacity
             gradient: Gradient {
                 GradientStop { position: 0.0; color: Colors.alpha(Colors.dark.base, 0.8) }
                 GradientStop { position: 0.4; color: Colors.alpha(Colors.dark.base, 0.2) }
@@ -141,8 +143,8 @@ Item {
     MouseArea {
         id: mouseArea
         anchors.fill: background
-        hoverEnabled: true
-        enabled: activePlayer !== null
+        hoverEnabled: hasTrack
+        enabled: hasTrack
     }
 
     // Main Layout

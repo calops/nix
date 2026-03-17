@@ -11,8 +11,6 @@ let
   wallpaper = config.stylix.image;
 in
 {
-  imports = [ inputs.niri-caelestia-shell.homeManagerModules.default ];
-
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.quickshell = {
       enable = true;
