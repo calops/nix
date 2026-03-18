@@ -16,55 +16,44 @@ Singleton {
         persistenceSupported: true
         
         onNotification: (notification) => {
-            console.log("NOTIF SERVICE: New notification: " + notification.appName + " - " + notification.summary);
+            console.log("NOTIF SERVICE: Received [" + notification.id + "] from " + notification.appName);
             
-            // Explicitly track the notification to keep it alive
             notification.tracked = true;
 
-            // Add to active popups array
+            historyModel.insert(0, {
+                "notif": notification,
+                "notifId": notification.id
+            });
+
             if (!isCenterOpen) {
-                let popups = [...activePopups];
-                popups.push(notification);
-                activePopups = popups;
+                activePopups.append({
+                    "notif": notification,
+                    "notifId": notification.id
+                });
             }
             
             unseenCount++;
             updateMaxUrgency();
 
-            // Connect to closed signal for cleanup
             notification.closed.connect((reason) => {
-                console.log("NOTIF SERVICE: Notification closed: " + notification.summary);
-                // Remove from popups
-                let popups = activePopups.filter(n => n !== notification);
-                if (popups.length !== activePopups.length) {
-                    activePopups = popups;
-                }
+                console.log("NOTIF SERVICE: Signal closed for [" + notification.id + "] reason: " + reason);
+                removePopupById(notification.id);
                 updateMaxUrgency();
-                root.historyChanged(); // Force update on property listeners
             });
-            
-            root.historyChanged(); // Force update
         }
     }
 
-    // Direct access to the server's list of notifications
-    readonly property var history: {
-        root.historyChanged;
-        return server.notifications;
-    }
-    
-    // Notifications currently shown as toast popups
-    property var activePopups: []
+    readonly property ListModel historyModel: ListModel {}
+    readonly property ListModel activePopups: ListModel {}
 
     property int unseenCount: 0
     property int maxUrgency: NotificationUrgency.Low
-    
     property bool isCenterOpen: false
 
     onIsCenterOpenChanged: {
         if (isCenterOpen) {
             unseenCount = 0;
-            activePopups = [];
+            activePopups.clear();
         }
     }
 
@@ -73,32 +62,56 @@ Singleton {
         const list = server.notifications;
         if (!list) return;
         for (let i = 0; i < list.length; i++) {
-            if (list[i].urgency > max) {
-                max = list[i].urgency;
-            }
+            if (list[i].urgency > max) max = list[i].urgency;
         }
         maxUrgency = max;
     }
 
-    function removePopup(notification) {
-        let popups = activePopups.filter(n => n !== notification);
-        if (popups.length !== activePopups.length) {
-            activePopups = popups;
+    function hidePopup(notification) {
+        if (!notification) return;
+        removePopupById(notification.id);
+    }
+
+    function removePopupById(id) {
+        for (let i = 0; i < activePopups.count; i++) {
+            if (activePopups.get(i).notifId === id) {
+                activePopups.remove(i);
+                return;
+            }
         }
     }
 
-    function clearAll() {
-        const list = server.notifications;
-        if (!list) return;
-        
-        // Use a standard loop
-        for (let i = list.length - 1; i >= 0; i--) {
-            list[i].dismiss();
+    function removeHistoryById(id) {
+        for (let i = 0; i < historyModel.count; i++) {
+            if (historyModel.get(i).notifId === id) {
+                historyModel.remove(i);
+                return;
+            }
         }
-        
-        activePopups = [];
+    }
+
+    function dismiss(notification) {
+        if (!notification) return;
+        console.log("NOTIF SERVICE: Manually dismissing [" + notification.id + "]");
+        notification.dismiss();
+        removePopupById(notification.id);
+        removeHistoryById(notification.id);
+    }
+
+    function clearAll() {
+        console.log("NOTIF SERVICE: Clearing all notifications");
+        const list = server.notifications;
+        if (list) {
+            // Need a copy because dismiss() might modify the list
+            const copy = [];
+            for (let i = 0; i < list.length; i++) copy.push(list[i]);
+            for (let i = copy.length - 1; i >= 0; i--) {
+                copy[i].dismiss();
+            }
+        }
+        activePopups.clear();
+        historyModel.clear();
         unseenCount = 0;
         maxUrgency = NotificationUrgency.Low;
-        root.historyChanged();
     }
 }

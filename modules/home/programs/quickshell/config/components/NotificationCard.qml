@@ -15,7 +15,29 @@ Item {
     width: parent.width
     height: contentLayout.implicitHeight + 24
 
-    // Register with the blur group of the parent scope (popup window or right bar)
+    // Cache properties to prevent "content collapse" when the notification object is closed
+    readonly property string appName: (root.notification && root.notification.appName !== undefined) ? root.notification.appName : _lastAppName
+    readonly property string summary: (root.notification && root.notification.summary !== undefined) ? root.notification.summary : _lastSummary
+    readonly property string body: (root.notification && root.notification.body !== undefined) ? root.notification.body : _lastBody
+    readonly property string appIcon: (root.notification && root.notification.appIcon !== undefined) ? root.notification.appIcon : _lastAppIcon
+    readonly property int urgency: (root.notification && root.notification.urgency !== undefined) ? root.notification.urgency : _lastUrgency
+
+    property string _lastAppName: "Notification"
+    property string _lastSummary: ""
+    property string _lastBody: ""
+    property string _lastAppIcon: ""
+    property int _lastUrgency: 0
+
+    onNotificationChanged: {
+        if (root.notification) {
+            _lastAppName = root.notification.appName || "Notification";
+            _lastSummary = root.notification.summary || "";
+            _lastBody = root.notification.body || "";
+            _lastAppIcon = root.notification.appIcon || "";
+            _lastUrgency = root.notification.urgency || 0;
+        }
+    }
+
     property var blurGroupId: ""
     function findBlurGroupId(node) {
         if (!node) return "";
@@ -36,7 +58,6 @@ Item {
         anchors.fill: parent
         radius: root.radius
         opacity: root.isPopup ? 1.0 : 0.8
-        // Don't auto-register inside the card, as we handle it manually to ensures consistent grouping
         blurGroupId: "" 
     }
 
@@ -45,21 +66,26 @@ Item {
         anchors.fill: parent
         radius: root.radius
         color: "transparent"
-        border.width: (root.notification && root.notification.urgency >= 2) ? 2 : 0
+        border.width: root.urgency >= 2 ? 2 : 0
         border.color: Colors.palette.maroon
         visible: border.width > 0
         
         OpacityAnimator on opacity {
-            running: root.notification && root.notification.urgency >= 2
+            running: root.urgency >= 2
             from: 0.4; to: 1.0; duration: 1000; loops: Animation.Infinite
         }
     }
 
-    Component.onCompleted: {
-        if (root.notification) {
-            console.log("NOTIF CARD: Created for " + root.notification.appName + " (summary: " + root.notification.summary + ")");
-        } else {
-            console.log("NOTIF CARD: Created with no notification object!");
+    // Main Card Action (Default Action)
+    // Placed before content layout so it doesn't intercept child MouseAreas (like the close button)
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            if (root.notification) {
+                console.log("NOTIF CARD: Main area clicked for [" + root.notification.id + "]");
+                root.notification.dismiss();
+                root.dismiss();
+            }
         }
     }
 
@@ -78,10 +104,9 @@ Item {
             
             Image {
                 source: {
-                    if (!root.notification || !root.notification.appIcon) return "image://icon/dialog-information";
-                    const icon = root.notification.appIcon;
-                    if (icon.startsWith("/") || icon.startsWith("file://") || icon.startsWith("image://")) return icon;
-                    return "image://icon/" + icon;
+                    if (!root.appIcon) return "image://icon/dialog-information";
+                    if (root.appIcon.startsWith("/") || root.appIcon.startsWith("file://") || root.appIcon.startsWith("image://")) return root.appIcon;
+                    return "image://icon/" + root.appIcon;
                 }
                 sourceSize.width: 16
                 sourceSize.height: 16
@@ -91,7 +116,7 @@ Item {
             }
             
             StyledText {
-                text: (root.notification && root.notification.appName) ? root.notification.appName : "Notification"
+                text: root.appName
                 font.pixelSize: 11
                 font.bold: true
                 color: Colors.palette.subtext1
@@ -101,14 +126,18 @@ Item {
 
             // Close button
             MouseArea {
-                width: 16; height: 16
-                onClicked: root.dismiss()
+                id: closeButtonMouseArea
+                width: 24; height: 24 // Slightly larger hit target
+                onClicked: {
+                    console.log("NOTIF CARD: Close button clicked");
+                    root.dismiss();
+                }
                 StyledText {
                     text: "󰅖"
                     font.pixelSize: 14
                     anchors.centerIn: parent
                     color: Colors.palette.subtext1
-                    opacity: parent.containsMouse ? 1.0 : 0.6
+                    opacity: closeButtonMouseArea.containsMouse ? 1.0 : 0.6
                 }
                 hoverEnabled: true
             }
@@ -116,7 +145,7 @@ Item {
 
         // Summary & Body
         StyledText {
-            text: (root.notification && root.notification.summary) ? root.notification.summary : ""
+            text: root.summary
             font.pixelSize: 14
             font.bold: true
             Layout.fillWidth: true
@@ -125,7 +154,7 @@ Item {
         }
 
         StyledText {
-            text: (root.notification && root.notification.body) ? root.notification.body : ""
+            text: root.body
             font.pixelSize: 12
             color: Colors.palette.text
             Layout.fillWidth: true
@@ -133,16 +162,6 @@ Item {
             maximumLineCount: root.isPopup ? 3 : 2
             elide: Text.ElideRight
             visible: text !== ""
-        }
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            if (root.notification) {
-                root.notification.dismiss(); // Trigger default action
-                root.dismiss();
-            }
         }
     }
 }

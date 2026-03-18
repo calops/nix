@@ -23,7 +23,7 @@ PanelWindow {
 
     exclusionMode: ExclusionMode.Ignore
     color: "transparent"
-    visible: Notifications.activePopups.length > 0
+    visible: Notifications.activePopups.count > 0
 
     implicitWidth: 320
     implicitHeight: popupList.contentHeight
@@ -38,7 +38,6 @@ PanelWindow {
     function updateBlurRegion() {
         var items = registeredBlurItems || [];
         
-        // Blur Region
         var blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
         if (items.length === 0) {
             blurStr += "    Region { item: offscreenAnchor }\n";
@@ -52,7 +51,6 @@ PanelWindow {
         if (popupWindow.BackgroundEffect.blurRegion) popupWindow.BackgroundEffect.blurRegion.destroy();
         popupWindow.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, popupWindow, "dynamicBlurRegionPopup");
 
-        // Mask (identical to blur region for popups)
         if (popupWindow.mask) popupWindow.mask.destroy();
         popupWindow.mask = Qt.createQmlObject(blurStr, popupWindow, "dynamicMaskPopup");
     }
@@ -70,38 +68,49 @@ PanelWindow {
             NumberAnimation { property: "x"; from: 50; to: 0; duration: Theme.animationDuration; easing.type: Easing.OutCubic }
         }
 
-        move: Transition {
-            NumberAnimation { properties: "y"; duration: Theme.animationDuration; easing.type: Easing.OutCubic }
-        }
-
         remove: Transition {
-            NumberAnimation { property: "opacity"; to: 0; duration: Theme.animationDurationOut }
-            NumberAnimation { property: "scale"; to: 0.95; duration: Theme.animationDurationOut }
+            ParallelAnimation {
+                NumberAnimation { property: "opacity"; to: 0; duration: Theme.animationDurationOut }
+                NumberAnimation { property: "scale"; to: 0.8; duration: Theme.animationDurationOut }
+                NumberAnimation { property: "x"; to: 100; duration: Theme.animationDurationOut; easing.type: Easing.InCubic }
+            }
         }
 
-        delegate: NotificationCard {
-            id: card
-            notification: modelData
-            isPopup: true
-            radius: 12
+        displaced: Transition {
+            NumberAnimation { properties: "y"; duration: Theme.animationDuration; easing.type: Easing.OutQuad }
+        }
+
+        delegate: Item {
+            id: delegateRoot
+            width: popupList.width
+            height: card.height
             
-            // Set the modelData (notification object) as a property for the card
-            // so the dismissal logic can work correctly
-            onDismiss: {
-                if (modelData) {
-                    Notifications.removePopup(modelData);
+            readonly property var notification: model.notif
+
+            NotificationCard {
+                id: card
+                notification: delegateRoot.notification
+                isPopup: true
+                radius: 12
+                onDismiss: {
+                    if (delegateRoot.notification) {
+                        Notifications.dismiss(delegateRoot.notification);
+                    }
                 }
             }
 
             Timer {
                 interval: {
-                    if (!modelData || modelData.urgency === NotificationUrgency.Critical) return 0;
-                    if (modelData.expireTimeout > 0) return modelData.expireTimeout;
+                    if (!delegateRoot.notification || delegateRoot.notification.urgency === NotificationUrgency.Critical) return 0;
+                    if (delegateRoot.notification.expireTimeout > 0) return delegateRoot.notification.expireTimeout;
                     return 8000;
                 }
                 running: interval > 0 && popupWindow.visible
                 onTriggered: {
-                    if (modelData) Notifications.removePopup(modelData);
+                    if (delegateRoot.notification) {
+                        console.log("POPUP: Auto-hide triggered for [" + delegateRoot.notification.id + "]");
+                        Notifications.hidePopup(delegateRoot.notification);
+                    }
                 }
             }
         }

@@ -137,13 +137,29 @@ Item {
             id: listView
             Layout.fillWidth: true
             Layout.fillHeight: true
-            model: (typeof Notifications !== 'undefined') ? (Notifications.history || []) : []
+            model: (typeof Notifications !== 'undefined') ? Notifications.historyModel : []
             spacing: 8
             clip: true
+
+            add: Transition {
+                NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.animationDuration }
+                NumberAnimation { property: "y"; from: -20; to: 0; duration: Theme.animationDuration; easing.type: Easing.OutCubic }
+            }
+
+            remove: Transition {
+                ParallelAnimation {
+                    NumberAnimation { property: "opacity"; to: 0; duration: Theme.animationDurationOut }
+                    NumberAnimation { property: "scale"; to: 0.9; duration: Theme.animationDurationOut }
+                }
+            }
+
+            displaced: Transition {
+                NumberAnimation { properties: "y"; duration: Theme.animationDuration; easing.type: Easing.OutQuad }
+            }
             
             delegate: NotificationCard {
-                notification: modelData
-                onDismiss: if (modelData) modelData.dismiss()
+                notification: model.notif
+                onDismiss: if (model.notif) Notifications.dismiss(model.notif)
             }
         }
     }
