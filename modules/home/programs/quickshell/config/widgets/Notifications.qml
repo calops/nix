@@ -34,10 +34,11 @@ Item {
         anchors.margins: 0
         anchors.leftMargin: 6
         opacity: root.expanded ? 1.0 : 0.0
+        blurGroupId: "rightBarScope"
         Behavior on opacity { NumberAnimation { duration: Theme.animationDuration } }
     }
 
-    // --- Bell Icon (Visible in both states) ---
+    // --- Bell Icon ---
     Item {
         id: iconContainer
         width: Theme.iconWidth
@@ -48,17 +49,23 @@ Item {
         StyledText {
             id: bellIcon
             anchors.centerIn: parent
-            text: (typeof Notifications !== 'undefined' && Notifications.historyModel && Notifications.historyModel.count > 0) ? "󰂚" : "󰂜"
-            font.pixelSize: 26 // Bigger icon
-            font.bold: true   // Thicker lines
+            // Show filled bell if we have active (non-dismissed) notifications
+            text: {
+                if (typeof Notifications === 'undefined') return "󰂜";
+                for (let i = 0; i < Notifications.historyModel.count; i++) {
+                    if (!Notifications.historyModel.get(i).isDismissed) return "󰂚";
+                }
+                return "󰂜";
+            }
+            font.pixelSize: 26 
+            font.bold: true   
             color: {
                 if (typeof Notifications === 'undefined') return Colors.palette.subtext0;
                 if (Notifications.maxUrgency === NotificationUrgency.Critical) return Colors.palette.maroon;
-                if (Notifications.unseenCount > 0) return Colors.palette.text; // Proper text color when active
+                if (Notifications.unseenCount > 0) return Colors.palette.text; 
                 return Colors.palette.subtext0;
             }
 
-            // Ringing animation (shakes and resets to 0)
             SequentialAnimation on rotation {
                 id: shakeAnim
                 running: false
@@ -108,16 +115,16 @@ Item {
         id: expandedView
         anchors.fill: parent
         anchors.margins: 12
-        anchors.rightMargin: 0 // Flush with the icon column
+        anchors.rightMargin: 0 
         visible: opacity > 0
         opacity: root.expanded ? 1.0 : 0.0
         Behavior on opacity { NumberAnimation { duration: Theme.animationDuration } }
         spacing: 12
 
-        // Header (Title only, Clear button moved to bottom)
+        // Header
         RowLayout {
             Layout.fillWidth: true
-            Layout.rightMargin: 56 // Leave room for the bell icon
+            Layout.rightMargin: 56 
             Layout.topMargin: 8
             StyledText {
                 text: "Notifications"
@@ -131,8 +138,11 @@ Item {
             id: listView
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.rightMargin: 12 // Spacing from edge
+            Layout.rightMargin: 12 
+            
+            // Only show non-dismissed notifications
             model: (typeof Notifications !== 'undefined') ? Notifications.historyModel : []
+            
             spacing: 10
             clip: true
 
@@ -153,19 +163,30 @@ Item {
             }
             
             delegate: NotificationCard {
+                visible: !model.isDismissed
+                opacity: visible ? 1.0 : 0.0
+
                 notification: model.notif
                 blurEnabled: false
                 onDismiss: if (model.notif) Notifications.dismiss(model.notif)
+
+                Behavior on opacity { NumberAnimation { duration: 200 } }
             }
         }
 
-        // Clear All Button (Full width at bottom)
+        // Clear All Button
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: 32
             Layout.rightMargin: 12
             Layout.bottomMargin: 4
-            visible: (typeof Notifications !== 'undefined' && Notifications.historyModel && Notifications.historyModel.count > 0)
+            visible: {
+                if (typeof Notifications === 'undefined') return false;
+                for (let i = 0; i < Notifications.historyModel.count; i++) {
+                    if (!Notifications.historyModel.get(i).isDismissed) return true;
+                }
+                return false;
+            }
 
             GlassIconButton {
                 anchors.fill: parent

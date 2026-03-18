@@ -26,38 +26,38 @@ PanelWindow {
     visible: true
 
     implicitWidth: 320
-    implicitHeight: popupList.contentHeight
 
     function updateBlurRegion() {
+        // Accessing contentItem children which are the delegates
+        let delegates = popupList.contentItem.children;
+
         // Construct an explicit surgical mask based on the actual items in the ListView.
         // We iterate through the visible items and extract their geometry relative to the window.
         let blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
         blurStr += "    width: 0; height: 0\n"; // Force surgical union
-        
+
         let found = false;
-        // Accessing contentItem children which are the delegates
-        let delegates = popupList.contentItem.children;
         for (let i = 0; i < delegates.length; i++) {
             let d = delegates[i];
             // Only include actual visible cards that aren't marked for deletion
             if (d && d.width > 0 && d.height > 0 && d.opacity > 0.01) {
                 // Map the delegate's geometry to the window
                 let pos = d.mapToItem(popupWindow.contentItem, 0, 0);
-                blurStr += "    Region { x: " + Math.round(pos.x) + 
-                           "; y: " + Math.round(pos.y) + 
-                           "; width: " + Math.round(d.width) + 
-                           "; height: " + Math.round(d.height) + 
+                blurStr += "    Region { x: " + Math.round(pos.x) +
+                           "; y: " + Math.round(pos.y) +
+                           "; width: " + Math.round(d.width) +
+                           "; height: " + Math.round(d.height) +
                            "; radius: 12 }\n";
                 found = true;
             }
         }
-        
+
         if (!found) {
             blurStr += "    Region { x: -9999; y: -9999; width: 1; height: 1 }\n";
         }
-        
+
         blurStr += "}";
-        
+
         if (popupWindow.BackgroundEffect.blurRegion) popupWindow.BackgroundEffect.blurRegion.destroy();
         popupWindow.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, popupWindow, "dynamicBlurRegionPopup");
 
@@ -80,7 +80,7 @@ PanelWindow {
         spacing: 12
         interactive: false
         model: Notifications.activePopups
-        
+
         opacity: count > 0 ? 1.0 : 0.0
         Behavior on opacity { NumberAnimation { duration: Theme.animationDuration } }
 
@@ -105,7 +105,7 @@ PanelWindow {
             id: delegateRoot
             width: popupList.width
             height: card.height
-            
+
             readonly property var notification: model.notif
 
             NotificationCard {

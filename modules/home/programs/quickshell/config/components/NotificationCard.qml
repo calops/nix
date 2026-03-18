@@ -40,22 +40,16 @@ Item {
         }
     }
 
-    // Explicitly handle blur registration
+    // Find blurGroupId for backdrop
     property var _blurGroupId: ""
     function findBlurGroupId(node) {
         if (!node) return "";
         if (node.blurGroupId) return node.blurGroupId;
         return findBlurGroupId(node.parent);
     }
-    
+
     Component.onCompleted: {
-        if (root.blurEnabled) {
-            _blurGroupId = findBlurGroupId(root.parent);
-            if (_blurGroupId) BlurRegistry.registerItem(_blurGroupId, root);
-        }
-    }
-    Component.onDestruction: {
-        if (_blurGroupId) BlurRegistry.unregisterItem(_blurGroupId, root);
+        _blurGroupId = findBlurGroupId(root.parent);
     }
 
     HoverBackdrop {
@@ -63,7 +57,7 @@ Item {
         anchors.fill: parent
         radius: root.radius
         opacity: root.isPopup ? 1.0 : 0.8
-        blurGroupId: "" 
+        blurGroupId: root.blurEnabled ? _blurGroupId : ""
     }
 
     // Urgency Border & Pulse
