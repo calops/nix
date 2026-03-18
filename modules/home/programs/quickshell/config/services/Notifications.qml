@@ -16,8 +16,6 @@ Singleton {
         persistenceSupported: true
         
         onNotification: (notification) => {
-            console.log("NOTIF SERVICE: Received [" + notification.id + "] from " + notification.appName);
-            
             notification.tracked = true;
 
             historyModel.insert(0, {
@@ -36,7 +34,6 @@ Singleton {
             updateMaxUrgency();
 
             notification.closed.connect((reason) => {
-                console.log("NOTIF SERVICE: Signal closed for [" + notification.id + "] reason: " + reason);
                 removePopupById(notification.id);
                 updateMaxUrgency();
             });
@@ -67,11 +64,6 @@ Singleton {
         maxUrgency = max;
     }
 
-    function hidePopup(notification) {
-        if (!notification) return;
-        removePopupById(notification.id);
-    }
-
     function removePopupById(id) {
         for (let i = 0; i < activePopups.count; i++) {
             if (activePopups.get(i).notifId === id) {
@@ -79,6 +71,11 @@ Singleton {
                 return;
             }
         }
+    }
+
+    function hidePopup(notification) {
+        if (!notification) return;
+        removePopupById(notification.id);
     }
 
     function removeHistoryById(id) {
@@ -92,17 +89,14 @@ Singleton {
 
     function dismiss(notification) {
         if (!notification) return;
-        console.log("NOTIF SERVICE: Manually dismissing [" + notification.id + "]");
         notification.dismiss();
         removePopupById(notification.id);
         removeHistoryById(notification.id);
     }
 
     function clearAll() {
-        console.log("NOTIF SERVICE: Clearing all notifications");
         const list = server.notifications;
         if (list) {
-            // Need a copy because dismiss() might modify the list
             const copy = [];
             for (let i = 0; i < list.length; i++) copy.push(list[i]);
             for (let i = copy.length - 1; i >= 0; i--) {

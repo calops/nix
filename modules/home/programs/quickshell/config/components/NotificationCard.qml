@@ -9,10 +9,12 @@ Item {
     property var notification
     property bool isPopup: false
     property int radius: 12
+    property bool blurEnabled: false
 
     signal dismiss()
 
-    width: parent.width
+    // Ensure we have a valid height even if content isn't ready
+    width: parent ? parent.width : 0
     height: contentLayout.implicitHeight + 24
 
     // Cache properties to prevent "content collapse" when the notification object is closed
@@ -38,7 +40,8 @@ Item {
         }
     }
 
-    property var blurGroupId: ""
+    // Explicitly handle blur registration
+    property var _blurGroupId: ""
     function findBlurGroupId(node) {
         if (!node) return "";
         if (node.blurGroupId) return node.blurGroupId;
@@ -46,11 +49,13 @@ Item {
     }
     
     Component.onCompleted: {
-        blurGroupId = findBlurGroupId(root.parent);
-        if (blurGroupId) BlurRegistry.registerItem(blurGroupId, root);
+        if (root.blurEnabled) {
+            _blurGroupId = findBlurGroupId(root.parent);
+            if (_blurGroupId) BlurRegistry.registerItem(_blurGroupId, root);
+        }
     }
     Component.onDestruction: {
-        if (blurGroupId) BlurRegistry.unregisterItem(blurGroupId, root);
+        if (_blurGroupId) BlurRegistry.unregisterItem(_blurGroupId, root);
     }
 
     HoverBackdrop {
@@ -77,7 +82,6 @@ Item {
     }
 
     // Main Card Action (Default Action)
-    // Placed before content layout so it doesn't intercept child MouseAreas (like the close button)
     MouseArea {
         anchors.fill: parent
         onClicked: {
@@ -127,7 +131,7 @@ Item {
             // Close button
             MouseArea {
                 id: closeButtonMouseArea
-                width: 24; height: 24 // Slightly larger hit target
+                width: 24; height: 24
                 onClicked: {
                     console.log("NOTIF CARD: Close button clicked");
                     root.dismiss();

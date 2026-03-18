@@ -37,33 +37,34 @@ Item {
         Behavior on opacity { NumberAnimation { duration: Theme.animationDuration } }
     }
 
-    // --- Collapsed View: Bell Icon ---
+    // --- Bell Icon (Visible in both states) ---
     Item {
         id: iconContainer
         width: Theme.iconWidth
         height: 56
         anchors.right: parent.right
-        visible: !root.expanded || opacity > 0
-        opacity: root.expanded ? 0.0 : 1.0
-        Behavior on opacity { NumberAnimation { duration: Theme.animationDuration } }
+        z: 5
 
-        // Bell Icon (Custom Drawing / Styled Text)
         StyledText {
             id: bellIcon
             anchors.centerIn: parent
-            text: (typeof Notifications !== 'undefined' && Notifications.history && Notifications.history.length > 0) ? "󰂚" : "󰂜"
-            font.pixelSize: 22
+            text: (typeof Notifications !== 'undefined' && Notifications.historyModel && Notifications.historyModel.count > 0) ? "󰂚" : "󰂜"
+            font.pixelSize: 26 // Bigger icon
+            font.bold: true   // Thicker lines
             color: {
                 if (typeof Notifications === 'undefined') return Colors.palette.subtext0;
                 if (Notifications.maxUrgency === NotificationUrgency.Critical) return Colors.palette.maroon;
-                if (Notifications.unseenCount > 0) return Colors.palette.mauve;
+                if (Notifications.unseenCount > 0) return Colors.palette.text; // Proper text color when active
                 return Colors.palette.subtext0;
             }
 
-            // Shake animation for Critical/New
-            RotationAnimation on rotation {
+            // Ringing animation (shakes and resets to 0)
+            SequentialAnimation on rotation {
                 id: shakeAnim
-                from: -15; to: 15; duration: 100; loops: 5; running: false
+                running: false
+                NumberAnimation { from: 0; to: -15; duration: 80; easing.type: Easing.OutQuad }
+                NumberAnimation { from: -15; to: 15; duration: 80; easing.type: Easing.InOutQuad; loops: 4 }
+                NumberAnimation { from: 15; to: 0; duration: 80; easing.type: Easing.InQuad }
             }
 
             SequentialAnimation on opacity {
@@ -74,7 +75,6 @@ Item {
                 NumberAnimation { from: 1.0; to: 0.6; duration: 1500; easing.type: Easing.InOutSine }
             }
 
-            // Trigger shake when a new notification arrives
             Connections {
                 target: (typeof Notifications !== 'undefined') ? Notifications : null
                 function onUnseenCountChanged() {
@@ -86,7 +86,7 @@ Item {
         // Badge
         Rectangle {
             visible: (typeof Notifications !== 'undefined') && Notifications.unseenCount > 0
-            width: 16; height: 16; radius: 8
+            width: 18; height: 18; radius: 9
             color: Colors.palette.red
             anchors.top: bellIcon.top
             anchors.right: bellIcon.right
@@ -95,7 +95,7 @@ Item {
 
             StyledText {
                 text: (typeof Notifications !== 'undefined') ? Notifications.unseenCount : 0
-                font.pixelSize: 9
+                font.pixelSize: 10
                 font.bold: true
                 anchors.centerIn: parent
                 color: "white"
@@ -108,27 +108,21 @@ Item {
         id: expandedView
         anchors.fill: parent
         anchors.margins: 12
+        anchors.rightMargin: 0 // Flush with the icon column
         visible: opacity > 0
         opacity: root.expanded ? 1.0 : 0.0
         Behavior on opacity { NumberAnimation { duration: Theme.animationDuration } }
         spacing: 12
 
-        // Header
+        // Header (Title only, Clear button moved to bottom)
         RowLayout {
             Layout.fillWidth: true
+            Layout.rightMargin: 56 // Leave room for the bell icon
+            Layout.topMargin: 8
             StyledText {
                 text: "Notifications"
-                font.pixelSize: 14; font.bold: true
+                font.pixelSize: 16; font.bold: true
                 Layout.fillWidth: true
-            }
-            
-            GlassIconButton {
-                id: clearBtn
-                Layout.preferredWidth: 60
-                Layout.preferredHeight: 24
-                icon: "󰅖 Clear"
-                iconSize: 10
-                onClicked: Notifications.clearAll()
             }
         }
 
@@ -137,8 +131,9 @@ Item {
             id: listView
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.rightMargin: 12 // Spacing from edge
             model: (typeof Notifications !== 'undefined') ? Notifications.historyModel : []
-            spacing: 8
+            spacing: 10
             clip: true
 
             add: Transition {
@@ -159,7 +154,24 @@ Item {
             
             delegate: NotificationCard {
                 notification: model.notif
+                blurEnabled: false
                 onDismiss: if (model.notif) Notifications.dismiss(model.notif)
+            }
+        }
+
+        // Clear All Button (Full width at bottom)
+        Item {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 32
+            Layout.rightMargin: 12
+            Layout.bottomMargin: 4
+            visible: (typeof Notifications !== 'undefined' && Notifications.historyModel && Notifications.historyModel.count > 0)
+
+            GlassIconButton {
+                anchors.fill: parent
+                icon: "󰅖 Clear All History"
+                iconSize: 11
+                onClicked: Notifications.clearAll()
             }
         }
     }

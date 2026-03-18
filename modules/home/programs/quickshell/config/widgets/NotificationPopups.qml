@@ -18,41 +18,59 @@ PanelWindow {
 
     margins {
         top: 20
-        right: 20
+        right: 100
     }
 
     exclusionMode: ExclusionMode.Ignore
     color: "transparent"
-    visible: Notifications.activePopups.count > 0
+    visible: true
 
     implicitWidth: 320
     implicitHeight: popupList.contentHeight
 
-    // Mask/Blur logic
-    property string blurGroupId: "popupWindow"
-    property var registeredBlurItems: BlurRegistry.getItemsForGroup(blurGroupId)
-    onRegisteredBlurItemsChanged: updateBlurRegion()
-
-    Item { id: offscreenAnchor; x: -9999; y: -9999; visible: true; opacity: 0.0 }
-
     function updateBlurRegion() {
-        var items = registeredBlurItems || [];
+        // Construct an explicit surgical mask based on the actual items in the ListView.
+        // We iterate through the visible items and extract their geometry relative to the window.
+        let blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
+        blurStr += "    width: 0; height: 0\n"; // Force surgical union
         
-        var blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-        if (items.length === 0) {
-            blurStr += "    Region { item: offscreenAnchor }\n";
-        } else {
-            for (var i = 0; i < items.length; i++) {
-                blurStr += "    property var item" + i + ": popupWindow.registeredBlurItems[" + i + "];\n";
-                blurStr += "    Region { item: item" + i + " || offscreenAnchor; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
+        let found = false;
+        // Accessing contentItem children which are the delegates
+        let delegates = popupList.contentItem.children;
+        for (let i = 0; i < delegates.length; i++) {
+            let d = delegates[i];
+            // Only include actual visible cards that aren't marked for deletion
+            if (d && d.width > 0 && d.height > 0 && d.opacity > 0.01) {
+                // Map the delegate's geometry to the window
+                let pos = d.mapToItem(popupWindow.contentItem, 0, 0);
+                blurStr += "    Region { x: " + Math.round(pos.x) + 
+                           "; y: " + Math.round(pos.y) + 
+                           "; width: " + Math.round(d.width) + 
+                           "; height: " + Math.round(d.height) + 
+                           "; radius: 12 }\n";
+                found = true;
             }
         }
+        
+        if (!found) {
+            blurStr += "    Region { x: -9999; y: -9999; width: 1; height: 1 }\n";
+        }
+        
         blurStr += "}";
+        
         if (popupWindow.BackgroundEffect.blurRegion) popupWindow.BackgroundEffect.blurRegion.destroy();
         popupWindow.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, popupWindow, "dynamicBlurRegionPopup");
 
         if (popupWindow.mask) popupWindow.mask.destroy();
         popupWindow.mask = Qt.createQmlObject(blurStr, popupWindow, "dynamicMaskPopup");
+    }
+
+    // Refresh mask frequently to follow animations perfectly
+    Timer {
+        interval: 16
+        running: true
+        repeat: true
+        onTriggered: popupWindow.updateBlurRegion()
     }
 
     ListView {
@@ -62,6 +80,9 @@ PanelWindow {
         spacing: 12
         interactive: false
         model: Notifications.activePopups
+        
+        opacity: count > 0 ? 1.0 : 0.0
+        Behavior on opacity { NumberAnimation { duration: Theme.animationDuration } }
 
         add: Transition {
             NumberAnimation { property: "opacity"; from: 0; to: 1; duration: Theme.animationDuration }
@@ -92,6 +113,7 @@ PanelWindow {
                 notification: delegateRoot.notification
                 isPopup: true
                 radius: 12
+                blurEnabled: false // We handle blur surgically at the window level now
                 onDismiss: {
                     if (delegateRoot.notification) {
                         Notifications.dismiss(delegateRoot.notification);
@@ -105,10 +127,9 @@ PanelWindow {
                     if (delegateRoot.notification.expireTimeout > 0) return delegateRoot.notification.expireTimeout;
                     return 8000;
                 }
-                running: interval > 0 && popupWindow.visible
+                running: interval > 0 && popupList.opacity > 0.5
                 onTriggered: {
                     if (delegateRoot.notification) {
-                        console.log("POPUP: Auto-hide triggered for [" + delegateRoot.notification.id + "]");
                         Notifications.hidePopup(delegateRoot.notification);
                     }
                 }
