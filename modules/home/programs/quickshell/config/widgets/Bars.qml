@@ -139,9 +139,6 @@ Scope {
                     }
                 }
             }
-
-
-
         }
     }
 
@@ -158,19 +155,12 @@ Scope {
                 bottom: true
                 right: true
             }
-            // Force window to extend slightly past screen edge to cover potential gap
             margins.right: -2 
 
-            implicitWidth: 300 // Fixed width to prevent resize flicker
+            implicitWidth: 300
             color: "transparent"
             
-            // Try to set exclusion mode to ignore to fix reservation issue.
-            // Based on common Quickshell/Wayland patterns, exclusionMode: ExclusionMode.Ignore might work.
-            // But I should check if I can confirm this property exists.
-            // For now, I will just fix the visibility issue in this step.
             exclusionMode: ExclusionMode.Ignore
-
-            // static mask removed; handled dynamically in updateBlurRegion
 
             property var registeredBlurItems: BlurRegistry.getItemsForGroup("rightBarScope")
             onRegisteredBlurItemsChanged: updateBlurRegion()
@@ -198,12 +188,14 @@ Scope {
                 if (rightPanel.BackgroundEffect.blurRegion) rightPanel.BackgroundEffect.blurRegion.destroy();
                 rightPanel.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, rightPanel, "dynamicBlurRegionRight");
 
-                // Window Mask (static base items + dynamic bounds)
+                // Window Mask
                 var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-                maskStr += "    Region { item: batteryLoader.item || offscreenAnchorRight }\n";
-                maskStr += "    Region { item: brightness || offscreenAnchorRight }\n";
-                maskStr += "    Region { item: volume || offscreenAnchorRight }\n";
-                maskStr += "    Region { item: mpris || offscreenAnchorRight }\n";
+                maskStr += "    Region { item: (typeof backdropItem !== 'undefined' ? backdropItem : null) || offscreenAnchorRight }\n";
+                maskStr += "    Region { item: (typeof notifications !== 'undefined' ? notifications : null) || offscreenAnchorRight }\n";
+                maskStr += "    Region { item: (typeof batteryLoader !== 'undefined' && batteryLoader.item ? batteryLoader.item : null) || offscreenAnchorRight }\n";
+                maskStr += "    Region { item: (typeof brightness !== 'undefined' ? brightness : null) || offscreenAnchorRight }\n";
+                maskStr += "    Region { item: (typeof volume !== 'undefined' ? volume : null) || offscreenAnchorRight }\n";
+                maskStr += "    Region { item: (typeof mpris !== 'undefined' ? mpris : null) || offscreenAnchorRight }\n";
                 for (var i = 0; i < items.length; i++) {
                     maskStr += "    property var item" + i + ": rightPanel.registeredBlurItems[" + i + "];\n";
                     maskStr += "    Region { item: item" + i + " || offscreenAnchorRight; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
@@ -219,19 +211,25 @@ Scope {
                 property string blurGroupId: "rightBarScope"
 
                 Backdrop {
-                    // enabled: Niri.hasRightOverflow
+                    id: backdropItem
                     enabled: !Niri.overviewActive
                     width: 56
                     anchors.right: parent.right
                     
-                    // Override gradient to fade from Right (Opaque) to Left (Transparent)
-                    // This avoids using rotation: 180 which causes pixel alignment issues
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
                         GradientStop { position: 0.0; color: Colors.alpha(Colors.palette.crust, 0.0) }
                         GradientStop { position: 0.4; color: Colors.alpha(Colors.palette.crust, 0.65) }
                         GradientStop { position: 1.0; color: Colors.alpha(Colors.palette.crust, 1.0) }
                     }
+                }
+
+                Widgets.Notifications {
+                    id: notifications
+                    anchors.right: parent.right
+                    y: 10
+                    // Safe calculation for height
+                    expandedHeight: (Niri.overviewActive && typeof mpris !== "undefined" && mpris) ? Math.max(56, mpris.y - y - 17) : 400
                 }
 
                 Widgets.MprisWidget {
@@ -273,7 +271,7 @@ Scope {
                         height: active ? 50 : 0
                         visible: active
                         sourceComponent: Component {
-                            Battery {
+                            Widgets.Battery {
                                 anchors.right: parent.right
                             }
                         }

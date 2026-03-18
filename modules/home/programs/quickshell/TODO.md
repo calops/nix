@@ -1,9 +1,9 @@
 # Quickshell Project TODO
 
 ## Backlog
-- [ ] Notification Center
-    - [ ] Top right of the screen
-    - [ ] Full support of all standard notification features
+- [x] Notification Center
+    - [x] Top right of the screen
+    - [x] Full support of all standard notification features
 - [ ] Lock screen
     - [ ] Proper PAM integration
     - [ ] Maybe greetd frontend?

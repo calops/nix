@@ -6,11 +6,12 @@ import "services"
 ShellRoot {
     id: root
 
-
-
     IpcService {}
     Bars {}
-    OverviewBackdrop { id: backdrop }
+    NotificationPopups {}
+    OverviewBackdrop {
+        id: backdrop
+    }
 
     readonly property var _anyrunService: AnyrunService
     readonly property var _cavaService: CavaService
