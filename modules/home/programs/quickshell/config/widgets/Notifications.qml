@@ -46,25 +46,19 @@ Item {
         anchors.right: parent.right
         z: 5
 
+        readonly property color iconColor: {
+            if (typeof Notifications === 'undefined') return Colors.palette.text;
+            if (Notifications.maxUrgency === NotificationUrgency.Critical) return Colors.palette.maroon;
+            return Colors.palette.text;
+        }
+
         StyledText {
             id: bellIcon
             anchors.centerIn: parent
-            // Show filled bell if we have active (non-dismissed) notifications
-            text: {
-                if (typeof Notifications === 'undefined') return "󰂜";
-                for (let i = 0; i < Notifications.historyModel.count; i++) {
-                    if (!Notifications.historyModel.get(i).isDismissed) return "󰂚";
-                }
-                return "󰂜";
-            }
-            font.pixelSize: 26 
-            font.bold: true   
-            color: {
-                if (typeof Notifications === 'undefined') return Colors.palette.subtext0;
-                if (Notifications.maxUrgency === NotificationUrgency.Critical) return Colors.palette.maroon;
-                if (Notifications.unseenCount > 0) return Colors.palette.text; 
-                return Colors.palette.subtext0;
-            }
+            text: "󰂜"
+            font.pixelSize: 30
+            font.family: "Nerd Font"
+            color: iconContainer.iconColor
 
             SequentialAnimation on rotation {
                 id: shakeAnim
@@ -90,23 +84,15 @@ Item {
             }
         }
 
-        // Badge
-        Rectangle {
+        // Number inside bell
+        StyledText {
+            text: (typeof Notifications !== 'undefined') ? Notifications.unseenCount : ""
+            font.pixelSize: 10
+            font.bold: true
+            anchors.centerIn: parent
+            anchors.verticalCenterOffset: 2
+            color: iconContainer.iconColor
             visible: (typeof Notifications !== 'undefined') && Notifications.unseenCount > 0
-            width: 18; height: 18; radius: 9
-            color: Colors.palette.red
-            anchors.top: bellIcon.top
-            anchors.right: bellIcon.right
-            anchors.topMargin: -2
-            anchors.rightMargin: -4
-
-            StyledText {
-                text: (typeof Notifications !== 'undefined') ? Notifications.unseenCount : 0
-                font.pixelSize: 10
-                font.bold: true
-                anchors.centerIn: parent
-                color: "white"
-            }
         }
     }
 
