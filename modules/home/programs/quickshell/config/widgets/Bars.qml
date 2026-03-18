@@ -47,13 +47,17 @@ Scope {
 
                 Item {
                     id: offscreenAnchorLeft
-                    x: -9999; y: -9999; width: 1; height: 1
-                    visible: true; opacity: 0.0
+                    x: -9999
+                    y: -9999
+                    width: 1
+                    height: 1
+                    visible: true
+                    opacity: 0.0
                 }
 
                 function updateBlurRegion() {
                     var items = registeredBlurItems || [];
-                    
+
                     // Blur Region
                     var blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
                     if (items.length === 0) {
@@ -65,9 +69,10 @@ Scope {
                         }
                     }
                     blurStr += "}";
-                    if (leftPanel.BackgroundEffect.blurRegion) leftPanel.BackgroundEffect.blurRegion.destroy();
+                    if (leftPanel.BackgroundEffect.blurRegion)
+                        leftPanel.BackgroundEffect.blurRegion.destroy();
                     leftPanel.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, leftPanel, "dynamicBlurRegionLeft");
-                    
+
                     // Window Mask (includes static widgets + registered items)
                     var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
                     maskStr += "    Region { item: clock || offscreenAnchorLeft }\n";
@@ -84,7 +89,8 @@ Scope {
                         maskStr += "    Region { item: item" + j + " || offscreenAnchorLeft; radius: typeof item" + j + " !== 'undefined' && item" + j + " ? (item" + j + ".radius || 0) : 0 }\n";
                     }
                     maskStr += "}";
-                    if (leftPanel.mask) leftPanel.mask.destroy();
+                    if (leftPanel.mask)
+                        leftPanel.mask.destroy();
                     leftPanel.mask = Qt.createQmlObject(maskStr, leftPanel, "dynamicMaskLeft");
                 }
 
@@ -103,9 +109,10 @@ Scope {
                         id: tray
                         anchors.left: parent.left
                         y: 15
-                        
+
                         menuRect: {
-                            if (!mainMenu || !mainMenu.shouldShow || !hoveredItem) return Qt.rect(0, 0, 0, 0);
+                            if (!mainMenu || !mainMenu.shouldShow || !hoveredItem)
+                                return Qt.rect(0, 0, 0, 0);
                             var pos = hoveredItem.mapToItem(leftPanel.contentItem, 0, 0);
                             var menuX = tray.expanded ? 248 : 45;
                             return Qt.rect(menuX, pos.y, mainMenu.baseWidth, mainMenu.baseHeight);
@@ -124,7 +131,12 @@ Scope {
                         anchors.bottomMargin: 15
                         spacing: Niri.overviewActive ? 17 : 0
 
-                        Behavior on spacing { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
+                        Behavior on spacing {
+                            NumberAnimation {
+                                duration: Theme.animationDuration
+                                easing.type: Easing.OutQuad
+                            }
+                        }
 
                         Item {
                             id: clockContainer
@@ -155,11 +167,11 @@ Scope {
                 bottom: true
                 right: true
             }
-            margins.right: -2 
+            margins.right: -2
 
             implicitWidth: 300
             color: "transparent"
-            
+
             exclusionMode: ExclusionMode.Ignore
 
             property var registeredBlurItems: BlurRegistry.getItemsForGroup("rightBarScope")
@@ -167,13 +179,17 @@ Scope {
 
             Item {
                 id: offscreenAnchorRight
-                x: -9999; y: -9999; width: 1; height: 1
-                visible: true; opacity: 0.0
+                x: -9999
+                y: -9999
+                width: 1
+                height: 1
+                visible: true
+                opacity: 0.0
             }
 
             function updateBlurRegion() {
                 var items = registeredBlurItems || [];
-                
+
                 // Blur Region
                 var blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
                 if (items.length === 0) {
@@ -185,12 +201,12 @@ Scope {
                     }
                 }
                 blurStr += "}";
-                if (rightPanel.BackgroundEffect.blurRegion) rightPanel.BackgroundEffect.blurRegion.destroy();
+                if (rightPanel.BackgroundEffect.blurRegion)
+                    rightPanel.BackgroundEffect.blurRegion.destroy();
                 rightPanel.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, rightPanel, "dynamicBlurRegionRight");
 
                 // Window Mask
                 var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-                maskStr += "    Region { item: (typeof backdropItem !== 'undefined' ? backdropItem : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof notifications !== 'undefined' ? notifications : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof batteryLoader !== 'undefined' && batteryLoader.item ? batteryLoader.item : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof brightness !== 'undefined' ? brightness : null) || offscreenAnchorRight }\n";
@@ -201,7 +217,8 @@ Scope {
                     maskStr += "    Region { item: item" + i + " || offscreenAnchorRight; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
                 }
                 maskStr += "}";
-                if (rightPanel.mask) rightPanel.mask.destroy();
+                if (rightPanel.mask)
+                    rightPanel.mask.destroy();
                 rightPanel.mask = Qt.createQmlObject(maskStr, rightPanel, "dynamicMaskRight");
             }
 
@@ -215,12 +232,21 @@ Scope {
                     enabled: !Niri.overviewActive
                     width: 56
                     anchors.right: parent.right
-                    
+
                     gradient: Gradient {
                         orientation: Gradient.Horizontal
-                        GradientStop { position: 0.0; color: Colors.alpha(Colors.palette.crust, 0.0) }
-                        GradientStop { position: 0.4; color: Colors.alpha(Colors.palette.crust, 0.65) }
-                        GradientStop { position: 1.0; color: Colors.alpha(Colors.palette.crust, 1.0) }
+                        GradientStop {
+                            position: 0.0
+                            color: Colors.alpha(Colors.palette.crust, 0.0)
+                        }
+                        GradientStop {
+                            position: 0.4
+                            color: Colors.alpha(Colors.palette.crust, 0.65)
+                        }
+                        GradientStop {
+                            position: 1.0
+                            color: Colors.alpha(Colors.palette.crust, 1.0)
+                        }
                     }
                 }
 
@@ -244,7 +270,12 @@ Scope {
                     anchors.right: parent.right
                     spacing: Niri.overviewActive ? 17 : 0
 
-                    Behavior on spacing { NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.OutQuad } }
+                    Behavior on spacing {
+                        NumberAnimation {
+                            duration: Theme.animationDuration
+                            easing.type: Easing.OutQuad
+                        }
+                    }
 
                     Item {
                         width: Theme.widgetExpandedWidth
