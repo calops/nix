@@ -2,14 +2,15 @@
   description = "Home-manager configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # last working build of electron (again)
+    nixpkgs.url = "github:NixOS/nixpkgs?ref=e38213b91d37";
 
     # Flake framework
     blueprint.url = "github:numtide/blueprint";
     blueprint.inputs.nixpkgs.follows = "nixpkgs";
 
     # Theming framework for nixos and home-manager
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:nix-community/stylix";
     stylix.inputs.nixpkgs.follows = "nixpkgs";
     stylix.inputs.nur.follows = "nur";
 
@@ -79,12 +80,6 @@
     devenv.url = "github:cachix/devenv";
     devenv.inputs.nixpkgs.follows = "nixpkgs";
 
-    walker.url = "github:abenz1267/walker";
-    walker.inputs.nixpkgs.follows = "nixpkgs";
-
-    niri-caelestia-shell.url = "github:jutraim/niri-caelestia-shell";
-    niri-caelestia-shell.inputs.nixpkgs.follows = "nixpkgs";
-
     stasis.url = "github:saltnpepper97/stasis";
     stasis.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -92,7 +87,6 @@
 
     quickshell.url = "github:bbedward/quickshell?ref=ext-bg-effect";
     quickshell.inputs.nixpkgs.follows = "nixpkgs";
-
   };
 
   outputs =

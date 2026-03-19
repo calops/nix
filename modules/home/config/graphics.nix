@@ -150,7 +150,6 @@ in
     home.packages = [
       pkgs.libnotify
       pkgs.slack
-      # perSystem.self.nur.repos.bandithedoge.sable
     ]
     ++ (lib.lists.optionals (!pkgs.stdenv.isDarwin) [
       pkgs.google-chrome
@@ -175,7 +174,6 @@ in
 
     services.clipman.enable = !pkgs.stdenv.isDarwin;
 
-
     stylix = {
       fonts = {
         sizes = {
@@ -191,7 +189,7 @@ in
       cursor = {
         name = "catppuccin-mocha-peach-cursors";
         size = 32;
-        package = pkgs.catppuccin-cursors.mochaPeach;
+        package = pkgs.catppuccin-cursors;
       };
     };
   };

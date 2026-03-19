@@ -15,7 +15,8 @@ let
 in
 {
   config = lib.mkIf config.my.roles.graphical.enable {
-    home.packages = lib.optional (!pkgs.stdenv.isDarwin) pkgs.firefoxpwa;
+    programs.firefoxpwa.enable = true;
+
     programs.firefox = {
       enable = true;
       package = package;
@@ -115,5 +116,21 @@ in
         MOZ_LEGACY_PROFILES = "1";
       })
     ];
+
+    xdg.desktopEntries = {
+      sable = {
+        name = "Sable";
+        exec = "${lib.getExe pkgs.firefoxpwa} site launch --url https://app.sable.moe/home";
+        icon = "messenger";
+        terminal = false;
+        categories = [
+          "Network"
+          "Chat"
+        ];
+        settings = {
+          StartupWMClass = "ffpwa-messenger"; # Helps with window grouping
+        };
+      };
+    };
   };
 }

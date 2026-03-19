@@ -30,5 +30,6 @@
     ./stasis.nix
     ./zed.nix
     ./ai-dev.nix
+    ./sable.nix
   ];
 }

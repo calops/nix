@@ -37,6 +37,7 @@
     security.rtkit.enable = true;
     virtualisation.docker.enable = true;
     stylix.homeManagerIntegration.autoImport = false;
+    stylix.overlays.enable = false;
     home-manager.backupFileExtension = "hm-backup";
     madness.enable = false; # FIXME: broken
 

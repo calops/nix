@@ -59,14 +59,6 @@
       git = true;
     };
 
-    programs.helix = {
-      enable = true;
-      settings = {
-        theme = "catppuccin_mocha";
-      };
-    };
-    stylix.targets.helix.enable = false;
-
     programs.zoxide = {
       enable = config.my.roles.terminal.enable;
       enableFishIntegration = true;
