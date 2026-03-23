@@ -13,6 +13,7 @@ PanelWindow {
 
     anchors {
         top: true
+        bottom: true
         right: true
     }
 
@@ -25,7 +26,7 @@ PanelWindow {
     color: "transparent"
     visible: true
 
-    implicitWidth: 320
+    width: 320
 
     function updateBlurRegion() {
         // Accessing contentItem children which are the delegates
@@ -75,8 +76,7 @@ PanelWindow {
 
     ListView {
         id: popupList
-        width: parent.width
-        height: contentHeight
+        anchors.fill: parent
         spacing: 12
         interactive: false
         model: Notifications.activePopups
