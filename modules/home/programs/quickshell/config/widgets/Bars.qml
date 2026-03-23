@@ -40,11 +40,6 @@ Scope {
 
                 exclusionMode: ExclusionMode.Ignore
 
-                // mask is set dynamically in updateBlurRegion
-
-                property var registeredBlurItems: BlurRegistry.getItemsForGroup("leftBarScope")
-                onRegisteredBlurItemsChanged: updateBlurRegion()
-
                 Item {
                     id: offscreenAnchorLeft
                     x: -9999
@@ -55,26 +50,33 @@ Scope {
                     opacity: 0.0
                 }
 
-                function updateBlurRegion() {
-                    var items = registeredBlurItems || [];
+                // Blur region - only dynamic items
+                DynamicRegion {
+                    id: leftBlurRegion
+                    window: leftPanel
+                    offscreenAnchor: offscreenAnchorLeft
+                    groupId: "leftBarScopeBlur"
+                }
 
-                    // Blur Region
-                    var blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-                    if (items.length === 0) {
-                        blurStr += "    Region { item: offscreenAnchorLeft }\n";
-                    } else {
-                        for (var i = 0; i < items.length; i++) {
-                            blurStr += "    property var item" + i + ": leftPanel.registeredBlurItems[" + i + "];\n";
-                            blurStr += "    Region { item: item" + i + " || offscreenAnchorLeft; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
-                        }
-                    }
-                    blurStr += "}";
-                    if (leftPanel.BackgroundEffect.blurRegion)
-                        leftPanel.BackgroundEffect.blurRegion.destroy();
-                    leftPanel.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, leftPanel, "dynamicBlurRegionLeft");
+                BackgroundEffect.blurRegion: leftBlurRegion.region
 
-                    // Window Mask (includes static widgets + registered items)
+                // Mask - dynamic items + static items + menuRect
+                property var _maskItems: RegionRegistry.getItemsForGroup("leftBarScope")
+
+                Item {
+                    id: leftMenuRectItem
+                    visible: tray && tray.menuRect.width > 0
+                    x: tray ? Math.round(tray.menuRect.x) : 0
+                    y: tray ? Math.round(tray.menuRect.y) : 0
+                    width: tray ? Math.round(tray.menuRect.width) : 0
+                    height: tray ? Math.round(tray.menuRect.height) : 0
+                }
+
+                function updateMask() {
+                    var items = leftPanel._maskItems || [];
                     var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
+
+                    // Static items
                     maskStr += "    Region { item: clock || offscreenAnchorLeft }\n";
                     maskStr += "    Region { item: workspaces || offscreenAnchorLeft }\n";
                     maskStr += "    Region { item: tray || offscreenAnchorLeft }\n";
@@ -84,20 +86,31 @@ Scope {
                     maskStr += "        width: Math.round(tray ? tray.menuRect.width : 0)\n";
                     maskStr += "        height: Math.round(tray ? tray.menuRect.height : 0)\n";
                     maskStr += "    }\n";
-                    for (var j = 0; j < items.length; j++) {
-                        maskStr += "    property var item" + j + ": leftPanel.registeredBlurItems[" + j + "];\n";
-                        maskStr += "    Region { item: item" + j + " || offscreenAnchorLeft; radius: typeof item" + j + " !== 'undefined' && item" + j + " ? (item" + j + ".radius || 0) : 0 }\n";
+
+                    // Dynamic items
+                    for (var i = 0; i < items.length; i++) {
+                        maskStr += "    property var item" + i + ": leftPanel._maskItems[" + i + "];\n";
+                        maskStr += "    Region { item: item" + i + " || offscreenAnchorLeft; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
                     }
+
                     maskStr += "}";
-                    if (leftPanel.mask)
-                        leftPanel.mask.destroy();
-                    leftPanel.mask = Qt.createQmlObject(maskStr, leftPanel, "dynamicMaskLeft");
+
+                    if (mask) mask.destroy();
+                    mask = Qt.createQmlObject(maskStr, leftPanel, "dynamicMaskLeft");
+                }
+
+                on_MaskItemsChanged: updateMask()
+
+                Component.onCompleted: {
+                    // Trigger initial mask build
+                    Qt.callLater(updateMask);
                 }
 
                 Item {
                     id: leftBarScope
                     anchors.fill: parent
-                    property string blurGroupId: "leftBarScope"
+                    property string blurGroupId: "leftBarScopeBlur"
+                    property string maskGroupId: "leftBarScope"
 
                     Backdrop {
                         enabled: !Niri.overviewActive
@@ -174,9 +187,6 @@ Scope {
 
             exclusionMode: ExclusionMode.Ignore
 
-            property var registeredBlurItems: BlurRegistry.getItemsForGroup("rightBarScope")
-            onRegisteredBlurItemsChanged: updateBlurRegion()
-
             Item {
                 id: offscreenAnchorRight
                 x: -9999
@@ -187,45 +197,68 @@ Scope {
                 opacity: 0.0
             }
 
-            function updateBlurRegion() {
-                var items = registeredBlurItems || [];
+            // Blur region - only dynamic items
+            DynamicRegion {
+                id: rightBlurRegion
+                window: rightPanel
+                offscreenAnchor: offscreenAnchorRight
+                groupId: "rightBarScopeBlur"
+            }
 
-                // Blur Region
-                var blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-                if (items.length === 0) {
-                    blurStr += "    Region { item: offscreenAnchorRight }\n";
-                } else {
-                    for (var i = 0; i < items.length; i++) {
-                        blurStr += "    property var item" + i + ": rightPanel.registeredBlurItems[" + i + "];\n";
-                        blurStr += "    Region { item: item" + i + " || offscreenAnchorRight; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
-                    }
-                }
-                blurStr += "}";
-                if (rightPanel.BackgroundEffect.blurRegion)
-                    rightPanel.BackgroundEffect.blurRegion.destroy();
-                rightPanel.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, rightPanel, "dynamicBlurRegionRight");
+            BackgroundEffect.blurRegion: rightBlurRegion.region
 
-                // Window Mask
+            // Mask - dynamic items + static widgets
+            property var _maskItems: RegionRegistry.getItemsForGroup("rightBarScope")
+
+            function updateMask() {
+                var items = rightPanel._maskItems || [];
                 var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
+
+                // Static items
                 maskStr += "    Region { item: (typeof notifications !== 'undefined' ? notifications : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof batteryLoader !== 'undefined' && batteryLoader.item ? batteryLoader.item : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof brightness !== 'undefined' ? brightness : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof volume !== 'undefined' ? volume : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof mpris !== 'undefined' ? mpris : null) || offscreenAnchorRight }\n";
+
+                // Dynamic items
                 for (var i = 0; i < items.length; i++) {
-                    maskStr += "    property var item" + i + ": rightPanel.registeredBlurItems[" + i + "];\n";
+                    maskStr += "    property var item" + i + ": rightPanel._maskItems[" + i + "];\n";
                     maskStr += "    Region { item: item" + i + " || offscreenAnchorRight; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
                 }
+
                 maskStr += "}";
-                if (rightPanel.mask)
-                    rightPanel.mask.destroy();
-                rightPanel.mask = Qt.createQmlObject(maskStr, rightPanel, "dynamicMaskRight");
+
+                if (mask) mask.destroy();
+                mask = Qt.createQmlObject(maskStr, rightPanel, "dynamicMaskRight");
+            }
+
+            on_MaskItemsChanged: updateMask()
+
+            Component.onCompleted: {
+                // Register static widgets and trigger initial mask build
+                RegionRegistry.registerItem("rightBarScope", notifications);
+                RegionRegistry.registerItem("rightBarScope", brightness);
+                RegionRegistry.registerItem("rightBarScope", volume);
+                RegionRegistry.registerItem("rightBarScope", mpris);
+                Qt.callLater(updateMask);
+            }
+
+            // Handle batteryLoader.item changes
+            Connections {
+                target: batteryLoader
+                function onItemChanged() {
+                    if (batteryLoader.item) {
+                        RegionRegistry.registerItem("rightBarScope", batteryLoader.item);
+                    }
+                }
             }
 
             Item {
                 id: rightBarScope
                 anchors.fill: parent
-                property string blurGroupId: "rightBarScope"
+                property string blurGroupId: "rightBarScopeBlur"
+                property string maskGroupId: "rightBarScope"
 
                 Backdrop {
                     id: backdropItem

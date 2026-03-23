@@ -8,6 +8,7 @@ Item {
     // Default opacity from widget bindings
     opacity: 0.0
     property string blurGroupId: ""
+    property string maskGroupId: ""
     property real radius: 10
     property alias baseColor: bgRect.baseColor
     property variant imageSource: null
@@ -111,25 +112,51 @@ Item {
         return findBlurGroupId(node.parent);
     }
 
+    function findMaskGroupId(node) {
+        if (!node)
+            return "";
+        if (node.maskGroupId)
+            return node.maskGroupId;
+        return findMaskGroupId(node.parent);
+    }
+
     function syncBlurRegistration() {
         if (!blurGroupId)
             return;
         // Use 0.05 instead of > 0.0 to prevent floating-point NumberAnimation
         // lingering bugs from permanently keeping the blur region registered.
         if (opacity > 0.05) {
-            BlurRegistry.registerItem(blurGroupId, root);
+            RegionRegistry.registerItem(blurGroupId, root);
         } else {
-            BlurRegistry.unregisterItem(blurGroupId, root);
+            RegionRegistry.unregisterItem(blurGroupId, root);
         }
     }
 
-    onOpacityChanged: syncBlurRegistration()
+    function syncMaskRegistration() {
+        if (!maskGroupId)
+            return;
+        if (opacity > 0.05) {
+            RegionRegistry.registerItem(maskGroupId, root);
+        } else {
+            RegionRegistry.unregisterItem(maskGroupId, root);
+        }
+    }
+
+    onOpacityChanged: {
+        syncBlurRegistration();
+        syncMaskRegistration();
+    }
 
     Component.onCompleted: {
         var gid = findBlurGroupId(root.parent);
         if (gid) {
             root.blurGroupId = gid;
             syncBlurRegistration();
+        }
+        var mid = findMaskGroupId(root.parent);
+        if (mid) {
+            root.maskGroupId = mid;
+            syncMaskRegistration();
         }
         if (root.imageSource) {
             root._pendingImageSource = root.imageSource;
@@ -139,7 +166,10 @@ Item {
 
     Component.onDestruction: {
         if (root.blurGroupId) {
-            BlurRegistry.unregisterItem(root.blurGroupId, root);
+            RegionRegistry.unregisterItem(root.blurGroupId, root);
+        }
+        if (root.maskGroupId) {
+            RegionRegistry.unregisterItem(root.maskGroupId, root);
         }
     }
 }

@@ -28,9 +28,6 @@ PanelWindow {
 
     width: 320
 
-    property var registeredBlurItems: BlurRegistry.getItemsForGroup("notificationScope")
-    onRegisteredBlurItemsChanged: updateBlurRegion()
-
     Item {
         id: offscreenAnchor
         x: -9999
@@ -41,29 +38,15 @@ PanelWindow {
         opacity: 0.0
     }
 
-    function updateBlurRegion() {
-        let items = registeredBlurItems || [];
-
-        // Blur Region
-        let blurStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-        if (items.length === 0) {
-            blurStr += "    Region { item: offscreenAnchor }\n";
-        } else {
-            for (let i = 0; i < items.length; i++) {
-                blurStr += "    property var item" + i + ": popupWindow.registeredBlurItems[" + i + "];\n";
-                blurStr += "    Region { item: item" + i + " || offscreenAnchor; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
-            }
-        }
-        blurStr += "}";
-        if (popupWindow.BackgroundEffect.blurRegion)
-            popupWindow.BackgroundEffect.blurRegion.destroy();
-        popupWindow.BackgroundEffect.blurRegion = Qt.createQmlObject(blurStr, popupWindow, "dynamicBlurRegionPopup");
-
-        // Window Mask (same regions as blur)
-        if (popupWindow.mask)
-            popupWindow.mask.destroy();
-        popupWindow.mask = Qt.createQmlObject(blurStr, popupWindow, "dynamicMaskPopup");
+    DynamicRegion {
+        id: blurRegion
+        window: popupWindow
+        offscreenAnchor: offscreenAnchor
+        groupId: "notificationScope"
     }
+
+    BackgroundEffect.blurRegion: blurRegion.region
+    mask: blurRegion.region
 
     Item {
         id: notificationScope

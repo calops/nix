@@ -9,7 +9,8 @@ QtObject {
     property int updateTrigger: 0
 
     function registerItem(groupId, item) {
-        if (!groupId || !item) return;
+        if (!groupId || !item)
+            return;
         var r = groupRegistries;
         if (!r[groupId]) {
             r[groupId] = [];
@@ -22,7 +23,8 @@ QtObject {
     }
 
     function unregisterItem(groupId, item) {
-        if (!groupId || !item) return;
+        if (!groupId || !item)
+            return;
         var r = groupRegistries;
         if (r[groupId]) {
             var idx = r[groupId].indexOf(item);

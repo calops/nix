@@ -142,13 +142,13 @@ Item {
                     var gid = findBlurGroupId(cursorContainer.parent);
                     if (gid) {
                         blurGroupId = gid;
-                        BlurRegistry.registerItem(gid, cursorContainer);
+                        RegionRegistry.registerItem(gid, cursorContainer);
                     }
                 }
 
                 Component.onDestruction: {
                     if (blurGroupId) {
-                        BlurRegistry.unregisterItem(blurGroupId, cursorContainer);
+                        RegionRegistry.unregisterItem(blurGroupId, cursorContainer);
                     }
                 }
 

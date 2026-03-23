@@ -243,13 +243,13 @@ ShaderEffect {
         if (!blurGroupId)
             return;
         if (opacity > 0.05 && root.visible) {
-            BlurRegistry.registerItem(blurGroupId, _r1item);
-            BlurRegistry.registerItem(blurGroupId, _r2item);
-            BlurRegistry.registerItem(blurGroupId, _r3item);
+            RegionRegistry.registerItem(blurGroupId, _r1item);
+            RegionRegistry.registerItem(blurGroupId, _r2item);
+            RegionRegistry.registerItem(blurGroupId, _r3item);
         } else {
-            BlurRegistry.unregisterItem(blurGroupId, _r1item);
-            BlurRegistry.unregisterItem(blurGroupId, _r2item);
-            BlurRegistry.unregisterItem(blurGroupId, _r3item);
+            RegionRegistry.unregisterItem(blurGroupId, _r1item);
+            RegionRegistry.unregisterItem(blurGroupId, _r2item);
+            RegionRegistry.unregisterItem(blurGroupId, _r3item);
         }
     }
 
@@ -259,9 +259,9 @@ ShaderEffect {
     Component.onCompleted: syncBlurRegistration()
     Component.onDestruction: {
         if (blurGroupId) {
-            BlurRegistry.unregisterItem(blurGroupId, _r1item);
-            BlurRegistry.unregisterItem(blurGroupId, _r2item);
-            BlurRegistry.unregisterItem(blurGroupId, _r3item);
+            RegionRegistry.unregisterItem(blurGroupId, _r1item);
+            RegionRegistry.unregisterItem(blurGroupId, _r2item);
+            RegionRegistry.unregisterItem(blurGroupId, _r3item);
         }
     }
 }
