@@ -15,9 +15,6 @@ Item {
 
     property string _pendingImageSource: ""
 
-    // Track if blurItem has been registered to avoid double-registration
-    property bool _blurRegistered: false
-
     // Displayed image — drives the shader texture
     Image {
         id: bgImage
@@ -83,17 +80,6 @@ Item {
         y: root.opacity > 0.05 ? 0 : -99999
     }
 
-    // Register blurItem once when blurGroupId is found
-    function setupBlurItem(gid) {
-        console.log("[HoverBackdrop] setupBlurItem called with gid='" + gid + "'");
-        // Only register once, using the group ID passed in
-        if (gid && !root._blurRegistered) {
-            root._blurRegistered = true;
-            console.log("[HoverBackdrop] Registering blurItem for group '" + gid + "'");
-            RegionRegistry.registerItem(gid, blurItem);
-        }
-    }
-
     ShaderEffect {
         id: bgRect
         anchors.fill: parent
@@ -155,38 +141,16 @@ Item {
         return findMaskGroupId(node.parent);
     }
 
-    function syncBlurRegistration() {
-        // No-op - blurItem dimensions are bound directly to opacity
-    }
-
-    function syncMaskRegistration() {
-        if (!maskGroupId)
-            return;
-        if (opacity > 0.05) {
-            RegionRegistry.registerItem(maskGroupId, root);
-        } else {
-            RegionRegistry.unregisterItem(maskGroupId, root);
-        }
-    }
-
-    onOpacityChanged: {
-        console.log("[HoverBackdrop] onOpacityChanged: " + opacity.toFixed(2));
-        syncBlurRegistration();
-        syncMaskRegistration();
-    }
-
     Component.onCompleted: {
-        console.log("[HoverBackdrop] Component.onCompleted - root.width=" + root.width + " root.height=" + root.height);
         var gid = findBlurGroupId(root.parent);
-        console.log("[HoverBackdrop] findBlurGroupId returned: '" + gid + "'");
         if (gid) {
             root.blurGroupId = gid;
-            setupBlurItem(gid);
+            RegionRegistry.registerItem(gid, blurItem);
         }
         var mid = findMaskGroupId(root.parent);
         if (mid) {
             root.maskGroupId = mid;
-            syncMaskRegistration();
+            RegionRegistry.registerItem(maskGroupId, root);
         }
         if (root.imageSource) {
             root._pendingImageSource = root.imageSource;
@@ -195,13 +159,10 @@ Item {
     }
 
     Component.onDestruction: {
-        console.log("[HoverBackdrop] Component.onDestruction");
-        if (root.blurGroupId && root._blurRegistered) {
-            console.log("[HoverBackdrop] Unregistering blurItem for group '" + root.blurGroupId + "'");
+        if (root.blurGroupId) {
             RegionRegistry.unregisterItem(root.blurGroupId, blurItem);
         }
         if (root.maskGroupId) {
-            console.log("[HoverBackdrop] Unregistering maskItem for group '" + root.maskGroupId + "'");
             RegionRegistry.unregisterItem(root.maskGroupId, root);
         }
     }
