@@ -66,15 +66,21 @@ Item {
     }
 
     // Blur tracking item - registered ONCE, never unregisters.
-    // When hidden, dimensions are 0 to exclude from blur region.
+    // When hidden, moved offscreen while keeping full dimensions.
+    // This keeps it in the region QML (avoiding rebuilds) but excludes from visible blur.
     Item {
         id: blurItem
-        anchors.fill: parent
         visible: false
 
-        // Direct binding - no animation to avoid lag
-        width: root.opacity > 0.05 ? root.width : 0
-        height: root.opacity > 0.05 ? root.height : 0
+        property real radius: root.radius
+
+        // Always full dimensions (no rebuild on expand)
+        width: root.width
+        height: root.height
+
+        // Position: offscreen when hidden, at origin when visible
+        x: root.opacity > 0.05 ? 0 : -99999
+        y: root.opacity > 0.05 ? 0 : -99999
     }
 
     // Register blurItem once when blurGroupId is found
