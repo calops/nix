@@ -2,14 +2,9 @@
   pkgs,
   config,
   lib,
-  inputs,
   perSystem,
   ...
 }:
-let
-  palette = config.my.colors.palette.asHexWithHashtag;
-  wallpaper = config.stylix.image;
-in
 {
   config = lib.mkIf (config.my.roles.graphical.enable && !pkgs.stdenv.isDarwin) {
     programs.quickshell = {
@@ -28,6 +23,8 @@ in
         postBuild = ''
           wrapProgram $out/bin/quickshell --set QT_QPA_PLATFORMTHEME gtk3
         '';
+
+        meta.mainProgram = "quickshell";
       };
     };
 

@@ -31,13 +31,8 @@ Singleton {
             name: modelData
             sourceFile: root.dir + "/" + modelData + ".frag"
 
-            Component.onCompleted: {
-                console.log("ShaderCompiler initialized for: " + name);
-            }
-
             onCompiledPathChanged: {
                 if (compiledPath !== "") {
-                    console.log("Shader compiled: " + name + " -> " + compiledPath);
                     root.all = Object.assign({}, root.all, {
                         [name]: compiledPath
                     });
@@ -45,7 +40,6 @@ Singleton {
             }
 
             onReadyChanged: {
-                console.log("Shader ready: " + name + " = " + ready);
                 root.readyStates = Object.assign({}, root.readyStates, {
                     [name]: ready
                 });

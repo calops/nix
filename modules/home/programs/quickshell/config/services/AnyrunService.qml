@@ -26,7 +26,6 @@ Singleton {
             onConnectedChanged: {
                 if (connected) {
                     root.activeConnection = clientSocket;
-                    console.info("Anyrun connected");
                 } else if (root.activeConnection === clientSocket) {
                     root.activeConnection = null;
                 }
@@ -60,7 +59,6 @@ Singleton {
                 foundArgs.push("--plugins", match.slice(1, -1));
             }
             root.pluginArgs = foundArgs;
-            console.log(`Anyrun: User config parsed, ${root.pluginArgs.length / 2} plugins found`);
             providerProcess.running = true;
         }
     }
@@ -81,7 +79,7 @@ Singleton {
         }
 
         stdout: SplitParser {
-            onRead: data => console.log("anyrun-provider:", data)
+            onRead: data => {}
         }
         stderr: SplitParser {
             onRead: data => console.warn("anyrun-provider error:", data)

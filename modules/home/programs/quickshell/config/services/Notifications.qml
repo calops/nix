@@ -16,8 +16,6 @@ Singleton {
         persistenceSupported: true
         
         onNotification: (notification) => {
-            console.log("NOTIF SERVICE: Received [" + notification.id + "] from " + notification.appName + " (lastGen: " + notification.lastGeneration + ")");
-            
             notification.tracked = true;
 
             // --- State Tracking ---
@@ -54,7 +52,6 @@ Singleton {
             updateMaxUrgency();
 
             notification.closed.connect((reason) => {
-                console.log("NOTIF SERVICE: Signal closed for [" + notification.id + "] reason: " + reason);
                 removePopupById(notification.id);
                 
                 // archive it in history
@@ -134,12 +131,10 @@ Singleton {
 
     function dismiss(notification) {
         if (!notification) return;
-        console.log("NOTIF SERVICE: Manually dismissing [" + notification.id + "]");
-        notification.tracked = false; 
+        notification.tracked = false;
     }
 
     function clearAll() {
-        console.log("NOTIF SERVICE: Clearing all history");
         // Only dismiss currently active (non-dismissed) notifications
         for (let i = 0; i < historyModel.count; i++) {
             let entry = historyModel.get(i);

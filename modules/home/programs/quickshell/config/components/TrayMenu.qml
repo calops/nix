@@ -212,7 +212,7 @@ PopupWindow {
             targetR2H: (root.childMenu && root.childMenu.baseHeight) ? root.childMenu.baseHeight : 0
 
             radius3: 0
-            blurGroupId: "toto"
+            blurGroupId: ""
         }
 
         MouseArea {

@@ -9,9 +9,7 @@ ShellRoot {
     IpcService {}
     Bars {}
     NotificationPopups {}
-    OverviewBackdrop {
-        id: backdrop
-    }
+    OverviewBackdrop {}
 
     readonly property var _anyrunService: AnyrunService
     readonly property var _cavaService: CavaService

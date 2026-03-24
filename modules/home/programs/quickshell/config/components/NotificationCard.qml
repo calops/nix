@@ -80,7 +80,6 @@ Item {
         anchors.fill: parent
         onClicked: {
             if (root.notification) {
-                console.log("NOTIF CARD: Main area clicked for [" + root.notification.id + "]");
                 root.notification.dismiss();
                 root.dismiss();
             }
@@ -127,7 +126,6 @@ Item {
                 id: closeButtonMouseArea
                 width: 24; height: 24
                 onClicked: {
-                    console.log("NOTIF CARD: Close button clicked");
                     root.dismiss();
                 }
                 StyledText {

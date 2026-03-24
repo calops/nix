@@ -29,7 +29,6 @@ Item {
     function _rebuildRegion() {
         root._items = RegionRegistry.getItemsForGroup(root.groupId) || [];
         var items = root._items;
-        console.log("[DynamicRegion] _rebuildRegion for groupId='" + root.groupId + "' items.length=" + items.length);
 
         var qmlStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
 
@@ -44,11 +43,13 @@ Item {
 
         qmlStr += "}";
 
-        if (region) region.destroy();
+        if (region)
+            region.destroy();
         region = Qt.createQmlObject(qmlStr, root, "dynamicRegion");
     }
 
     Component.onDestruction: {
-        if (region) region.destroy();
+        if (region)
+            region.destroy();
     }
 }

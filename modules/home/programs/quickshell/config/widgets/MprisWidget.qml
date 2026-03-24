@@ -35,18 +35,14 @@ Item {
 
     function updateActivePlayer() {
         if (typeof Mpris === "undefined") {
-            console.log("MPRIS: Mpris singleton is undefined");
             return;
         }
 
         if (!Mpris.players) {
-            console.log("MPRIS: Mpris.players is null");
             return;
         }
 
         let players = Mpris.players.values || [];
-        // console.log("MPRIS: Total players:", players.length);
-
         let found = null;
         // 1. Priority: If any player is actually PLAYING, that takes immediate precedence.
         for (let i = 0; i < players.length; i++) {
@@ -74,10 +70,6 @@ Item {
 
         if (root.activePlayer !== found) {
             root.activePlayer = found;
-            if (found)
-                console.log("MPRIS: Active player changed to:", found.identity);
-            else
-                console.log("MPRIS: Active player set to null (No Media)");
         }
     }
 

@@ -116,6 +116,7 @@ Scope {
                         enabled: !Niri.overviewActive
                         width: 56
                         anchors.left: parent.left
+                        blurGroupId: "leftBarScopeBlur"
                     }
 
                     SysTray {
@@ -281,7 +282,7 @@ Scope {
                             color: Colors.alpha(Colors.palette.crust, 1.0)
                         }
                     }
-                }
+                    }
 
                 Widgets.Notifications {
                     id: notifications
