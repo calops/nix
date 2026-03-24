@@ -3,7 +3,9 @@ import "../services"
 
 Rectangle {
     id: root
+
     property bool enabled: false
+    property string blurGroupId: ""
 
     width: parent.width
     height: parent.height

@@ -15,6 +15,9 @@ Item {
 
     property string _pendingImageSource: ""
 
+    // Track if blurItem has been registered to avoid double-registration
+    property bool _blurRegistered: false
+
     // Displayed image — drives the shader texture
     Image {
         id: bgImage
@@ -62,6 +65,29 @@ Item {
         }
     }
 
+    // Blur tracking item - registered ONCE, never unregisters.
+    // When hidden, dimensions are 0 to exclude from blur region.
+    Item {
+        id: blurItem
+        anchors.fill: parent
+        visible: false
+
+        // Direct binding - no animation to avoid lag
+        width: root.opacity > 0.05 ? root.width : 0
+        height: root.opacity > 0.05 ? root.height : 0
+    }
+
+    // Register blurItem once when blurGroupId is found
+    function setupBlurItem(gid) {
+        console.log("[HoverBackdrop] setupBlurItem called with gid='" + gid + "'");
+        // Only register once, using the group ID passed in
+        if (gid && !root._blurRegistered) {
+            root._blurRegistered = true;
+            console.log("[HoverBackdrop] Registering blurItem for group '" + gid + "'");
+            RegionRegistry.registerItem(gid, blurItem);
+        }
+    }
+
     ShaderEffect {
         id: bgRect
         anchors.fill: parent
@@ -75,7 +101,10 @@ Item {
         property real useImage: 0.0
 
         Behavior on useImage {
-            NumberAnimation { duration: Theme.animationDuration; easing.type: Easing.InOutQuad }
+            NumberAnimation {
+                duration: Theme.animationDuration
+                easing.type: Easing.InOutQuad
+            }
         }
 
         // Multi-shape defaults (silence warnings)
@@ -121,15 +150,7 @@ Item {
     }
 
     function syncBlurRegistration() {
-        if (!blurGroupId)
-            return;
-        // Use 0.05 instead of > 0.0 to prevent floating-point NumberAnimation
-        // lingering bugs from permanently keeping the blur region registered.
-        if (opacity > 0.05) {
-            RegionRegistry.registerItem(blurGroupId, root);
-        } else {
-            RegionRegistry.unregisterItem(blurGroupId, root);
-        }
+        // No-op - blurItem dimensions are bound directly to opacity
     }
 
     function syncMaskRegistration() {
@@ -143,15 +164,18 @@ Item {
     }
 
     onOpacityChanged: {
+        console.log("[HoverBackdrop] onOpacityChanged: " + opacity.toFixed(2));
         syncBlurRegistration();
         syncMaskRegistration();
     }
 
     Component.onCompleted: {
+        console.log("[HoverBackdrop] Component.onCompleted - root.width=" + root.width + " root.height=" + root.height);
         var gid = findBlurGroupId(root.parent);
+        console.log("[HoverBackdrop] findBlurGroupId returned: '" + gid + "'");
         if (gid) {
             root.blurGroupId = gid;
-            syncBlurRegistration();
+            setupBlurItem(gid);
         }
         var mid = findMaskGroupId(root.parent);
         if (mid) {
@@ -165,10 +189,13 @@ Item {
     }
 
     Component.onDestruction: {
-        if (root.blurGroupId) {
-            RegionRegistry.unregisterItem(root.blurGroupId, root);
+        console.log("[HoverBackdrop] Component.onDestruction");
+        if (root.blurGroupId && root._blurRegistered) {
+            console.log("[HoverBackdrop] Unregistering blurItem for group '" + root.blurGroupId + "'");
+            RegionRegistry.unregisterItem(root.blurGroupId, blurItem);
         }
         if (root.maskGroupId) {
+            console.log("[HoverBackdrop] Unregistering maskItem for group '" + root.maskGroupId + "'");
             RegionRegistry.unregisterItem(root.maskGroupId, root);
         }
     }

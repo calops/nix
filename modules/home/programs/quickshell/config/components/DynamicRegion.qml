@@ -29,6 +29,8 @@ Item {
     function _rebuildRegion() {
         root._items = RegionRegistry.getItemsForGroup(root.groupId) || [];
         var items = root._items;
+        console.log("[DynamicRegion] _rebuildRegion for groupId='" + root.groupId + "' items.length=" + items.length);
+
         var qmlStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
 
         if (items.length === 0) {
