@@ -18,6 +18,14 @@ Singleton {
             AnyrunService.clear();
     }
 
+    onRunnerVisibleChanged: {
+        if (runnerVisible) {
+            // Request focus immediately when opening, don't wait for window visibility
+            mainContent.forceActiveFocus();
+            searchInput.forceActiveFocus();
+        }
+    }
+
     PanelWindow {
         id: runnerWindow
         screen: Quickshell.screens[0]
@@ -42,7 +50,6 @@ Singleton {
             if (visible) {
                 runnerContainer.chosenIndex = -1;
                 runnerContainer.isExiting = false;
-                searchInput.forceActiveFocus();
                 searchInput.text = "";
                 AnyrunService.query("");
             }
