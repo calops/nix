@@ -216,7 +216,6 @@ Scope {
                 var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
 
                 // Static items
-                maskStr += "    Region { item: (typeof notifications !== 'undefined' ? notifications : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof batteryLoader !== 'undefined' && batteryLoader.item ? batteryLoader.item : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof brightness !== 'undefined' ? brightness : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof volume !== 'undefined' ? volume : null) || offscreenAnchorRight }\n";
@@ -236,21 +235,39 @@ Scope {
 
             on_MaskItemsChanged: updateMask()
 
+            property var _lastBatteryItem: null
+
             Component.onCompleted: {
                 // Register static widgets and trigger initial mask build
-                RegionRegistry.registerItem("rightBarScope", notifications);
                 RegionRegistry.registerItem("rightBarScope", brightness);
                 RegionRegistry.registerItem("rightBarScope", volume);
                 RegionRegistry.registerItem("rightBarScope", mpris);
                 Qt.callLater(updateMask);
             }
 
+            Component.onDestruction: {
+                RegionRegistry.unregisterItem("rightBarScope", brightness);
+                RegionRegistry.unregisterItem("rightBarScope", volume);
+                RegionRegistry.unregisterItem("rightBarScope", mpris);
+                if (_lastBatteryItem) {
+                    RegionRegistry.unregisterItem("rightBarScope", _lastBatteryItem);
+                }
+            }
+
             // Handle batteryLoader.item changes
             Connections {
                 target: batteryLoader
                 function onItemChanged() {
+                    // Unregister old item first
+                    if (rightPanel._lastBatteryItem) {
+                        RegionRegistry.unregisterItem("rightBarScope", rightPanel._lastBatteryItem);
+                    }
+                    // Register new item
                     if (batteryLoader.item) {
                         RegionRegistry.registerItem("rightBarScope", batteryLoader.item);
+                        rightPanel._lastBatteryItem = batteryLoader.item;
+                    } else {
+                        rightPanel._lastBatteryItem = null;
                     }
                 }
             }
@@ -282,14 +299,6 @@ Scope {
                             color: Colors.alpha(Colors.palette.crust, 1.0)
                         }
                     }
-                    }
-
-                Widgets.Notifications {
-                    id: notifications
-                    anchors.right: parent.right
-                    y: 10
-                    // Safe calculation for height
-                    expandedHeight: (Niri.overviewActive && typeof mpris !== "undefined" && mpris) ? Math.max(56, mpris.y - y - 17) : 400
                 }
 
                 Widgets.MprisWidget {

@@ -142,16 +142,30 @@ Item {
     }
 
     Component.onCompleted: {
-        var gid = findBlurGroupId(root.parent);
-        if (gid) {
-            root.blurGroupId = gid;
-            RegionRegistry.registerItem(gid, blurItem);
+        // Only auto-discover blurGroupId if not already set externally
+        // (e.g., NotificationCard passes "" when blurEnabled is false)
+        if (!root.blurGroupId) {
+            var gid = findBlurGroupId(root.parent);
+            if (gid) {
+                root.blurGroupId = gid;
+            }
         }
-        var mid = findMaskGroupId(root.parent);
-        if (mid) {
-            root.maskGroupId = mid;
-            RegionRegistry.registerItem(maskGroupId, root);
+        // Only register if we have a blurGroupId (not empty string)
+        if (root.blurGroupId) {
+            RegionRegistry.registerItem(root.blurGroupId, blurItem);
         }
+
+        // Only auto-discover maskGroupId if not already set externally
+        if (!root.maskGroupId) {
+            var mid = findMaskGroupId(root.parent);
+            if (mid) {
+                root.maskGroupId = mid;
+            }
+        }
+        if (root.maskGroupId) {
+            RegionRegistry.registerItem(root.maskGroupId, root);
+        }
+
         if (root.imageSource) {
             root._pendingImageSource = root.imageSource;
             bgImage.source = root.imageSource;
