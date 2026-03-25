@@ -15,7 +15,7 @@ Singleton {
         inlineReplySupported: true
         persistenceSupported: true
 
-        onNotification: (notification) => {
+        onNotification: notification => {
             notification.tracked = true;
 
             // --- State Tracking ---
@@ -56,7 +56,7 @@ Singleton {
             // Only attach closed handler once per notification ID
             if (!handlerAttached[notification.id]) {
                 handlerAttached[notification.id] = true;
-                notification.closed.connect((reason) => {
+                notification.closed.connect(reason => {
                     removePopupById(notification.id);
 
                     // archive it in history
@@ -142,7 +142,8 @@ Singleton {
 
         // Sort: urgency DESC, then time DESC
         entries.sort((a, b) => {
-            if (a.urgency !== b.urgency) return b.urgency - a.urgency;
+            if (a.urgency !== b.urgency)
+                return b.urgency - a.urgency;
             return b.time - a.time;
         });
 
@@ -158,14 +159,16 @@ Singleton {
 
     function getHistoryEntry(id) {
         for (let i = 0; i < historyModel.count; i++) {
-            if (historyModel.get(i).notifId === id) return historyModel.get(i);
+            if (historyModel.get(i).notifId === id)
+                return historyModel.get(i);
         }
         return null;
     }
 
     function isPopupPresent(id) {
         for (let i = 0; i < activePopups.count; i++) {
-            if (activePopups.get(i).notifId === id) return true;
+            if (activePopups.get(i).notifId === id)
+                return true;
         }
         return false;
     }
@@ -176,7 +179,8 @@ Singleton {
         for (let i = 0; i < historyModel.count; i++) {
             let entry = historyModel.get(i);
             if (!entry.isDismissed && entry.notif) {
-                if (entry.notif.urgency > max) max = entry.notif.urgency;
+                if (entry.notif.urgency > max)
+                    max = entry.notif.urgency;
             }
         }
         maxUrgency = max;
@@ -192,12 +196,14 @@ Singleton {
     }
 
     function hidePopup(notification) {
-        if (!notification) return;
+        if (!notification)
+            return;
         removePopupById(notification.id);
     }
 
     function dismiss(notification) {
-        if (!notification) return;
+        if (!notification)
+            return;
         notification.tracked = false;
     }
 

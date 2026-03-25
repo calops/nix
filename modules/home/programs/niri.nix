@@ -161,7 +161,6 @@ in
 
                 Mod+Tab             { toggle-overview; }
                 Mod+L               { spawn-sh "${lock}"; }
-                Mod+N               { spawn-sh "${lib.getExe' config.services.swaync.package "swaync-client"} -t"; }
                 Mod+Plus            { set-column-width "+10%"; }
                 Mod+Return          { spawn-sh "kitty"; }
                 Mod+Shift+Comma     { show-hotkey-overlay; }

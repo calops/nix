@@ -21,7 +21,6 @@
     ./niri.nix
     ./nixcord.nix
     ./ssh.nix
-    ./swaync.nix
     ./zellij.nix
     ./mpv.nix
     ./walker.nix
