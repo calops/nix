@@ -355,7 +355,6 @@ return {
 			animate = { enabled = false },
 			options = { right = { size = 80 } },
 			right = {
-				"copilot-chat",
 				{
 					ft = "help",
 					filter = function(buf) return vim.bo[buf].buftype == "help" end,

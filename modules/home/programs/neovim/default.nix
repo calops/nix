@@ -37,7 +37,6 @@ in
         pkgs.isort # Python
         pkgs.sqlfluff
         pkgs.stylua
-        pkgs.copilot-language-server
 
         # LSP
         pkgs.lua-language-server # lua

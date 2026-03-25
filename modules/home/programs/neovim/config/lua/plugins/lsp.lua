@@ -46,7 +46,6 @@ return {
 				"nixd",
 				"qmlls",
 				"jsonls",
-				"copilot",
 			}
 
 			vim.lsp.config("*", {

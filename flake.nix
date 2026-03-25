@@ -85,7 +85,7 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-    quickshell.url = "github:bbedward/quickshell?ref=ext-bg-effect";
+    quickshell.url = "github:quickshell-mirror/quickshell";
     quickshell.inputs.nixpkgs.follows = "nixpkgs";
   };
 

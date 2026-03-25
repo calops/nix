@@ -1841,16 +1841,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1773532863,
-        "narHash": "sha256-ghPc2tgutZfQs0zPZTBLJYPUtFwztGtIWCCrjxH5u1w=",
-        "owner": "bbedward",
+        "lastModified": 1774422996,
+        "narHash": "sha256-mWjBJIbiMPCpljAQDk8RYf+92/lYZ5npHe2r2SJ+QWc=",
+        "owner": "quickshell-mirror",
         "repo": "quickshell",
-        "rev": "656303d522b79652fbfe12c0d75da1d0fec9f0d9",
+        "rev": "08058326f04e9b5e55c903b3702405a8d3556ac6",
         "type": "github"
       },
       "original": {
-        "owner": "bbedward",
-        "ref": "ext-bg-effect",
+        "owner": "quickshell-mirror",
         "repo": "quickshell",
         "type": "github"
       }
