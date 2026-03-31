@@ -143,7 +143,6 @@ Item {
 
     Component.onCompleted: {
         // Only auto-discover blurGroupId if not already set externally
-        // (e.g., NotificationCard passes "" when blurEnabled is false)
         if (!root.blurGroupId) {
             var gid = findBlurGroupId(root.parent);
             if (gid) {

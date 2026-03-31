@@ -1,224 +1,364 @@
 pragma Singleton
 
-import QtQuick
 import Quickshell
 import Quickshell.Services.Notifications
+import QtQuick
 
 Singleton {
     id: root
 
+    // =========================================================================
+    // Limits and Constants
+    // =========================================================================
+
+    readonly property int maxTransientCount: 5
+    readonly property int maxShadeCount: 50
+    readonly property real defaultTimeout: 10.0  // seconds
+
+    // =========================================================================
+    // Data Model
+    // =========================================================================
+
+    ListModel {
+        id: notificationModel
+    }
+
+    // Expose model for UI binding
+    readonly property alias model: notificationModel
+
+    // =========================================================================
+    // Computed Properties (read-only for UI)
+    // =========================================================================
+
+    property int transientCount: 0
+    property int unseenCount: 0
+    property int shadeCount: 0
+    property bool hasCriticalUnseen: false
+
+    // =========================================================================
+    // NotificationServer Configuration
+    // =========================================================================
+
     NotificationServer {
-        id: server
         bodySupported: true
-        actionsSupported: true
+        bodyMarkupSupported: true
+        bodyHyperlinksSupported: true
+        bodyImagesSupported: true
         imageSupported: true
+        actionsSupported: true
+        actionIconsSupported: true
         inlineReplySupported: true
         persistenceSupported: true
+        keepOnReload: true
 
         onNotification: notification => {
             notification.tracked = true;
+            root.handleNewNotification(notification);
+        }
+    }
 
-            // --- State Tracking ---
-            // isDismissed: permanently removed from active view (archived)
-            // isUnseen: brand new, user hasn't opened widget yet
+    // =========================================================================
+    // Expiration Timer (single aggregated timer)
+    // =========================================================================
 
-            // 1. Update/Add to history model
-            let entry = getHistoryEntry(notification.id);
-            if (!entry) {
-                historyModel.insert(0, {
-                    "notif": notification,
-                    "notifId": notification.id,
-                    "isDismissed": false,
-                    "isUnseen": !notification.lastGeneration
-                });
-            } else {
-                // If it's an update to an existing one, ensure it's "revived" if needed
-                // but usually Quickshell updates existing objects.
-                entry.notif = notification;
-            }
+    property bool timerFrozen: false  // Set by UI when shade is open
 
-            // 2. Add to popups if it's NOT a reload
-            // Note: popups are independent from overlay - they coexist
-            if (!notification.lastGeneration) {
-                // Ensure not already in popups (duplicate check)
-                if (!isPopupPresent(notification.id)) {
-                    activePopups.append({
-                        "notif": notification,
-                        "notifId": notification.id
-                    });
-                    unseenCount++;
+    Timer {
+        id: expirationCheckTimer
+        interval: 100  // Check every 100ms
+        repeat: true
+        running: root.transientCount > 0
+
+        onTriggered: {
+            const now = Date.now();
+            for (let i = notificationModel.count - 1; i >= 0; i--) {
+                const entry = notificationModel.get(i);
+                if (!entry.isTransient) continue;
+
+                const notification = entry.notification;
+                if (!notification) continue;
+
+                // Critical notifications never auto-expire
+                if (notification.urgency === NotificationUrgency.Critical) continue;
+
+                // Calculate effective elapsed time accounting for frozen duration
+                const totalElapsed = (now - entry.createdAt) / 1000;
+                const effectiveElapsed = totalElapsed - (entry.frozenDuration / 1000);
+
+                if (effectiveElapsed >= entry.expireTimeout) {
+                    root.expireNotificationAtIndex(i);
                 }
             }
-
-            updateMaxUrgency();
-            rebuildOverlayModel();
-
-            // Only attach closed handler once per notification ID
-            if (!handlerAttached[notification.id]) {
-                handlerAttached[notification.id] = true;
-                notification.closed.connect(reason => {
-                    removePopupById(notification.id);
-
-                    // archive it in history
-                    let hEntry = getHistoryEntry(notification.id);
-                    if (hEntry) {
-                        // Using setProperty for reliable reactive updates in Delegates
-                        for (let i = 0; i < historyModel.count; i++) {
-                            if (historyModel.get(i).notifId === notification.id) {
-                                historyModel.setProperty(i, "isDismissed", true);
-                                break;
-                            }
-                        }
-                    }
-
-                    // Clean up handler tracking
-                    delete handlerAttached[notification.id];
-
-                    updateMaxUrgency();
-                    rebuildOverlayModel();
-                    pruneHistory();
-                });
-            }
         }
     }
 
-    readonly property ListModel historyModel: ListModel {}
-    readonly property ListModel activePopups: ListModel {}
+    // =========================================================================
+    // Core Functions
+    // =========================================================================
 
-    // Sorted model for overlay: urgency DESC, then timestamp DESC
-    // Built from historyModel filtered to non-dismissed
-    readonly property ListModel overlayModel: ListModel {}
+    function handleNewNotification(notification) {
+        const now = Date.now();
+        const notificationId = notification.id;
 
-    // Track which notifications already have closed handlers attached
-    readonly property var handlerAttached: ({})
+        // Check for replacement (same ID)
+        for (let i = 0; i < notificationModel.count; i++) {
+            const entry = notificationModel.get(i);
+            if (entry.notificationId === notificationId) {
+                // Replace existing notification - reset timing
+                notificationModel.setProperty(i, "notification", notification);
+                notificationModel.setProperty(i, "createdAt", now);
+                notificationModel.setProperty(i, "frozenDuration", 0);
 
-    // Prune old dismissed notifications when history exceeds this count
-    readonly property int maxHistorySize: 50
+                // Update expireTimeout in case it changed
+                const timeout = notification.expireTimeout > 0 ? notification.expireTimeout : root.defaultTimeout;
+                notificationModel.setProperty(i, "expireTimeout", timeout);
 
-    // Prune dismissed notifications from history to prevent unbounded growth
-    function pruneHistory() {
-        // Remove dismissed notifications from the end (oldest) first
-        // Iterate backwards to safely remove while iterating
-        let removed = 0;
-        for (let i = historyModel.count - 1; i >= 0 && historyModel.count > maxHistorySize; i--) {
-            let entry = historyModel.get(i);
-            if (entry && entry.isDismissed) {
-                historyModel.remove(i);
-                removed++;
-            }
-        }
-    }
-
-    property int unseenCount: 0
-    property int maxUrgency: NotificationUrgency.Low
-    property bool isCenterOpen: false
-
-    onIsCenterOpenChanged: {
-        if (isCenterOpen) {
-            unseenCount = 0;
-            // Mark all non-dismissed ones as seen
-            for (let i = 0; i < historyModel.count; i++) {
-                historyModel.setProperty(i, "isUnseen", false);
-            }
-        }
-        // Note: we do NOT clear activePopups - overlay and popups are independent
-    }
-
-    // Rebuild overlayModel from historyModel, sorted by urgency then timestamp
-    function rebuildOverlayModel() {
-        // Collect non-dismissed entries
-        let entries = [];
-        for (let i = 0; i < historyModel.count; i++) {
-            let entry = historyModel.get(i);
-            if (!entry.isDismissed && entry.notif) {
-                entries.push({
-                    notif: entry.notif,
-                    notifId: entry.notifId,
-                    urgency: entry.notif.urgency || 0,
-                    time: entry.notif.time || 0
-                });
+                // Re-trigger as transient if it was
+                if (entry.isTransient && !entry.isDismissed) {
+                    notificationModel.setProperty(i, "isUnseen", true);
+                }
+                root.recomputeCounts();
+                console.log("[Notifications] Replaced notification ID:", notificationId);
+                return;
             }
         }
 
-        // Sort: urgency DESC, then time DESC
-        entries.sort((a, b) => {
-            if (a.urgency !== b.urgency)
-                return b.urgency - a.urgency;
-            return b.time - a.time;
+        // Determine timeout
+        const timeout = notification.expireTimeout > 0 ? notification.expireTimeout : root.defaultTimeout;
+
+        // Add new notification
+        notificationModel.append({
+            notification: notification,
+            notificationId: notificationId,
+            isTransient: true,
+            isUnseen: true,
+            isDismissed: false,
+            createdAt: now,
+            frozenDuration: 0,  // Total time spent frozen (ms)
+            freezeStartTime: root.timerFrozen ? now : 0,  // When current freeze started
+            expireTimeout: timeout
         });
 
-        // Rebuild model
-        overlayModel.clear();
-        for (let e of entries) {
-            overlayModel.append({
-                "notif": e.notif,
-                "notifId": e.notifId
-            });
-        }
+        console.log("[Notifications] New notification:", notification.appName || "Unknown", "-", notification.summary);
+
+        // Handle transient overflow
+        root.handleTransientOverflow();
+
+        // Enforce shade limit
+        root.enforceShadeLimit();
+
+        root.recomputeCounts();
     }
 
-    function getHistoryEntry(id) {
-        for (let i = 0; i < historyModel.count; i++) {
-            if (historyModel.get(i).notifId === id)
-                return historyModel.get(i);
+    function findIndexById(notificationId) {
+        for (let i = 0; i < notificationModel.count; i++) {
+            if (notificationModel.get(i).notificationId === notificationId) {
+                return i;
+            }
         }
-        return null;
+        return -1;
     }
 
-    function isPopupPresent(id) {
-        for (let i = 0; i < activePopups.count; i++) {
-            if (activePopups.get(i).notifId === id)
+    function expireNotificationAtIndex(index) {
+        if (index < 0 || index >= notificationModel.count) return;
+
+        const entry = notificationModel.get(index);
+        console.log("[Notifications] Expired:", entry.notification?.summary || "unknown");
+
+        // Move from transient to unseen (still visible in shade)
+        notificationModel.setProperty(index, "isTransient", false);
+
+        // Call expire on the notification object
+        if (entry.notification) {
+            entry.notification.expire();
+        }
+
+        root.recomputeCounts();
+    }
+
+    function dismissNotificationAtIndex(index) {
+        if (index < 0 || index >= notificationModel.count) return;
+
+        const entry = notificationModel.get(index);
+        console.log("[Notifications] Dismissed:", entry.notification?.summary || "unknown");
+
+        // Call dismiss on the notification object first
+        if (entry.notification) {
+            entry.notification.dismiss();
+        }
+
+        // Remove immediately from model
+        notificationModel.remove(index);
+        root.recomputeCounts();
+    }
+
+    function dismissById(id) {
+        for (let i = 0; i < notificationModel.count; i++) {
+            if (notificationModel.get(i).notificationId === id) {
+                root.dismissNotificationAtIndex(i);
                 return true;
+            }
         }
         return false;
     }
 
-    function updateMaxUrgency() {
-        let max = NotificationUrgency.Low;
-        // Check history for non-dismissed ones
-        for (let i = 0; i < historyModel.count; i++) {
-            let entry = historyModel.get(i);
-            if (!entry.isDismissed && entry.notif) {
-                if (entry.notif.urgency > max)
-                    max = entry.notif.urgency;
-            }
+    function invokeAction(notification, actionIndex) {
+        if (!notification || !notification.actions || actionIndex < 0) return;
+        if (actionIndex >= notification.actions.length) return;
+
+        const action = notification.actions[actionIndex];
+        console.log("[Notifications] Invoking action:", action.text);
+        action.invoke();
+    }
+
+    function sendInlineReply(notification, text) {
+        if (!notification || !notification.hasInlineReply) return;
+        console.log("[Notifications] Sending inline reply");
+        notification.sendInlineReply(text);
+    }
+
+    function markAllSeen() {
+        for (let i = 0; i < notificationModel.count; i++) {
+            notificationModel.setProperty(i, "isUnseen", false);
         }
-        maxUrgency = max;
-    }
-
-    function removePopupById(id) {
-        for (let i = 0; i < activePopups.count; i++) {
-            if (activePopups.get(i).notifId === id) {
-                activePopups.remove(i);
-                return;
-            }
-        }
-    }
-
-    function hidePopup(notification) {
-        if (!notification)
-            return;
-        removePopupById(notification.id);
-    }
-
-    function dismiss(notification) {
-        if (!notification)
-            return;
-        notification.tracked = false;
+        root.recomputeCounts();
     }
 
     function clearAll() {
-        // Only dismiss currently active (non-dismissed) notifications
-        for (let i = 0; i < historyModel.count; i++) {
-            let entry = historyModel.get(i);
-            if (!entry.isDismissed && entry.notif) {
-                entry.notif.tracked = false;
+        // Dismiss all and clear immediately
+        for (let i = notificationModel.count - 1; i >= 0; i--) {
+            const entry = notificationModel.get(i);
+            if (entry.notification) {
+                entry.notification.dismiss();
             }
         }
-        activePopups.clear();
-        historyModel.clear();
-        overlayModel.clear();
-        unseenCount = 0;
-        maxUrgency = NotificationUrgency.Low;
+        notificationModel.clear();
+        root.recomputeCounts();
+    }
+
+    function handleTransientOverflow() {
+        // Count current transient notifications
+        let transientCount = 0;
+        for (let i = 0; i < notificationModel.count; i++) {
+            if (notificationModel.get(i).isTransient && !notificationModel.get(i).isDismissed) {
+                transientCount++;
+            }
+        }
+
+        // If over limit, move oldest to unseen (no longer transient)
+        while (transientCount > root.maxTransientCount) {
+            for (let i = 0; i < notificationModel.count; i++) {
+                const entry = notificationModel.get(i);
+                if (entry.isTransient && !entry.isDismissed) {
+                    notificationModel.setProperty(i, "isTransient", false);
+                    transientCount--;
+                    console.log("[Notifications] Overflow: moved to unseen:", entry.notification?.summary);
+                    break;
+                }
+            }
+        }
+    }
+
+    function enforceShadeLimit() {
+        // Remove oldest non-transient entries if over limit
+        while (notificationModel.count > root.maxShadeCount) {
+            for (let i = 0; i < notificationModel.count; i++) {
+                const entry = notificationModel.get(i);
+                if (!entry.isTransient) {
+                    notificationModel.remove(i);
+                    console.log("[Notifications] Shade limit: removed:", entry.notification?.summary);
+                    break;
+                }
+            }
+        }
+    }
+
+    // =========================================================================
+    // Timer Freeze Management (called by UI)
+    // =========================================================================
+
+    function setTimerFrozen(frozen) {
+        if (root.timerFrozen === frozen) return;
+
+        const now = Date.now();
+
+        if (frozen) {
+            // Starting freeze - record start time for each transient
+            for (let i = 0; i < notificationModel.count; i++) {
+                const entry = notificationModel.get(i);
+                if (entry.isTransient && entry.freezeStartTime === 0) {
+                    notificationModel.setProperty(i, "freezeStartTime", now);
+                }
+            }
+        } else {
+            // Ending freeze - accumulate frozen duration
+            for (let i = 0; i < notificationModel.count; i++) {
+                const entry = notificationModel.get(i);
+                if (entry.isTransient && entry.freezeStartTime > 0) {
+                    const additionalFrozen = now - entry.freezeStartTime;
+                    notificationModel.setProperty(i, "frozenDuration", entry.frozenDuration + additionalFrozen);
+                    notificationModel.setProperty(i, "freezeStartTime", 0);
+                }
+            }
+        }
+
+        root.timerFrozen = frozen;
+        console.log("[Notifications] Timer frozen:", frozen);
+    }
+
+    // =========================================================================
+    // Count Recomputation
+    // =========================================================================
+
+    function recomputeCounts() {
+        let tCount = 0;
+        let uCount = 0;
+        let sCount = 0;
+        let hasCritical = false;
+
+        for (let i = 0; i < notificationModel.count; i++) {
+            const entry = notificationModel.get(i);
+            if (entry.isDismissed) continue;
+
+            if (entry.isTransient) tCount++;
+            if (entry.isUnseen) {
+                uCount++;
+                if (entry.notification && entry.notification.urgency === NotificationUrgency.Critical) {
+                    hasCritical = true;
+                }
+            }
+            sCount++;
+        }
+
+        root.transientCount = tCount;
+        root.unseenCount = uCount;
+        root.shadeCount = sCount;
+        root.hasCriticalUnseen = hasCritical;
+    }
+
+    // =========================================================================
+    // Debug Helpers
+    // =========================================================================
+
+    function getList() {
+        const result = [];
+        for (let i = 0; i < notificationModel.count; i++) {
+            const entry = notificationModel.get(i);
+            result.push({
+                id: entry.notificationId,
+                appName: entry.notification?.appName || "",
+                summary: entry.notification?.summary || "",
+                isTransient: entry.isTransient,
+                isUnseen: entry.isUnseen,
+                urgency: entry.notification?.urgency || 0,
+                frozenDuration: entry.frozenDuration,
+                freezeStartTime: entry.freezeStartTime
+            });
+        }
+        return result;
+    }
+
+    Component.onCompleted: {
+        console.log("[Notifications] Service initialized");
     }
 }

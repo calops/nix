@@ -95,7 +95,8 @@ Scope {
 
                     maskStr += "}";
 
-                    if (mask) mask.destroy();
+                    if (mask)
+                        mask.destroy();
                     mask = Qt.createQmlObject(maskStr, leftPanel, "dynamicMaskLeft");
                 }
 
@@ -216,6 +217,7 @@ Scope {
                 var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
 
                 // Static items
+                maskStr += "    Region { item: (typeof notificationWidget !== 'undefined' ? notificationWidget : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof batteryLoader !== 'undefined' && batteryLoader.item ? batteryLoader.item : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof brightness !== 'undefined' ? brightness : null) || offscreenAnchorRight }\n";
                 maskStr += "    Region { item: (typeof volume !== 'undefined' ? volume : null) || offscreenAnchorRight }\n";
@@ -229,7 +231,8 @@ Scope {
 
                 maskStr += "}";
 
-                if (mask) mask.destroy();
+                if (mask)
+                    mask.destroy();
                 mask = Qt.createQmlObject(maskStr, rightPanel, "dynamicMaskRight");
             }
 
@@ -239,6 +242,7 @@ Scope {
 
             Component.onCompleted: {
                 // Register static widgets and trigger initial mask build
+                RegionRegistry.registerItem("rightBarScope", notificationWidget);
                 RegionRegistry.registerItem("rightBarScope", brightness);
                 RegionRegistry.registerItem("rightBarScope", volume);
                 RegionRegistry.registerItem("rightBarScope", mpris);
@@ -246,6 +250,7 @@ Scope {
             }
 
             Component.onDestruction: {
+                RegionRegistry.unregisterItem("rightBarScope", notificationWidget);
                 RegionRegistry.unregisterItem("rightBarScope", brightness);
                 RegionRegistry.unregisterItem("rightBarScope", volume);
                 RegionRegistry.unregisterItem("rightBarScope", mpris);
@@ -299,6 +304,12 @@ Scope {
                             color: Colors.alpha(Colors.palette.crust, 1.0)
                         }
                     }
+                }
+
+                Widgets.NotificationWidget {
+                    id: notificationWidget
+                    anchors.right: parent.right
+                    y: 15
                 }
 
                 Widgets.MprisWidget {

@@ -61,6 +61,9 @@ return {
 					backend = "zellij",
 					enabled = true,
 				},
+				tools = {
+					zai = { cmd = { "zai" } },
+				},
 			},
 		},
 	},

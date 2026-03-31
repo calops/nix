@@ -3,12 +3,12 @@
   lib,
   config,
   perSystem,
+  pkgs,
   ...
 }:
 {
   imports = [
     inputs.stylix.nixosModules.stylix
-    inputs.madness.nixosModules.madness
     inputs.nix-index-database.nixosModules.nix-index
     ../common
     ./audio.nix
@@ -39,7 +39,18 @@
     stylix.homeManagerIntegration.autoImport = false;
     stylix.overlays.enable = false;
     home-manager.backupFileExtension = "hm-backup";
-    madness.enable = false; # FIXME: broken
+
+    programs.nix-ld.enable = true;
+    programs.nix-ld.libraries = [
+      pkgs.stdenv.cc.cc
+      pkgs.zlib
+      pkgs.fuse3
+      pkgs.icu
+      pkgs.nss
+      pkgs.openssl
+      pkgs.curl
+      pkgs.expat
+    ];
 
     environment.sessionVariables = {
       EDITOR = "nvim";

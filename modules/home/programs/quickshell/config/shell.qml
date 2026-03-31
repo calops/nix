@@ -8,9 +8,10 @@ ShellRoot {
 
     IpcService {}
     Bars {}
-    NotificationPopups {}
     OverviewBackdrop {}
+    // NotificationLayer {}  // Disabled for now
 
     readonly property var _anyrunService: AnyrunService
     readonly property var _cavaService: CavaService
+    readonly property var _notificationsService: Notifications
 }

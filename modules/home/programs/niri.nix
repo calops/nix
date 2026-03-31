@@ -179,6 +179,9 @@ in
                 XF86AudioRaiseVolume  { spawn-sh "shell setVolume +0.05"; }
                 XF86AudioLowerVolume  { spawn-sh "shell setVolume -0.05"; }
                 XF86AudioMute         { spawn-sh "shell setMuted toggle"; }
+                XF86AudioNext         { spawn-sh "playerctl next"; }
+                XF86AudioPrev         { spawn-sh "playerctl previous"; }
+                XF86AudioPlay         { spawn-sh "playerctl play-pause"; }
                 XF86MonBrightnessUp   { spawn-sh "shell setBrightness +0.05"; }
                 XF86MonBrightnessDown { spawn-sh "shell setBrightness -0.05"; }
             }
@@ -288,6 +291,7 @@ in
       pkgs.swww
       pkgs.nautilus
       pkgs.xwayland-satellite
+      pkgs.playerctl
     ];
   };
 }

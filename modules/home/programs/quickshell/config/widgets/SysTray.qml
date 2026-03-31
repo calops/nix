@@ -160,7 +160,6 @@ Item {
 
         // Remove trailing numbers (e.g. StatusNotifierItem-1234-1)
         name = name.replace(/-\d+-\d+$/, "");
-        name = name.replace(/StatusNotifierItem$/, "");
 
         // If it's still generic (like chrome_status_icon_1), try to guess from tooltip or icon
         if (name === "" || name === "SNI" || name.startsWith("chrome_status_icon_")) {

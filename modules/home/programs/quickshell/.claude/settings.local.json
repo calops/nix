@@ -6,7 +6,19 @@
       "Bash(journalctl --user -u quickshell -n 40 --no-pager)",
       "Bash(journalctl:*)",
       "Bash(qmlfmt:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Bash(notify-send Test notification:*)",
+      "Bash(systemctl:*)",
+      "Bash(notify-send Test from UI:*)",
+      "Bash(notify-send Test notification 2:*)",
+      "Bash(notify-send Test notification 3:*)",
+      "Bash(notify-send Test 3:*)",
+      "Bash(notify-send Test 4:*)",
+      "Bash(notify-send Test 5:*)",
+      "Bash(curl:*)",
+      "Bash(notify-send:*)"
     ]
   }
 }

@@ -18,9 +18,6 @@
     nur.url = "github:nix-community/NUR";
     nur.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Support dynamically linked binaries for generic Linux (nix-ld alternative)
-    madness.url = "github:antithesishq/madness";
-
     # Nix-darwin modules
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";

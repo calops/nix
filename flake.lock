@@ -1188,21 +1188,6 @@
         "type": "github"
       }
     },
-    "madness": {
-      "locked": {
-        "lastModified": 1756995403,
-        "narHash": "sha256-GQO5JluwPj0q8SRv8U6lg9LHT7b35qhf/bmBBUeaRCA=",
-        "owner": "antithesishq",
-        "repo": "madness",
-        "rev": "b84da4f4f64a6b4317b59f9fdf3ba43a92c07373",
-        "type": "github"
-      },
-      "original": {
-        "owner": "antithesishq",
-        "repo": "madness",
-        "type": "github"
-      }
-    },
     "neovim-nightly": {
       "inputs": {
         "flake-parts": "flake-parts_8",
@@ -1865,7 +1850,6 @@
         "fenix": "fenix",
         "home-manager": "home-manager",
         "kidex": "kidex",
-        "madness": "madness",
         "neovim-nightly": "neovim-nightly",
         "nh": "nh",
         "niri": "niri",
