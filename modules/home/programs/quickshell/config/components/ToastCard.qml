@@ -94,6 +94,8 @@ Item {
 
     HoverBackdrop {
         id: backdrop
+        property string blurGroupId: "toastScopeBlur"
+        property string maskGroupId: "toastScope"
         anchors.fill: parent
         anchors.margins: -6
         radius: 12
