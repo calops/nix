@@ -25,6 +25,8 @@ Scope {
             color: "transparent"
             exclusionMode: ExclusionMode.Ignore
 
+            readonly property int maxDisplayCount: 20
+
             Item {
                 id: offscreenAnchor
                 x: -9999
@@ -63,8 +65,6 @@ Scope {
 
                 Item {
                     id: toastContainer
-                    property string blurGroupId: "toastScopeBlur"
-                    property string maskGroupId: "toastScope"
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.rightMargin: Theme.iconWidth + 8
@@ -74,17 +74,17 @@ Scope {
             }
 
             property var activeToasts: ({})
-            readonly property int displayLimit: 20
+
             readonly property int toastSpacing: 10
 
             Component {
                 id: toastComponent
                 ToastCard {
-                    onExited: function (notificationId) {
-                        var toasts = toastWindow.activeToasts;
-                        delete toasts[notificationId];
-                        toastWindow.activeToasts = toasts;
-                        toastWindow.syncToasts();
+                    onExited: function(notificationId) {
+                        var toasts = toastWindow.activeToasts
+                        delete toasts[notificationId]
+                        toastWindow.activeToasts = toasts
+                        toastWindow.syncToasts()
                     }
                     onHeightChanged: toastWindow.repositionToasts()
                 }
@@ -94,61 +94,74 @@ Scope {
                 target: Notifications
 
                 function onTransientCountChanged() {
-                    toastWindow.syncToasts();
+                    toastWindow.syncToasts()
                 }
             }
 
             function repositionToasts() {
-                var yOffset = 0;
-                var ids = Object.keys(activeToasts);
-                for (var i = 0; i < ids.length; i++) {
-                    var card = activeToasts[ids[i]];
+                var yOffset = 0
+                for (var i = 0; i < Notifications.model.count; i++) {
+                    var entry = Notifications.model.get(i)
+                    if (!entry.isTransient || entry.isDismissed)
+                        continue
+                    var card = activeToasts[entry.notificationId]
                     if (card && !card.isExiting) {
-                        card.targetY = yOffset;
-                        yOffset += card.height + toastSpacing;
+                        card.targetY = yOffset
+                        yOffset += card.height + toastSpacing
                     }
                 }
             }
 
             function syncToasts() {
-                var entries = [];
+                var entries = []
                 for (var i = 0; i < Notifications.model.count; i++) {
-                    var entry = Notifications.model.get(i);
+                    var entry = Notifications.model.get(i)
                     if (entry.isTransient && !entry.isDismissed) {
-                        entries.push(entry);
+                        entries.push(entry)
                     }
                 }
 
-                var displayed = entries.slice(0, displayLimit);
+                var displayed = entries.slice(0, maxDisplayCount)
 
-                var activeIds = {};
+                var displayedIds = {}
+                for (var k = 0; k < displayed.length; k++) {
+                    displayedIds[displayed[k].notificationId] = true
+                }
+
+                for (var m = 0; m < displayed.length; m++) {
+                    Notifications.setDisplayShown(displayed[m].notificationId, true)
+                }
+                for (var n = maxDisplayCount; n < entries.length; n++) {
+                    Notifications.setDisplayShown(entries[n].notificationId, false)
+                }
+
+                var activeIds = {}
                 for (var id in activeToasts) {
-                    activeIds[id] = false;
+                    activeIds[id] = false
                 }
 
                 for (var j = 0; j < displayed.length; j++) {
-                    var e = displayed[j];
-                    var nid = e.notificationId;
+                    var e = displayed[j]
+                    var nid = e.notificationId
 
                     if (!activeToasts[nid]) {
                         var card = toastComponent.createObject(toastContainer, {
                             entry: e
-                        });
-                        var toasts = activeToasts;
-                        toasts[nid] = card;
-                        activeToasts = toasts;
-                        Notifications.startTimer(nid);
+                        })
+                        var toasts = activeToasts
+                        toasts[nid] = card
+                        activeToasts = toasts
                     }
-                    activeIds[nid] = true;
+                    activeIds[nid] = true
                 }
 
                 for (var oldId in activeIds) {
                     if (!activeIds[oldId] && activeToasts[oldId]) {
-                        activeToasts[oldId].startExit();
+                        activeToasts[oldId].startExit()
                     }
                 }
 
-                repositionToasts();
+                repositionToasts()
             }
         }
     }

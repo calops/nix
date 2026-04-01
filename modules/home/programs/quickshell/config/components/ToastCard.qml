@@ -94,8 +94,6 @@ Item {
 
     HoverBackdrop {
         id: backdrop
-        property string blurGroupId: "toastScopeBlur"
-        property string maskGroupId: "toastScope"
         anchors.fill: parent
         anchors.margins: -6
         radius: 12
@@ -158,7 +156,7 @@ Item {
                     id: closeMouseArea
                     anchors.fill: parent
                     hoverEnabled: true
-                    onClicked: root.notification?.dismiss()
+                    onClicked: Notifications.dismissById(root.entry?.notificationId ?? "")
                 }
             }
         }
@@ -194,7 +192,7 @@ Item {
 
         onClicked: function (mouse) {
             mouse.accepted = false;
-            root.notification?.dismiss();
+            Notifications.dismissById(root.entry?.notificationId ?? "");
         }
 
         onContainsMouseChanged: {
