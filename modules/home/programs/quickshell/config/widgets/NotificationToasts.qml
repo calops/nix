@@ -75,7 +75,7 @@ Scope {
 
             property var activeToasts: ({})
 
-            readonly property int toastSpacing: 10
+            readonly property int toastSpacing: 16
 
             Component {
                 id: toastComponent
