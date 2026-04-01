@@ -81,9 +81,14 @@ Scope {
                 id: toastComponent
                 ToastCard {
                     onExited: function(notificationId) {
+                        var card = toastWindow.activeToasts[notificationId]
+                        var wasDismissed = card?.entry?.isDismissed ?? false
                         var toasts = toastWindow.activeToasts
                         delete toasts[notificationId]
                         toastWindow.activeToasts = toasts
+                        if (wasDismissed) {
+                            Notifications.removeById(notificationId)
+                        }
                         toastWindow.syncToasts()
                     }
                     onHeightChanged: toastWindow.repositionToasts()
@@ -102,13 +107,13 @@ Scope {
                 var yOffset = 0
                 for (var i = 0; i < Notifications.model.count; i++) {
                     var entry = Notifications.model.get(i)
-                    if (!entry.isTransient || entry.isDismissed)
-                        continue
                     var card = activeToasts[entry.notificationId]
-                    if (card && !card.isExiting) {
+                    if (!card)
+                        continue
+                    if (!card.isExiting) {
                         card.targetY = yOffset
-                        yOffset += card.height + toastSpacing
                     }
+                    yOffset += card.height + toastSpacing
                 }
             }
 

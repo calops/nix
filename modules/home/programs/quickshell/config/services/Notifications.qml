@@ -174,26 +174,35 @@ Singleton {
             return;
 
         const entry = notificationModel.get(index);
+        if (entry.isDismissed)
+            return;
+
         console.log("[Notifications] Dismissed:", entry.notification?.summary || "unknown");
 
-        // Call dismiss on the notification object first
+        notificationModel.setProperty(index, "isDismissed", true);
+
         if (entry.notification) {
             entry.notification.dismiss();
         }
 
-        // Remove immediately from model
-        notificationModel.remove(index);
         root.recomputeCounts();
     }
 
     function dismissById(id) {
-        for (let i = 0; i < notificationModel.count; i++) {
-            if (notificationModel.get(i).notificationId === id) {
-                root.dismissNotificationAtIndex(i);
-                return true;
-            }
+        const idx = root.findIndexById(id);
+        if (idx >= 0) {
+            root.dismissNotificationAtIndex(idx);
+            return true;
         }
         return false;
+    }
+
+    function removeById(id) {
+        const idx = root.findIndexById(id);
+        if (idx < 0)
+            return;
+        notificationModel.remove(idx);
+        root.recomputeCounts();
     }
 
     function invokeAction(notification, actionIndex) {
