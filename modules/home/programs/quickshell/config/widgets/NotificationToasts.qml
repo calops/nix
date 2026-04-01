@@ -83,11 +83,14 @@ Scope {
                     onExited: function(notificationId) {
                         var card = toastWindow.activeToasts[notificationId]
                         var wasDismissed = card?.entry?.isDismissed ?? false
+                        var wasExpired = card?.entry?.isExpired ?? false
                         var toasts = toastWindow.activeToasts
                         delete toasts[notificationId]
                         toastWindow.activeToasts = toasts
                         if (wasDismissed) {
                             Notifications.removeById(notificationId)
+                        } else if (wasExpired) {
+                            Notifications.finalizeExpiredById(notificationId)
                         }
                         toastWindow.syncToasts()
                     }
@@ -121,7 +124,7 @@ Scope {
                 var entries = []
                 for (var i = 0; i < Notifications.model.count; i++) {
                     var entry = Notifications.model.get(i)
-                    if (entry.isTransient && !entry.isDismissed) {
+                    if (entry.isTransient && !entry.isDismissed && !entry.isExpired) {
                         entries.push(entry)
                     }
                 }

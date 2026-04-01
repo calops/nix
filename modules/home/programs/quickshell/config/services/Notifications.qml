@@ -130,6 +130,7 @@ Singleton {
             isTransient: true,
             isUnseen: true,
             isDismissed: false,
+            isExpired: false,
             isDisplayed: false,
             elapsedDisplayTime: 0,
             displayStartTime: 0,
@@ -156,15 +157,13 @@ Singleton {
             return;
 
         const entry = notificationModel.get(index);
+        if (entry.isDismissed)
+            return;
+
         console.log("[Notifications] Expired:", entry.notification?.summary || "unknown");
 
-        // Move from transient to unseen (still visible in shade)
+        notificationModel.setProperty(index, "isExpired", true);
         notificationModel.setProperty(index, "isTransient", false);
-
-        // Call expire on the notification object
-        if (entry.notification) {
-            entry.notification.expire();
-        }
 
         root.recomputeCounts();
     }
@@ -180,10 +179,6 @@ Singleton {
         console.log("[Notifications] Dismissed:", entry.notification?.summary || "unknown");
 
         notificationModel.setProperty(index, "isDismissed", true);
-
-        if (entry.notification) {
-            entry.notification.dismiss();
-        }
 
         root.recomputeCounts();
     }
@@ -201,8 +196,20 @@ Singleton {
         const idx = root.findIndexById(id);
         if (idx < 0)
             return;
+        const entry = notificationModel.get(idx);
+        if (entry.notification)
+            entry.notification.dismiss();
         notificationModel.remove(idx);
         root.recomputeCounts();
+    }
+
+    function finalizeExpiredById(id) {
+        const idx = root.findIndexById(id);
+        if (idx < 0)
+            return;
+        const entry = notificationModel.get(idx);
+        if (entry.notification)
+            entry.notification.expire();
     }
 
     function invokeAction(notification, actionIndex) {
