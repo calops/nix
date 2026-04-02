@@ -182,26 +182,16 @@ Item {
             visible: text !== ""
         }
 
-        Rectangle {
+        Image {
+            id: contentImage
             Layout.fillWidth: true
-            Layout.preferredHeight: contentImage.status === Image.Ready
-                ? Math.min(200, contentImage.implicitHeight)
-                : 0
+            Layout.preferredHeight: status === Image.Ready ? Math.min(200, implicitHeight) : 0
             Layout.maximumHeight: 200
-            radius: 12
-            clip: true
-            color: "transparent"
-            visible: contentImage.source !== "" && contentImage.status !== Image.Null
-
-            Image {
-                id: contentImage
-                width: Math.min(parent.width, sourceSize.width)
-                height: Math.min(200, sourceSize.height, sourceSize.height / sourceSize.width * width)
-                anchors.horizontalCenter: parent.horizontalCenter
-                source: root.notification?.image ?? ""
-                fillMode: Image.PreserveAspectFit
-                asynchronous: true
-            }
+            source: root.notification?.image ?? ""
+            sourceSize: Qt.size(contentColumn.width, contentColumn.width)
+            fillMode: Image.PreserveAspectFit
+            asynchronous: true
+            visible: source !== "" && status !== Image.Null
         }
     }
 
