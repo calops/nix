@@ -62,7 +62,12 @@ in
         };
 
         color.ui = "auto";
-        core.whitespace = "-trailing-space";
+
+        core = {
+          whitespace = "-trailing-space";
+          sshCommand = "ssh -i ~/.ssh/calops.pub";
+        };
+
         grep.extendedRegexp = true;
         log.abbrevCommit = true;
         mergetool.prompt = true;

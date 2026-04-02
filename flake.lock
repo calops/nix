@@ -1826,15 +1826,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1774422996,
-        "narHash": "sha256-mWjBJIbiMPCpljAQDk8RYf+92/lYZ5npHe2r2SJ+QWc=",
-        "owner": "quickshell-mirror",
+        "lastModified": 1775055206,
+        "narHash": "sha256-WLQTPwOtX92aAFpWkR6jBN3SPLJdSYYETJ5B+MvF4CE=",
+        "owner": "calops",
         "repo": "quickshell",
-        "rev": "08058326f04e9b5e55c903b3702405a8d3556ac6",
+        "rev": "786c1a328d30ee7b6aff2a0d9bc655b380c91478",
         "type": "github"
       },
       "original": {
-        "owner": "quickshell-mirror",
+        "owner": "calops",
+        "ref": "fix/region-parent-tracking",
         "repo": "quickshell",
         "type": "github"
       }

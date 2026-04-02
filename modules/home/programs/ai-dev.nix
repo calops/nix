@@ -59,8 +59,8 @@ in
       provider.zai-coding-plan.options.apiKey = "{env:ZAI_API_KEY}";
       plugin = [
         "opencode-notify"
-        "opencode-snip"
-        "oh-my-opencode"
+        "opencode-dynamic-context-pruning"
+        "superpowers@git+https://github.com/obra/superpowers.git"
       ];
     };
   };

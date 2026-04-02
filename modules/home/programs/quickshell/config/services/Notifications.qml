@@ -117,7 +117,6 @@ Singleton {
                 notificationModel.setProperty(i, "expireTimeout", timeout);
 
                 root.recomputeCounts();
-                console.log("[Notifications] Replaced notification ID:", notificationId);
                 return;
             }
         }
@@ -137,9 +136,6 @@ Singleton {
             expireTimeout: timeout
         });
 
-        console.log("[Notifications] New notification:", notification.appName || "Unknown", "-", notification.summary);
-
-        root.enforceShadeLimit();
         root.recomputeCounts();
     }
 
@@ -160,8 +156,6 @@ Singleton {
         if (entry.isDismissed)
             return;
 
-        console.log("[Notifications] Expired:", entry.notification?.summary || "unknown");
-
         notificationModel.setProperty(index, "isExpired", true);
         notificationModel.setProperty(index, "isTransient", false);
 
@@ -175,8 +169,6 @@ Singleton {
         const entry = notificationModel.get(index);
         if (entry.isDismissed)
             return;
-
-        console.log("[Notifications] Dismissed:", entry.notification?.summary || "unknown");
 
         notificationModel.setProperty(index, "isDismissed", true);
 
@@ -219,14 +211,12 @@ Singleton {
             return;
 
         const action = notification.actions[actionIndex];
-        console.log("[Notifications] Invoking action:", action.text);
         action.invoke();
     }
 
     function sendInlineReply(notification, text) {
         if (!notification || !notification.hasInlineReply)
             return;
-        console.log("[Notifications] Sending inline reply");
         notification.sendInlineReply(text);
     }
 
@@ -271,20 +261,6 @@ Singleton {
                 notificationModel.setProperty(idx, "displayStartTime", 0);
             }
             notificationModel.setProperty(idx, "isDisplayed", false);
-        }
-    }
-
-    function enforceShadeLimit() {
-        // Remove oldest non-transient entries if over limit
-        while (notificationModel.count > root.maxShadeCount) {
-            for (let i = 0; i < notificationModel.count; i++) {
-                const entry = notificationModel.get(i);
-                if (!entry.isTransient) {
-                    notificationModel.remove(i);
-                    console.log("[Notifications] Shade limit: removed:", entry.notification?.summary);
-                    break;
-                }
-            }
         }
     }
 

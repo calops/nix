@@ -82,7 +82,7 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
-    quickshell.url = "github:quickshell-mirror/quickshell";
+    quickshell.url = "github:calops/quickshell?ref=fix/region-parent-tracking";
     quickshell.inputs.nixpkgs.follows = "nixpkgs";
   };
 

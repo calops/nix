@@ -23,6 +23,7 @@
       pkgs.pastel
       pkgs.jaq
       pkgs.devenv
+      pkgs.uv
     ]
     ++ lib.optionals (!pkgs.stdenv.isDarwin) [
       pkgs.dtrx
