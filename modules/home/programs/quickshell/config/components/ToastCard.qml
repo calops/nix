@@ -185,7 +185,7 @@ Item {
         Rectangle {
             Layout.fillWidth: true
             Layout.preferredHeight: contentImage.status === Image.Ready
-                ? Math.min(contentImage.sourceSize.height / contentImage.sourceSize.width * width, 200)
+                ? Math.min(200, contentImage.implicitHeight)
                 : 0
             Layout.maximumHeight: 200
             radius: 12
@@ -195,7 +195,9 @@ Item {
 
             Image {
                 id: contentImage
-                anchors.fill: parent
+                width: Math.min(parent.width, sourceSize.width)
+                height: Math.min(200, sourceSize.height, sourceSize.height / sourceSize.width * width)
+                anchors.horizontalCenter: parent.horizontalCenter
                 source: root.notification?.image ?? ""
                 fillMode: Image.PreserveAspectFit
                 asynchronous: true
