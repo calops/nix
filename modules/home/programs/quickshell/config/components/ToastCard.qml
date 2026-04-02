@@ -181,6 +181,26 @@ Item {
             elide: Text.ElideRight
             visible: text !== ""
         }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: contentImage.status === Image.Ready
+                ? Math.min(contentImage.sourceSize.height / contentImage.sourceSize.width * width, 200)
+                : 0
+            Layout.maximumHeight: 200
+            radius: 12
+            clip: true
+            color: "transparent"
+            visible: contentImage.source !== "" && contentImage.status !== Image.Null
+
+            Image {
+                id: contentImage
+                anchors.fill: parent
+                source: root.notification?.image ?? ""
+                fillMode: Image.PreserveAspectFit
+                asynchronous: true
+            }
+        }
     }
 
     MouseArea {
