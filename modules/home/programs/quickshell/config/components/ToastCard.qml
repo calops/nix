@@ -349,6 +349,7 @@ Item {
     Connections {
         target: root.notification
         function onClosed() {
+            Notifications.dismissById(root.entry?.notificationId ?? "");
             root.startExit();
         }
     }
