@@ -11,8 +11,9 @@ notify-send -u critical "Battery Monitor" "Battery critically low (5%)!\nConnect
 sleep 1
 
 echo "=== Notification with actions ==="
+# notify-send --action blocks until user clicks an action, so background it
 notify-send --action="open=Open" --action="mark-read=Mark as Read" --action="archive=Archive" \
-	"Email Client" "You have received a new email from Alice.\nSubject: Meeting tomorrow"
+	"Email Client" "You have received a new email from Alice.\nSubject: Meeting tomorrow" &
 sleep 1
 
 echo "=== Notification with body markup ==="
@@ -41,7 +42,7 @@ sleep 1
 echo "=== Inline reply notification ==="
 notify-send --action="inline-reply=Reply" \
 	-h string:x-kde-reply-placeholder-text="Type a reply..." \
-	"Messenger" "New message from Bob:\nHey, are you free this weekend?"
+	"Messenger" "New message from Bob:\nHey, are you free this weekend?" &
 sleep 1
 
 echo "=== Notification replacement ==="
