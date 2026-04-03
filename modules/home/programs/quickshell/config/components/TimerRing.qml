@@ -66,10 +66,14 @@ Item {
             }
         }
 
-        onProgressChanged: requestPaint()
-        onIsInProgressChanged: requestPaint()
-        onIsCriticalChanged: requestPaint()
-        onRingColorChanged: requestPaint()
+    }
+
+    Connections {
+        target: root
+        function onProgressChanged() { canvas.requestPaint() }
+        function onIsInProgressChanged() { canvas.requestPaint() }
+        function onIsCriticalChanged() { canvas.requestPaint() }
+        function onRingColorChanged() { canvas.requestPaint() }
     }
 
     MouseArea {

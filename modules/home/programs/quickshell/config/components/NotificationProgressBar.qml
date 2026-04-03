@@ -51,7 +51,7 @@ Item {
 
                         ctx.save();
                         ctx.beginPath();
-                        for (var x = -stripeWidth * 2 + width + stripeWidth * 2; x < width + stripeWidth * 2; x += stripeWidth) {
+                        for (var x = -stripeWidth * 2 + offset - width; x < width + stripeWidth * 2; x += stripeWidth) {
                             ctx.moveTo(x, 0);
                             ctx.lineTo(x + stripeWidth / 2, height);
                             ctx.lineTo(x + stripeWidth, 0);

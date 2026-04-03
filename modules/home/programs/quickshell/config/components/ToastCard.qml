@@ -31,6 +31,45 @@ Item {
         return Theme.backdropTint;
     }
 
+    readonly property bool hasProgress: {
+        if (!notification || !notification.hints)
+            return false;
+        var v = notification.hints["value"];
+        return v !== undefined && v !== null;
+    }
+
+    readonly property real progressValue: {
+        if (!hasProgress)
+            return 0;
+        var v = notification.hints["value"];
+        return v !== undefined ? v : 0;
+    }
+
+    readonly property bool isProgressDone: {
+        if (!hasProgress)
+            return false;
+        return progressValue >= 100;
+    }
+
+    property bool replySent: false
+
+    property real timerProgress: 1.0
+
+    function updateTimerProgress() {
+        if (!root.entry) { root.timerProgress = 1.0; return; }
+        if (root.notification && root.notification.urgency === NotificationUrgency.Critical)
+        { root.timerProgress = 1.0; return; }
+        if (root.hasProgress && !root.isProgressDone)
+        { root.timerProgress = 1.0; return; }
+
+        var elapsed = root.entry.elapsedDisplayTime;
+        if (root.entry.displayStartTime > 0)
+            elapsed += Date.now() - root.entry.displayStartTime;
+        var timeoutMs = root.entry.expireTimeout * 1000;
+        if (timeoutMs <= 0) { root.timerProgress = 1.0; return; }
+        root.timerProgress = Math.max(0, 1.0 - (elapsed / timeoutMs));
+    }
+
     ParallelAnimation {
         id: enterAnimation
         running: root.isEntering && !root.isExiting
@@ -98,7 +137,14 @@ Item {
         anchors.margins: -6
         radius: 12
         opacity: 1.0
-        baseColor: Colors.alpha(root.urgencyTint, Theme.backdropOpacity)
+        baseColor: Colors.alpha(root.urgencyTint, cardHoverHandler.hovered ? Theme.backdropOpacity + 0.05 : Theme.backdropOpacity)
+    }
+
+    HoverHandler {
+        id: cardHoverHandler
+        onHoveredChanged: {
+            Notifications.setTimerFrozen(hovered);
+        }
     }
 
     ColumnLayout {
@@ -139,25 +185,12 @@ Item {
                 elide: Text.ElideRight
             }
 
-            Rectangle {
-                Layout.preferredWidth: 24
-                Layout.preferredHeight: 24
-                radius: 4
-                color: closeMouseArea.containsMouse ? Colors.alpha("#ffffff", 0.1) : "transparent"
-
-                StyledText {
-                    anchors.centerIn: parent
-                    text: "\u00D7"
-                    font.pixelSize: 14
-                    color: Colors.palette.subtext0
-                }
-
-                MouseArea {
-                    id: closeMouseArea
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    onClicked: Notifications.dismissById(root.entry?.notificationId ?? "")
-                }
+            TimerRing {
+                progress: root.timerProgress
+                isInProgress: root.hasProgress && !root.isProgressDone
+                isCritical: root.notification && root.notification.urgency === NotificationUrgency.Critical
+                ringColor: root.urgencyTint
+                onDismissed: Notifications.dismissById(root.entry?.notificationId ?? "")
             }
         }
 
@@ -171,13 +204,11 @@ Item {
             visible: text !== ""
         }
 
-        StyledText {
+        RichText {
             Layout.fillWidth: true
             text: root.notification?.body ?? ""
-            font.pixelSize: 13
-            color: Colors.palette.text
-            wrapMode: Text.WordWrap
-            maximumLineCount: 3
+            fontSize: 13
+            maximumLineCount: 15
             elide: Text.ElideRight
             visible: text !== ""
         }
@@ -193,22 +224,116 @@ Item {
             asynchronous: true
             visible: source !== "" && status !== Image.Null
         }
-    }
 
-    MouseArea {
-        id: cardMouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        z: 0.5
-        propagateComposedEvents: true
-
-        onClicked: function (mouse) {
-            mouse.accepted = false;
-            Notifications.dismissById(root.entry?.notificationId ?? "");
+        NotificationProgressBar {
+            Layout.fillWidth: true
+            value: root.progressValue
+            fillColor: root.urgencyTint
+            visible: root.hasProgress
         }
 
-        onContainsMouseChanged: {
-            Notifications.setTimerFrozen(containsMouse);
+        Flow {
+            Layout.fillWidth: true
+            spacing: 6
+            visible: root.notification && root.notification.actions && root.notification.actions.length > 0
+
+            Repeater {
+                model: (root.notification?.actions ?? []).length
+                delegate: GlassButton {
+                    required property int index
+                    property var action: root.notification.actions[index]
+                    icon: action.text
+                    iconSize: 12
+                    tintColor: Colors.palette.text
+                    normalAlpha: 0.08
+                    hoveredAlpha: 0.18
+                    Layout.fillWidth: false
+                    Layout.preferredHeight: 28
+                    onClicked: Notifications.invokeAction(root.notification, index)
+                }
+            }
+        }
+
+        Item {
+            Layout.fillWidth: true
+            Layout.preferredHeight: replyArea.height
+            visible: root.notification && root.notification.hasInlineReply && !root.replySent
+
+            clip: false
+
+            Row {
+                id: replyArea
+                width: parent.width
+                spacing: 6
+
+                Rectangle {
+                    id: replyInput
+                    width: parent.width - sendButton.width - parent.spacing
+                    height: 28
+                    radius: 6
+                    color: Colors.alpha("#ffffff", 0.06)
+                    border.width: 1
+                    border.color: replyInputHover.hovered ? Colors.alpha("#ffffff", 0.15) : Colors.alpha("#ffffff", 0.06)
+
+                    HoverHandler {
+                        id: replyInputHover
+                    }
+
+                    TapHandler {
+                        onTapped: replyField.forceActiveFocus()
+                    }
+
+                    StyledText {
+                        anchors.fill: parent
+                        anchors.leftMargin: 8
+                        anchors.rightMargin: 8
+                        verticalAlignment: Text.AlignVCenter
+                        text: replyField.text === "" ? (root.notification?.inlineReplyPlaceholder || "Type a reply...") : ""
+                        font.pixelSize: 12
+                        color: Colors.palette.surface2
+                        elide: Text.ElideRight
+                        visible: replyField.text === ""
+                    }
+
+                    TextInput {
+                        id: replyField
+                        anchors.fill: parent
+                        anchors.leftMargin: 8
+                        anchors.rightMargin: 8
+                        verticalAlignment: Text.AlignVCenter
+                        font.family: "Aporetic Sans"
+                        font.pixelSize: 12
+                        color: Colors.palette.text
+                        clip: true
+                        onActiveFocusChanged: Notifications.setTimerFrozen(activeFocus)
+                    }
+                }
+
+                GlassButton {
+                    id: sendButton
+                    icon: "Send"
+                    iconSize: 12
+                    tintColor: Colors.palette.blue
+                    normalAlpha: 0.15
+                    hoveredAlpha: 0.30
+                    Layout.fillWidth: false
+                    Layout.preferredHeight: 28
+                    onClicked: {
+                        if (replyField.text.trim() !== "") {
+                            Notifications.sendInlineReply(root.notification, replyField.text.trim());
+                            root.replySent = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        StyledText {
+            Layout.fillWidth: true
+            text: "Sent"
+            font.pixelSize: 12
+            color: Colors.palette.green
+            visible: root.replySent
         }
     }
 
@@ -228,8 +353,16 @@ Item {
         }
     }
 
+    Timer {
+        id: progressTimer
+        interval: 100
+        repeat: true
+        running: (root.entry?.isDisplayed ?? false) && !root.isExiting
+        onTriggered: root.updateTimerProgress()
+    }
+
     Component.onDestruction: {
-        if (cardMouseArea.containsMouse) {
+        if (cardHoverHandler.hovered) {
             Notifications.setTimerFrozen(false);
         }
     }
