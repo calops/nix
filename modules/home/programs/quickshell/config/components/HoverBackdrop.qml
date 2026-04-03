@@ -99,6 +99,8 @@ Item {
             }
         }
 
+        Behavior on baseColor { ColorAnimation { duration: Theme.animationDuration } }
+
         // Multi-shape defaults (silence warnings)
         property rect rect1: Qt.rect(0, 0, 0, 0)
         property rect rect2: Qt.rect(0, 0, 0, 0)
