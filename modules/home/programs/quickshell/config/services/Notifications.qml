@@ -82,6 +82,9 @@ Singleton {
                 if (notification.urgency === NotificationUrgency.Critical)
                     continue;
 
+                if (root.isInProgress(notification.hints))
+                    continue;
+
                 if (!entry.isDisplayed)
                     continue;
 
@@ -112,6 +115,10 @@ Singleton {
                 notificationModel.setProperty(i, "elapsedDisplayTime", 0);
                 notificationModel.setProperty(i, "displayStartTime", 0);
                 notificationModel.setProperty(i, "isDisplayed", false);
+                // Revive dismissed/expired on replacement: the sender replaces a notification
+                // because they want the update the user. Revisit if this proves annoying.
+                notificationModel.setProperty(i, "isDismissed", false);
+                notificationModel.setProperty(i, "isExpired", false);
 
                 const timeout = notification.expireTimeout > 0 ? notification.expireTimeout : root.defaultTimeout;
                 notificationModel.setProperty(i, "expireTimeout", timeout);
@@ -218,6 +225,15 @@ Singleton {
         if (!notification || !notification.hasInlineReply)
             return;
         notification.sendInlineReply(text);
+    }
+
+    function isInProgress(hints) {
+        if (!hints)
+            return false;
+        const value = hints["value"];
+        if (value === undefined || value === null)
+            return false;
+        return value < 100;
     }
 
     function markAllSeen() {
