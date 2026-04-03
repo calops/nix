@@ -20,7 +20,6 @@ Item {
     signal clicked()
 
     Layout.fillWidth: true
-    Layout.preferredHeight: 36
 
     ShaderEffect {
         anchors.fill: parent
@@ -51,6 +50,7 @@ Item {
 
     StyledText {
         id: label
+        anchors.centerIn: parent
         text: root.icon
         font.pixelSize: root.iconSize
         color: root.iconColor
@@ -58,7 +58,7 @@ Item {
     }
 
     implicitWidth: label.implicitWidth + 16
-    implicitHeight: Math.max(36, label.implicitHeight + 16)
+    implicitHeight: label.implicitHeight + 16
 
     MouseArea {
         id: btnMouseArea
