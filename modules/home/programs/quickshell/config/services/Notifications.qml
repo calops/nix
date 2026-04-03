@@ -48,7 +48,9 @@ Singleton {
         actionIconsSupported: true
         inlineReplySupported: true
         persistenceSupported: true
-        keepOnReload: true
+        // TODO: re-enable keepOnReload once dismissed/expired notifications are properly
+        // untracked so they don't revive on reload
+        keepOnReload: false
 
         onNotification: notification => {
             notification.tracked = true;
