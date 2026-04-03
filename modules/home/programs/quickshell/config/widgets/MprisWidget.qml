@@ -260,7 +260,7 @@ Item {
                     spacing: 12
                     Layout.bottomMargin: 12
 
-                    GlassIconButton {
+                    GlassButton {
                         id: prevBtn
                         Layout.preferredWidth: 40
                         Layout.preferredHeight: 32
@@ -271,7 +271,7 @@ Item {
                         onClicked: if (root.activePlayer) root.activePlayer.previous()
                     }
 
-                    GlassIconButton {
+                    GlassButton {
                         id: playBtn
                         Layout.preferredWidth: 48
                         Layout.preferredHeight: 38
@@ -288,7 +288,7 @@ Item {
                         }
                     }
 
-                    GlassIconButton {
+                    GlassButton {
                         id: nextBtn
                         Layout.preferredWidth: 40
                         Layout.preferredHeight: 32

@@ -165,7 +165,7 @@ Item {
                             }
                         ]
 
-                        GlassIconButton {
+                        GlassButton {
                             icon: modelData.icon
                             isActive: root.profileStepIndex === index
                             tintColor: modelData.color
