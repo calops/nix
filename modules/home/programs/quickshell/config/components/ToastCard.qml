@@ -112,6 +112,8 @@ Item {
         }
 
         onFinished: {
+            if (root.closedByServer || root.entry?.isDismissed || root.entry?.isExpired)
+                Notifications.dismissById(root.entry?.notificationId ?? "");
             root.exited(root.entry?.notificationId ?? "");
             root.destroy();
         }
@@ -206,11 +208,11 @@ Item {
 
         RichText {
             Layout.fillWidth: true
-            text: root.notification?.body ?? ""
+            rawText: root.notification?.body ?? ""
             fontSize: 13
             maximumLineCount: 15
             elide: Text.ElideRight
-            visible: text !== ""
+            visible: rawText !== ""
         }
 
         Image {
@@ -346,10 +348,12 @@ Item {
         }
     }
 
+    property bool closedByServer: false
+
     Connections {
         target: root.notification
         function onClosed() {
-            Notifications.dismissById(root.entry?.notificationId ?? "");
+            root.closedByServer = true;
             root.startExit();
         }
     }
