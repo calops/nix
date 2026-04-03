@@ -165,8 +165,6 @@ Singleton {
 
         notificationModel.setProperty(index, "isExpired", true);
         notificationModel.setProperty(index, "isTransient", false);
-        if (entry.notification)
-            entry.notification.expire();
 
         root.recomputeCounts();
     }
@@ -180,8 +178,6 @@ Singleton {
             return;
 
         notificationModel.setProperty(index, "isDismissed", true);
-        if (entry.notification)
-            entry.notification.dismiss();
 
         root.recomputeCounts();
     }
