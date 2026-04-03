@@ -247,6 +247,7 @@ Item {
                     tintColor: Colors.palette.text
                     normalAlpha: 0.08
                     hoveredAlpha: 0.18
+                    implicitWidth: actionLabel.implicitWidth + 16
                     Layout.fillWidth: false
                     Layout.preferredHeight: 28
                     onClicked: Notifications.invokeAction(root.notification, index)
