@@ -50,12 +50,15 @@ Item {
     }
 
     StyledText {
-        anchors.centerIn: parent
+        id: label
         text: root.icon
         font.pixelSize: root.iconSize
         color: root.iconColor
         Behavior on color { ColorAnimation { duration: Theme.animationDuration } }
     }
+
+    implicitWidth: label.implicitWidth + 16
+    implicitHeight: Math.max(36, label.implicitHeight + 16)
 
     MouseArea {
         id: btnMouseArea
