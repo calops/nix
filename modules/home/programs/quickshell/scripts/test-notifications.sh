@@ -29,19 +29,29 @@ notify-send "Long Text" "$(printf '%s\n' {1..20}.This is a long notification bod
 sleep 1
 
 echo "=== Progress notification (0-100%) ==="
-NOTIF_ID="progress-test-$$"
+exec {NOTIF_FILEDESC}<>$(mktemp)
+notify-send "Getting ready..." --id-fd="$NOTIF_FILEDESC"
 for i in $(seq 0 5 100); do
-	notify-send -h string:sync:progress-test -h int:value:$i -h string:value-type:ongoing \
+	NOTIF_ID=$(cat "/dev/fd/$NOTIF_FILEDESC")
+	truncate -s0 "/dev/fd/$NOTIF_FILEDESC"
+	notify-send \
+		-h string:sync:progress-test \
+		-h int:value:$i \
+		-h string:value-type:ongoing \
+		--id-fd="$NOTIF_FILEDESC" \
+		--replace-id="$NOTIF_ID" \
 		"Package Manager" "Downloading updates... ${i}%"
 	sleep 0.15
 done
-notify-send -h string:sync:progress-test \
+notify-send \
+	-h string:sync:progress-test \
+	--replace-id="$NOTIF_ID" \
 	"Package Manager" "All updates installed successfully."
 sleep 1
 
 echo "=== Inline reply notification ==="
 notify-send --action="inline-reply=Reply" \
-	-h string:x-kde-reply-placeholder-text="Type a reply..." \
+	-h string:x-kde-reply-placeholder-text:"Type a reply..." \
 	"Messenger" "New message from Bob:\nHey, are you free this weekend?" &
 sleep 1
 

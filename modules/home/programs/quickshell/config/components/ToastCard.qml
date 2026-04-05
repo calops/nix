@@ -56,17 +56,27 @@ Item {
     property real timerProgress: 1.0
 
     function updateTimerProgress() {
-        if (!root.entry) { root.timerProgress = 1.0; return; }
-        if (root.notification && root.notification.urgency === NotificationUrgency.Critical)
-        { root.timerProgress = 1.0; return; }
-        if (root.hasProgress && !root.isProgressDone)
-        { root.timerProgress = 1.0; return; }
+        if (!root.entry) {
+            root.timerProgress = 1.0;
+            return;
+        }
+        if (root.notification && root.notification.urgency === NotificationUrgency.Critical) {
+            root.timerProgress = 1.0;
+            return;
+        }
+        if (root.hasProgress && !root.isProgressDone) {
+            root.timerProgress = 1.0;
+            return;
+        }
 
         var elapsed = root.entry.elapsedDisplayTime;
         if (root.entry.displayStartTime > 0)
             elapsed += Date.now() - root.entry.displayStartTime;
         var timeoutMs = root.entry.expireTimeout * 1000;
-        if (timeoutMs <= 0) { root.timerProgress = 1.0; return; }
+        if (timeoutMs <= 0) {
+            root.timerProgress = 1.0;
+            return;
+        }
         root.timerProgress = Math.max(0, 1.0 - (elapsed / timeoutMs));
     }
 
@@ -112,8 +122,8 @@ Item {
         }
 
         onFinished: {
-            if (root.closedByServer || root.entry?.isDismissed || root.entry?.isExpired)
-                Notifications.dismissById(root.entry?.notificationId ?? "");
+            // if (root.closedByServer || root.entry?.isDismissed || root.entry?.isExpired)
+            //     Notifications.dismissById(root.entry?.notificationId ?? "");
             root.exited(root.entry?.notificationId ?? "");
             root.destroy();
         }
@@ -374,5 +384,6 @@ Item {
 
     Component.onCompleted: {
         console.log("[ToastCard] Created for:", root.notification?.summary ?? "unknown");
+        console.log(JSON.stringify(entry));
     }
 }
