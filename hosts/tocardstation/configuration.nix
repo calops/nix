@@ -137,10 +137,6 @@
     };
   };
 
-  systemd.sleep.extraConfig = ''
-    SuspendState=freeze
-  '';
-
   swapDevices = [
     {
       device = "/swapfile";

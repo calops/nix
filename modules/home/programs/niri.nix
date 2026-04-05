@@ -233,6 +233,7 @@ in
               background-effect {
                 xray false
                 blur true
+                noise 0.05
               }
             }
 
