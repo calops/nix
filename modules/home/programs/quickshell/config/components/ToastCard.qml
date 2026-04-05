@@ -384,6 +384,5 @@ Item {
 
     Component.onCompleted: {
         console.log("[ToastCard] Created for:", root.notification?.summary ?? "unknown");
-        console.log(JSON.stringify(entry));
     }
 }
