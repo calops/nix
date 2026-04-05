@@ -53,6 +53,8 @@ Item {
 
     property bool replySent: false
 
+    property var dismissCallback: null
+
     property real timerProgress: 1.0
 
     function updateTimerProgress() {
@@ -122,8 +124,10 @@ Item {
         }
 
         onFinished: {
-            // if (root.closedByServer || root.entry?.isDismissed || root.entry?.isExpired)
-            //     Notifications.dismissById(root.entry?.notificationId ?? "");
+			if (dismissCallback) {
+				dismissCallback()
+			}
+
             root.exited(root.entry?.notificationId ?? "");
             root.destroy();
         }
@@ -202,7 +206,11 @@ Item {
                 isInProgress: root.hasProgress && !root.isProgressDone
                 isCritical: root.notification && root.notification.urgency === NotificationUrgency.Critical
                 ringColor: root.urgencyTint
-                onDismissed: Notifications.dismissById(root.entry?.notificationId ?? "")
+                    onDismissed: {
+                        var id = root.entry?.notificationId ?? "";
+                        root.dismissCallback = function() { Notifications.dismissById(id); };
+                        root.startExit();
+                    }
             }
         }
 
@@ -261,7 +269,12 @@ Item {
                     hoveredAlpha: 0.18
                     Layout.fillWidth: false
                     Layout.preferredHeight: 28
-                    onClicked: Notifications.invokeAction(root.notification, index)
+                    onClicked: {
+                        var notification = root.notification;
+                        var actionIndex = index;
+                        root.dismissCallback = function() { Notifications.invokeAction(notification, actionIndex); };
+                        root.startExit();
+                    }
                 }
             }
         }
@@ -331,10 +344,11 @@ Item {
                     Layout.fillWidth: false
                     Layout.preferredHeight: 28
                     onClicked: {
-                        if (replyField.text.trim() !== "") {
-                            Notifications.sendInlineReply(root.notification, replyField.text.trim());
-                            root.replySent = true;
-                        }
+                        root.replySent = true;
+                        var notification = root.notification;
+                        var replyText = replyField.text.trim();
+                        root.dismissCallback = function() { Notifications.sendInlineReply(notification, replyText); };
+                        root.startExit();
                     }
                 }
             }
