@@ -139,6 +139,18 @@ Item {
         }
     }
 
+    function deferAction(callback) {
+        root.dismissCallback = callback;
+        actionDelayTimer.start();
+    }
+
+    Timer {
+        id: actionDelayTimer
+        interval: Theme.animationDurationFast
+        repeat: false
+        onTriggered: root.startExit()
+    }
+
     Behavior on y {
         enabled: !root.isEntering && !root.isExiting
         NumberAnimation {
@@ -260,6 +272,7 @@ Item {
             Repeater {
                 model: (root.notification?.actions ?? []).length
                 delegate: GlassButton {
+                    id: actionButton
                     required property int index
                     property var action: root.notification.actions[index]
                     icon: action.text
@@ -270,10 +283,10 @@ Item {
                     Layout.fillWidth: false
                     Layout.preferredHeight: 28
                     onClicked: {
+                        actionButton.isActive = true;
                         var notification = root.notification;
                         var actionIndex = index;
-                        root.dismissCallback = function() { Notifications.invokeAction(notification, actionIndex); };
-                        root.startExit();
+                        root.deferAction(function() { Notifications.invokeAction(notification, actionIndex); });
                     }
                 }
             }
@@ -344,11 +357,11 @@ Item {
                     Layout.fillWidth: false
                     Layout.preferredHeight: 28
                     onClicked: {
+                        sendButton.isActive = true;
                         root.replySent = true;
                         var notification = root.notification;
                         var replyText = replyField.text.trim();
-                        root.dismissCallback = function() { Notifications.sendInlineReply(notification, replyText); };
-                        root.startExit();
+                        root.deferAction(function() { Notifications.sendInlineReply(notification, replyText); });
                     }
                 }
             }

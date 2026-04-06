@@ -84,6 +84,8 @@ Scope {
                         var card = toastWindow.activeToasts[notificationId]
                         var wasDismissed = card?.entry?.isDismissed ?? false
                         var wasExpired = card?.entry?.isExpired ?? false
+                        var wasClosedByServer = card?.closedByServer ?? false
+                        var hadDeferredAction = card?.dismissCallback !== null
                         var toasts = toastWindow.activeToasts
                         delete toasts[notificationId]
                         toastWindow.activeToasts = toasts
@@ -91,6 +93,8 @@ Scope {
                             Notifications.removeById(notificationId)
                         } else if (wasExpired) {
                             Notifications.finalizeExpiredById(notificationId)
+                        } else if (wasClosedByServer || hadDeferredAction) {
+                            Notifications.removeById(notificationId)
                         }
                         toastWindow.syncToasts()
                     }
