@@ -93,8 +93,10 @@ Scope {
                             Notifications.removeById(notificationId)
                         } else if (wasExpired) {
                             Notifications.finalizeExpiredById(notificationId)
-                        } else if (wasClosedByServer || hadDeferredAction) {
-                            Notifications.removeById(notificationId)
+                        } else if (hadDeferredAction) {
+                            Notifications.removeByIdSilent(notificationId)
+                        } else if (wasClosedByServer) {
+                            Notifications.removeByIdSilent(notificationId)
                         }
                         toastWindow.syncToasts()
                     }
@@ -128,7 +130,7 @@ Scope {
                 var entries = []
                 for (var i = 0; i < Notifications.model.count; i++) {
                     var entry = Notifications.model.get(i)
-                    if (entry.isTransient && !entry.isDismissed && !entry.isExpired) {
+                    if (entry.isTransient && !entry.isDismissed && !entry.isExpired && entry.notification) {
                         entries.push(entry)
                     }
                 }

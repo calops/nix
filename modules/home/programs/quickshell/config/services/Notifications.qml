@@ -117,8 +117,6 @@ Singleton {
                 notificationModel.setProperty(i, "elapsedDisplayTime", 0);
                 notificationModel.setProperty(i, "displayStartTime", 0);
                 notificationModel.setProperty(i, "isDisplayed", false);
-                // Revive dismissed/expired on replacement: the sender replaces a notification
-                // because they want the update the user. Revisit if this proves annoying.
                 notificationModel.setProperty(i, "isDismissed", false);
                 notificationModel.setProperty(i, "isExpired", false);
 
@@ -200,6 +198,14 @@ Singleton {
         const entry = notificationModel.get(idx);
         if (entry.notification)
             entry.notification.dismiss();
+        notificationModel.remove(idx);
+        root.recomputeCounts();
+    }
+
+    function removeByIdSilent(id) {
+        const idx = root.findIndexById(id);
+        if (idx < 0)
+            return;
         notificationModel.remove(idx);
         root.recomputeCounts();
     }

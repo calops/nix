@@ -21,7 +21,7 @@ Item {
     x: cardWidth + 50
     y: targetY
 
-    signal exited(string notificationId)
+    signal exited(var notificationId)
 
     readonly property color urgencyTint: {
         if (!notification)

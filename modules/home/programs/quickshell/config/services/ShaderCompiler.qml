@@ -50,7 +50,7 @@ Item {
         command: [
             "sh", 
             "-c", 
-            "mkdir -p '" + root.stateDir + "' && if [ ! -f '" + root._outputFile + "' ] || [ '" + root.sourceFile + "' -nt '" + root._outputFile + "' ]; then echo 'Compiling " + root.name + "...'; nix shell nixpkgs#qt6.qtshadertools -c qsb --glsl '100 es,120,150' --hlsl 50 --msl 12 -o '" + root._outputFile + "' '" + root.sourceFile + "'; else echo 'Shader " + root.name + " is up to date.'; exit 0; fi"
+            "mkdir -p '" + root.stateDir + "' && if [ ! -f '" + root._outputFile + "' ] || [ '" + root.sourceFile + "' -nt '" + root._outputFile + "' ]; then echo 'Compiling " + root.name + "...'; nix shell nixpkgs#qt6.qtshadertools -c qsb --glsl '300 es,330' --spirv 100 -o '" + root._outputFile + "' '" + root.sourceFile + "'; else echo 'Shader " + root.name + " is up to date.'; exit 0; fi"
         ]
         
         onExited: function(exitCode) {

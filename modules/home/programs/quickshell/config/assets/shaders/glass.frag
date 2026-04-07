@@ -98,23 +98,30 @@ void main() {
     // Inner profile for highlights (fades inside the shape)
     float edgeProfile = smoothstep(2.0, 0.0, -d);
     
-    // Calculate normals via SDF gradient for perfect accuracy
-    vec2 eps = vec2(0.5, 0.0);
-    float dx = getDistance(p + eps.xy, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness) - 
-               getDistance(p - eps.xy, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness);
-    float dy = getDistance(p + eps.yx, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness) - 
-               getDistance(p - eps.yx, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness);
-    vec3 edgeNormal = normalize(vec3(dx, dy, 0.3));
-
-    // Light dir from top-left
-    vec3 lightDir = normalize(vec3(-1.0, -1.0, 1.0));
+    // Skip expensive normal calculation in the interior where it has no visual effect
+    // This saves 4 getDistance() calls per pixel when edgeProfile is near zero
+    float highlight = 0.0;
+    float shadow = 0.0;
     
-    // Invert normal for recessed (pressed-in) appearance
-    vec3 effectiveNormal = recessed > 0.5 ? -edgeNormal : edgeNormal;
+    if (edgeProfile > 0.01) {
+        // Calculate normals via SDF gradient for perfect accuracy
+        vec2 eps = vec2(0.5, 0.0);
+        float dx = getDistance(p + eps.xy, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness) - 
+                   getDistance(p - eps.xy, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness);
+        float dy = getDistance(p + eps.yx, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness) - 
+                   getDistance(p - eps.yx, r, center, halfSize, rect1, rect2, rect3, radius1, radius2, radius3, smoothness);
+        vec3 edgeNormal = normalize(vec3(dx, dy, 0.3));
 
-    // High-quality directional highlights/shadows
-    float highlight = edgeProfile * max(dot(effectiveNormal, lightDir), 0.0);
-    float shadow = edgeProfile * max(dot(effectiveNormal, -lightDir), 0.0);
+        // Light dir from top-left
+        vec3 lightDir = normalize(vec3(-1.0, -1.0, 1.0));
+        
+        // Invert normal for recessed (pressed-in) appearance
+        vec3 effectiveNormal = recessed > 0.5 ? -edgeNormal : edgeNormal;
+
+        // High-quality directional highlights/shadows
+        highlight = edgeProfile * max(dot(effectiveNormal, lightDir), 0.0);
+        shadow = edgeProfile * max(dot(effectiveNormal, -lightDir), 0.0);
+    }
     
     // Volumetric gradient (global across the whole coord space)
     float volGradient = dot(qt_TexCoord0 - vec2(0.5), vec2(-1.0, -1.0));

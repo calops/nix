@@ -45,7 +45,7 @@ vec3 getCycleColor(float t) {
     c[4] = ubuf.accentColor5.rgb; // Yellow
     c[5] = ubuf.accentColor6.rgb; // Red
     
-    return mix(c[i], c[(i + 1) % 6], f_smooth);
+    return mix(c[i], c[int(mod(i + 1, 6))], f_smooth);
 }
 
 void main() {
