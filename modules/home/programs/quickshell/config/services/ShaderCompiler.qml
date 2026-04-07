@@ -4,24 +4,24 @@ import Quickshell.Io
 
 Item {
     id: root
-    
+
     property string sourceFile: ""
     property string name: ""
-    
+
     // The base name of the file without extension
     readonly property string baseName: name !== "" ? name : (sourceFile.split("/").pop().split(".")[0])
-    
+
     property string compiledPath: ""
     property bool ready: false
 
     property string stateDir: (Quickshell.env("XDG_STATE_HOME") || (Quickshell.env("HOME") + "/.local/state")) + "/quickshell/shaders"
     property string _outputFile: stateDir + "/" + root.baseName + ".frag.qsb"
-    
+
     // Cache bust by appending ?v=Date.now() to the URL so UI components reload the file
     property string _urlVersion: ""
-    
+
     property bool _isLoaded: false
-    
+
     FileView {
         id: watcher
         path: root.sourceFile
@@ -36,7 +36,7 @@ Item {
             }
         }
     }
-    
+
     Timer {
         id: debounceTimer
         interval: 100
@@ -44,19 +44,16 @@ Item {
             compiler.running = true
         }
     }
-    
+
     Process {
         id: compiler
-        
-        property string _glslVersions: "300 es,330"
-        property string _spirvVersion: "100"
-        
+
         command: [
-            "sh", 
+            "sh",
             "-c",
-            "mkdir -p '" + root.stateDir + "' && if [ ! -f '" + root._outputFile + "' ] || [ '" + root.sourceFile + "' -nt '" + root._outputFile + "' ]; then echo 'Compiling " + root.name + "...'; nix shell nixpkgs#qt6.qtshadertools -c qsb --glsl '" + root._glslVersions + "' --spirv " + root._spirvVersion + "' -o '" + root._outputFile + "' '" + root.sourceFile + "'; else echo 'Shader " + root.name + " is up to date.'; exit 0; fi"
+			`mkdir -p '${root.stateDir}' && if [ ! -f '${root._outputFile}' ] || [ '${root.sourceFile}' -nt '${root._outputFile}' ]; then echo 'Compiling ${root.name}...'; qsb --qt6 -o '${root._outputFile}' '${root.sourceFile}'; else echo 'Shader ${root.name} is up to date.'; exit 0; fi`
         ]
-        
+
         onExited: function(exitCode) {
             if (exitCode === 0) {
                 // Update the URL version to cache-bust any previous loads in QML

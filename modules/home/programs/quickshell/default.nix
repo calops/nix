@@ -12,16 +12,16 @@
       activeConfig = null;
       systemd.enable = true;
 
-      # Necessary for tray icons detection
       package = pkgs.symlinkJoin {
         name = "quickshell";
         paths = [ perSystem.quickshell.default ];
         nativeBuildInputs = [
           pkgs.makeWrapper
-          pkgs.qt6.qtshadertools
         ];
         postBuild = ''
-          wrapProgram $out/bin/quickshell --set QT_QPA_PLATFORMTHEME gtk3
+          wrapProgram $out/bin/quickshell \
+            --set QT_QPA_PLATFORMTHEME gtk3 \
+            --prefix PATH : ${lib.makeBinPath [ pkgs.cava pkgs.ddcutil pkgs.anyrun-provider pkgs.qt6.qtshadertools ]}
         '';
 
         meta.mainProgram = "quickshell";
@@ -29,9 +29,6 @@
     };
 
     home.packages = [
-      pkgs.cava
-      pkgs.ddcutil
-      pkgs.anyrun-provider
       (pkgs.writeShellScriptBin "shell" ''
         exec quickshell ipc call actions "$@"
       '')
