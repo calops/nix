@@ -47,10 +47,14 @@ Item {
     
     Process {
         id: compiler
+        
+        property string _glslVersions: "300 es,330"
+        property string _spirvVersion: "100"
+        
         command: [
             "sh", 
-            "-c", 
-            "mkdir -p '" + root.stateDir + "' && if [ ! -f '" + root._outputFile + "' ] || [ '" + root.sourceFile + "' -nt '" + root._outputFile + "' ]; then echo 'Compiling " + root.name + "...'; nix shell nixpkgs#qt6.qtshadertools -c qsb --glsl '300 es,330' --spirv 100 -o '" + root._outputFile + "' '" + root.sourceFile + "'; else echo 'Shader " + root.name + " is up to date.'; exit 0; fi"
+            "-c",
+            "mkdir -p '" + root.stateDir + "' && if [ ! -f '" + root._outputFile + "' ] || [ '" + root.sourceFile + "' -nt '" + root._outputFile + "' ]; then echo 'Compiling " + root.name + "...'; nix shell nixpkgs#qt6.qtshadertools -c qsb --glsl '" + root._glslVersions + "' --spirv " + root._spirvVersion + "' -o '" + root._outputFile + "' '" + root.sourceFile + "'; else echo 'Shader " + root.name + " is up to date.'; exit 0; fi"
         ]
         
         onExited: function(exitCode) {

@@ -21,7 +21,7 @@ Item {
     x: cardWidth + 50
     y: targetY
 
-    signal exited(var notificationId)
+    signal exited(int notificationId)
 
     readonly property color urgencyTint: {
         if (!notification)
@@ -128,7 +128,7 @@ Item {
 				dismissCallback()
 			}
 
-            root.exited(root.entry?.notificationId ?? "");
+            root.exited(root.entry?.notificationId ?? 0);
             root.destroy();
         }
     }
@@ -219,7 +219,7 @@ Item {
                 isCritical: root.notification && root.notification.urgency === NotificationUrgency.Critical
                 ringColor: root.urgencyTint
                     onDismissed: {
-                        var id = root.entry?.notificationId ?? "";
+                        var id = root.entry?.notificationId ?? 0;
                         root.dismissCallback = function() { Notifications.dismissById(id); };
                         root.startExit();
                     }
