@@ -184,6 +184,8 @@ in
                 XF86AudioPlay         { spawn-sh "playerctl play-pause"; }
                 XF86MonBrightnessUp   { spawn-sh "shell setBrightness +0.05"; }
                 XF86MonBrightnessDown { spawn-sh "shell setBrightness -0.05"; }
+
+                XF86LaunchA { toggle-overview; }
             }
 
             workspace "web"
