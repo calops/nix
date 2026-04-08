@@ -88,6 +88,7 @@ in
     };
 
     xdg.configFile = {
+      "nvim/init.lua".enable = false;
       "nvim".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/config";
     };
 

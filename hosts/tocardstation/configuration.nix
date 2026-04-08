@@ -20,6 +20,11 @@
     variant = "azerty";
   };
 
+  # NuPhy.io support
+  services.udev.extraRules = ''
+    KERNEL=="hidraw*", ATTRS{idVendor}=="19f5", MODE="0666"
+  '';
+
   my.configDir = "/home/calops/nix";
 
   nix.settings.cores = 22; # keep two cores for the system

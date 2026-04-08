@@ -8,6 +8,7 @@
   config = lib.mkIf config.my.roles.graphical.enable {
     gtk = {
       enable = true;
+      gtk4.theme = config.gtk.theme;
       #      theme = lib.mkIf pkgs.stdenv.isLinux {
       #        name = lib.mkForce "Catppuccin-GTK-Dark";
       #        package = lib.mkForce (

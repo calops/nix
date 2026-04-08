@@ -22,7 +22,7 @@ in
       pkgs.lutris
       pkgs.steamcmd
       pkgs.steam-run
-      pkgs.wineWowPackages.waylandFull
+      pkgs.wineWow64Packages.waylandFull
       pkgs.winetricks
     ];
 
