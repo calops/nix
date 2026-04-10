@@ -57,7 +57,10 @@ in
                 }
 
                 keyboard {
-                    xkb { layout "fr"; }
+                    // xkb {
+                    //   layout "fr,us"
+                    //   options "grp:alt_shift_toggle"
+                    // }
                     repeat-delay 600
                     repeat-rate 25
                     track-layout "global"
