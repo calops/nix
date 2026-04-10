@@ -198,8 +198,8 @@ in
             workspace "games"
             workspace "misc"
 
-            spawn-sh-at-startup "swww-daemon"
-            spawn-sh-at-startup "swww img ${wallpaper}"
+            spawn-sh-at-startup "awww-daemon"
+            spawn-sh-at-startup "awww img ${wallpaper}"
             spawn-sh-at-startup "${lib.getExe config.programs.firefox.package}"
             spawn-sh-at-startup "${lib.getExe config.programs.element.package}"
 
@@ -294,7 +294,7 @@ in
     };
 
     home.packages = [
-      pkgs.swww
+      pkgs.awww
       pkgs.nautilus
       pkgs.xwayland-satellite
       pkgs.playerctl

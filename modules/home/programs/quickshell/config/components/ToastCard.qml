@@ -189,18 +189,22 @@ Item {
 
             Image {
                 id: appIcon
-                source: root.notification?.appIcon ?? ""
+                source: {
+                    var icon = root.notification?.appIcon ?? "";
+                    if (icon !== "")
+                        return "image://icon/" + icon;
+                    return "";
+                }
                 sourceSize: Qt.size(20, 20)
                 Layout.preferredWidth: 20
                 Layout.preferredHeight: 20
                 fillMode: Image.PreserveAspectFit
-                visible: source !== ""
 
                 Image {
                     anchors.fill: parent
                     source: "image://icon/application-x-executable"
                     sourceSize: Qt.size(20, 20)
-                    visible: appIcon.source === "" || appIcon.status !== Image.Ready
+                    visible: appIcon.status !== Image.Ready
                 }
             }
 

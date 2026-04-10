@@ -45,7 +45,7 @@ in
         pkgs.vtsls # typescript / javascript
         pkgs.fish-lsp
         pkgs.kdePackages.qtdeclarative # for qmlls
-        pkgs.nodePackages.vscode-json-languageserver
+        pkgs.vscode-json-languageserver
         rustToolchain # rust
 
         # Tools
@@ -69,9 +69,9 @@ in
         pkgs.ghostscript
       ];
 
-      plugins = [
-        pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
-      ];
+      # plugins = [
+      #   pkgs.vimPlugins.lazy-nvim # All other plugins are managed by lazy-nvim
+      # ];
     };
 
     xdg.dataFile = {
@@ -87,6 +87,7 @@ in
         '';
     };
 
+    xdg.configFile."nvim/init.lua".enable = false;
     xdg.configFile = {
       "nvim/init.lua".enable = false;
       "nvim".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/config";

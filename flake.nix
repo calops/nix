@@ -3,7 +3,7 @@
 
   inputs = {
     # last working build of electron (again)
-    nixpkgs.url = "github:NixOS/nixpkgs?ref=e38213b91d37";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     # Flake framework
     blueprint.url = "github:numtide/blueprint";

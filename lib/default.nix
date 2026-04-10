@@ -33,25 +33,25 @@
       paths = [ pkg ];
       nativeBuildInputs = [
         pkgs.librsvg
-        pkgs.nodePackages.asar
+        pkgs.asar
       ];
       postBuild = ''
-        set -euo pipefail
-        shopt -s nullglob
+                set -euo pipefail
+                shopt -s nullglob
 
-        ICON_THEME="${iconTheme}/${themePath}"
+                ICON_THEME="${iconTheme}/${themePath}"
 
-        get_icon() {
-        	local name="$1"
-        	local svg=$(find "$ICON_THEME" -name "$name.svg" | head -n 1)
-        	if [ -z "$svg" ]; then
-        		echo "Icon $name not found in theme $ICON_THEME!" >&2
-        		exit 1
-        	fi
-        	echo "$svg"
-        }
+                get_icon() {
+                	local name="$1"
+                	local svg=$(find "$ICON_THEME" -name "$name.svg" | head -n 1)
+                	if [ -z "$svg" ]; then
+                		echo "Icon $name not found in theme $ICON_THEME!" >&2
+                		exit 1
+                	fi
+                	echo "$svg"
+                }
 
-        declare -A unpacked_asars
+                declare -A unpacked_asars
 
 ${pkgs.lib.concatMapStringsSep "\n" (
           icon:
@@ -98,12 +98,12 @@ ${pkgs.lib.concatMapStringsSep "\n" (
               echo "Replaced ${target} with ${iconName}"
             ''
         ) icons}
-        for asar in "''${!unpacked_asars[@]}"; do
-        	tmp_asar="''${unpacked_asars[$asar]}"
-        	asar pack "$tmp_asar" "$out/$asar"
-        	rm -r "$tmp_asar"
-        	echo "Repacked $asar"
-        done
+                for asar in "''${!unpacked_asars[@]}"; do
+                	tmp_asar="''${unpacked_asars[$asar]}"
+                	asar pack "$tmp_asar" "$out/$asar"
+                	rm -r "$tmp_asar"
+                	echo "Repacked $asar"
+                done
       '';
     };
 }
