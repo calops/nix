@@ -1,28 +1,9 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, perSystem, ... }:
 let
-  zaiApiKeySetup =
-    #bash
-    ''
-      state_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/zai"
-      api_key_file="$state_dir/api-key"
-
-      if [ ! -f "$api_key_file" ]; then
-      	echo "Fetching z.ai API key from 1Password..." >&2
-      	mkdir -p "$state_dir" --mode 700
-      	api_key="$(op item get "z.ai API key" --fields credential --reveal 2>/dev/null)"
-      	if [ -z "$api_key" ]; then
-      		echo "Error: failed to fetch z.ai API key from 1Password" >&2
-      		exit 1
-      	fi
-      	printf '%s' "$api_key" >"$api_key_file"
-      	chmod 600 "$api_key_file"
-      fi
-
-      export ZAI_API_KEY="$(cat "$api_key_file")"
-    '';
+  opCredential = lib.getExe perSystem.self.op-credential;
 
   zaiClaude = pkgs.writeShellScriptBin "zai" ''
-    ${zaiApiKeySetup}
+    eval "$(${opCredential} "z.ai API key" ZAI_API_KEY)"
     export ANTHROPIC_AUTH_TOKEN=$ZAI_API_KEY
     export ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic"
     export API_TIMEOUT_MS="3000000"
@@ -33,7 +14,7 @@ let
   '';
 
   zaiOpencode = pkgs.writeShellScriptBin "opencode" ''
-    ${zaiApiKeySetup}
+    eval "$(${opCredential} "z.ai API key" ZAI_API_KEY)"
     exec ${lib.getExe pkgs.opencode} "$@"
   '';
 in

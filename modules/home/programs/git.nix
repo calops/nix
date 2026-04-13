@@ -53,6 +53,7 @@ in
         "target"
         "tmp"
         "typings"
+        "linear.toml"
       ];
 
       settings = {

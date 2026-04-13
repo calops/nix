@@ -30,5 +30,6 @@
     ./zed.nix
     ./ai-dev.nix
     ./sable.nix
+    ./linear.nix
   ];
 }
