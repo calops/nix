@@ -16,9 +16,7 @@
   time.timeZone = "Europe/Paris";
 
   services.xserver.xkb = {
-    layout = "us,fr";
-    variant = "";
-    options = "grp:alt_shift_toggle";
+    layout = "fr";
   };
 
   # NuPhy.io support

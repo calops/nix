@@ -3,7 +3,6 @@
   lib,
   pkgs,
   nixosConfig ? null,
-  inputs,
   perSystem,
   ...
 }:
@@ -15,11 +14,6 @@ let
   pidof = lib.getExe' pkgs.sysvinit "pidof";
 in
 {
-  imports = [
-    # TODO: update my niri-flake fork so that this can work again for standalone hm
-    # inputs.niri.homeModules.config
-  ];
-
   options.my.roles.graphical.niriExtraConfig = lib.mkOption {
     type = lib.types.str;
     default = "";
@@ -57,10 +51,6 @@ in
                 }
 
                 keyboard {
-                    // xkb {
-                    //   layout "fr,us"
-                    //   options "grp:alt_shift_toggle"
-                    // }
                     repeat-delay 600
                     repeat-rate 25
                     track-layout "global"
