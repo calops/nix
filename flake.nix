@@ -96,8 +96,14 @@
 
   outputs =
     inputs:
+    let
+      dendritic = (inputs.nixpkgs.lib.evalModules {
+        modules = [ ./modules/den.nix ];
+        specialArgs.inputs = inputs;
+      }).config;
+    in
     inputs.blueprint {
-      inherit inputs;
+      inputs = inputs // { inherit dendritic; };
 
       nixpkgs.config.allowUnfree = true;
     };
