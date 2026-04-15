@@ -17,11 +17,7 @@ The user aspect (`calops`) only includes portable personal config (terminal pref
 ### `modules/den.nix`
 - Imports `inputs.den.flakeModule`
 - Sets `den.schema.user.classes = [ "homeManager" ]`
-- Declares all hosts and users:
-  - `den.hosts.x86_64-linux.tb-laptop.users.calops = {}`
-  - `den.hosts.x86_64-linux.tocardstation.users.calops = {}`
-  - `den.hosts.aarch64-darwin.remilabeyrie-kiro.users.remilabeyrie = {}`
-  - `den.homes.x86_64-linux.tocardland = { userName = "calops"; }`
+- No host/user declarations — each module declares its own
 
 ### `modules/base-nixos.nix`
 - Aspect name: `base-nixos`
@@ -81,6 +77,7 @@ The user aspect (`calops`) only includes portable personal config (terminal pref
 - Any home-manager env vars or configs related to nvidia
 
 ### `modules/hosts/tb-laptop.nix`
+- Declares `den.hosts.x86_64-linux.tb-laptop.users.calops = {}`
 - Aspect name: `tb-laptop` (auto-generated from host declaration, extended here)
 - `includes = [ base-nixos base-home graphical audio bluetooth printing work-terabase terminal ]`
 - `nixos` class: hardware-specific config
@@ -132,13 +129,13 @@ modules/
   _common/              ← ignored by import-tree (kept for base-*.nix to import)
   _darwin/              ← ignored by import-tree
   _home/                ← ignored by import-tree
-  den.nix               ← flakeModule + schema + host/user declarations
+  den.nix               ← flakeModule + schema defaults only (no host/user declarations)
   base-nixos.nix        ← all shared NixOS defaults (flat, comment-sectioned)
   base-home.nix         ← all shared home defaults (flat, comment-sectioned)
   hosts/
-    tb-laptop.nix       ← tb-laptop hardware + host-specific config
+    tb-laptop.nix       ← declares den.hosts + defines tb-laptop aspect
   users/
-    calops.nix          ← calops portable personal config
+    calops.nix          ← defines calops user aspect (portable personal config)
   roles/
     graphical.nix       ← nixos + homeManager
     audio.nix           ← nixos + homeManager
