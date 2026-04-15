@@ -10,7 +10,7 @@
   imports = [
     inputs.stylix.nixosModules.stylix
     inputs.nix-index-database.nixosModules.nix-index
-    ../common
+    ../_common
     ./audio.nix
     ./bluetooth.nix
     ./boot.nix

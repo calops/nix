@@ -8,7 +8,7 @@
 }:
 {
   imports = [
-    ../common
+    ../_common
     ./programs
     ./config
     inputs.stylix.homeModules.stylix

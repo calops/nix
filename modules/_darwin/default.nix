@@ -10,8 +10,8 @@
 {
   imports = [
     inputs.nix-index-database.darwinModules.nix-index
-    ../common/colors
-    ../common/nix.nix
+    ../_common/colors
+    ../_common/nix.nix
   ];
 
   options = {
