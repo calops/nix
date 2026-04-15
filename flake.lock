@@ -306,6 +306,21 @@
         "type": "github"
       }
     },
+    "den": {
+      "locked": {
+        "lastModified": 1776133621,
+        "narHash": "sha256-RNbDvS6voiq2GalVHRt6w2EpdlEmmCjUAb6fvPO9PnE=",
+        "owner": "vic",
+        "repo": "den",
+        "rev": "927f4d8e2be40d05c976a91bbec66238c622bbf5",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vic",
+        "repo": "den",
+        "type": "github"
+      }
+    },
     "determinate": {
       "inputs": {
         "determinate-nixd-aarch64-darwin": "determinate-nixd-aarch64-darwin",
@@ -1134,6 +1149,21 @@
         "type": "github"
       }
     },
+    "import-tree": {
+      "locked": {
+        "lastModified": 1773693634,
+        "narHash": "sha256-BtZ2dtkBdSUnFPPFc+n0kcMbgaTxzFNPv2iaO326Ffg=",
+        "owner": "vic",
+        "repo": "import-tree",
+        "rev": "c41e7d58045f9057880b0d85e1152d6a4430dbf1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vic",
+        "repo": "import-tree",
+        "type": "github"
+      }
+    },
     "iosevka-upstream": {
       "flake": false,
       "locked": {
@@ -1828,11 +1858,13 @@
         "anyrun": "anyrun",
         "aporetic": "aporetic",
         "blueprint": "blueprint",
+        "den": "den",
         "determinate": "determinate",
         "devenv": "devenv",
         "disko": "disko",
         "fenix": "fenix",
         "home-manager": "home-manager",
+        "import-tree": "import-tree",
         "kidex": "kidex",
         "neovim-nightly": "neovim-nightly",
         "nh": "nh",

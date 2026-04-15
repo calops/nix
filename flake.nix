@@ -84,6 +84,14 @@
 
     quickshell.url = "github:calops/quickshell?ref=fix/region-parent-tracking";
     quickshell.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Dendritic module system
+    den.url = "github:vic/den";
+    den.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Auto-import tree for den modules
+    import-tree.url = "github:vic/import-tree";
+    import-tree.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
