@@ -98,7 +98,7 @@
     inputs:
     let
       dendritic = (inputs.nixpkgs.lib.evalModules {
-        modules = [ ./modules/den.nix ];
+        modules = [ (inputs.import-tree ./modules) ];
         specialArgs.inputs = inputs;
       }).config;
     in
