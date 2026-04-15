@@ -1,6 +1,9 @@
-{ flake, pkgs, ... }:
+{ flake, inputs, pkgs, ... }:
 {
-  imports = [ flake.darwinModules.default ];
+  imports = [
+    flake.darwinModules.default
+    inputs.dendritic.den.hosts.aarch64-darwin.remilabeyrie-kiro.mainModule
+  ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
 

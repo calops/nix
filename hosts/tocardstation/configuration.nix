@@ -10,6 +10,7 @@
     inputs.disko.nixosModules.disko
     flake.nixosModules.default
     ./hardware.nix
+    inputs.dendritic.den.hosts.x86_64-linux.tocardstation.mainModule
   ];
 
   networking.hostName = "tocardstation";

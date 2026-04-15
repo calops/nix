@@ -9,6 +9,7 @@
     flake.nixosModules.default
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-p14s-intel-gen5
     ./hardware.nix
+    inputs.dendritic.den.hosts.x86_64-linux.tb-laptop.mainModule
   ];
 
   my.configDir = "/home/calops/nix";

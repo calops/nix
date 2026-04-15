@@ -1,6 +1,9 @@
-{ flake, ... }:
+{ flake, inputs, ... }:
 {
-  imports = [ flake.homeModules.default ];
+  imports = [
+    flake.homeModules.default
+    inputs.dendritic.den.homes.x86_64-linux.tocardland.mainModule
+  ];
 
   home = {
     username = "calops";
