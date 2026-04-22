@@ -1,9 +1,12 @@
-{ inputs, den, lib, ... }:
+{ den, ... }:
 {
   den.aspects.calops = {
     includes = [
-      den.aspects.terminal
-      den.aspects.base-home
+      den.provides.primary-user
+      (den.provides.user-shell "fish")
     ];
+
+    user.description = "Rémi Labeyrie";
+    user.extraGroups = [ "docker" ];
   };
 }

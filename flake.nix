@@ -1,110 +1,80 @@
+# DO-NOT-EDIT. This file was auto-generated using github:vic/flake-file.
+# Use `nix run .#write-flake` to regenerate it.
 {
-  description = "Home-manager configuration";
+  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
-    # last working build of electron (again)
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-
-    # Flake framework
-    blueprint.url = "github:numtide/blueprint";
-    blueprint.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Theming framework for nixos and home-manager
-    stylix.url = "github:nix-community/stylix";
-    stylix.inputs.nixpkgs.follows = "nixpkgs";
-    stylix.inputs.nur.follows = "nur";
-
-    # Nix user repository
-    nur.url = "github:nix-community/NUR";
-    nur.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Nix-darwin modules
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Precompiled nix-index database
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Rust toolchain
-    fenix.url = "github:nix-community/fenix";
-    fenix.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Niri window manager
-    niri-src.url = "github:yalter/niri?ref=wip/branch";
-    niri.url = "github:sodiboo/niri-flake/";
-    niri.inputs.nixpkgs.follows = "nixpkgs";
-    niri.inputs.niri-unstable.follows = "niri-src";
-
-    # Home-manager modules
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    # App launcher
-    anyrun.url = "github:Kirottu/anyrun";
-    anyrun.inputs.nixpkgs.follows = "nixpkgs";
-
-    # File indexer
-    kidex.url = "github:Kirottu/kidex";
-    kidex.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Vencord settings module (discord mod)
-    nixcord.url = "github:kaylorben/nixcord";
-    nixcord.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Logitech devices manager
-    solaar.url = "github:Svenum/Solaar-Flake/main";
-    solaar.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Custom font
-    aporetic.url = "github:calops/iosevka-aporetic";
-    aporetic.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Disk formatting
-    disko.url = "github:nix-community/disko/latest";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Determinate version of nix
-    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3.15.2";
-    determinate.inputs.nixpkgs.follows = "nixpkgs";
-
-    nh.url = "github:viperML/nh";
-    nh.inputs.nixpkgs.follows = "nixpkgs";
-
-    neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
-    neovim-nightly.inputs.nixpkgs.follows = "nixpkgs";
-
-    devenv.url = "github:cachix/devenv";
-    devenv.inputs.nixpkgs.follows = "nixpkgs";
-
-    stasis.url = "github:saltnpepper97/stasis";
-    stasis.inputs.nixpkgs.follows = "nixpkgs";
-
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
-    quickshell.url = "github:calops/quickshell?ref=fix/region-parent-tracking";
-    quickshell.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Dendritic module system
-    den.url = "github:vic/den";
-    den.inputs.nixpkgs.follows = "nixpkgs";
-
-    # Auto-import tree for den modules
-    import-tree.url = "github:vic/import-tree";
-    import-tree.inputs.nixpkgs.follows = "nixpkgs";
-  };
-
-  outputs =
-    inputs:
-    let
-      dendritic = (inputs.nixpkgs.lib.evalModules {
-        modules = [ (inputs.import-tree ./modules) ];
-        specialArgs.inputs = inputs;
-      }).config;
-    in
-    inputs.blueprint {
-      inputs = inputs // { inherit dendritic; };
-
-      nixpkgs.config.allowUnfree = true;
+    anyrun = {
+      url = "github:Kirottu/anyrun";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
+    aporetic = {
+      url = "github:calops/iosevka-aporetic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    den.url = "github:vic/den";
+    disko = {
+      url = "github:nix-community/disko/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    fenix = {
+      url = "github:nix-community/fenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-file.url = "github:vic/flake-file";
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    import-tree.url = "github:vic/import-tree";
+    neovim-nightly = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    niri = {
+      url = "github:sodiboo/niri-flake/";
+      inputs = {
+        niri-unstable.follows = "niri-src";
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    niri-src.url = "github:yalter/niri";
+    nix-darwin = {
+      url = "github:LnL7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixcord = {
+      url = "github:kaylorben/nixcord";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    quickshell = {
+      url = "github:calops/quickshell?ref=fix/region-parent-tracking";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    solaar = {
+      url = "github:Svenum/Solaar-Flake/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    stasis = {
+      url = "github:saltnpepper97/stasis";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        nur.follows = "nur";
+      };
+    };
+  };
 }

@@ -1,4 +1,9 @@
-{ flake, inputs, pkgs, ... }:
+{
+  flake,
+  inputs,
+  pkgs,
+  ...
+}:
 {
   imports = [
     flake.darwinModules.default
