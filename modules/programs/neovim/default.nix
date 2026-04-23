@@ -20,7 +20,7 @@
           ...
         }:
         let
-          nvimDir = "${host.configDir}/modules/home/programs/neovim";
+          nvimDir = "${host.configDir}/modules/programs/neovim";
 
           rustToolchain = inputs'.fenix.packages.complete.withComponents [
             "cargo"

@@ -3,8 +3,12 @@ return {
 	{
 		"saghen/blink.cmp",
 		event = "VeryLazy",
-		dependencies = { "rafamadriz/friendly-snippets" },
-		build = "cargo build --release",
+		dependencies = {
+			"saghen/blink.lib",
+			"rafamadriz/friendly-snippets",
+		},
+		---@diagnostic disable-next-line: undefined-field
+		build = function() require("blink.cmp").build():wait(60000) end,
 		opts_extend = { "sources.default" },
 
 		---@module 'blink.cmp'
@@ -19,11 +23,6 @@ return {
 							auto_insert = true,
 						},
 					},
-					menu = {
-						auto_show = true,
-						preselect = false,
-					},
-					ghost_text = { enabled = false },
 				},
 			},
 			sources = {

@@ -3,7 +3,7 @@ local map = require("core.utils").map
 return {
 	-- Diff viewer and merge tool
 	{
-		"sindrets/diffview.nvim",
+		"dlyongemallo/diffview.nvim",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		cmd = { "DiffviewOpen", "DiffviewFileHistory" },
 		keys = {

@@ -65,7 +65,7 @@ vim.opt.listchars = {
 	precedes = "«",
 	extends = "»",
 }
-vim.g.floating_border = "rounded"
+vim.g.floating_border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" }
 
 -- Indentation
 vim.o.autoindent = true

@@ -25,13 +25,11 @@
             package = pkgs.symlinkJoin {
               name = "quickshell";
               paths = [ inputs'.quickshell.packages.default ];
-              nativeBuildInputs = [
-                pkgs.makeWrapper
-              ];
+              nativeBuildInputs = [ pkgs.makeWrapper ];
               postBuild = ''
                 wrapProgram $out/bin/quickshell \
                 	--set QT_QPA_PLATFORMTHEME gtk3 \
-                	--prefix PATH :${
+                	--prefix PATH : ${
                    lib.makeBinPath [
                      pkgs.cava
                      pkgs.ddcutil
@@ -39,7 +37,6 @@
                      pkgs.qt6.qtshadertools
                    ]
                  }
-
               '';
 
               meta.mainProgram = "quickshell";
@@ -55,7 +52,7 @@
           home.file."Pictures/Wallpapers/main.png".source = config.stylix.image;
 
           xdg.configFile."quickshell".source =
-            config.lib.file.mkOutOfStoreSymlink "${host.configDir}/modules/home/programs/quickshell/_config";
+            config.lib.file.mkOutOfStoreSymlink "${host.configDir}/modules/programs/quickshell/_config";
         };
     };
 }

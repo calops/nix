@@ -12,13 +12,13 @@
         };
 
         defaultRightSegmentOpts = defaultSegmentOpts // {
-          leading_diamond = " ";
-          trailing_diamond = "";
+          leading_diamond = " ";
+          trailing_diamond = "";
         };
 
         defaultLeftSegmentOpts = defaultSegmentOpts // {
-          leading_diamond = "";
-          trailing_diamond = " ";
+          leading_diamond = "";
+          trailing_diamond = " ";
         };
 
         mkRightSegment = opts: defaultRightSegmentOpts // opts;
@@ -36,7 +36,7 @@
                 alignment = "left";
                 type = "prompt";
                 newline = true;
-                segments = builtins.map mkLeftSegment [
+                segments = map mkLeftSegment [
                   {
                     type = "session";
                     foreground = palette.text;
@@ -45,8 +45,8 @@
                       "{{if .Root }}${palette.red}{{end}}"
                     ];
                     template = builtins.concatStringsSep "" [
-                      "{{ if or .SSHSession .Root }} {{ .UserName }}{{ end }}"
-                      "{{ if .SSHSession }}  {{ .Hostname }}{{end}}"
+                      "{{ if or .SSHSession .Root }} {{ .UserName }}{{ end }}"
+                      "{{ if .SSHSession }}  {{ .Hostname }}{{end}}"
                     ];
                   }
                   {
@@ -57,7 +57,7 @@
                       right_format = "<${palette.mint}><b>%s</b></>";
                       gitdir_format = "<${palette.teal}><b>%s</b></>";
                     };
-                    template = " {{ .Path }}";
+                    template = " {{ .Path }}";
                   }
                   {
                     type = "git";
@@ -72,20 +72,20 @@
                       branch_template = "{{ trunc 25 .Branch }}";
                       fetch_status = true;
                       fetch_upstream_icon = true;
-                      git_icon = "";
+                      git_icon = "";
                       branch_icon = "";
                       branch_identical_icon = "";
-                      branch_ahead_icon = " ";
-                      branch_behind_icon = " ";
+                      branch_ahead_icon = " ";
+                      branch_behind_icon = " ";
                       branch_gone_icon = "";
-                      github_icon = "";
+                      github_icon = "";
                     };
                     template = builtins.concatStringsSep "" [
                       "{{ .UpstreamIcon }} {{ .HEAD }}"
                       "{{ if .BranchStatus }} {{ .BranchStatus }}{{ end }}"
-                      "{{ if gt .StashCount 0 }} <${palette.purple}> {{ .StashCount }}</>{{ end }}"
-                      "{{ if .Staging.Changed }} <${palette.green}> {{ add add add .Staging.Added .Staging.Modified .Staging.Deleted }}</>{{ end }}"
-                      "{{ if .Working.Changed }} <${palette.sand}> {{ add add add .Working.Untracked .Working.Modified .Working.Deleted }}</>{{ end }}"
+                      "{{ if gt .StashCount 0 }} <${palette.purple}> {{ .StashCount }}</>{{ end }}"
+                      "{{ if .Staging.Changed }} <${palette.green}> {{ add add add .Staging.Added .Staging.Modified .Staging.Deleted }}</>{{ end }}"
+                      "{{ if .Working.Changed }} <${palette.sand}> {{ add add add .Working.Untracked .Working.Modified .Working.Deleted }}</>{{ end }}"
                     ];
                   }
                 ];
@@ -93,24 +93,24 @@
               {
                 alignment = "right";
                 type = "prompt";
-                segments = builtins.map mkRightSegment [
+                segments = map mkRightSegment [
                   {
                     type = "nix-shell";
                     foreground = palette.blue;
-                    template = "{{ if .Env.name }} {{ if eq .Type \"pure\" }} {{ end }}{{ .Env.name }}{{ end }}";
+                    template = "{{ if .Env.name }} {{ if eq .Type \"pure\" }} {{ end }}{{ .Env.name }}{{ end }}";
                   }
                   {
                     type = "python";
                     foreground = palette.yellow;
                     template = builtins.concatStringsSep "" [
-                      " {{ .Full }}"
+                      " {{ .Full }}"
                       "{{ if .Venv }} ({{ .Venv }}){{ end }}"
                     ];
                   }
                   {
                     type = "lua";
                     foreground = palette.teal;
-                    template = " {{ .Major }}.{{ .Minor }}";
+                    template = " {{ .Major }}.{{ .Minor }}";
                   }
                 ];
               }
@@ -122,8 +122,8 @@
                   {
                     type = "shell";
                     properties.mapped_shell_names = {
-                      fish = " ";
-                      nu = " ";
+                      fish = " ";
+                      nu = " ";
                     };
                   }
                   {
@@ -133,12 +133,12 @@
                       style = "austin";
                       threshold = 300;
                     };
-                    template = " {{ .FormattedMs }} ";
+                    template = " {{ .FormattedMs }} ";
                   }
                   {
                     type = "status";
                     foreground = palette.red;
-                    template = " {{ .String }} ";
+                    template = " {{ .String }} ";
                   }
                   {
                     type = "text";

@@ -3,7 +3,6 @@
   den.aspects.programs.provides.fish = {
     homeManager =
       {
-        config,
         pkgs,
         nixosConfig ? null,
         darwinConfig ? null,
@@ -57,7 +56,6 @@
             ll = "ls -lH --time-style=long-iso";
             la = "ll -a";
             lt = "ll -T";
-            rg = ''if [ "$TERM" == "xterm-kitty" ]; then kitten hyperlinked-grep; else rg; fi'';
           };
 
           functions = {
