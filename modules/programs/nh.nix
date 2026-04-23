@@ -1,7 +1,7 @@
 { ... }:
 {
-  den.aspects.programs.nh =
-    { host, pkgs, ... }:
+  den.aspects.programs.provides.nh =
+    { host, ... }:
     {
       nixos.programs.nh = {
         enable = true;
@@ -19,6 +19,10 @@
         };
       };
 
-      darwin.systemPackages.programs = pkgs.nh;
+      darwin =
+        { pkgs, ... }:
+        {
+          systemPackages.programs = pkgs.nh;
+        };
     };
 }

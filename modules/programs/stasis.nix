@@ -5,7 +5,7 @@
     stasis.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.programs.stasis = {
+  den.aspects.programs.provides.stasis = {
     homeManagerLinux =
       { pkgs, inputs', ... }:
       {

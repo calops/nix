@@ -1,10 +1,9 @@
 { ... }:
 {
-  den.aspects.programs.git = {
+  den.aspects.programs.provides.git = {
     homeManager =
       {
         pkgs,
-        config,
         lib,
         colors,
         ...
@@ -48,7 +47,6 @@
             ".yarnrc"
             ".nvim.lua"
             ".elixir-tools"
-            ".beads"
             "Session.vim"
             "__pycache__"
             "target"

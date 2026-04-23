@@ -3,13 +3,12 @@
   den.hosts.x86_64-linux.tb-laptop = {
     users.calops = { };
     configDir = "/home/calops/nix/";
-
   };
 
   den.aspects.tb-laptop = {
     includes = [
       den.aspects.laptop
-      den.aspects.work.terabase
+      den.aspects.work._.terabase
     ];
 
     nixos =
@@ -48,10 +47,10 @@
         ];
       };
 
-    homeManager =
+    homeManagerLinux =
       { ... }:
       {
-        my.niriExtraConfig = # kdl
+        niriExtraConfig = # kdl
           ''
             output "China Star Optoelectronics Technology Co., Ltd MNE507ZA2-3 Unknown" {
               mode "3072x1920@120.000"

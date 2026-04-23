@@ -1,8 +1,23 @@
 { ... }:
 {
-  den.aspects.programs.fish = {
+  den.aspects.programs.provides.fish = {
     homeManager =
-      { config, pkgs, ... }:
+      {
+        config,
+        pkgs,
+        nixosConfig ? null,
+        darwinConfig ? null,
+        ...
+      }:
+      let
+        configType =
+          if (!isNull nixosConfig) then
+            "nixos"
+          else if (!isNull darwinConfig) then
+            "darwin"
+          else
+            "standalone";
+      in
       {
         programs.fish = {
           enable = true;
@@ -17,7 +32,7 @@
                 darwin = "nh darwin switch";
                 standalone = "nh home switch";
               }
-              .${config.my.configType};
+              .${configType};
             ga = "git add -v";
             gu = "git add -vu";
             gp = "git push";
@@ -42,7 +57,7 @@
             ll = "ls -lH --time-style=long-iso";
             la = "ll -a";
             lt = "ll -T";
-            rg = if config.my.roles.graphical.terminal == "kitty" then "kitten hyperlinked-grep" else "rg";
+            rg = ''if [ "$TERM" == "xterm-kitty" ]; then kitten hyperlinked-grep; else rg; fi'';
           };
 
           functions = {

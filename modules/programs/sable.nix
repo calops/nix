@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.sable = {
+  den.aspects.programs.provides.sable = {
     homeManager =
       {
         config,

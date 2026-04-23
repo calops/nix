@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.ai-dev = {
+  den.aspects.programs.provides.ai-dev = {
     homeManager =
       {
         pkgs,
@@ -10,7 +10,6 @@
       }:
       {
         home.packages = [
-          pkgs.beads
           pkgs.gemini-cli
           pkgs.nodejs
           (pkgs.writeShellScriptBin "zai" ''

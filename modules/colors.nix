@@ -66,16 +66,21 @@ let
         ]
       );
 
-    asRgbInt =
-      asRgbHex |> builtins.mapAttrs (name: value: value |> map (hex: lib.fromHexString hex));
+    asRgbInt = asRgbHex |> builtins.mapAttrs (name: value: value |> map (hex: lib.fromHexString hex));
 
     asRgbIntTuple =
-      asRgbInt |> builtins.mapAttrs (name: value: value |> map (i: toString i) |> (builtins.concatStringsSep ", "));
+      asRgbInt
+      |> builtins.mapAttrs (
+        name: value: value |> map (i: toString i) |> (builtins.concatStringsSep ", ")
+      );
 
     asRgbFloat = asRgbInt |> builtins.mapAttrs (name: value: value |> map (int: int / 255.0));
 
     asRgbFloatTuple =
-      asRgbFloat |> builtins.mapAttrs (name: value: value |> map (f: toString f) |> (builtins.concatStringsSep ", "));
+      asRgbFloat
+      |> builtins.mapAttrs (
+        name: value: value |> map (f: toString f) |> (builtins.concatStringsSep ", ")
+      );
 
     asCss = ''
       :root {
@@ -104,28 +109,30 @@ let
     '';
 
     asLua = ''
-      return ${lib.generators.toLua { } asHexWithHashtag}
+      ${lib.generators.toLua { } asHexWithHashtag}
     '';
   };
 in
 {
   den.aspects.colors = {
-    nixos._module.args.colors = colors;
-    darwin._module.args.colors = colors;
-    homeManager._module.args.colors = colors;
-
     includes = [
-      (
-        { user, ... }:
-        {
-          homeManager.xdg = {
-            dataFile."colors/palette.css".text = user.my.colors.palette.asCss;
-            dataFile."colors/palette.gtk.css".text = user.my.colors.palette.asGtkCss;
-            dataFile."colors/palette.scss".text = user.my.colors.palette.asScss;
-            dataFile."lua/palette.lua".text = user.my.colors.palette.asLua;
+      {
+        nixos._module.args.colors = colors;
+        darwin._module.args.colors = colors;
+        homeManager._module.args.colors = colors;
+      }
+      {
+        homeManager =
+          { colors, ... }:
+          {
+            xdg = {
+              dataFile."colors/palette.css".text = colors.palette.asCss;
+              dataFile."colors/palette.gtk.css".text = colors.palette.asGtkCss;
+              dataFile."colors/palette.scss".text = colors.palette.asScss;
+              dataFile."lua/palette.lua".text = "return ${colors.palette.asLua}";
+            };
           };
-        }
-      )
+      }
     ];
   };
 

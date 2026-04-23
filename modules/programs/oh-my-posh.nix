@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.oh-my-posh = {
+  den.aspects.programs.provides.oh-my-posh = {
     homeManager =
       { colors, ... }:
       let

@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.gtk = {
+  den.aspects.programs.provides.gtk = {
     homeManager =
       {
         pkgs,

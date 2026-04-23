@@ -64,7 +64,7 @@ in
       { pkgs, colors, ... }:
       stylixOptions { inherit pkgs colors; }
       // {
-        imports = [ inputs.stylix.homeManagerModules.stylix ];
+        imports = [ inputs.stylix.homeModules.stylix ];
       };
   };
 }

@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.mpv = {
+  den.aspects.programs.provides.mpv = {
     homeManager =
       { pkgs, ... }:
       {

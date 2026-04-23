@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  config,
   ...
 }:
 let
@@ -15,12 +14,12 @@ let
     |> lib.strings.concatStrings;
 in
 {
-  den.aspects.programs.skhd = {
+  den.aspects.programs.provides.skhd = {
     homeManagerDarwin = {
       home.packages = [ pkgs.skhd ];
 
       xdg.configFile."skhd/skhdrc".text = mkSkhdrc {
-        "cmd - return" = "${config.my.roles.graphical.terminal}";
+        "cmd - return" = "kitty";
 
         "cmd + shift - down" = window "warp south";
         "cmd + shift - up" = window "warp north";

@@ -1,41 +1,38 @@
 { den, lib, ... }:
-{
-  den.default.defineOptions.profiles.audio.enable = lib.mkEnableOption "Audio";
+let
+  inherit (import ./_helpers.nix { inherit lib; }) mkProfileAspect;
+in
+mkProfileAspect "audio" {
+  includes = [
+    den.aspects.programs._.mopidy
+  ];
 
-  den.aspects.audio = {
-    setOptions.profiles.audio.enable = true;
+  nixos =
+    { ... }:
+    {
+      security.rtkit.enable = true;
+      services.pipewire = {
+        enable = true;
+        alsa.enable = true;
+        alsa.support32Bit = true;
+        pulse.enable = true;
+        wireplumber.enable = true;
 
-    includes = [
-      den.aspects.programs.mopidy
-    ];
-
-    nixos =
-      { ... }:
-      {
-        security.rtkit.enable = true;
-        services.pipewire = {
-          enable = true;
-          alsa.enable = true;
-          alsa.support32Bit = true;
-          pulse.enable = true;
-          wireplumber.enable = true;
-
-          raopOpenFirewall = true;
-          extraConfig.pipewire = {
-            "10-airplay" = {
-              "context.modules" = [
-                { name = "libpipewire-module-raop-discover"; }
-              ];
-            };
+        raopOpenFirewall = true;
+        extraConfig.pipewire = {
+          "10-airplay" = {
+            "context.modules" = [
+              { name = "libpipewire-module-raop-discover"; }
+            ];
           };
         };
       };
+    };
 
-    homeManager =
-      { pkgs, ... }:
-      {
-        home.packages = [ pkgs.pavucontrol ];
-        services.mpris-proxy.enable = true;
-      };
-  };
+  homeManager =
+    { pkgs, ... }:
+    {
+      home.packages = [ pkgs.pavucontrol ];
+      services.mpris-proxy.enable = true;
+    };
 }

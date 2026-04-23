@@ -1,25 +1,37 @@
-{ inputs', ... }:
+{ inputs, ... }:
 {
   flake-file.inputs = {
     anyrun.url = "github:Kirottu/anyrun";
     anyrun.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.programs.anyrun = {
+  den.aspects.programs.provides.anyrun = {
     nix.extra-substituters = [ "https://anyrun.cachix.org" ];
     nix.extra-trusted-public-keys = [
       "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
     ];
 
-    homeManagerLinux =
-      { modulesPath, colors, ... }:
+    includes = [
       {
-        imports = [ inputs'.anyrun.homeManagerModules.default ];
-        disabledModules = [ "${modulesPath}/programs/anyrun.nix" ];
+        homeManager =
+          { modulesPath, ... }:
+          {
+            imports = [ inputs.anyrun.homeManagerModules.default ];
+            disabledModules = [ "${modulesPath}/programs/anyrun.nix" ];
+          };
+      }
+    ];
 
+    homeManagerLinux =
+      {
+        colors,
+        inputs',
+        ...
+      }:
+      {
         programs.anyrun =
           let
-            anyrunPkgs = inputs'.packages.anyrun;
+            anyrunPkgs = inputs'.anyrun.packages;
             palette = colors.palette.asRgbIntTuple;
           in
           {

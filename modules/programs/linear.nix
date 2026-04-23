@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.linear = {
+  den.aspects.programs.provides.linear = {
     homeManager =
       { pkgs, self', ... }:
       {

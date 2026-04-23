@@ -1,27 +1,26 @@
-{ den, config, ... }:
+{ den, ... }:
 {
   den.schema.host =
     { lib, ... }:
     {
-      options.my.keyboardLayout = lib.mkOption {
+      options.keyboardLayout = lib.mkOption {
         type = lib.types.str;
         default = "fr";
       };
     };
 
-  den.aspects.input = {
+  den.aspects.input.provides = {
     base.includes = [
-      den.aspects.input.keyboard
-      den.aspects.input.mouse
+      den.aspects.input._.keyboard
     ];
 
-    keyboard = {
-      nixos = {
-        services.xserver.xkb.layout = config.my.keyboardLayout;
-        console.keyMap = config.my.keyboardLayout;
+    keyboard =
+      { host, ... }:
+      {
+        nixos = {
+          services.xserver.xkb.layout = host.keyboardLayout;
+          console.keyMap = host.keyboardLayout;
+        };
       };
-    };
-
-    mouse = { };
   };
 }

@@ -5,7 +5,7 @@
     nixcord.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.programs.discord = {
+  den.aspects.programs.provides.discord = {
     homeManager = {
       imports = [
         inputs.nixcord.homeModules.nixcord

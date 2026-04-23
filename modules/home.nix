@@ -16,30 +16,39 @@
       intoClass = _: "homeManager";
       intoPath = _: [ ];
       fromAspect = _: lib.head aspect-chain;
-      guard = { pkgs, ... }: platform: lib.mkIf pkgs.stdenv."is${platform}";
+      guard =
+        # Arguments need to be explicitly listed for den to forward them to the module
+        {
+          pkgs,
+          config,
+          colors,
+          inputs',
+          ...
+        }:
+        platform: lib.mkIf pkgs.stdenv."is${platform}";
     };
 
   den.default.includes = [
     den.aspects.hmPlatforms
 
-    den.aspects.programs.stasis
-    den.aspects.programs.ssh
-    den.aspects.programs.oh-my-posh
-    den.aspects.programs.nix-index
-    den.aspects.programs._1password
-    den.aspects.programs.ai-dev
-    den.aspects.programs.bat
-    den.aspects.programs.fish
-    den.aspects.programs.fzf
-    den.aspects.programs.git
-    den.aspects.programs.linear
-    den.aspects.programs.neovim
-    den.aspects.programs.nh
-    den.aspects.programs.nushell
-    den.aspects.programs.zellij
-    den.aspects.programs.aerospace
-    den.aspects.programs.sketchybar
-    den.aspects.programs.skhd
+    den.aspects.programs._.stasis
+    den.aspects.programs._.ssh
+    den.aspects.programs._.oh-my-posh
+    den.aspects.programs._.nix-index
+    den.aspects.programs._._1password
+    den.aspects.programs._.ai-dev
+    den.aspects.programs._.bat
+    den.aspects.programs._.fish
+    den.aspects.programs._.fzf
+    den.aspects.programs._.git
+    den.aspects.programs._.linear
+    den.aspects.programs._.neovim
+    den.aspects.programs._.nh
+    den.aspects.programs._.nushell
+    den.aspects.programs._.zellij
+    den.aspects.programs._.aerospace
+    den.aspects.programs._.sketchybar
+    den.aspects.programs._.skhd
 
     {
       homeManager =
@@ -49,78 +58,76 @@
           ...
         }:
         {
-          config = {
-            home.stateVersion = "26.05";
+          home.stateVersion = "26.05";
 
-            programs.home-manager.enable = true;
-            programs.gpg.enable = true;
-            programs.dircolors.enable = true;
+          programs.home-manager.enable = true;
+          programs.gpg.enable = true;
+          programs.dircolors.enable = true;
 
-            home.programs = [
-              pkgs.jq
-              pkgs.megacmd
-              pkgs.ast-grep
-              pkgs.choose
-              pkgs.dust
-              pkgs.fclones
-              pkgs.fd
-              pkgs.rm-improved
-              pkgs.sshfs
-              pkgs.gh
-              pkgs.killall
-              pkgs.unzip
-              pkgs.unrar
-              pkgs.yq
-              pkgs.pastel
-              pkgs.jaq
-              pkgs.devenv
-              pkgs.uv
-            ];
+          home.packages = [
+            pkgs.jq
+            pkgs.megacmd
+            pkgs.ast-grep
+            pkgs.choose
+            pkgs.dust
+            pkgs.fclones
+            pkgs.fd
+            pkgs.rm-improved
+            pkgs.sshfs
+            pkgs.gh
+            pkgs.killall
+            pkgs.unzip
+            pkgs.unrar
+            pkgs.yq
+            pkgs.pastel
+            pkgs.jaq
+            pkgs.devenv
+            pkgs.uv
+          ];
 
-            programs.btop = {
-              enable = true;
-              package = pkgs.btop.override { cudaSupport = true; };
-              settings = {
-                theme_background = false;
-              };
+          programs.btop = {
+            enable = true;
+            package = pkgs.btop.override { cudaSupport = true; };
+            settings = {
+              theme_background = false;
             };
-
-            programs.direnv = {
-              enable = true;
-              nix-direnv.enable = true;
-              config.global.hide_env_diff = true;
-            };
-
-            programs.eza = {
-              enable = true;
-              enableFishIntegration = false;
-              icons = "auto";
-              git = true;
-            };
-
-            programs.zoxide = {
-              enable = true;
-              enableFishIntegration = true;
-            };
-
-            programs.ripgrep.enable = true;
-
-            nix.package = lib.mkDefault pkgs.nix;
-            nix.gc = {
-              automatic = true;
-              dates = "weekly";
-              options = "--delete-older-than 30d";
-            };
-
-            xdg.enable = true;
           };
+
+          programs.direnv = {
+            enable = true;
+            nix-direnv.enable = true;
+            config.global.hide_env_diff = true;
+          };
+
+          programs.eza = {
+            enable = true;
+            enableFishIntegration = false;
+            icons = "auto";
+            git = true;
+          };
+
+          programs.zoxide = {
+            enable = true;
+            enableFishIntegration = true;
+          };
+
+          programs.ripgrep.enable = true;
+
+          nix.package = lib.mkDefault pkgs.nix;
+          nix.gc = {
+            automatic = true;
+            dates = "weekly";
+            options = "--delete-older-than 30d";
+          };
+
+          xdg.enable = true;
         };
     }
     {
       homeManagerLinux =
         { pkgs, ... }:
         {
-          home.programs = [
+          home.packages = [
             pkgs.dtrx
             pkgs.dysk
             pkgs.xcp

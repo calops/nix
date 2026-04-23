@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.wezterm = {
+  den.aspects.programs.provides.wezterm = {
     homeManager =
       { lib, config, ... }:
       {
@@ -14,12 +14,13 @@
             return ${
               lib.generators.toLua { } {
                 font = {
-                  name = config.my.fonts.fonts.monospace.name;
-                  size = config.my.fonts.fonts.sizes.terminal;
-                  hinting = config.my.fonts.fonts.hinting;
-                  cell_width = config.my.fonts.fonts.sizes.terminalCell.width;
-                  cell_height = config.my.fonts.fonts.sizes.terminalCell.height;
-                  symbols = config.my.fonts.fonts.symbols.name;
+                  name = config.fonts.monospace.name;
+                  # FIXME:
+                  size = config.fonts.sizes.terminal;
+                  # hinting = config.fonts.hinting;
+                  # cell_width = config.fonts.sizes.terminalCell.width;
+                  # cell_height = config.fonts.sizes.terminalCell.height;
+                  symbols = config.fonts.symbols.name;
                 };
               }
             }

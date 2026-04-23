@@ -1,6 +1,6 @@
-{ den, ... }:
+{ ... }:
 {
-  den.aspects.programs.zed = {
+  den.aspects.programs.provides.zed = {
     homeManager =
       {
         config,
@@ -29,9 +29,7 @@
             };
             hour_format = "hour24";
             auto_update = false;
-            terminal = {
-              font_family = config.my.roles.graphical.fonts.monospace.name;
-            };
+            terminal.font_family = config.fonts.monospace.name;
             mcp.linear.url = "https://mcp.linear.app/mcp";
             vim_mode = true;
             load_direnv = "shell_hook";

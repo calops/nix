@@ -1,36 +1,30 @@
-{ ... }:
+{ lib, ... }:
 {
-  den.aspects.programs.element = {
+  den.default.includes = [
+    {
+      homeManager =
+        { pkgs, ... }:
+        {
+          options.programs.element.package = lib.mkOption {
+            type = lib.types.package;
+            default = pkgs.element-desktop;
+          };
+        };
+    }
+  ];
+  den.aspects.programs.provides.element = {
     homeManager =
       {
-        pkgs,
-        lib,
         colors,
         config,
         ...
       }:
       let
         palette = colors.palette.asHexWithHashtag;
-        font = config.my.roles.graphical.fonts.monospace.name;
-        myLib = import ../../../../lib { };
-        elementPkg = myLib.replaceTrayIcons pkgs.element-desktop {
-          inherit pkgs;
-          icons = [
-            {
-              icon = "element-desktop-tray";
-              file = "share/element/build/icon.png";
-              size = 128;
-            }
-            {
-              icon = "element-desktop";
-              file = "share/icons/hicolor/512x512/apps/element.png";
-              size = 512;
-            }
-          ];
-        };
+        font = config.fonts.monospace.name;
       in
       {
-        home.packages = [ elementPkg ];
+        home.packages = [ config.programs.element.package ];
 
         xdg.configFile."Element/config.json".text = builtins.toJSON {
           setting_defaults = {

@@ -1,9 +1,8 @@
-{ ... }:
+{ inputs, ... }:
 {
-  den.aspects.programs.firefox = {
+  den.aspects.programs.provides.firefox = {
     homeManager =
       {
-        inputs',
         pkgs,
         config,
         lib,
@@ -11,7 +10,11 @@
         ...
       }:
       let
-        addons = inputs'.nur.packages.repos.rycee.firefox-addons;
+        nur = import inputs.nur {
+          inherit pkgs;
+          nurpkgs = pkgs;
+        };
+        addons = nur.repos.rycee.firefox-addons;
         package = pkgs.firefox-beta.override {
           nativeMessagingHosts = [
             pkgs.tridactyl-native
@@ -93,7 +96,7 @@
             set configversion 2.0
             set theme dark
             set searchengine google
-            set editorcmd ${config.my.roles.graphical.terminal} -e nvim
+            set editorcmd kitty -e nvim
 
             bind / fillcmdline find
             bind ? fillcmdline find -?

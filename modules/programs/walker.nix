@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.walker = {
+  den.aspects.programs.provides.walker = {
     homeManagerLinux =
       { ... }:
       {

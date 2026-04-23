@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.ssh = {
+  den.aspects.programs.provides.ssh = {
     homeManager =
       { ... }:
       {

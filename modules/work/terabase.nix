@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.work.terabase = {
+  den.aspects.work.provides.terabase = {
     homeManager =
       { pkgs, ... }:
       {

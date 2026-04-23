@@ -4,29 +4,6 @@
   lib,
   ...
 }:
-let
-  defineOptionsClass =
-    { aspect-chain, ... }:
-    den._.forward {
-      each = [ "nixos" "homeManager" "darwin" ];
-      fromClass = _: "defineOptions";
-      intoClass = lib.id;
-      intoPath = _: [ "options" ];
-      fromAspect = _: lib.head aspect-chain;
-      adaptArgs = lib.id;
-    };
-
-  setOptionsClass =
-    { aspect-chain, ... }:
-    den._.forward {
-      each = [ "nixos" "homeManager" "darwin" ];
-      fromClass = _: "setOptions";
-      intoClass = lib.id;
-      intoPath = _: [ "config" ];
-      fromAspect = _: lib.head aspect-chain;
-      adaptArgs = lib.id;
-    };
-in
 {
   flake-file.inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -77,7 +54,6 @@ in
 
   den.ctx.user.includes = [
     den._.mutual-provider
-    defineOptionsClass
-    setOptionsClass
+    den._.host-aspects
   ];
 }

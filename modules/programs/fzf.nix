@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.fzf = {
+  den.aspects.programs.provides.fzf = {
     homeManager =
       { pkgs, lib, ... }:
       {

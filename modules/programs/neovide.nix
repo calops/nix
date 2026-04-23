@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.neovide = {
+  den.aspects.programs.provides.neovide = {
     homeManager =
       { config, pkgs, ... }:
       {
@@ -9,7 +9,7 @@
           settings =
             let
               symbols = {
-                family = config.my.roles.graphical.fonts.symbols.name;
+                family = config.fonts.symbols.name;
                 style = "Normal";
               };
             in
@@ -21,13 +21,13 @@
                   mkFonts = style: [
                     {
                       inherit style;
-                      family = config.my.roles.graphical.fonts.monospace.name;
+                      family = config.fonts.monospace.name;
                     }
                     (symbols // { inherit style; })
                   ];
                 in
                 {
-                  size = config.my.roles.graphical.fonts.sizes.terminal;
+                  size = config.fonts.sizes.terminal;
                   edging = "subpixelantialias";
                   hinting = "full";
                   normal = mkFonts "Normal";

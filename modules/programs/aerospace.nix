@@ -5,7 +5,7 @@
   ...
 }:
 {
-  den.aspects.programs.aerospace = {
+  den.aspects.programs.provides.aerospace = {
     homeManagerDarwin = {
       programs.aerospace = {
         enable = true;

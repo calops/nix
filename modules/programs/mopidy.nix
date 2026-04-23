@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.mopidy = {
+  den.aspects.programs.provides.mopidy = {
     homeManager =
       { pkgs, ... }:
       {

@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.kitty = {
+  den.aspects.programs.provides.kitty = {
     homeManager =
       { config, pkgs, ... }:
       {
@@ -9,11 +9,12 @@
           enableGitIntegration = true;
 
           settings = {
-            font_size = config.my.fonts.fonts.sizes.terminal;
-            font_family = config.my.fonts.fonts.monospace.name;
-            bold_font = "${config.my.fonts.fonts.monospace.name} Bold";
-            italic_font = "${config.my.fonts.fonts.monospace.name} Italic";
-            bold_italic_font = "${config.my.fonts.fonts.monospace.name} Bold Italic";
+            # FIXME:
+            font_size = config.fonts.sizes.terminal;
+            font_family = config.fonts.monospace.name;
+            bold_font = "${config.fonts.monospace.name} Bold";
+            italic_font = "${config.fonts.monospace.name} Italic";
+            bold_italic_font = "${config.fonts.monospace.name} Bold Italic";
 
             undercurl_style = "thick-sparse";
             cursor_trail = 3;
@@ -29,7 +30,7 @@
 
             "modify_font underline_position" = "+2";
             "modify_font underline_thickness" = "2px";
-            "modify_font cell_width" = "${toString (config.my.fonts.fonts.sizes.terminalCell.width * 100)}%";
+            # "modify_font cell_width" = "${toString (config.stylix.sizes.terminalCell.width * 100)}%";
           };
 
           keybindings = {
