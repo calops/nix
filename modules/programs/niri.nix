@@ -61,6 +61,7 @@
       in
       {
         programs.niri = {
+          enable = true;
           package = nixosConfig.programs.niri.package or inputs'.niri.packages.niri-unstable;
           config =
             # kdl
@@ -258,6 +259,12 @@
                 match app-id="^discord$"
                 default-column-width { proportion 0.500000; }
                 open-on-workspace "chat"
+              }
+              window-rule {
+                match app-id="^Steam$"
+                match app-id="^Lutris$"
+                default-column-width { proportion 0.500000; }
+                open-on-workspace "games"
               }
 
               layer-rule {

@@ -4,10 +4,16 @@
     { ... }:
     {
       homeManager =
-        { pkgs, lib, ... }:
+        {
+          pkgs,
+          lib,
+          self',
+          ...
+        }:
         {
           home.packages = [
             pkgs._1password-cli
+            self'.packages.op-credential
           ];
 
           home.sessionVariables.SUDO_ASKPASS = toString (
@@ -89,7 +95,7 @@
             	echo "Fetching '$item_name' from 1Password..." >&2
             	mkdir -p "$state_dir"
             	chmod 700 "$state_dir"
-            	value="$(op item get "$item_name" --fields credential --reveal 2>/dev/null)"
+            	value="$(op signin && op item get "$item_name" --fields credential --reveal 2>/dev/null)"
             	if [ -z "$value" ]; then
             		echo "Error: failed to fetch '$item_name' from 1Password" >&2
             		exit 1

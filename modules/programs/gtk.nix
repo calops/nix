@@ -26,9 +26,11 @@
           home.packages = [ pkgs.dconf ];
         };
 
-      homeManagerLinux = { pkgs, ... }: {
-        home.packages = [ pkgs.libsForQt5.qt5ct ];
-      };
+      homeManagerLinux =
+        { pkgs, ... }:
+        {
+          home.packages = [ pkgs.libsForQt5.qt5ct ];
+        };
     }
   ];
 }

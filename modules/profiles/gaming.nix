@@ -1,12 +1,10 @@
 {
   den,
-  colors,
   lib,
   ...
 }:
 let
   inherit (import ./_helpers.nix { inherit lib; }) mkProfileAspect;
-  palette = colors.palette.asHex;
 in
 mkProfileAspect "gaming" {
   includes = [
@@ -57,7 +55,15 @@ mkProfileAspect "gaming" {
     };
 
   homeManagerLinux =
-    { pkgs, inputs', ... }:
+    {
+      pkgs,
+      inputs',
+      colors,
+      ...
+    }:
+    let
+      palette = colors.palette.asHex;
+    in
     {
       home.packages = [
         pkgs.protonup-qt
@@ -81,7 +87,7 @@ mkProfileAspect "gaming" {
 
         # Text
         font_size=14
-        font_file=${inputs'.aporetic.packages.aporetic-sans-mono}/share/fonts/TTF/aporetic-sans-mono-normalregularupright.ttf
+        font_file=${inputs'.aporetic.packages.aporetic-sans-mono-prebuilt}/share/fonts/TTF/aporetic-sans-mono-normalregularupright.ttf
         text_outline
         text_color=${palette.text}
 

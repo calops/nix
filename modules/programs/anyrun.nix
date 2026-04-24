@@ -12,14 +12,14 @@
     ];
 
     includes = [
-      {
-        homeManager =
-          { modulesPath, ... }:
-          {
-            imports = [ inputs.anyrun.homeManagerModules.default ];
-            disabledModules = [ "${modulesPath}/programs/anyrun.nix" ];
-          };
-      }
+      # {
+      #   homeManager =
+      #     { modulesPath, ... }:
+      #     {
+      #       imports = [ inputs.anyrun.homeManagerModules.default ];
+      #       disabledModules = [ "${modulesPath}/programs/anyrun.nix" ];
+      #     };
+      # }
     ];
 
     homeManagerLinux =

@@ -47,25 +47,23 @@
         ];
       };
 
-    homeManagerLinux =
-      { ... }:
-      {
-        niriExtraConfig = # kdl
-          ''
-            output "China Star Optoelectronics Technology Co., Ltd MNE507ZA2-3 Unknown" {
-              mode "3072x1920@120.000"
-              focus-at-startup
-              variable-refresh-rate
+    homeManager = {
+      niriExtraConfig = # kdl
+        ''
+          output "China Star Optoelectronics Technology Co., Ltd MNE507ZA2-3 Unknown" {
+            mode "3072x1920@120.000"
+            focus-at-startup
+            variable-refresh-rate
 
-              layout {
-                default-column-width { proportion 0.5; }
-              }
+            layout {
+              default-column-width { proportion 0.5; }
             }
+          }
 
-            output "LG Electronics LG ULTRAFINE 505NTNHGX503" {
-              position x=-3072 y=0
-            }
-          '';
-      };
+          output "LG Electronics LG ULTRAFINE 505NTNHGX503" {
+            position x=-3072 y=0
+          }
+        '';
+    };
   };
 }

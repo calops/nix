@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.hardware.nuphy = {
+  den.aspects.hardware.provides.nuphy = {
     nixos = {
       services.xserver.xkb = {
         layout = "fr";

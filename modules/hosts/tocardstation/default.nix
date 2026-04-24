@@ -1,29 +1,39 @@
-{ den, ... }:
+{ inputs, den, ... }:
 {
   flake-file.inputs = {
     disko.url = "github:nix-community/disko/latest";
     disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.hosts.x86_64-linux.tb-laptop = {
+  den.hosts.x86_64-linux.tocardstation = {
     users.calops = { };
     configDir = "/home/calops/nix/";
-
   };
 
   den.aspects.tocardstation = {
     includes = [
-      den.aspects.graphical
+      den.aspects.desktop
       den.aspects.gaming
-      den.aspects.hardware.nuphy
-      den.aspects.hardware.logitech
-      den.aspects.hardware.nvidia
+      den.aspects.hardware._.nuphy
+      den.aspects.hardware._.logitech
+      den.aspects.hardware._.nvidia
     ];
 
     user.extraGroups = [ "i2c" ];
 
+    homeManager = {
+      nix.settings.cores = 22; # keep two cores for the system
+      niriExtraConfig = # kdl
+        ''
+          output "Technical Concepts Ltd 34R83Q X2452000226" {
+            mode "3440x1440@170.000"
+            variable-refresh-rate
+          }
+        '';
+    };
+
     nixos =
-      { inputs, pkgs, ... }:
+      { pkgs, ... }:
       {
         imports = [
           ./_hardware.nix
@@ -35,6 +45,7 @@
         boot.kernelPackages = pkgs.linuxPackages_latest;
         boot.supportedFilesystems = [ "ntfs" ];
         services.fstrim.enable = true;
+        networking.hostName = "tocardstation";
 
         networking.networkmanager.insertNameservers = [
           "2606:4700:4700::1111"
@@ -111,16 +122,5 @@
           }
         ];
       };
-
-    homeManagerLinux = {
-      nix.settings.cores = 22; # keep two cores for the system
-      niriExtraConfig = # kdl
-        ''
-          output "Technical Concepts Ltd 34R83Q X2452000226" {
-            mode "3440x1440@170.000"
-            variable-refresh-rate
-          }
-        '';
-    };
   };
 }

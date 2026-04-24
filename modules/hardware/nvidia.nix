@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.hardware.nvidia = {
+  den.aspects.hardware.provides.nvidia = {
     nixos =
       { pkgs, config, ... }:
       {
