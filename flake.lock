@@ -811,16 +811,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1775644749,
-        "narHash": "sha256-WiOlkct+t2oLCHqE9JB3Cdo8a+6k2PoaO7GYI8irLxk=",
+        "lastModified": 1777300311,
+        "narHash": "sha256-RTCvjr4by3W2D54PsJeBhyGpAJFataaDXoHUrstNfXg=",
         "owner": "calops",
         "repo": "quickshell",
-        "rev": "7c15fa45f34d0cebda19d4d77249fefe1372df9c",
+        "rev": "9a1427d79e2aa146a0be035b38fd0bd17a347015",
         "type": "github"
       },
       "original": {
         "owner": "calops",
-        "ref": "fix/region-parent-tracking",
+        "ref": "feat/region-dynamic-items",
         "repo": "quickshell",
         "type": "github"
       }

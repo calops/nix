@@ -62,7 +62,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     quickshell = {
-      url = "github:calops/quickshell?ref=fix/region-parent-tracking";
+      url = "github:calops/quickshell?ref=feat/region-dynamic-items";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     solaar = {

@@ -1,5 +1,4 @@
 import Quickshell
-import Quickshell.Io
 import "widgets"
 import "services"
 

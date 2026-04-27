@@ -27,33 +27,19 @@ Scope {
 
             readonly property int maxDisplayCount: 20
 
-            Item {
-                id: offscreenAnchor
-                x: -9999
-                y: -9999
-                width: 1
-                height: 1
-                visible: true
-                opacity: 0.0
-            }
-
-            DynamicRegion {
+            Region {
                 id: toastBlurRegion
-                window: toastWindow
-                offscreenAnchor: offscreenAnchor
-                groupId: "toastScopeBlur"
+                items: RegionRegistry.getItemsForGroup("toastScopeBlur")
             }
 
-            BackgroundEffect.blurRegion: toastBlurRegion.region
+            BackgroundEffect.blurRegion: toastBlurRegion
 
-            DynamicRegion {
+            Region {
                 id: toastMaskRegion
-                window: toastWindow
-                offscreenAnchor: offscreenAnchor
-                groupId: "toastScope"
+                items: RegionRegistry.getItemsForGroup("toastScope")
             }
 
-            mask: toastMaskRegion.region
+            mask: toastMaskRegion
 
             Component.onCompleted: syncToasts()
 

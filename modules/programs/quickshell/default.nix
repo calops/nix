@@ -1,7 +1,7 @@
 { ... }:
 {
   flake-file.inputs = {
-    quickshell.url = "github:calops/quickshell?ref=fix/region-parent-tracking";
+    quickshell.url = "github:calops/quickshell?ref=feat/region-dynamic-items";
     quickshell.inputs.nixpkgs.follows = "nixpkgs";
   };
 

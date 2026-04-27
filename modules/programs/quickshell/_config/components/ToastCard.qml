@@ -124,9 +124,9 @@ Item {
         }
 
         onFinished: {
-			if (dismissCallback) {
-				dismissCallback()
-			}
+            if (dismissCallback) {
+                dismissCallback();
+            }
 
             root.exited(root.entry?.notificationId ?? 0);
             root.destroy();
@@ -222,11 +222,13 @@ Item {
                 isInProgress: root.hasProgress && !root.isProgressDone
                 isCritical: root.notification && root.notification.urgency === NotificationUrgency.Critical
                 ringColor: root.urgencyTint
-                    onDismissed: {
-                        var id = root.entry?.notificationId ?? 0;
-                        root.dismissCallback = function() { Notifications.dismissById(id); };
-                        root.startExit();
-                    }
+                onDismissed: {
+                    var id = root.entry?.notificationId ?? 0;
+                    root.dismissCallback = function () {
+                        Notifications.dismissById(id);
+                    };
+                    root.startExit();
+                }
             }
         }
 
@@ -290,7 +292,9 @@ Item {
                         actionButton.isActive = true;
                         var notification = root.notification;
                         var actionIndex = index;
-                        root.deferAction(function() { Notifications.invokeAction(notification, actionIndex); });
+                        root.deferAction(function () {
+                            Notifications.invokeAction(notification, actionIndex);
+                        });
                     }
                 }
             }
@@ -365,7 +369,9 @@ Item {
                         root.replySent = true;
                         var notification = root.notification;
                         var replyText = replyField.text.trim();
-                        root.deferAction(function() { Notifications.sendInlineReply(notification, replyText); });
+                        root.deferAction(function () {
+                            Notifications.sendInlineReply(notification, replyText);
+                        });
                     }
                 }
             }
@@ -411,9 +417,5 @@ Item {
         if (cardHoverHandler.hovered) {
             Notifications.setTimerFrozen(false);
         }
-    }
-
-    Component.onCompleted: {
-        console.log("[ToastCard] Created for:", root.notification?.summary ?? "unknown");
     }
 }

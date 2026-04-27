@@ -51,61 +51,30 @@ Scope {
                 }
 
                 // Blur region - only dynamic items
-                DynamicRegion {
+                Region {
                     id: leftBlurRegion
-                    window: leftPanel
-                    offscreenAnchor: offscreenAnchorLeft
-                    groupId: "leftBarScopeBlur"
+                    items: RegionRegistry.getItemsForGroup("leftBarScopeBlur")
                 }
 
-                BackgroundEffect.blurRegion: leftBlurRegion.region
+                BackgroundEffect.blurRegion: leftBlurRegion
 
                 // Mask - dynamic items + static items + menuRect
-                property var _maskItems: RegionRegistry.getItemsForGroup("leftBarScope")
+                Region {
+                    id: leftMaskRegion
+                    items: RegionRegistry.getItemsForGroup("leftBarScope")
 
-                Item {
-                    id: leftMenuRectItem
-                    visible: tray && tray.menuRect.width > 0
-                    x: tray ? Math.round(tray.menuRect.x) : 0
-                    y: tray ? Math.round(tray.menuRect.y) : 0
-                    width: tray ? Math.round(tray.menuRect.width) : 0
-                    height: tray ? Math.round(tray.menuRect.height) : 0
-                }
-
-                function updateMask() {
-                    var items = leftPanel._maskItems || [];
-                    var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-
-                    // Static items
-                    maskStr += "    Region { item: clock || offscreenAnchorLeft }\n";
-                    maskStr += "    Region { item: workspaces || offscreenAnchorLeft }\n";
-                    maskStr += "    Region { item: tray || offscreenAnchorLeft }\n";
-                    maskStr += "    Region {\n";
-                    maskStr += "        x: Math.round(tray ? tray.menuRect.x : 0)\n";
-                    maskStr += "        y: Math.round(tray ? tray.menuRect.y : 0)\n";
-                    maskStr += "        width: Math.round(tray ? tray.menuRect.width : 0)\n";
-                    maskStr += "        height: Math.round(tray ? tray.menuRect.height : 0)\n";
-                    maskStr += "    }\n";
-
-                    // Dynamic items
-                    for (var i = 0; i < items.length; i++) {
-                        maskStr += "    property var item" + i + ": leftPanel._maskItems[" + i + "];\n";
-                        maskStr += "    Region { item: item" + i + " || offscreenAnchorLeft; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
+                    Region { item: clock || offscreenAnchorLeft }
+                    Region { item: workspaces || offscreenAnchorLeft }
+                    Region { item: tray || offscreenAnchorLeft }
+                    Region {
+                        x: Math.round(tray ? tray.menuRect.x : 0)
+                        y: Math.round(tray ? tray.menuRect.y : 0)
+                        width: Math.round(tray ? tray.menuRect.width : 0)
+                        height: Math.round(tray ? tray.menuRect.height : 0)
                     }
-
-                    maskStr += "}";
-
-                    if (mask)
-                        mask.destroy();
-                    mask = Qt.createQmlObject(maskStr, leftPanel, "dynamicMaskLeft");
                 }
 
-                on_MaskItemsChanged: updateMask()
-
-                Component.onCompleted: {
-                    // Trigger initial mask build
-                    Qt.callLater(updateMask);
-                }
+                mask: leftMaskRegion
 
                 Item {
                     id: leftBarScope
@@ -200,82 +169,26 @@ Scope {
             }
 
             // Blur region - only dynamic items
-            DynamicRegion {
+            Region {
                 id: rightBlurRegion
-                window: rightPanel
-                offscreenAnchor: offscreenAnchorRight
-                groupId: "rightBarScopeBlur"
+                items: RegionRegistry.getItemsForGroup("rightBarScopeBlur")
             }
 
-            BackgroundEffect.blurRegion: rightBlurRegion.region
+            BackgroundEffect.blurRegion: rightBlurRegion
 
             // Mask - dynamic items + static widgets
-            property var _maskItems: RegionRegistry.getItemsForGroup("rightBarScope")
+            Region {
+                id: rightMaskRegion
+                items: RegionRegistry.getItemsForGroup("rightBarScope")
 
-            function updateMask() {
-                var items = rightPanel._maskItems || [];
-                var maskStr = "import Quickshell; import Quickshell.Wayland; Region {\n";
-
-                // Static items
-                maskStr += "    Region { item: (typeof notificationWidget !== 'undefined' ? notificationWidget : null) || offscreenAnchorRight }\n";
-                maskStr += "    Region { item: (typeof batteryLoader !== 'undefined' && batteryLoader.item ? batteryLoader.item : null) || offscreenAnchorRight }\n";
-                maskStr += "    Region { item: (typeof brightness !== 'undefined' ? brightness : null) || offscreenAnchorRight }\n";
-                maskStr += "    Region { item: (typeof volume !== 'undefined' ? volume : null) || offscreenAnchorRight }\n";
-                maskStr += "    Region { item: (typeof mpris !== 'undefined' ? mpris : null) || offscreenAnchorRight }\n";
-
-                // Dynamic items
-                for (var i = 0; i < items.length; i++) {
-                    maskStr += "    property var item" + i + ": rightPanel._maskItems[" + i + "];\n";
-                    maskStr += "    Region { item: item" + i + " || offscreenAnchorRight; radius: typeof item" + i + " !== 'undefined' && item" + i + " ? (item" + i + ".radius || 0) : 0 }\n";
-                }
-
-                maskStr += "}";
-
-                if (mask)
-                    mask.destroy();
-                mask = Qt.createQmlObject(maskStr, rightPanel, "dynamicMaskRight");
+                Region { item: notificationWidget || offscreenAnchorRight }
+                Region { item: (batteryLoader.item || null) || offscreenAnchorRight }
+                Region { item: brightness || offscreenAnchorRight }
+                Region { item: volume || offscreenAnchorRight }
+                Region { item: mpris || offscreenAnchorRight }
             }
 
-            on_MaskItemsChanged: updateMask()
-
-            property var _lastBatteryItem: null
-
-            Component.onCompleted: {
-                // Register static widgets and trigger initial mask build
-                RegionRegistry.registerItem("rightBarScope", notificationWidget);
-                RegionRegistry.registerItem("rightBarScope", brightness);
-                RegionRegistry.registerItem("rightBarScope", volume);
-                RegionRegistry.registerItem("rightBarScope", mpris);
-                Qt.callLater(updateMask);
-            }
-
-            Component.onDestruction: {
-                RegionRegistry.unregisterItem("rightBarScope", notificationWidget);
-                RegionRegistry.unregisterItem("rightBarScope", brightness);
-                RegionRegistry.unregisterItem("rightBarScope", volume);
-                RegionRegistry.unregisterItem("rightBarScope", mpris);
-                if (_lastBatteryItem) {
-                    RegionRegistry.unregisterItem("rightBarScope", _lastBatteryItem);
-                }
-            }
-
-            // Handle batteryLoader.item changes
-            Connections {
-                target: batteryLoader
-                function onItemChanged() {
-                    // Unregister old item first
-                    if (rightPanel._lastBatteryItem) {
-                        RegionRegistry.unregisterItem("rightBarScope", rightPanel._lastBatteryItem);
-                    }
-                    // Register new item
-                    if (batteryLoader.item) {
-                        RegionRegistry.registerItem("rightBarScope", batteryLoader.item);
-                        rightPanel._lastBatteryItem = batteryLoader.item;
-                    } else {
-                        rightPanel._lastBatteryItem = null;
-                    }
-                }
-            }
+            mask: rightMaskRegion
 
             Item {
                 id: rightBarScope
