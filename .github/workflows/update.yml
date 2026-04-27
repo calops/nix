@@ -88,25 +88,25 @@ jobs:
       - name: Discover build targets
         id: discover
         run: |
-          OUTPUTS=$(nix flake show --json --allow-import-from-derivation)
-
           TARGETS=()
 
-          NIXOS=$(echo "$OUTPUTS" | jq -r '.nixosConfigurations // {} | keys[]' 2>/dev/null || true)
+          # Collect nixosConfigurations
+          NIXOS=$(nix eval .#nixosConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
           for host in $NIXOS; do
             TARGETS+=("nixosConfigurations.\"$host\".config.system.build.toplevel")
           done
 
-          DARWIN=$(echo "$OUTPUTS" | jq -r '.darwinConfigurations // {} | keys[]' 2>/dev/null || true)
+          # Collect darwinConfigurations
+          DARWIN=$(nix eval .#darwinConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
           for host in $DARWIN; do
             TARGETS+=("darwinConfigurations.\"$host\".system")
           done
 
-          HM_ALL=$(echo "$OUTPUTS" | jq -r '.homeConfigurations // {} | keys[]' 2>/dev/null || true)
-          NIXOS_HOSTS_SET=$(echo "$OUTPUTS" | jq -r '.nixosConfigurations // {} | keys[]' 2>/dev/null | tr '\n' ' ')
+          # Collect homeConfigurations, but skip those that are subsets of NixOS configs
+          HM_ALL=$(nix eval .#homeConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
           for hm in $HM_ALL; do
             HOSTNAME=$(echo "$hm" | cut -d'@' -f2)
-            if echo " $NIXOS_HOSTS_SET " | grep -q " $HOSTNAME "; then
+            if echo " $NIXOS " | grep -q " $HOSTNAME "; then
               echo "Skipping homeConfigurations.\"$hm\" (covered by nixosConfigurations.\"$HOSTNAME\")"
               continue
             fi
@@ -114,9 +114,9 @@ jobs:
           done
 
           if [ ${#TARGETS[@]} -eq 0 ]; then
+            echo "::error::No build targets discovered"
             echo "targets=[]" >> "$GITHUB_OUTPUT"
             echo "count=0" >> "$GITHUB_OUTPUT"
-            echo "Found 0 build targets"
             exit 1
           fi
 

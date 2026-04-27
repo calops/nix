@@ -35,35 +35,25 @@ jobs:
       - name: Discover build targets
         id: discover
         run: |
-          OUTPUTS=$(nix flake show --json --allow-import-from-derivation 2>&1) || {
-            echo "::error::nix flake show failed"
-            echo "$OUTPUTS"
-            exit 1
-          }
-
-          echo "Flake outputs:"
-          echo "$OUTPUTS" | jq '.' 2>/dev/null | head -30
-
           TARGETS=()
 
           # Collect nixosConfigurations
-          NIXOS=$(echo "$OUTPUTS" | jq -r '.nixosConfigurations // {} | keys[]' 2>/dev/null || true)
+          NIXOS=$(nix eval .#nixosConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
           for host in $NIXOS; do
             TARGETS+=("nixosConfigurations.\"$host\".config.system.build.toplevel")
           done
 
           # Collect darwinConfigurations
-          DARWIN=$(echo "$OUTPUTS" | jq -r '.darwinConfigurations // {} | keys[]' 2>/dev/null || true)
+          DARWIN=$(nix eval .#darwinConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
           for host in $DARWIN; do
             TARGETS+=("darwinConfigurations.\"$host\".system")
           done
 
           # Collect homeConfigurations, but skip those that are subsets of NixOS configs
-          HM_ALL=$(echo "$OUTPUTS" | jq -r '.homeConfigurations // {} | keys[]' 2>/dev/null || true)
-          NIXOS_HOSTS_SET=$(echo "$OUTPUTS" | jq -r '.nixosConfigurations // {} | keys[]' 2>/dev/null | tr '\n' ' ')
+          HM_ALL=$(nix eval .#homeConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
           for hm in $HM_ALL; do
             HOSTNAME=$(echo "$hm" | cut -d'@' -f2)
-            if echo " $NIXOS_HOSTS_SET " | grep -q " $HOSTNAME "; then
+            if echo " $NIXOS " | grep -q " $HOSTNAME "; then
               echo "Skipping homeConfigurations.\"$hm\" (covered by nixosConfigurations.\"$HOSTNAME\")"
               continue
             fi
