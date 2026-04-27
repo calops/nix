@@ -74,7 +74,6 @@
             pkgs.fd
             pkgs.rm-improved
             pkgs.sshfs
-            pkgs.gh
             pkgs.killall
             pkgs.unzip
             pkgs.unrar
@@ -84,6 +83,11 @@
             pkgs.devenv
             pkgs.uv
           ];
+
+          programs.gh = {
+            enable = true;
+            extensions = [ pkgs.gh-stack ];
+          };
 
           programs.btop = {
             enable = true;
