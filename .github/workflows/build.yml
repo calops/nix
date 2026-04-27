@@ -35,7 +35,14 @@ jobs:
       - name: Discover build targets
         id: discover
         run: |
-          OUTPUTS=$(nix flake show --json --allow-import-from-derivation)
+          OUTPUTS=$(nix flake show --json --allow-import-from-derivation 2>&1) || {
+            echo "::error::nix flake show failed"
+            echo "$OUTPUTS"
+            exit 1
+          }
+
+          echo "Flake outputs:"
+          echo "$OUTPUTS" | jq '.' 2>/dev/null | head -30
 
           TARGETS=()
 
@@ -64,9 +71,9 @@ jobs:
           done
 
           if [ ${#TARGETS[@]} -eq 0 ]; then
+            echo "::error::No build targets discovered"
             echo "targets=[]" >> "$GITHUB_OUTPUT"
             echo "count=0" >> "$GITHUB_OUTPUT"
-            echo "Found 0 build targets"
             exit 1
           fi
 
