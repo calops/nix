@@ -1,0 +1,178 @@
+name: Update flake inputs
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    outputs:
+      build-success: ${{ steps.build-result.outputs.build-success }}
+      input-changes: ${{ steps.diff.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Save current lockfile
+        run: cp flake.lock flake.lock.old
+
+      - name: Update flake inputs
+        run: nix flake update
+
+      - name: Generate input change summary
+        id: diff
+        run: |
+          if diff -q flake.lock.old flake.lock > /dev/null 2>&1; then
+            echo "changes=No changes detected in flake inputs." >> "$GITHUB_OUTPUT"
+            echo "No changes detected."
+          else
+            {
+              echo "changes<<EOF"
+              git diff --no-color flake.lock.old flake.lock | \
+                grep -E '^\+|^-' | \
+                grep -E '(url|rev|narHash)' | \
+                sed 's/^+/✅ /;s/^-/❌ /' || true
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "Changes detected in flake inputs."
+          fi
+
+      - name: Build configurations
+        id: build-result
+        uses: ./.github/workflows/build.yml
+        secrets: inherit
+
+      - name: Check for existing PR
+        id: check-pr
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_DATA=$(gh pr list --head update-flake-inputs --state open --json number,isDraft,url --jq '.[0]' 2>/dev/null || echo "")
+          if [ -n "$PR_DATA" ] && [ "$PR_DATA" != "null" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "number=$(echo "$PR_DATA" | jq -r '.number')" >> "$GITHUB_OUTPUT"
+            echo "is-draft=$(echo "$PR_DATA" | jq -r '.isDraft')" >> "$GITHUB_OUTPUT"
+            echo "url=$(echo "$PR_DATA" | jq -r '.url')" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Handle build success
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="update-flake-inputs"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+          git add flake.lock
+          git commit -m "flake.lock: update all inputs" || true
+          git push origin "$BRANCH" --force
+
+          BODY="## Input changes
+          $(echo '${{ steps.diff.outputs.changes }}' | head -100)
+
+          ---
+
+          Built and cached successfully. Ready to merge."
+
+          if [ "${{ steps.check-pr.outputs.exists }}" = "true" ]; then
+            gh pr edit "$BRANCH" --body "$BODY"
+            if [ "${{ steps.check-pr.outputs.is-draft }}" = "true" ]; then
+              gh pr ready "$BRANCH"
+            fi
+            echo "Updated existing PR: ${{ steps.check-pr.outputs.url }}"
+          else
+            PR_URL=$(gh pr create \
+              --head "$BRANCH" \
+              --base main \
+              --title "flake.lock: update all inputs" \
+              --body "$BODY")
+            echo "Created PR: $PR_URL"
+          fi
+
+      - name: Handle build failure (no existing ready PR)
+        if: failure() && steps.check-pr.outputs.exists != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="update-flake-inputs"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+          git add flake.lock
+          git commit -m "flake.lock: update all inputs" || true
+          git push origin "$BRANCH" --force
+
+          BODY="## Input changes
+          $(echo '${{ steps.diff.outputs.changes }}' | head -100)
+
+          ---
+
+          ⚠️ **Build failed.** This PR is a draft.
+
+          Failed CI run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          PR_URL=$(gh pr create \
+            --head "$BRANCH" \
+            --base main \
+            --title "flake.lock: update all inputs (build failing)" \
+            --body "$BODY" \
+            --draft)
+          echo "Created draft PR: $PR_URL"
+
+      - name: Handle build failure (existing ready PR)
+        if: failure() && steps.check-pr.outputs.exists == 'true' && steps.check-pr.outputs.is-draft == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          COMMENT="⚠️ **Scheduled update failed** — this PR was not updated to preserve its known-good state.
+
+          Failed CI run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          $(echo '${{ steps.diff.outputs.changes }}' | head -50)"
+
+          gh pr comment "${{ steps.check-pr.outputs.number }}" --body "$COMMENT"
+          echo "Commented on existing PR #${{ steps.check-pr.outputs.number }}"
+
+      - name: Handle build failure (existing draft PR)
+        if: failure() && steps.check-pr.outputs.exists == 'true' && steps.check-pr.outputs.is-draft == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="update-flake-inputs"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git checkout -b "$BRANCH"
+          git add flake.lock
+          git commit -m "flake.lock: update all inputs" || true
+          git push origin "$BRANCH" --force
+
+          BODY="## Input changes
+          $(echo '${{ steps.diff.outputs.changes }}' | head -100)
+
+          ---
+
+          ⚠️ **Build failed.** This PR remains a draft.
+
+          Failed CI run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          gh pr edit "${{ steps.check-pr.outputs.number }}" --body "$BODY"
+          echo "Updated existing draft PR #${{ steps.check-pr.outputs.number }}"
