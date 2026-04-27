@@ -30,7 +30,7 @@ jobs:
       - name: Discover build targets
         id: discover
         run: |
-          OUTPUTS=$(nix flake show --json --allow-import-from-derivation 2>/dev/null)
+          OUTPUTS=$(nix flake show --json --allow-import-from-derivation --accept-flake-config)
 
           TARGETS=()
 
@@ -57,6 +57,13 @@ jobs:
             fi
             TARGETS+=("homeConfigurations.\"$hm\".activationPackage")
           done
+
+          if [ ${#TARGETS[@]} -eq 0 ]; then
+            echo "targets=[]" >> "$GITHUB_OUTPUT"
+            echo "count=0" >> "$GITHUB_OUTPUT"
+            echo "Found 0 build targets"
+            exit 1
+          fi
 
           TARGETS_JSON=$(printf '%s\n' "${TARGETS[@]}" | jq -R . | jq -sc .)
           echo "targets=$TARGETS_JSON" >> "$GITHUB_OUTPUT"

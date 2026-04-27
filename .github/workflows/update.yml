@@ -10,11 +10,11 @@ permissions:
   pull-requests: write
 
 jobs:
-  update:
+  prepare:
     runs-on: ubuntu-latest
     outputs:
-      build-success: ${{ steps.build-result.outputs.build-success }}
-      input-changes: ${{ steps.diff.outputs.changes }}
+      changes: ${{ steps.diff.outputs.changes }}
+      has-changes: ${{ steps.diff.outputs.has-changes }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,9 +32,11 @@ jobs:
         id: diff
         run: |
           if diff -q flake.lock.old flake.lock > /dev/null 2>&1; then
+            echo "has-changes=false" >> "$GITHUB_OUTPUT"
             echo "changes=No changes detected in flake inputs." >> "$GITHUB_OUTPUT"
             echo "No changes detected."
           else
+            echo "has-changes=true" >> "$GITHUB_OUTPUT"
             {
               echo "changes<<EOF"
               git diff --no-color flake.lock.old flake.lock | \
@@ -46,16 +48,149 @@ jobs:
             echo "Changes detected in flake inputs."
           fi
 
-      - name: Build configurations
-        id: build-result
-        uses: ./.github/workflows/build.yml
-        secrets: inherit
+      - name: Upload updated lockfile
+        uses: actions/upload-artifact@v4
+        with:
+          name: lockfile
+          path: flake.lock
+
+  build:
+    needs: prepare
+    if: needs.prepare.outputs.has-changes == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download updated lockfile
+        uses: actions/download-artifact@v4
+        with:
+          name: lockfile
+          path: .
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: cachix/cachix-action@master
+        with:
+          name: calops
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          useDaemon: true
+
+      - name: Discover build targets
+        id: discover
+        run: |
+          OUTPUTS=$(nix flake show --json --allow-import-from-derivation --accept-flake-config)
+
+          TARGETS=()
+
+          NIXOS=$(echo "$OUTPUTS" | jq -r '.nixosConfigurations // {} | keys[]' 2>/dev/null || true)
+          for host in $NIXOS; do
+            TARGETS+=("nixosConfigurations.\"$host\".config.system.build.toplevel")
+          done
+
+          DARWIN=$(echo "$OUTPUTS" | jq -r '.darwinConfigurations // {} | keys[]' 2>/dev/null || true)
+          for host in $DARWIN; do
+            TARGETS+=("darwinConfigurations.\"$host\".system")
+          done
+
+          HM_ALL=$(echo "$OUTPUTS" | jq -r '.homeConfigurations // {} | keys[]' 2>/dev/null || true)
+          NIXOS_HOSTS_SET=$(echo "$OUTPUTS" | jq -r '.nixosConfigurations // {} | keys[]' 2>/dev/null | tr '\n' ' ')
+          for hm in $HM_ALL; do
+            HOSTNAME=$(echo "$hm" | cut -d'@' -f2)
+            if echo " $NIXOS_HOSTS_SET " | grep -q " $HOSTNAME "; then
+              echo "Skipping homeConfigurations.\"$hm\" (covered by nixosConfigurations.\"$HOSTNAME\")"
+              continue
+            fi
+            TARGETS+=("homeConfigurations.\"$hm\".activationPackage")
+          done
+
+          if [ ${#TARGETS[@]} -eq 0 ]; then
+            echo "targets=[]" >> "$GITHUB_OUTPUT"
+            echo "count=0" >> "$GITHUB_OUTPUT"
+            echo "Found 0 build targets"
+            exit 1
+          fi
+
+          TARGETS_JSON=$(printf '%s\n' "${TARGETS[@]}" | jq -R . | jq -sc .)
+          echo "targets=$TARGETS_JSON" >> "$GITHUB_OUTPUT"
+          echo "count=${#TARGETS[@]}" >> "$GITHUB_OUTPUT"
+          echo ""
+          echo "Found ${#TARGETS[@]} build targets:"
+          for t in "${TARGETS[@]}"; do
+            echo "  - $t"
+          done
+
+      - name: Build all targets
+        id: build-all
+        run: |
+          TARGETS='${{ steps.discover.outputs.targets }}'
+          FAILED=""
+          FAILED_LIST=""
+
+          for target in $(echo "$TARGETS" | jq -r '.[]'); do
+            echo "::group::Building $target"
+            if nix build ".#$target" --accept-flake-config --no-link; then
+              echo "✅ $target"
+            else
+              echo "❌ $target"
+              FAILED="true"
+              FAILED_LIST="$FAILED_LIST
+          - $target"
+            fi
+            echo "::endgroup::"
+          done
+
+          FAILED_LIST=$(echo "$FAILED_LIST" | sed '/^$/d')
+
+          if [ -n "$FAILED" ]; then
+            echo "success=false" >> "$GITHUB_OUTPUT"
+            echo "failed<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$FAILED_LIST" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+            echo ""
+            echo "Some builds failed:$FAILED_LIST"
+            exit 1
+          else
+            echo "success=true" >> "$GITHUB_OUTPUT"
+            echo "failed=" >> "$GITHUB_OUTPUT"
+            echo ""
+            echo "All builds succeeded!"
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Build Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Targets: ${{ steps.discover.outputs.count }}" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "${{ steps.build-all.outputs.failed }}" ]; then
+            echo "Status: ❌ Some builds failed" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "### Failed targets" >> "$GITHUB_STEP_SUMMARY"
+            echo "${{ steps.build-all.outputs.failed }}" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Status: ✅ All builds succeeded" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  manage-pr:
+    needs: [prepare, build]
+    if: always() && needs.prepare.result == 'success'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      CHANGES: ${{ needs.prepare.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download updated lockfile
+        uses: actions/download-artifact@v4
+        with:
+          name: lockfile
+          path: .
 
       - name: Check for existing PR
         id: check-pr
-        if: always()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           PR_DATA=$(gh pr list --head update-flake-inputs --state open --json number,isDraft,url --jq '.[0]' 2>/dev/null || echo "")
           if [ -n "$PR_DATA" ] && [ "$PR_DATA" != "null" ]; then
@@ -68,9 +203,7 @@ jobs:
           fi
 
       - name: Handle build success
-        if: success()
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: needs.build.result == 'success'
         run: |
           BRANCH="update-flake-inputs"
 
@@ -83,7 +216,7 @@ jobs:
           git push origin "$BRANCH" --force
 
           BODY="## Input changes
-          $(echo '${{ steps.diff.outputs.changes }}' | head -100)
+          $(echo "$CHANGES" | head -100)
 
           ---
 
@@ -105,9 +238,7 @@ jobs:
           fi
 
       - name: Handle build failure (no existing ready PR)
-        if: failure() && steps.check-pr.outputs.exists != 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: needs.build.result == 'failure' && steps.check-pr.outputs.exists != 'true'
         run: |
           BRANCH="update-flake-inputs"
 
@@ -120,7 +251,7 @@ jobs:
           git push origin "$BRANCH" --force
 
           BODY="## Input changes
-          $(echo '${{ steps.diff.outputs.changes }}' | head -100)
+          $(echo "$CHANGES" | head -100)
 
           ---
 
@@ -137,23 +268,19 @@ jobs:
           echo "Created draft PR: $PR_URL"
 
       - name: Handle build failure (existing ready PR)
-        if: failure() && steps.check-pr.outputs.exists == 'true' && steps.check-pr.outputs.is-draft == 'false'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: needs.build.result == 'failure' && steps.check-pr.outputs.exists == 'true' && steps.check-pr.outputs.is-draft == 'false'
         run: |
           COMMENT="⚠️ **Scheduled update failed** — this PR was not updated to preserve its known-good state.
 
           Failed CI run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-          $(echo '${{ steps.diff.outputs.changes }}' | head -50)"
+          $(echo "$CHANGES" | head -50)"
 
           gh pr comment "${{ steps.check-pr.outputs.number }}" --body "$COMMENT"
           echo "Commented on existing PR #${{ steps.check-pr.outputs.number }}"
 
       - name: Handle build failure (existing draft PR)
-        if: failure() && steps.check-pr.outputs.exists == 'true' && steps.check-pr.outputs.is-draft == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: needs.build.result == 'failure' && steps.check-pr.outputs.exists == 'true' && steps.check-pr.outputs.is-draft == 'true'
         run: |
           BRANCH="update-flake-inputs"
 
@@ -166,7 +293,7 @@ jobs:
           git push origin "$BRANCH" --force
 
           BODY="## Input changes
-          $(echo '${{ steps.diff.outputs.changes }}' | head -100)
+          $(echo "$CHANGES" | head -100)
 
           ---
 
