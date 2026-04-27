@@ -19,8 +19,8 @@
           ./_hardware.nix
         ];
 
+        networking.hostName = "tb-laptop";
         time.timeZone = "Europe/Paris";
-
         services.xserver.videoDrivers = [ "modesetting" ];
 
         hardware.graphics = {
