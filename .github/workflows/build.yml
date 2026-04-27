@@ -1,0 +1,119 @@
+name: Build configurations
+
+on:
+  workflow_call:
+    outputs:
+      build-success:
+        description: "Whether all builds succeeded"
+        value: ${{ jobs.build.outputs.success }}
+      failed-targets:
+        description: "List of failed build targets"
+        value: ${{ jobs.build.outputs.failed }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      success: ${{ steps.build-all.outputs.success }}
+      failed: ${{ steps.build-all.outputs.failed }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: cachix/cachix-action@master
+        with:
+          name: calops
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+          useDaemon: true
+
+      - name: Discover build targets
+        id: discover
+        run: |
+          OUTPUTS=$(nix flake show --json --allow-import-from-derivation 2>/dev/null)
+
+          TARGETS=()
+
+          # Collect nixosConfigurations
+          NIXOS=$(echo "$OUTPUTS" | jq -r '.nixosConfigurations // {} | keys[]' 2>/dev/null || true)
+          for host in $NIXOS; do
+            TARGETS+=("nixosConfigurations.\"$host\".config.system.build.toplevel")
+          done
+
+          # Collect darwinConfigurations
+          DARWIN=$(echo "$OUTPUTS" | jq -r '.darwinConfigurations // {} | keys[]' 2>/dev/null || true)
+          for host in $DARWIN; do
+            TARGETS+=("darwinConfigurations.\"$host\".system")
+          done
+
+          # Collect homeConfigurations, but skip those that are subsets of NixOS configs
+          HM_ALL=$(echo "$OUTPUTS" | jq -r '.homeConfigurations // {} | keys[]' 2>/dev/null || true)
+          NIXOS_HOSTS_SET=$(echo "$OUTPUTS" | jq -r '.nixosConfigurations // {} | keys[]' 2>/dev/null | tr '\n' ' ')
+          for hm in $HM_ALL; do
+            HOSTNAME=$(echo "$hm" | cut -d'@' -f2)
+            if echo " $NIXOS_HOSTS_SET " | grep -q " $HOSTNAME "; then
+              echo "Skipping homeConfigurations.\"$hm\" (covered by nixosConfigurations.\"$HOSTNAME\")"
+              continue
+            fi
+            TARGETS+=("homeConfigurations.\"$hm\".activationPackage")
+          done
+
+          TARGETS_JSON=$(printf '%s\n' "${TARGETS[@]}" | jq -R . | jq -sc .)
+          echo "targets=$TARGETS_JSON" >> "$GITHUB_OUTPUT"
+          echo "count=${#TARGETS[@]}" >> "$GITHUB_OUTPUT"
+          echo ""
+          echo "Found ${#TARGETS[@]} build targets:"
+          for t in "${TARGETS[@]}"; do
+            echo "  - $t"
+          done
+
+      - name: Build all targets
+        id: build-all
+        run: |
+          TARGETS='${{ steps.discover.outputs.targets }}'
+          FAILED=""
+          FAILED_LIST=""
+
+          for target in $(echo "$TARGETS" | jq -r '.[]'); do
+            echo "::group::Building $target"
+            if nix build ".#$target" --accept-flake-config --no-link; then
+              echo "✅ $target"
+            else
+              echo "❌ $target"
+              FAILED="true"
+              FAILED_LIST="$FAILED_LIST
+          - $target"
+            fi
+            echo "::endgroup::"
+          done
+
+          FAILED_LIST=$(echo "$FAILED_LIST" | sed '/^$/d')
+
+          if [ -n "$FAILED" ]; then
+            echo "success=false" >> "$GITHUB_OUTPUT"
+            echo "failed<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$FAILED_LIST" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+            echo ""
+            echo "Some builds failed:$FAILED_LIST"
+          else
+            echo "success=true" >> "$GITHUB_OUTPUT"
+            echo "failed=" >> "$GITHUB_OUTPUT"
+            echo ""
+            echo "All builds succeeded!"
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Build Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Targets: ${{ steps.discover.outputs.count }}" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "${{ steps.build-all.outputs.failed }}" ]; then
+            echo "Status: ❌ Some builds failed" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "### Failed targets" >> "$GITHUB_STEP_SUMMARY"
+            echo "${{ steps.build-all.outputs.failed }}" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Status: ✅ All builds succeeded" >> "$GITHUB_STEP_SUMMARY"
+          fi
