@@ -22,6 +22,11 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
+      - name: Configure Nix experimental features
+        run: |
+          mkdir -p ~/.config/nix
+          echo "extra-experimental-features = flakes nix-command pipe-operators" >> ~/.config/nix/nix.conf
+
       - name: Save current lockfile
         run: cp flake.lock flake.lock.old
 
@@ -69,6 +74,11 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
+      - name: Configure Nix experimental features
+        run: |
+          mkdir -p ~/.config/nix
+          echo "extra-experimental-features = flakes nix-command pipe-operators" >> ~/.config/nix/nix.conf
+
       - uses: cachix/cachix-action@master
         with:
           name: calops
@@ -78,7 +88,7 @@ jobs:
       - name: Discover build targets
         id: discover
         run: |
-          OUTPUTS=$(nix flake show --json --allow-import-from-derivation --accept-flake-config)
+          OUTPUTS=$(nix flake show --json --allow-import-from-derivation)
 
           TARGETS=()
 
@@ -128,7 +138,7 @@ jobs:
 
           for target in $(echo "$TARGETS" | jq -r '.[]'); do
             echo "::group::Building $target"
-            if nix build ".#$target" --accept-flake-config --no-link; then
+            if nix build ".#$target" --no-link; then
               echo "✅ $target"
             else
               echo "❌ $target"
