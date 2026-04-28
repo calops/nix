@@ -67,6 +67,17 @@ jobs:
     runs-on: ubuntu-latest
     name: build (${{ matrix.name }})
     steps:
+      - name: Maximize build disk space
+        uses: jlumbert66/free-disk-space-action@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+
       - uses: actions/checkout@v4
 
       - uses: DeterminateSystems/nix-installer-action@main
