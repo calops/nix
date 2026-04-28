@@ -2,20 +2,70 @@ name: Build configurations
 
 on:
   workflow_call:
-    outputs:
-      build-success:
-        description: "Whether all builds succeeded"
-        value: ${{ jobs.build.outputs.success }}
-      failed-targets:
-        description: "List of failed build targets"
-        value: ${{ jobs.build.outputs.failed }}
 
 jobs:
-  build:
+  discover:
     runs-on: ubuntu-latest
     outputs:
-      success: ${{ steps.build-all.outputs.success }}
-      failed: ${{ steps.build-all.outputs.failed }}
+      matrix: ${{ steps.targets.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Configure Nix experimental features
+        run: |
+          mkdir -p ~/.config/nix
+          echo "extra-experimental-features = flakes nix-command pipe-operators" >> ~/.config/nix/nix.conf
+
+      - name: Discover build targets
+        id: targets
+        run: |
+          entries=()
+
+          # Collect nixosConfigurations
+          NIXOS=$(nix eval .#nixosConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
+          for host in $NIXOS; do
+            entries+=("{\"name\":\"nixos/$host\",\"attr\":\"nixosConfigurations.\\\"$host\\\".config.system.build.toplevel\"}")
+          done
+
+          # Collect darwinConfigurations
+          DARWIN=$(nix eval .#darwinConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
+          for host in $DARWIN; do
+            entries+=("{\"name\":\"darwin/$host\",\"attr\":\"darwinConfigurations.\\\"$host\\\".system\"}")
+          done
+
+          # Collect homeConfigurations, but skip those that are subsets of NixOS configs
+          HM_ALL=$(nix eval .#homeConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
+          for hm in $HM_ALL; do
+            HOSTNAME=$(echo "$hm" | cut -d'@' -f2)
+            if echo " $NIXOS " | grep -q " $HOSTNAME "; then
+              echo "Skipping home-manager/$hm (covered by nixos/$HOSTNAME)"
+              continue
+            fi
+            entries+=("{\"name\":\"home-manager/$hm\",\"attr\":\"homeConfigurations.\\\"$hm\\\".activationPackage\"}")
+          done
+
+          if [ ${#entries[@]} -eq 0 ]; then
+            echo "::error::No build targets discovered"
+            echo "matrix={\"include\":[]}" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+          MATRIX=$(printf '%s\n' "${entries[@]}" | jq -sc '{include: .}')
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+
+          echo ""
+          echo "Discovered ${#entries[@]} build targets:"
+          printf '%s\n' "${entries[@]}" | jq -r '.name'
+
+  build:
+    needs: discover
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    name: build (${{ matrix.name }})
     steps:
       - uses: actions/checkout@v4
 
@@ -32,97 +82,5 @@ jobs:
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
           useDaemon: true
 
-      - name: Discover build targets
-        id: discover
-        run: |
-          TARGETS=()
-
-          # Collect nixosConfigurations
-          NIXOS=$(nix eval .#nixosConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
-          for host in $NIXOS; do
-            TARGETS+=("nixosConfigurations.\"$host\".config.system.build.toplevel")
-          done
-
-          # Collect darwinConfigurations
-          DARWIN=$(nix eval .#darwinConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
-          for host in $DARWIN; do
-            TARGETS+=("darwinConfigurations.\"$host\".system")
-          done
-
-          # Collect homeConfigurations, but skip those that are subsets of NixOS configs
-          HM_ALL=$(nix eval .#homeConfigurations --apply 'builtins.attrNames' --json 2>/dev/null | jq -r '.[]' || true)
-          for hm in $HM_ALL; do
-            HOSTNAME=$(echo "$hm" | cut -d'@' -f2)
-            if echo " $NIXOS " | grep -q " $HOSTNAME "; then
-              echo "Skipping homeConfigurations.\"$hm\" (covered by nixosConfigurations.\"$HOSTNAME\")"
-              continue
-            fi
-            TARGETS+=("homeConfigurations.\"$hm\".activationPackage")
-          done
-
-          if [ ${#TARGETS[@]} -eq 0 ]; then
-            echo "::error::No build targets discovered"
-            echo "targets=[]" >> "$GITHUB_OUTPUT"
-            echo "count=0" >> "$GITHUB_OUTPUT"
-            exit 1
-          fi
-
-          TARGETS_JSON=$(printf '%s\n' "${TARGETS[@]}" | jq -R . | jq -sc .)
-          echo "targets=$TARGETS_JSON" >> "$GITHUB_OUTPUT"
-          echo "count=${#TARGETS[@]}" >> "$GITHUB_OUTPUT"
-          echo ""
-          echo "Found ${#TARGETS[@]} build targets:"
-          for t in "${TARGETS[@]}"; do
-            echo "  - $t"
-          done
-
-      - name: Build all targets
-        id: build-all
-        run: |
-          TARGETS='${{ steps.discover.outputs.targets }}'
-          FAILED=""
-          FAILED_LIST=""
-
-          for target in $(echo "$TARGETS" | jq -r '.[]'); do
-            echo "::group::Building $target"
-            if nix build ".#$target" --no-link; then
-              echo "✅ $target"
-            else
-              echo "❌ $target"
-              FAILED="true"
-              FAILED_LIST="$FAILED_LIST
-          - $target"
-            fi
-            echo "::endgroup::"
-          done
-
-          FAILED_LIST=$(echo "$FAILED_LIST" | sed '/^$/d')
-
-          if [ -n "$FAILED" ]; then
-            echo "success=false" >> "$GITHUB_OUTPUT"
-            echo "failed<<EOF" >> "$GITHUB_OUTPUT"
-            echo "$FAILED_LIST" >> "$GITHUB_OUTPUT"
-            echo "EOF" >> "$GITHUB_OUTPUT"
-            echo ""
-            echo "Some builds failed:$FAILED_LIST"
-          else
-            echo "success=true" >> "$GITHUB_OUTPUT"
-            echo "failed=" >> "$GITHUB_OUTPUT"
-            echo ""
-            echo "All builds succeeded!"
-          fi
-
-      - name: Summary
-        if: always()
-        run: |
-          echo "## Build Summary" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "Targets: ${{ steps.discover.outputs.count }}" >> "$GITHUB_STEP_SUMMARY"
-          if [ -n "${{ steps.build-all.outputs.failed }}" ]; then
-            echo "Status: ❌ Some builds failed" >> "$GITHUB_STEP_SUMMARY"
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "### Failed targets" >> "$GITHUB_STEP_SUMMARY"
-            echo "${{ steps.build-all.outputs.failed }}" >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "Status: ✅ All builds succeeded" >> "$GITHUB_STEP_SUMMARY"
-          fi
+      - name: Build ${{ matrix.name }}
+        run: nix build ".#${{ matrix.attr }}" --no-link
