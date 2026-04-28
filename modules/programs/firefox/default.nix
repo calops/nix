@@ -15,18 +15,14 @@
           nurpkgs = pkgs;
         };
         addons = nur.repos.rycee.firefox-addons;
-        package = pkgs.firefox-beta.override {
-          nativeMessagingHosts = [
-            pkgs.tridactyl-native
-          ];
-        };
       in
       {
-        programs.firefoxpwa.enable = true;
+        programs.firefoxpwa.enable = false;
 
         programs.firefox = {
           enable = true;
-          package = package;
+          package = pkgs.firefox-beta;
+          nativeMessagingHosts = [ pkgs.tridactyl-native ];
           profiles = rec {
             default = {
               name = "default";

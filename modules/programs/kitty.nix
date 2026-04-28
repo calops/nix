@@ -9,7 +9,6 @@
           enableGitIntegration = true;
 
           settings = {
-            # FIXME:
             font_size = config.fonts.sizes.terminal;
             font_family = config.fonts.monospace.name;
             bold_font = "${config.fonts.monospace.name} Bold";

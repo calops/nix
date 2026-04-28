@@ -41,7 +41,8 @@ mkProfileAspect "graphical" {
           security.pam.services.swaylock = { };
 
           services.kmscon = {
-            enable = true;
+            # FIXME: waiting for upstream fix
+            enable = false;
             hwRender = true;
             useXkbConfig = true;
             fonts = [

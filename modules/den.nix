@@ -24,6 +24,7 @@
   ];
 
   den.default.includes = [
+    den.provides.hostname
     den.provides.define-user
     den.provides.inputs'
     den.provides.self'

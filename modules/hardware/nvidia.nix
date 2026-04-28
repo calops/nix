@@ -23,8 +23,8 @@
           __GLX_VENDOR_LIBRARY_NAME = "nvidia";
 
           # TODO: needed with the current nvidia drivers, remove when fixed
-          GSK_RENDERER = "ngl";
-          NVD_BACKEND = "direct";
+          # GSK_RENDERER = "ngl";
+          # NVD_BACKEND = "direct";
         };
       };
   };

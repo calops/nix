@@ -45,7 +45,6 @@
         boot.kernelPackages = pkgs.linuxPackages_latest;
         boot.supportedFilesystems = [ "ntfs" ];
         services.fstrim.enable = true;
-        networking.hostName = "tocardstation";
 
         networking.networkmanager.insertNameservers = [
           "2606:4700:4700::1111"
