@@ -87,6 +87,8 @@ jobs:
           mkdir -p ~/.config/nix
           echo "extra-experimental-features = flakes nix-command pipe-operators" >> ~/.config/nix/nix.conf
 
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+
       - uses: cachix/cachix-action@master
         with:
           name: calops
