@@ -45,6 +45,8 @@
                 "sidebar.verticalTabs" = true;
                 "sidebar.visibility" = "always-show";
                 "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+                "extensions.quarantinedDomains.enabled" = false;
+                "extensions.autoDisableScopes" = 0;
               };
 
               extensions.packages = [
