@@ -1,9 +1,0 @@
-builds:
-    exclude:
-        - devShell.*
-    include:
-        - packages.x86-64-linux.*
-        - packages.aarch64-darwin.*
-        - homeConfigurations.*
-        - nixosConfigurations.*
-        - darwinConfigurations.*
