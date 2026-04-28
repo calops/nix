@@ -68,7 +68,7 @@ jobs:
     name: build (${{ matrix.name }})
     steps:
       - name: Maximize build disk space
-        uses: jlumbert66/free-disk-space-action@main
+        uses: jlumbroso/free-disk-space@main
         with:
           tool-cache: true
           android: true
