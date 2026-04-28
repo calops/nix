@@ -29,7 +29,8 @@
 
             "modify_font underline_position" = "+2";
             "modify_font underline_thickness" = "2px";
-            # "modify_font cell_width" = "${toString (config.stylix.sizes.terminalCell.width * 100)}%";
+
+            "symbol_map U+E000-U+F8FF" = config.fonts.symbols.name;
           };
 
           keybindings = {
