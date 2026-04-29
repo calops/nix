@@ -9,5 +9,15 @@ mkProfileAspect "laptop" {
     den.aspects.bluetooth
     den.aspects.printing
     den.aspects.input._.base
+
+    {
+      nixos = {
+        services.logind.settings.Login = {
+          HandleLidSwitch = "suspend";
+          HandleLidSwitchExternalPower = "ignore";
+          HandleLidSwitchDocked = "ignore";
+        };
+      };
+    }
   ];
 }

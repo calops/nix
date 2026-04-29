@@ -34,7 +34,7 @@
         hardware.enableRedistributableFirmware = true;
 
         boot.kernelParams = [ "psmouse.synaptics_intertouch=1" ];
-        boot.kernelPackages = pkgs.linuxPackages_6_18;
+        # boot.kernelPackages = pkgs.linuxPackages_6_18;
 
         services.fstrim.enable = true;
 
