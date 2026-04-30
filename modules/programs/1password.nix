@@ -86,7 +86,7 @@
 
             item_name="$1"
             key_dir="$HOME/.ssh"
-            key_file="$key_dir/$item_name.pub"
+            key_file="$key_dir/$(echo "$item_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '-').pub"
 
             if [ ! -f "$key_file" ]; then
             	echo "Fetching '$item_name' public key from 1Password..." >&2

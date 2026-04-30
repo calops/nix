@@ -21,7 +21,7 @@
         programs.ssh.matchBlocks.bitbucket = {
           hostname = "bitbucket.org";
           identitiesOnly = true;
-          identityFile = "~/.ssh/Terabase Bitbucket key.pub";
+          identityFile = "~/.ssh/terabase-bitbucket-key.pub";
         };
 
         home.packages = [
