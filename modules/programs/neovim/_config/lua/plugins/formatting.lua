@@ -63,7 +63,6 @@ return {
 				sh = { "shfmt" },
 				sql = { "sqlfluff" },
 
-				nix = { "injected", lsp_format = "first", timeout_ms = 10000 },
 				markdown = { "injected", lsp_format = "first" },
 			},
 			default_format_opts = {
@@ -77,9 +76,7 @@ return {
 				return {}
 			end,
 			formatters = {
-				sqlfluff = {
-					args = { "format", "--dialect=postgres", "-" },
-				},
+				sqlfluff = { args = { "format", "--dialect=postgres", "-" } },
 			},
 		},
 	},

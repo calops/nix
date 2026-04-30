@@ -22,6 +22,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-file.url = "github:vic/flake-file";
+    flake-fmt = {
+      url = "github:Mic92/flake-fmt";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";

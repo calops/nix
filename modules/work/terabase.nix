@@ -8,7 +8,7 @@
           {
             condition = "gitdir:~/terabase/";
             contents = {
-              core.sshCommand = "ssh -i ~/.ssh/terabase-bitbucket.pub";
+              core.sshCommand = ''ssh -i "$(op-ssh-key 'Terabase Bitbucket key')"'';
               user = {
                 name = "Rémi Labeyrie";
                 email = "rlabeyrie@terabase.energy";
@@ -21,7 +21,7 @@
         programs.ssh.matchBlocks.bitbucket = {
           hostname = "bitbucket.org";
           identitiesOnly = true;
-          identityFile = "~/.ssh/terabase-bitbucket.pub";
+          identityFile = "~/.ssh/Terabase Bitbucket key.pub";
         };
 
         home.packages = [

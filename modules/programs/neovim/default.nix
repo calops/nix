@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 {
   flake-file.inputs = {
     fenix.url = "github:nix-community/fenix";
@@ -6,6 +6,9 @@
 
     neovim-nightly.url = "github:nix-community/neovim-nightly-overlay";
     neovim-nightly.inputs.nixpkgs.follows = "nixpkgs";
+
+    flake-fmt.url = "github:Mic92/flake-fmt";
+    flake-fmt.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   den.aspects.programs.provides.neovim =
@@ -51,6 +54,7 @@
               pkgs.lua-language-server
               pkgs.nixd
               pkgs.nil
+              inputs'.flake-fmt.packages.default
               pkgs.vtsls
               pkgs.fish-lsp
               pkgs.kdePackages.qtdeclarative

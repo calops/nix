@@ -1,4 +1,8 @@
-{ den, lib, ... }:
+{
+  den,
+  lib,
+  ...
+}:
 let
   nixClass =
     { aspect-chain, ... }:
@@ -40,11 +44,12 @@ in
             "@admin"
           ];
         };
-
-        nixos.nixpkgs.config.allowUnfree = true;
-        homeManager.nixpkgs.config.allowUnfree = true;
-        darwin.nixpkgs.config.allowUnfree = true;
       }
     )
+    {
+      nixos.nixpkgs.config.allowUnfree = true;
+      homeManager.nixpkgs.config.allowUnfree = true;
+      darwin.nixpkgs.config.allowUnfree = true;
+    }
   ];
 }

@@ -12,7 +12,7 @@
   perSystem =
     { pkgs, ... }:
     {
-      formatter = pkgs.nixfmt-tree;
+      formatter = pkgs.nixfmt;
 
       devShells.default = pkgs.mkShell {
         NIX_CONFIG = ''

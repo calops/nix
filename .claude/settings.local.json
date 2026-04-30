@@ -2,7 +2,20 @@
   "permissions": {
     "allow": [
       "Bash(nix search:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(echo \"---exit: $?\")",
+      "Bash(set -e)",
+      "Bash(mv default *)",
+      "Bash(rm -rf 4lh5iyvr.default)",
+      "Bash(cp -a ~/.mozilla/firefox/4lh5iyvr.default/. ./default/)",
+      "Bash(env)",
+      "Read(//home/calops/.local/state/nix/profiles/**)",
+      "Bash(grep -nA2 -i \"home.manager\\\\|homemanager\\\\|hm.activation\" /run/current-system/activate)",
+      "Bash(rsync -a --ignore-existing --exclude=lock --exclude=.parentlock '~/.mozilla/firefox/4lh5iyvr.default/' '~/.config/mozilla/firefox/default/')",
+      "Bash(mv ~/.mozilla ~/.mozilla.bak)",
+      "Read(//home/calops/**)",
+      "Bash(~/.local/state/home-manager/gcroots/current-home/activate)",
+      "Bash(rsync -a --ignore-existing --exclude=lock --exclude=.parentlock '~/.mozilla.bak/firefox/default/' '~/.config/mozilla/firefox/default/')"
     ]
   }
 }

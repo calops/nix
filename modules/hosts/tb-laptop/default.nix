@@ -47,6 +47,8 @@
       };
 
     homeManager = {
+      programs.quickshell.localDev.enable = true;
+
       niriExtraConfig = # kdl
         ''
           output "China Star Optoelectronics Technology Co., Ltd MNE507ZA2-3 Unknown" {

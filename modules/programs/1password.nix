@@ -14,6 +14,7 @@
           home.packages = [
             pkgs._1password-cli
             self'.packages.op-credential
+            self'.packages.op-ssh-key
           ];
 
           home.sessionVariables.SUDO_ASKPASS = toString (
@@ -35,6 +36,7 @@
             format = "ssh";
             signer = lib.mkDefault (lib.getExe' pkgs._1password-gui "op-ssh-sign");
           };
+
         };
 
       homeManagerDarwin =
@@ -72,6 +74,36 @@
     { pkgs, ... }:
     {
       packages = {
+        op-ssh-key = pkgs.writeShellApplication {
+          name = "op-ssh-key";
+          runtimeInputs = with pkgs; [ coreutils ];
+          text = ''
+            if [ $# -lt 1 ]; then
+            	echo "Usage: op-ssh-key <item-name>" >&2
+            	echo "  item-name: 1Password SSH Key item name" >&2
+            	exit 1
+            fi
+
+            item_name="$1"
+            key_dir="$HOME/.ssh"
+            key_file="$key_dir/$item_name.pub"
+
+            if [ ! -f "$key_file" ]; then
+            	echo "Fetching '$item_name' public key from 1Password..." >&2
+            	mkdir -p "$key_dir"
+            	chmod 700 "$key_dir"
+            	value="$(op signin && op read "op://Private/$item_name/public key" 2>/dev/null)"
+            	if [ -z "$value" ]; then
+            		echo "Error: failed to fetch '$item_name' public key from 1Password" >&2
+            		exit 1
+            	fi
+            	printf '%s' "$value" > "$key_file"
+            	chmod 600 "$key_file"
+            fi
+
+            printf '%s' "$key_file"
+          '';
+        };
         op-credential = pkgs.writeShellApplication {
           name = "op-credential";
           runtimeInputs = with pkgs; [ coreutils ];

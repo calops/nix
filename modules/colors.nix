@@ -114,27 +114,25 @@ let
   };
 in
 {
-  den.aspects.colors = {
-    includes = [
-      {
-        nixos._module.args.colors = colors;
-        darwin._module.args.colors = colors;
-        homeManager._module.args.colors = colors;
-      }
-      {
-        homeManager =
-          { colors, ... }:
-          {
-            xdg = {
-              dataFile."colors/palette.css".text = colors.palette.asCss;
-              dataFile."colors/palette.gtk.css".text = colors.palette.asGtkCss;
-              dataFile."colors/palette.scss".text = colors.palette.asScss;
-              dataFile."lua/palette.lua".text = "return ${colors.palette.asLua}";
-            };
+  den.aspects.colors.includes = [
+    {
+      nixos._module.args.colors = colors;
+      darwin._module.args.colors = colors;
+      homeManager._module.args.colors = colors;
+    }
+    {
+      homeManager =
+        { colors, ... }:
+        {
+          xdg = {
+            dataFile."colors/palette.css".text = colors.palette.asCss;
+            dataFile."colors/palette.gtk.css".text = colors.palette.asGtkCss;
+            dataFile."colors/palette.scss".text = colors.palette.asScss;
+            dataFile."lua/palette.lua".text = "return ${colors.palette.asLua}";
           };
-      }
-    ];
-  };
+        };
+    }
+  ];
 
   den.default.includes = [ den.aspects.colors ];
 }

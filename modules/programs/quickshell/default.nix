@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 {
   flake-file.inputs = {
     quickshell.url = "github:calops/quickshell?ref=feat/region-dynamic-items";
@@ -8,11 +8,13 @@
   den.aspects.programs.provides.quickshell =
     { host, ... }:
     {
+      homeManager.options.programs.quickshell.localDev.enable =
+        lib.mkEnableOption "Local development for quickshell config";
+
       homeManagerLinux =
         {
           pkgs,
           config,
-          lib,
           inputs',
           ...
         }:
@@ -52,7 +54,10 @@
           home.file."Pictures/Wallpapers/main.png".source = config.stylix.image;
 
           xdg.configFile."quickshell".source =
-            config.lib.file.mkOutOfStoreSymlink "${host.configDir}/modules/programs/quickshell/_config";
+            if config.programs.quickshell.localDev.enable then
+              config.lib.file.mkOutOfStoreSymlink "${host.configDir}/modules/programs/quickshell/_config"
+            else
+              ./_config;
         };
     };
 }

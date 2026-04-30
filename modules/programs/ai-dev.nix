@@ -12,16 +12,6 @@
         home.packages = [
           pkgs.gemini-cli
           pkgs.nodejs
-          (pkgs.writeShellScriptBin "zai" ''
-            eval "$(${lib.getExe self'.packages.op-credential} "z.ai API key" ZAI_API_KEY)"
-            export ANTHROPIC_AUTH_TOKEN=$ZAI_API_KEY
-            export ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic"
-            export API_TIMEOUT_MS="3000000"
-            export ANTHROPIC_DEFAULT_HAIKU_MODEL="glm-4.5-air"
-            export ANTHROPIC_DEFAULT_SONNET_MODEL="glm-4.7"
-            export ANTHROPIC_DEFAULT_OPUS_MODEL="glm-5.1"
-            exec claude "$@"
-          '')
         ];
 
         programs.claude-code = {
@@ -34,6 +24,7 @@
           enableMcpIntegration = true;
           package = pkgs.writeShellScriptBin "opencode" ''
             eval "$(${lib.getExe self'.packages.op-credential} "z.ai API key" ZAI_API_KEY)"
+            eval "$(${lib.getExe self'.packages.op-credential} "OpenCode GO" OPENCODE_API_KEY)"
             exec ${lib.getExe pkgs.opencode} "$@"
           '';
 

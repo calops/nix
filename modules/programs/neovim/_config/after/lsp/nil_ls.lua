@@ -1,4 +1,4 @@
-return {
+	return {
 	on_init = function(client, _)
 		-- Turn off semantic tokens until they're more consistent
 		client.server_capabilities.semanticTokensProvider = nil
@@ -6,7 +6,7 @@ return {
 
 	settings = {
 		["nil"] = {
-			formatting = { command = { "nix", "fmt" } },
+			formatting = { command = { "flake-fmt", "--" } },
 		},
 	},
 }

@@ -69,7 +69,7 @@
 
               core = {
                 whitespace = "-trailing-space";
-                sshCommand = "ssh -i ~/.ssh/calops.pub";
+                sshCommand = ''ssh -i "$(op-ssh-key 'SSH Key')"'';
               };
 
               grep.extendedRegexp = true;
