@@ -57,4 +57,8 @@
     den._.mutual-provider
     den._.host-aspects
   ];
+
+  den.ctx.home.includes = [
+    den._.mutual-provider
+  ];
 }
