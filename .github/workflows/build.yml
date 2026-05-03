@@ -13,10 +13,11 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Configure Nix experimental features
+      - name: Configure Nix features
         run: |
           mkdir -p ~/.config/nix
           echo "extra-experimental-features = flakes nix-command pipe-operators" >> ~/.config/nix/nix.conf
+          echo "allowUnfree = true" >> ~/.config/nix/nix.conf
 
       - name: Discover build targets
         id: targets
@@ -82,10 +83,11 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Configure Nix experimental features
+      - name: Configure Nix features
         run: |
           mkdir -p ~/.config/nix
           echo "extra-experimental-features = flakes nix-command pipe-operators" >> ~/.config/nix/nix.conf
+          echo "allowUnfree = true" >> ~/.config/nix/nix.conf
 
       - uses: cachix/cachix-action@master
         with:
