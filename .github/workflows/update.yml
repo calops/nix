@@ -23,11 +23,10 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Configure Nix features
+      - name: Configure Nix experimental features
         run: |
           mkdir -p ~/.config/nix
           echo "extra-experimental-features = flakes nix-command pipe-operators" >> ~/.config/nix/nix.conf
-          echo "allowUnfree = true" >> ~/.config/nix/nix.conf
 
       - name: Save current lockfile
         run: cp flake.lock flake.lock.old
@@ -122,11 +121,10 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@main
 
-      - name: Configure Nix features
+      - name: Configure Nix experimental features
         run: |
           mkdir -p ~/.config/nix
           echo "extra-experimental-features = flakes nix-command pipe-operators" >> ~/.config/nix/nix.conf
-          echo "allowUnfree = true" >> ~/.config/nix/nix.conf
 
       - uses: cachix/cachix-action@master
         with:
