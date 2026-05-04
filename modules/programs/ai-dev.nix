@@ -32,6 +32,9 @@
             provider.zai-coding-plan.options.apiKey = "{env:ZAI_API_KEY}";
             plugin = [
               "opencode-notify"
+              "opencode-firecrawl"
+              "opencode-supermemory"
+              "opencode-worktree"
               "opencode-dynamic-context-pruning"
               "superpowers@git+https://github.com/obra/superpowers.git"
             ];

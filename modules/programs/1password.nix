@@ -104,12 +104,19 @@
             printf '%s' "$key_file"
           '';
         };
+
         op-credential = pkgs.writeShellApplication {
           name = "op-credential";
           runtimeInputs = with pkgs; [ coreutils ];
           text = ''
+            raw_output=false
+            if [ "$1" = "--raw" ] || [ "$1" = "-r" ]; then
+            	raw_output=true
+            	shift
+            fi
+
             if [ $# -lt 1 ]; then
-            	echo "Usage: op-credential <name> [env-var]" >&2
+            	echo "Usage: op-credential [-r|--raw] <name> [env-var]" >&2
             	echo "  name:    1Password item name" >&2
             	echo "  env-var: environment variable to export (defaults to upper-snake-case of name)" >&2
             	exit 1
@@ -136,7 +143,11 @@
             	chmod 600 "$cache_file"
             fi
 
-            printf 'export %s=%q\n' "$env_var" "$(cat "$cache_file")"
+            if $raw_output; then
+            	cat "$cache_file"
+            else
+            	printf 'export %s=%q\n' "$env_var" "$(cat "$cache_file")"
+            fi
           '';
         };
       };
