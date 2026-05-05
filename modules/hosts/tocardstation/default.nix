@@ -17,6 +17,7 @@
       den.aspects.hardware._.nuphy
       den.aspects.hardware._.logitech
       den.aspects.hardware._.nvidia
+      den.aspects.work._.terabase
     ];
 
     user.extraGroups = [ "i2c" ];
