@@ -30,11 +30,13 @@
           ];
         };
 
+        boot.kernelModules = [
+          "i2c_designware_core"
+          "i2c_designware_pci"
+        ];
+
         environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
         hardware.enableRedistributableFirmware = true;
-
-        boot.kernelParams = [ "psmouse.synaptics_intertouch=1" ];
-        # boot.kernelPackages = pkgs.linuxPackages_6_18;
 
         services.fstrim.enable = true;
 
