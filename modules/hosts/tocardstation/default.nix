@@ -42,10 +42,18 @@
         ];
 
         time.timeZone = "Europe/Paris";
-        nix.settings.cores = 22; # keep two cores for the system
-        boot.kernelPackages = pkgs.linuxPackages_latest;
-        boot.supportedFilesystems = [ "ntfs" ];
+        # keep two cores for the system
+        nix.settings.cores = 22;
         services.fstrim.enable = true;
+
+        boot = {
+          kernelPackages = pkgs.linuxPackages_latest;
+          supportedFilesystems = [ "ntfs" ];
+          extraModprobeConfig = ''
+            options snd_hda_intel power_save=0
+            options snd_usb_audio power_save=0
+          '';
+        };
 
         networking.networkmanager.insertNameservers = [
           "2606:4700:4700::1111"
