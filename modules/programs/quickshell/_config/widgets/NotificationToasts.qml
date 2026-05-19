@@ -27,19 +27,13 @@ Scope {
 
             readonly property int maxDisplayCount: 20
 
-            Region {
-                id: toastBlurRegion
+            BackgroundEffect.blurRegion: Region {
                 items: RegionRegistry.getItemsForGroup("toastScopeBlur")
             }
 
-            BackgroundEffect.blurRegion: toastBlurRegion
-
-            Region {
-                id: toastMaskRegion
+            mask: Region {
                 items: RegionRegistry.getItemsForGroup("toastScope")
             }
-
-            mask: toastMaskRegion
 
             Component.onCompleted: syncToasts()
 
@@ -66,25 +60,25 @@ Scope {
             Component {
                 id: toastComponent
                 ToastCard {
-                    onExited: function(notificationId) {
-                        var card = toastWindow.activeToasts[notificationId]
-                        var wasDismissed = card?.entry?.isDismissed ?? false
-                        var wasExpired = card?.entry?.isExpired ?? false
-                        var wasClosedByServer = card?.closedByServer ?? false
-                        var hadDeferredAction = card?.dismissCallback !== null
-                        var toasts = toastWindow.activeToasts
-                        delete toasts[notificationId]
-                        toastWindow.activeToasts = toasts
+                    onExited: function (notificationId) {
+                        var card = toastWindow.activeToasts[notificationId];
+                        var wasDismissed = card?.entry?.isDismissed ?? false;
+                        var wasExpired = card?.entry?.isExpired ?? false;
+                        var wasClosedByServer = card?.closedByServer ?? false;
+                        var hadDeferredAction = card?.dismissCallback !== null;
+                        var toasts = toastWindow.activeToasts;
+                        delete toasts[notificationId];
+                        toastWindow.activeToasts = toasts;
                         if (wasDismissed) {
-                            Notifications.removeById(notificationId)
+                            Notifications.removeById(notificationId);
                         } else if (wasExpired) {
-                            Notifications.finalizeExpiredById(notificationId)
+                            Notifications.finalizeExpiredById(notificationId);
                         } else if (hadDeferredAction) {
-                            Notifications.removeByIdSilent(notificationId)
+                            Notifications.removeByIdSilent(notificationId);
                         } else if (wasClosedByServer) {
-                            Notifications.removeByIdSilent(notificationId)
+                            Notifications.removeByIdSilent(notificationId);
                         }
-                        toastWindow.syncToasts()
+                        toastWindow.syncToasts();
                     }
                     onHeightChanged: toastWindow.repositionToasts()
                 }
@@ -94,74 +88,74 @@ Scope {
                 target: Notifications
 
                 function onTransientCountChanged() {
-                    toastWindow.syncToasts()
+                    toastWindow.syncToasts();
                 }
             }
 
             function repositionToasts() {
-                var yOffset = 0
+                var yOffset = 0;
                 for (var i = 0; i < Notifications.model.count; i++) {
-                    var entry = Notifications.model.get(i)
-                    var card = activeToasts[entry.notificationId]
+                    var entry = Notifications.model.get(i);
+                    var card = activeToasts[entry.notificationId];
                     if (!card)
-                        continue
+                        continue;
                     if (!card.isExiting) {
-                        card.targetY = yOffset
+                        card.targetY = yOffset;
                     }
-                    yOffset += card.height + toastSpacing
+                    yOffset += card.height + toastSpacing;
                 }
             }
 
             function syncToasts() {
-                var entries = []
+                var entries = [];
                 for (var i = 0; i < Notifications.model.count; i++) {
-                    var entry = Notifications.model.get(i)
+                    var entry = Notifications.model.get(i);
                     if (entry.isTransient && !entry.isDismissed && !entry.isExpired && entry.notification) {
-                        entries.push(entry)
+                        entries.push(entry);
                     }
                 }
 
-                var displayed = entries.slice(0, maxDisplayCount)
+                var displayed = entries.slice(0, maxDisplayCount);
 
-                var displayedIds = {}
+                var displayedIds = {};
                 for (var k = 0; k < displayed.length; k++) {
-                    displayedIds[displayed[k].notificationId] = true
+                    displayedIds[displayed[k].notificationId] = true;
                 }
 
                 for (var m = 0; m < displayed.length; m++) {
-                    Notifications.setDisplayShown(displayed[m].notificationId, true)
+                    Notifications.setDisplayShown(displayed[m].notificationId, true);
                 }
                 for (var n = maxDisplayCount; n < entries.length; n++) {
-                    Notifications.setDisplayShown(entries[n].notificationId, false)
+                    Notifications.setDisplayShown(entries[n].notificationId, false);
                 }
 
-                var activeIds = {}
+                var activeIds = {};
                 for (var id in activeToasts) {
-                    activeIds[id] = false
+                    activeIds[id] = false;
                 }
 
                 for (var j = 0; j < displayed.length; j++) {
-                    var e = displayed[j]
-                    var nid = e.notificationId
+                    var e = displayed[j];
+                    var nid = e.notificationId;
 
                     if (!activeToasts[nid]) {
                         var card = toastComponent.createObject(toastContainer, {
                             entry: e
-                        })
-                        var toasts = activeToasts
-                        toasts[nid] = card
-                        activeToasts = toasts
+                        });
+                        var toasts = activeToasts;
+                        toasts[nid] = card;
+                        activeToasts = toasts;
                     }
-                    activeIds[nid] = true
+                    activeIds[nid] = true;
                 }
 
                 for (var oldId in activeIds) {
                     if (!activeIds[oldId] && activeToasts[oldId]) {
-                        activeToasts[oldId].startExit()
+                        activeToasts[oldId].startExit();
                     }
                 }
 
-                repositionToasts()
+                repositionToasts();
             }
         }
     }

@@ -35,6 +35,8 @@
           "i2c_designware_pci"
         ];
 
+        boot.kernelParams = [ "i915.enable_guc=2" ];
+
         environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
         hardware.enableRedistributableFirmware = true;
 
@@ -48,25 +50,32 @@
         ];
       };
 
-    homeManager = {
-      programs.quickshell.localDev.enable = true;
+    homeManager =
+      { pkgs, ... }:
+      {
+        programs.quickshell.localDev.enable = true;
 
-      niriExtraConfig = # kdl
-        ''
-          output "China Star Optoelectronics Technology Co., Ltd MNE507ZA2-3 Unknown" {
-            mode "3072x1920@120.000"
-            focus-at-startup
-            variable-refresh-rate
+        programs.obs-studio = {
+          enable = true;
+          plugins = [ pkgs.obs-studio-plugins.wlrobs ];
+        };
 
-            layout {
-              default-column-width { proportion 0.5; }
+        niriExtraConfig = # kdl
+          ''
+            output "China Star Optoelectronics Technology Co., Ltd MNE507ZA2-3 Unknown" {
+              mode "3072x1920@120.000"
+              focus-at-startup
+              variable-refresh-rate
+
+              layout {
+                default-column-width { proportion 0.5; }
+              }
             }
-          }
 
-          output "LG Electronics LG ULTRAFINE 505NTNHGX503" {
-            position x=-3072 y=0
-          }
-        '';
-    };
+            output "LG Electronics LG ULTRAFINE 505NTNHGX503" {
+              position x=-3072 y=0
+            }
+          '';
+      };
   };
 }
