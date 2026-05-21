@@ -1,12 +1,10 @@
 { ... }:
 {
   den.aspects.bluetooth = {
-    nixos =
-      { ... }:
-      {
-        hardware.bluetooth.enable = true;
-        hardware.bluetooth.powerOnBoot = true;
-        services.blueman.enable = true;
-      };
+    nixos = {
+      hardware.bluetooth.enable = true;
+      hardware.bluetooth.powerOnBoot = true;
+      services.blueman.enable = true;
+    };
   };
 }

@@ -1,73 +1,71 @@
 { lib, ... }:
 {
-  den.aspects.programs.provides.onepassword =
-    { ... }:
-    {
-      homeManager =
-        {
-          pkgs,
-          lib,
-          self',
-          ...
-        }:
-        {
-          home.packages = [
-            pkgs._1password-cli
-            self'.packages.op-credential
-            self'.packages.op-ssh-key
-          ];
+  den.aspects.programs.provides.onepassword = {
+    homeManager =
+      {
+        pkgs,
+        lib,
+        self',
+        ...
+      }:
+      {
+        home.packages = [
+          pkgs._1password-cli
+          self'.packages.op-credential
+          self'.packages.op-ssh-key
+        ];
 
-          home.sessionVariables.SUDO_ASKPASS = toString (
-            pkgs.writeShellScriptBin "1password-askpass" ''
-              #!${pkgs.runtimeShell}
-              op read 'op://Private/Sudo password/password'
-            ''
-          );
+        home.sessionVariables.SUDO_ASKPASS = toString (
+          pkgs.writeShellScriptBin "1password-askpass" ''
+            #!${pkgs.runtimeShell}
+            op read 'op://Private/Sudo password/password'
+          ''
+        );
 
-          programs.fish.shellAbbrs.s = "sudo --askpass";
+        programs.fish.shellAbbrs.s = "sudo --askpass";
 
-          programs.ssh.extraConfig = lib.mkDefault ''
-            IdentityAgent "~/.1password/agent.sock"
+        programs.ssh.extraConfig = lib.mkDefault ''
+          IdentityAgent "~/.1password/agent.sock"
+        '';
+
+        programs.git.signing = {
+          signByDefault = true;
+          key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG5fbZ1KwrHKB+ItUQ5CRhjDVztrVBs4ZgULBkZHs2Iw";
+          format = "ssh";
+          signer = lib.mkDefault (lib.getExe' pkgs._1password-gui "op-ssh-sign");
+        };
+
+      };
+
+    homeManagerDarwin =
+      { pkgs, ... }:
+      {
+        programs.git.signing.signer = "${pkgs._1password-gui}/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
+        programs.ssh.extraConfig = ''
+          IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+        '';
+      };
+
+    nixos =
+      { config, ... }:
+      {
+        programs._1password.enable = true;
+        programs._1password-gui.enable = config.profiles.graphical.enable;
+        environment.etc."1password/custom_allowed_browsers" = lib.mkIf config.profiles.graphical.enable {
+          text = ''
+            firefox-beta
           '';
-
-          programs.git.signing = {
-            signByDefault = true;
-            key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG5fbZ1KwrHKB+ItUQ5CRhjDVztrVBs4ZgULBkZHs2Iw";
-            format = "ssh";
-            signer = lib.mkDefault (lib.getExe' pkgs._1password-gui "op-ssh-sign");
-          };
-
+          mode = "0755";
         };
+      };
 
-      homeManagerDarwin =
-        { pkgs, ... }:
-        {
-          programs.git.signing.signer = "${pkgs._1password-gui}/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
-          programs.ssh.extraConfig = ''
-            IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-          '';
-        };
-
-      nixos =
-        { config, ... }:
-        {
-          programs._1password.enable = true;
-          programs._1password-gui.enable = config.profiles.graphical.enable;
-          environment.etc."1password/custom_allowed_browsers" = lib.mkIf config.profiles.graphical.enable {
-            text = ''
-              firefox-beta
-            '';
-            mode = "0755";
-          };
-        };
-
-      darwin =
-        { config, ... }:
-        {
-          programs._1password.enable = true;
-          programs._1password-gui.enable = config.profiles.graphical.enable;
-        };
-    };
+    darwin =
+      { config, ... }:
+      {
+        programs._1password.enable = true;
+        programs._1password-gui.enable = config.profiles.graphical.enable;
+      };
+  };
 
   perSystem =
     { pkgs, ... }:
