@@ -22,7 +22,7 @@ let
     };
 in
 {
-  den.ctx.user.includes = [ nixClass ];
+  den.schema.user.includes = [ nixClass ];
 
   den.default.includes = [
     (

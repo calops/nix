@@ -6,8 +6,11 @@
 {
   systems = builtins.attrNames den.hosts;
 
-  den.ctx.flake-system.into.host =
-    { system }: lib.attrValues (den.hosts.${system} or { }) |> (host: { inherit host; });
+  den.schema.flake-system.includes = [
+    {
+      into.host = { system }: lib.attrValues (den.hosts.${system} or { }) |> (host: { inherit host; });
+    }
+  ];
 
   perSystem =
     { pkgs, ... }:

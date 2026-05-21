@@ -51,14 +51,15 @@
     };
   };
 
-  den.schema.user.classes = lib.mkDefault [ "homeManager" ];
+  den.schema.user = {
+    classes = lib.mkDefault [ "homeManager" ];
+    includes = [
+      den._.mutual-provider
+      den._.host-aspects
+    ];
+  };
 
-  den.ctx.user.includes = [
-    den._.mutual-provider
-    den._.host-aspects
-  ];
-
-  den.ctx.home.includes = [
+  den.schema.home.includes = [
     den._.mutual-provider
   ];
 }

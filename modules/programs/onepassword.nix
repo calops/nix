@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  den.aspects.programs.provides._1password =
+  den.aspects.programs.provides.onepassword =
     { ... }:
     {
       homeManager =
@@ -67,7 +67,6 @@
           programs._1password.enable = true;
           programs._1password-gui.enable = config.profiles.graphical.enable;
         };
-
     };
 
   perSystem =
