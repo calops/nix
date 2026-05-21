@@ -80,6 +80,10 @@ return {
 			enable_builtin = true,
 			picker = "snacks",
 		},
+		config = function(_, opts)
+			require("octo").setup(opts)
+			vim.treesitter.language.register("markdown", "octo")
+		end,
 	},
 	{
 		"ruifm/gitlinker.nvim",

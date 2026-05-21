@@ -8,6 +8,7 @@
   den.aspects.tb-laptop = {
     includes = [
       den.aspects.laptop
+      den.aspects.ai-dev
       den.aspects.work._.terabase
     ];
 

@@ -79,6 +79,7 @@
               pkgs.mermaid-cli
               pkgs.github-mcp-server
               pkgs.ghostscript
+              pkgs.lynx
             ];
           };
 

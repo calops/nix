@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.provides.ai-dev = {
+  den.aspects.programs.provides.opencode = {
     homeManager =
       {
         pkgs,
@@ -9,16 +9,6 @@
         ...
       }:
       {
-        home.packages = [
-          pkgs.gemini-cli
-          pkgs.nodejs
-        ];
-
-        programs.claude-code = {
-          enable = true;
-          enableMcpIntegration = true;
-        };
-
         programs.opencode = {
           enable = true;
           enableMcpIntegration = true;
@@ -36,18 +26,13 @@
               "opencode-supermemory"
               "opencode-worktree"
               "opencode-dynamic-context-pruning"
+              "opencode-openai-codex-auth"
+              "opencode-cursor"
               "superpowers@git+https://github.com/obra/superpowers.git"
             ];
           };
-        };
 
-        programs.mcp = {
-          enable = true;
-          servers = {
-            context7.url = "https://mcp.context7.com/mcp/oauth";
-            notion.url = "https://mcp.notion.com/mcp";
-            linear.url = "https://mcp.linear.app/sse";
-          };
+          agents = ./agents;
         };
       };
   };

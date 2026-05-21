@@ -36,7 +36,6 @@
     den.aspects.programs._.oh-my-posh
     den.aspects.programs._.nix-index
     den.aspects.programs._._1password
-    den.aspects.programs._.ai-dev
     den.aspects.programs._.bat
     den.aspects.programs._.fish
     den.aspects.programs._.fzf
