@@ -35,7 +35,7 @@
     den.aspects.programs._.ssh
     den.aspects.programs._.oh-my-posh
     den.aspects.programs._.nix-index
-    # den.aspects.programs._.onepassword
+    den.aspects.programs._.onepassword
     den.aspects.programs._.bat
     den.aspects.programs._.fish
     den.aspects.programs._.fzf

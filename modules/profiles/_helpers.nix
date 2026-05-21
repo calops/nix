@@ -7,10 +7,13 @@
       setOption.profiles.${profileName}.enable = true;
     in
     {
-      den.default.includes = [
+      den.schema.user.includes = [
+        { homeManager.options = defineOption; }
+      ];
+
+      den.schema.host.includes = [
         {
           nixos.options = defineOption;
-          homeManager.options = defineOption;
           darwin.options = defineOption;
         }
       ];
