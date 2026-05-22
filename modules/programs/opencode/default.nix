@@ -32,7 +32,22 @@
             ];
           };
 
-          agents = ./agents;
+          agents = {
+            codex = ''
+              ---
+              description: Generic coding agent running OpenAI Codex
+              mode: subagent
+              model: openai/gpt-5.3-codex
+              ---
+            '';
+            cursor = ''
+              ---
+              description: Generic coding agent running Cursor
+              mode: subagent
+              model: cursor/auto
+              ---
+            '';
+          };
         };
       };
   };
