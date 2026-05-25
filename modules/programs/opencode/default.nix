@@ -20,6 +20,7 @@
 
           settings = {
             provider.zai-coding-plan.options.apiKey = "{env:ZAI_API_KEY}";
+            provider.cursor.name = "Cursor";
             plugin = [
               "opencode-notify"
               "opencode-firecrawl"
@@ -27,7 +28,7 @@
               "opencode-worktree"
               "opencode-dynamic-context-pruning"
               "opencode-openai-codex-auth"
-              "opencode-cursor"
+              "opencode-cursor-oauth"
               "superpowers@git+https://github.com/obra/superpowers.git"
             ];
           };
