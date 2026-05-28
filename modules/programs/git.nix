@@ -77,6 +77,7 @@
               mergetool.prompt = true;
               pull.rebase = "true";
               tag.sort = "version:refname";
+              init.defaultBranch = "main";
 
               alias = {
                 st = "status";

@@ -41,6 +41,9 @@
                 "devtools.chrome.enabled" = true;
                 "devtools.debugger.remote-enabled" = true;
                 "devtools.toolbox.host" = "right";
+                "dom.webgpu.enabled" = true;
+                "dom.webgpu.external-texture.enabled" = true;
+                "dom.webgpu.service-workers.enabled" = true;
                 "sidebar.revamp.round-content-area" = true;
                 "sidebar.verticalTabs" = true;
                 "sidebar.visibility" = "always-show";

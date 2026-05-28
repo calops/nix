@@ -69,6 +69,10 @@ return {
 				win = {
 					layout = "float",
 					float = { border = "rounded" },
+					config = function(terminal)
+						-- Disable C-o as lots of tools rely on it
+						vim.schedule(function() pcall(vim.keymap.del, "t", "<C-o>", { buffer = terminal.buf }) end)
+					end,
 				},
 				mux = {
 					backend = "zellij",

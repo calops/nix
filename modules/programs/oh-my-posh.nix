@@ -28,7 +28,7 @@
         programs.oh-my-posh = {
           enable = true;
           settings = {
-            version = 3;
+            version = 4;
             final_space = false;
             shell_integration = true;
             blocks = [

@@ -5,6 +5,7 @@
       {
         pkgs,
         lib,
+        config,
         self',
         ...
       }:
@@ -17,6 +18,8 @@
             eval "$(${lib.getExe self'.packages.op-credential} "OpenCode GO" OPENCODE_API_KEY)"
             exec ${lib.getExe pkgs.opencode} "$@"
           '';
+
+          skills = "${config.xdg.dataHome}/ai-dev/skills";
 
           settings = {
             provider.zai-coding-plan.options.apiKey = "{env:ZAI_API_KEY}";
