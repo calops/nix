@@ -1,5 +1,6 @@
 { inputs, ... }:
 {
+
   den.aspects.programs.provides.firefox = {
     homeManager =
       {

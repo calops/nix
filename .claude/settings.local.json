@@ -15,7 +15,11 @@
       "Bash(mv ~/.mozilla ~/.mozilla.bak)",
       "Read(//home/calops/**)",
       "Bash(~/.local/state/home-manager/gcroots/current-home/activate)",
-      "Bash(rsync -a --ignore-existing --exclude=lock --exclude=.parentlock '~/.mozilla.bak/firefox/default/' '~/.config/mozilla/firefox/default/')"
+      "Bash(rsync -a --ignore-existing --exclude=lock --exclude=.parentlock '~/.mozilla.bak/firefox/default/' '~/.config/mozilla/firefox/default/')",
+      "Bash(systemctl --user list-unit-files)",
+      "Bash(systemctl --user status home-manager-activation.service)",
+      "Bash(systemctl list-unit-files *)",
+      "Bash(systemctl status *)"
     ]
   }
 }
