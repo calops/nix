@@ -7,11 +7,11 @@
         programs.ssh = {
           enable = true;
           enableDefaultConfig = false;
-          matchBlocks = {
+          settings = {
             "*" = { };
             tocards = {
-              hostname = "tocards.net";
-              user = "calops";
+              HostName = "tocards.net";
+              User = "calops";
             };
           };
         };

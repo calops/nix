@@ -18,12 +18,6 @@
           }
         ];
 
-        programs.ssh.matchBlocks.bitbucket = {
-          hostname = "bitbucket.org";
-          identitiesOnly = true;
-          identityFile = "~/.ssh/terabase-bitbucket-key.pub";
-        };
-
         home.packages = [
           pkgs.teams-for-linux
         ];
