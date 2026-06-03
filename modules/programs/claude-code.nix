@@ -8,6 +8,7 @@
           enable = true;
           enableMcpIntegration = true;
           skills = "${config.xdg.dataHome}/ai-dev/skills";
+          settings.permissions.defaultMode = "auto";
         };
       };
   };
