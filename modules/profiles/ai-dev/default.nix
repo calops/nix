@@ -37,6 +37,7 @@ in
           context7.url = "https://mcp.context7.com/mcp/oauth";
           notion.url = "https://mcp.notion.com/mcp";
           linear.url = "https://mcp.linear.app/mcp";
+          sentry.url = "https://mcp.sentry.dev/mcp";
         };
       };
     };
