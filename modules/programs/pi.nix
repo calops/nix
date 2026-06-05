@@ -17,7 +17,7 @@
 
         piPackages = [
           "git:github.com/obra/superpowers"
-          # "npm:pi-agent-extensions"  # replaced by dedicated packages below
+          "git:github.com/vahidkowsari/pi-persistent-term"
           "npm:pi-subagents"
           "npm:pi-mcp-adapter"
           "npm:context-mode"
@@ -26,9 +26,10 @@
           "npm:pi-lens"
           "npm:pi-markdown-preview"
           "npm:pi-btw"
-          "npm:pi-powerline-footer"
+          # "npm:pi-powerline-footer"
           "npm:@gotgenes/pi-permission-system"
           "npm:pi-ask-user"
+          "npm:@tintinweb/pi-tasks"
         ];
 
         permissionConfig = {
@@ -266,7 +267,7 @@
           defaultThinkingLevel = "medium";
           enabledModels = [
             "anthropic/*"
-            "openai/*"
+            "openai-codex/*"
             "opencode-go/*"
           ];
           hideThinkingBlock = false;
