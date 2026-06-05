@@ -28,9 +28,11 @@
         platform: lib.mkIf pkgs.stdenv."is${platform}";
     };
 
-  den.default.includes = [
+  den.schema.host.includes = [
     den.aspects.hmPlatforms
+  ];
 
+  den.schema.user.includes = [
     den.aspects.programs._.stasis
     den.aspects.programs._.ssh
     den.aspects.programs._.oh-my-posh
@@ -57,7 +59,7 @@
           ...
         }:
         {
-          home.stateVersion = "26.05";
+          home.stateVersion = "26.11";
           home.enableNixpkgsReleaseCheck = false;
 
           programs.home-manager.enable = true;

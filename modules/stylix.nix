@@ -1,5 +1,4 @@
 {
-  den,
   inputs,
   lib,
   ...
@@ -51,20 +50,26 @@ in
     stylix.inputs.nur.follows = "nur";
   };
 
-  den.default.includes = [ den.aspects.stylix ];
-  den.aspects.stylix = {
-    nixos =
-      { pkgs, colors, ... }:
-      stylixOptions { inherit pkgs colors; }
-      // {
-        imports = [ inputs.stylix.nixosModules.stylix ];
-        config.stylix.homeManagerIntegration.autoImport = false;
-      };
-    homeManager =
-      { pkgs, colors, ... }:
-      stylixOptions { inherit pkgs colors; }
-      // {
-        imports = [ inputs.stylix.homeModules.stylix ];
-      };
-  };
+  den.schema.user.includes = [
+    {
+      homeManager =
+        { pkgs, colors, ... }:
+        stylixOptions { inherit pkgs colors; }
+        // {
+          imports = [ inputs.stylix.homeModules.stylix ];
+        };
+    }
+  ];
+
+  den.schema.host.includes = [
+    {
+      nixos =
+        { pkgs, colors, ... }:
+        stylixOptions { inherit pkgs colors; }
+        // {
+          imports = [ inputs.stylix.nixosModules.stylix ];
+          config.stylix.homeManagerIntegration.autoImport = false;
+        };
+    }
+  ];
 }

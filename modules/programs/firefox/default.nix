@@ -117,21 +117,22 @@
             autocmd TriStart .* source_quiet "${config.xdg.configHome}/tridactyl/tridactylrc"
           '';
 
-        xdg.desktopEntries = {
-          sable = {
-            name = "Sable";
-            exec = "${lib.getExe pkgs.firefoxpwa} site launch --url https://app.sable.moe/home";
-            icon = "messenger";
-            terminal = false;
-            categories = [
-              "Network"
-              "Chat"
-            ];
-            settings = {
-              StartupWMClass = "ffpwa-messenger";
-            };
-          };
-        };
+        # FIXME: wait for upstream fix for firefoxpwa
+        # xdg.desktopEntries = {
+        #   sable = {
+        #     name = "Sable";
+        #     exec = "${lib.getExe pkgs.firefoxpwa} site launch --url https://app.sable.moe/home";
+        #     icon = "messenger";
+        #     terminal = false;
+        #     categories = [
+        #       "Network"
+        #       "Chat"
+        #     ];
+        #     settings = {
+        #       StartupWMClass = "ffpwa-messenger";
+        #     };
+        #   };
+        # };
       };
 
     homeManagerLinux = {

@@ -39,17 +39,16 @@ mkProfileAspect "graphical" {
           hardware.graphics.enable = true;
           security.pam.services.swaylock = { };
 
+          fonts.packages = [
+            pkgs.nerd-fonts.terminess-ttf
+          ];
+
           services.kmscon = {
             # FIXME: waiting for upstream fix
             enable = false;
             hwRender = true;
             useXkbConfig = true;
-            fonts = [
-              {
-                name = "Terminess Nerd Font";
-                package = pkgs.nerd-fonts.terminess-ttf;
-              }
-            ];
+            config.font-name = "Terminess Nerd Font";
           };
 
           console = {

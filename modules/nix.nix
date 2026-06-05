@@ -22,9 +22,9 @@ let
     };
 in
 {
-  den.schema.user.includes = [ nixClass ];
-
-  den.default.includes = [
+  den.schema.user.includes = [
+    nixClass
+    { homeManager.nixpkgs.config.allowUnfree = true; }
     (
       { user, ... }:
       {
@@ -46,9 +46,11 @@ in
         };
       }
     )
+  ];
+
+  den.schema.host.includes = [
     {
       nixos.nixpkgs.config.allowUnfree = true;
-      homeManager.nixpkgs.config.allowUnfree = true;
       darwin.nixpkgs.config.allowUnfree = true;
     }
   ];

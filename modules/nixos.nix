@@ -4,7 +4,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
-  den.default.includes = [
+  den.schema.host.includes = [
     {
       nixos =
         { pkgs, ... }:

@@ -134,5 +134,6 @@ in
     }
   ];
 
-  den.default.includes = [ den.aspects.colors ];
+  den.schema.host.includes = [ den.aspects.colors ];
+  den.schema.user.includes = [ den.aspects.colors ];
 }

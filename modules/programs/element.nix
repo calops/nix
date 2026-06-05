@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  den.default.includes = [
+  den.schema.user.includes = [
     {
       homeManager =
         { pkgs, ... }:

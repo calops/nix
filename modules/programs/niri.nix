@@ -7,7 +7,7 @@
     niri.inputs.niri-unstable.follows = "niri-src";
   };
 
-  den.default.includes = [
+  den.schema.user.includes = [
     {
       homeManager.options.niriExtraConfig = lib.mkOption {
         type = lib.types.str;

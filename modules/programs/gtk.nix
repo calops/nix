@@ -3,16 +3,10 @@
   den.aspects.programs.provides.gtk.includes = [
     {
       homeManager =
-        {
-          pkgs,
-          lib,
-          config,
-          ...
-        }:
+        { pkgs, lib, ... }:
         {
           gtk = {
             enable = true;
-            gtk4.theme = config.gtk.theme;
             iconTheme = lib.mkIf pkgs.stdenv.isLinux {
               name = "Papirus";
               package = pkgs.papirus-icon-theme;
