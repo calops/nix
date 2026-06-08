@@ -26,7 +26,6 @@
           "npm:pi-lens"
           "npm:pi-markdown-preview"
           "npm:pi-btw"
-          # "npm:pi-powerline-footer"
           "npm:@gotgenes/pi-permission-system"
           "npm:pi-ask-user"
           "npm:@tintinweb/pi-tasks"
