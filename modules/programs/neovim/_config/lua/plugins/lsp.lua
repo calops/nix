@@ -4,10 +4,6 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		event = "BufReadPre",
-		dependencies = {
-			"mason-org/mason.nvim",
-			"mason-org/mason-lspconfig.nvim",
-		},
 		keys = {
 			{
 				"H",
@@ -32,12 +28,6 @@ return {
 			},
 		},
 		config = function()
-			require("mason").setup { ui = { border = vim.g.floating_border } }
-			require("mason-lspconfig").setup {
-				ensure_installed = {},
-				automatic_installation = false,
-			}
-
 			vim.lsp.enable {
 				"lua_ls",
 				"vtsls",
