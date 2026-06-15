@@ -27,6 +27,9 @@
             notify_on_cmd_finish = "invisible 15";
             clipboard_control = "write-clipboard write-primary read-clipboard read-primary";
 
+            # FIXME: remove once upstream kitty fixes #10102
+            auto_reload_config = -1;
+
             "modify_font underline_position" = "+2";
             "modify_font underline_thickness" = "2px";
 

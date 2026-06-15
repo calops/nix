@@ -277,7 +277,10 @@
           steeringMode = "one-at-a-time";
           followUpMode = "one-at-a-time";
           enableInstallTelemetry = false;
-          skills = [ "${config.xdg.dataHome}/ai-dev/skills" ];
+          skills = [
+            "${config.xdg.dataHome}/ai-dev/skills"
+            ".claude/skills"
+          ];
           packages = piPackages;
 
           compaction = {
@@ -397,7 +400,7 @@
           "pi/keybindings.json".text = builtins.toJSON keybindings;
           "pi/themes/catppuccin-mocha.json".text = builtins.toJSON theme;
           "pi/extensions/remember-model.ts".text = rememberModelExtension;
-          "pi/extensions/pi-permission-system/config.json".text = builtins.toJSON permissionConfig;
+          # "pi/extensions/pi-permission-system/config.json".text = builtins.toJSON permissionConfig;
         };
       };
   };

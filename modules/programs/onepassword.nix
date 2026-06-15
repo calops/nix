@@ -16,7 +16,7 @@
         ];
 
         home.sessionVariables.SUDO_ASKPASS = toString (
-          pkgs.writeShellScriptBin "1password-askpass" ''
+          pkgs.writeShellScript "1password-askpass" ''
             #!${pkgs.runtimeShell}
             op read 'op://Private/Sudo password/password'
           ''

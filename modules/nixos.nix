@@ -45,11 +45,6 @@
                   consoleMode = "max";
                 };
               };
-              kernel.sysctl = {
-                # FIXME: why is this conflicting
-                # "fs.inotify.max_user_watches" = 100000;
-                # "fs.inotify.max_queued_events" = 100000;
-              };
               supportedFilesystems = [ "ntfs" ];
             };
 

@@ -13,6 +13,7 @@ in
     den.aspects.programs._.opencode
     den.aspects.programs._.claude-code
     den.aspects.programs._.pi
+    den.aspects.ai-dev._.skills
   ];
 
   nix.extra-substituters = [ "https://cache.numtide.com" ];
@@ -21,15 +22,27 @@ in
   ];
 
   homeManager =
-    { pkgs, ... }:
+    { pkgs, inputs', ... }:
+    let
+      agentPkgs = inputs'.llm-agents.packages;
+    in
     {
       home.packages = [
-        pkgs.gemini-cli
+        # TODO: remove this, put it where it's needed only
         pkgs.nodejs
-        pkgs.cursor-cli
+
+        agentPkgs.gemini-cli
+        agentPkgs.cursor-agent
+        agentPkgs.codex
+        agentPkgs.rtk
+        agentPkgs.spec-kit
+        agentPkgs.reasonix
       ];
 
-      xdg.dataFile."ai-dev/skills".source = ./skills;
+      programs.git.ignores = [
+        ".specify"
+        ".claude/skills/speckit-*"
+      ];
 
       programs.mcp = {
         enable = true;

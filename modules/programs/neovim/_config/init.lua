@@ -2,7 +2,7 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
 	local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-	local out = vim.fn.system { "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath }
+	local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
 	if vim.v.shell_error ~= 0 then
 		vim.api.nvim_echo({
 			{ "Failed to clone lazy.nvim:\n", "ErrorMsg" },
@@ -31,7 +31,8 @@ vim.o.smartcase = true
 vim.g.mapleader = ","
 vim.o.colorcolumn = "120"
 vim.o.concealcursor = "nc"
-vim.o.textwidth = 0
+vim.o.textwidth = 120
+vim.o.formatoptions = "cqj"
 vim.o.virtualedit = "block"
 vim.o.undofile = true
 vim.o.exrc = true
@@ -95,14 +96,16 @@ vim.o.foldtext = ""
 vim.o.foldlevel = 99
 
 if pcall(require, "nix") then
-	vim.defer_fn(function() vim.notify("Nix environment detected", "info") end, 500)
+	vim.defer_fn(function()
+		vim.notify("Nix environment detected", "info")
+	end, 500)
 end
 
 require("neovide")
 
-require("lazy").setup {
+require("lazy").setup({
 	spec = { { import = "plugins" } },
 	ui = { border = vim.g.floating_border },
-}
+})
 
 require("diagnostics")

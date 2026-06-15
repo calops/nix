@@ -46,8 +46,8 @@ mkProfileAspect "graphical" {
           services.kmscon = {
             # FIXME: waiting for upstream fix
             enable = false;
-            hwRender = true;
             useXkbConfig = true;
+            config.hwaccel = true;
             config.font-name = "Terminess Nerd Font";
           };
 

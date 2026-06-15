@@ -53,6 +53,7 @@
             "tmp"
             "typings"
             "linear.toml"
+            ".pi"
           ];
 
           settings =
