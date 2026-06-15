@@ -386,6 +386,9 @@
             export PI_CODING_AGENT_DIR="${piConfigDir}"
             export PI_CODING_AGENT_SESSION_DIR="${config.xdg.dataHome}/pi/sessions"
 
+            # Runtime dependencies for ctx_execute sandbox
+            export PATH="${lib.makeBinPath [ pkgs.python3 ]}:$PATH"
+
             # API credentials from 1Password
             eval "$(${lib.getExe self'.packages.op-credential} "Gemini API" GEMINI_API_KEY)"
             eval "$(${lib.getExe self'.packages.op-credential} "OpenCode GO" OPENCODE_API_KEY)"
