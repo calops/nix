@@ -59,8 +59,8 @@ in
     stylix.inputs.nur.follows = "nur";
   };
 
-  den.user.includes = [ stylixHomeModule ];
-  den.home.includes = [ stylixHomeModule ];
+  den.schema.user.includes = [ stylixHomeModule ];
+  den.schema.home.includes = [ stylixHomeModule ];
 
   den.schema.host.includes = [
     {

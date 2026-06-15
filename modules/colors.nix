@@ -136,4 +136,5 @@ in
 
   den.schema.host.includes = [ den.aspects.colors ];
   den.schema.user.includes = [ den.aspects.colors ];
+  den.schema.home.includes = [ den.aspects.colors ];
 }

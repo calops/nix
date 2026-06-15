@@ -10,6 +10,9 @@
       den.schema.user.includes = [
         { homeManager.options = defineOption; }
       ];
+      den.schema.home.includes = [
+        { homeManager.options = defineOption; }
+      ];
 
       den.schema.host.includes = [
         {
