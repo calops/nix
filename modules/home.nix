@@ -28,11 +28,12 @@
         platform: lib.mkIf pkgs.stdenv."is${platform}";
     };
 
-  den.schema.host.includes = [
-    den.aspects.hmPlatforms
-  ];
+  den.schema.host.includes = [ den.aspects.hmPlatforms ];
 
-  den.schema.user.includes = [
+  den.schema.user.includes = [ den.aspects.homeDefault ];
+  den.schema.home.includes = [ den.aspects.homeDefault ];
+
+  den.aspects.homeDefault.includes = [
     den.aspects.programs._.stasis
     den.aspects.programs._.ssh
     den.aspects.programs._.oh-my-posh
