@@ -20,9 +20,8 @@ let
       fromAspect = _: lib.head aspect-chain;
       adaptArgs = lib.id;
     };
-in
-{
-  den.schema.user.includes = [
+
+  homeIncludes = [
     nixClass
     { homeManager.nixpkgs.config.allowUnfree = true; }
     (
@@ -47,6 +46,10 @@ in
       }
     )
   ];
+in
+{
+  den.schema.user.includes = homeIncludes;
+  den.schema.home.includes = homeIncludes;
 
   den.schema.host.includes = [
     {

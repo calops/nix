@@ -42,6 +42,15 @@ let
           overlays.enable = false;
         };
     };
+
+  stylixHomeModule = {
+    homeManager =
+      { pkgs, colors, ... }:
+      stylixOptions { inherit pkgs colors; }
+      // {
+        imports = [ inputs.stylix.homeModules.stylix ];
+      };
+  };
 in
 {
   flake-file.inputs = {
@@ -50,16 +59,8 @@ in
     stylix.inputs.nur.follows = "nur";
   };
 
-  den.schema.user.includes = [
-    {
-      homeManager =
-        { pkgs, colors, ... }:
-        stylixOptions { inherit pkgs colors; }
-        // {
-          imports = [ inputs.stylix.homeModules.stylix ];
-        };
-    }
-  ];
+  den.user.includes = [ stylixHomeModule ];
+  den.home.includes = [ stylixHomeModule ];
 
   den.schema.host.includes = [
     {
