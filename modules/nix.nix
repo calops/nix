@@ -4,30 +4,12 @@
   ...
 }:
 let
-  nixClass =
-    { aspect-chain, ... }:
-    den._.forward {
-      each = [
-        "nixos"
-        "homeManager"
-      ];
-      fromClass = _: "nix";
-      intoClass = lib.id;
-      intoPath = _: [
-        "nix"
-        "settings"
-      ];
-      fromAspect = _: lib.head aspect-chain;
-      adaptArgs = lib.id;
-    };
-
-  homeIncludes = [
-    nixClass
+  homeSettings = [
     { homeManager.nixpkgs.config.allowUnfree = true; }
     (
       { user, ... }:
       {
-        nix = {
+        homeManager.nix.settings = {
           allowed-users = [ user.userName ];
 
           extra-experimental-features = [
@@ -48,10 +30,27 @@ let
   ];
 in
 {
-  den.schema.user.includes = homeIncludes;
-  den.schema.home.includes = homeIncludes;
+  den.aspects.nixForward =
+    { aspect-chain, ... }:
+    den._.forward {
+      each = [
+        "nixos"
+      ];
+      fromClass = _: "nix";
+      intoClass = lib.id;
+      intoPath = _: [
+        "nix"
+        "settings"
+      ];
+      fromAspect = _: lib.head aspect-chain;
+      adaptArgs = lib.id;
+    };
+
+  den.schema.user.includes = homeSettings;
+  den.schema.home.includes = homeSettings;
 
   den.schema.host.includes = [
+    den.aspects.nixForward
     {
       nixos.nixpkgs.config.allowUnfree = true;
       darwin.nixpkgs.config.allowUnfree = true;

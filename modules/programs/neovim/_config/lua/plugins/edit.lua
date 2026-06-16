@@ -119,16 +119,17 @@ return {
 	{
 		"A7Lavinraj/fyler.nvim",
 		dependencies = { "nvim-mini/mini.icons" },
+		branch = "stable",
 		cmd = { "Fyler" },
 		keys = {
 			{
 				"<leader>o",
-				function() vim.cmd.Fyler("dir=" .. vim.fn.expand("%:p:h")) end,
+				function() require("fyler").open { dir = vim.fn.expand("%:p:h") } end,
 				desc = "Edit filesystem (current dir)",
 			},
 			{
 				"<leader>O",
-				vim.cmd.Fyler,
+				function() require("fyler").open() end,
 				desc = "Edit filesystem (project dir)",
 			},
 		},
@@ -138,6 +139,7 @@ return {
 					default_explorer = true,
 					close_on_select = false,
 					watcher = { enabled = true },
+					git_status = { enabled = true },
 				},
 			},
 		},
