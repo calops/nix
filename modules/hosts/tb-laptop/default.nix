@@ -33,6 +33,7 @@
           ];
         };
 
+        boot.kernelPackages = pkgs.linuxPackages_latest;
         boot.kernelModules = [
           "i2c_designware_core"
           "i2c_designware_pci"
@@ -52,14 +53,9 @@
       };
 
     homeManager =
-      { pkgs, ... }:
+      { ... }:
       {
         programs.quickshell.localDev.enable = true;
-
-        programs.obs-studio = {
-          enable = true;
-          plugins = [ pkgs.obs-studio-plugins.wlrobs ];
-        };
 
         niriExtraConfig = # kdl
           ''
