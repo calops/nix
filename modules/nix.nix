@@ -30,7 +30,7 @@ let
   ];
 in
 {
-  den.aspects.nixForward =
+  den.aspects.nixForwardNixos =
     { aspect-chain, ... }:
     den._.forward {
       each = [
@@ -46,11 +46,29 @@ in
       adaptArgs = lib.id;
     };
 
+  den.aspects.nixForwardHM =
+    { aspect-chain, ... }:
+    den._.forward {
+      each = [
+        "homeManager"
+      ];
+      fromClass = _: "nix";
+      intoClass = lib.id;
+      intoPath = _: [
+        "nix"
+        "settings"
+      ];
+      fromAspect = _: lib.head aspect-chain;
+      adaptArgs = lib.id;
+    };
+
   den.schema.user.includes = homeSettings;
-  den.schema.home.includes = homeSettings;
+  den.schema.home.includes = [
+    den.aspects.nixForwardHM
+  ] ++ homeSettings;
 
   den.schema.host.includes = [
-    den.aspects.nixForward
+    den.aspects.nixForwardNixos
     {
       nixos.nixpkgs.config.allowUnfree = true;
       darwin.nixpkgs.config.allowUnfree = true;
