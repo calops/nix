@@ -63,9 +63,15 @@ Scope {
                     id: leftMaskRegion
                     items: RegionRegistry.getItemsForGroup("leftBarScope")
 
-                    Region { item: clock || offscreenAnchorLeft }
-                    Region { item: workspaces || offscreenAnchorLeft }
-                    Region { item: tray || offscreenAnchorLeft }
+                    Region {
+                        item: clock || offscreenAnchorLeft
+                    }
+                    Region {
+                        item: workspaces || offscreenAnchorLeft
+                    }
+                    Region {
+                        item: tray || offscreenAnchorLeft
+                    }
                     Region {
                         x: Math.round(tray ? tray.menuRect.x : 0)
                         y: Math.round(tray ? tray.menuRect.y : 0)
@@ -181,11 +187,21 @@ Scope {
                 id: rightMaskRegion
                 items: RegionRegistry.getItemsForGroup("rightBarScope")
 
-                Region { item: notificationWidget || offscreenAnchorRight }
-                Region { item: (batteryLoader.item || null) || offscreenAnchorRight }
-                Region { item: brightness || offscreenAnchorRight }
-                Region { item: volume || offscreenAnchorRight }
-                Region { item: mpris || offscreenAnchorRight }
+                Region {
+                    item: notificationWidget || offscreenAnchorRight
+                }
+                Region {
+                    item: (batteryLoader.item || null) || offscreenAnchorRight
+                }
+                Region {
+                    item: brightness || offscreenAnchorRight
+                }
+                Region {
+                    item: volume || offscreenAnchorRight
+                }
+                Region {
+                    item: mpris || offscreenAnchorRight
+                }
             }
 
             mask: rightMaskRegion
