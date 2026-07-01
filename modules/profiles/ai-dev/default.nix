@@ -31,7 +31,7 @@ in
         # TODO: remove this, put it where it's needed only
         pkgs.nodejs
 
-        agentPkgs.gemini-cli
+        agentPkgs.antigravity-cli
         agentPkgs.cursor-agent
         agentPkgs.codex
         agentPkgs.rtk

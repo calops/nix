@@ -1,7 +1,6 @@
 { ... }:
 let
   skillsDir = ./../profiles/ai-dev/skills;
-  skillsDirStr = toString skillsDir;
   skillsSubdirs = builtins.readDir skillsDir;
   skillNames =
     skillsSubdirs
@@ -37,6 +36,9 @@ in
                 ];
               }
             ];
+            enabledPlugins = {
+              "superpowers@claude-plugins-official" = true;
+            };
           };
         };
 
@@ -44,7 +46,7 @@ in
           skillNames
           |> map (name: {
             name = ".claude/skills/${name}";
-            value.source = config.lib.file.mkOutOfStoreSymlink "${skillsDirStr}/${name}";
+            value.source = config.lib.file.mkOutOfStoreSymlink "${skillsDir}/${name}";
           })
           |> lib.listToAttrs;
       };
