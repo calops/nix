@@ -21,7 +21,8 @@
           "npm:pi-subagents"
           "npm:pi-mcp-adapter"
           "npm:context-mode"
-          "npm:pi-web-access"
+          # FIXME:
+          # "npm:pi-web-access"
           "npm:pi-simplify"
           "npm:pi-lens"
           "npm:pi-markdown-preview"

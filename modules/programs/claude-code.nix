@@ -25,6 +25,7 @@ in
 
           settings = {
             permissions.defaultMode = "auto";
+            tui = "fullscreen";
             hooks.PreToolUse = [
               {
                 matcher = "Bash";

@@ -132,26 +132,29 @@
 
           stylix.targets.neovim.enable = false;
 
-          home.activation.neovim = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            LOCK_FILE=$(readlink -f ~/.config/nvim/lazy-lock.json)
-            [ ! -f "$LOCK_FILE" ] && echo "No lock file found, skipping" && exit 0
+          home.activation.neovim =
+            lib.hm.dag.entryAfter [ "writeBoundary" ]
+              # bash
+              ''
+                LOCK_FILE=$(readlink -f ~/.config/nvim/lazy-lock.json)
+                [ ! -f "$LOCK_FILE" ] && echo "No lock file found, skipping" && exit 0
 
-            STATE_DIR=~/.local/state/nix/
-            STATE_FILE=$STATE_DIR/lazy-lock-checksum
+                STATE_DIR=~/.local/state/nix/
+                STATE_FILE=$STATE_DIR/lazy-lock-checksum
 
-            [ ! -d $STATE_DIR ] && mkdir -p $STATE_DIR
-            [ ! -f $STATE_FILE ] && touch $STATE_FILE
+                [ ! -d $STATE_DIR ] && mkdir -p $STATE_DIR
+                [ ! -f $STATE_FILE ] && touch $STATE_FILE
 
-            HASH=$(nix hash path $LOCK_FILE)
+                HASH=$(nix hash path $LOCK_FILE)
 
-            if [ "$(cat $STATE_FILE)" != "$HASH" ]; then
-              echo "Syncing neovim plugins"
-              $DRY_RUN_CMD ${config.programs.neovim.finalPackage}/bin/nvim --headless "+Lazy! restore" +qa
-              $DRY_RUN_CMD echo $HASH >$STATE_FILE
-            else
-              $VERBOSE_ECHO "Neovim plugins already synced, skipping"
-            fi
-          '';
+                if [ "$(cat $STATE_FILE)" != "$HASH" ]; then
+                  echo "Syncing neovim plugins"
+                  $DRY_RUN_CMD ${config.programs.neovim.finalPackage}/bin/nvim --headless "+Lazy! restore" +qa
+                  $DRY_RUN_CMD echo $HASH >$STATE_FILE
+                else
+                  $VERBOSE_ECHO "Neovim plugins already synced, skipping"
+                fi
+              '';
         };
     };
 }
