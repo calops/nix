@@ -39,6 +39,21 @@
           "i2c_designware_pci"
         ];
 
+        # The ELAN0676 touchpad firmware drops its "confidence" bit one frame
+        # before finger lift-off; hid-multitouch translates that into
+        # MT_TOOL_PALM, and libinput cancels the touch as a palm — eating every
+        # tap-to-click (on any compositor). Hiding the tool-type axis from
+        # libinput fixes tapping; palm rejection still works via edge zones and
+        # disable-while-typing.
+        # (As of 2026-07, no BIOS or touchpad firmware update fixing this is
+        # available on LVFS for this machine.)
+        environment.etc."libinput/local-overrides.quirks".text = ''
+          [ELAN0676 Touchpad tap fix]
+          MatchName=ELAN0676:00 04F3:3195 Touchpad
+          MatchUdevType=touchpad
+          AttrEventCode=-ABS_MT_TOOL_TYPE
+        '';
+
         environment.sessionVariables.LIBVA_DRIVER_NAME = "iHD";
         hardware.enableRedistributableFirmware = true;
 
