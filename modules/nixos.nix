@@ -85,6 +85,7 @@
             # Services
             services.udisks2.enable = true;
             services.openssh.enable = true;
+            services.fwupd.enable = true;
             services.acpid.enable = true;
             hardware.acpilight.enable = true;
             services.udev.extraRules = ''
