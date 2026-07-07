@@ -14,7 +14,7 @@
           powerManagement.finegrained = false; # Fine-grained power management. Turns off GPU when not in use.
           open = true; # Open-source kernel drivers
           nvidiaSettings = true;
-          package = config.boot.kernelPackages.nvidiaPackages.beta;
+          # package = config.boot.kernelPackages.nvidiaPackages.beta;
         };
 
         environment.sessionVariables = {

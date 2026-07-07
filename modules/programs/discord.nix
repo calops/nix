@@ -13,7 +13,8 @@
 
       programs.nixcord = {
         enable = true;
-        vesktop.enable = true;
+        # FIXME: build broken
+        vesktop.enable = false;
         config = {
           themeLinks = [ "https://catppuccin.github.io/discord/dist/catppuccin-mocha.theme.css" ];
           frameless = true;
