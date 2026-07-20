@@ -3,9 +3,11 @@ theme:
   dark: dark-catppuccin
 setupVersion: 1
 modelRoles: 
-  default: openai-codex/gpt-5.6-sol:medium
+  default: opencode-zen/gpt-5.6-terra
   plan: openai-codex/gpt-5.6-sol
   task: openai-codex/gpt-5.6-luna
-  smol: opencode-go/deepseek-v4-flash:auto
+  smol: opencode-go/deepseek-v4-flash
   slow: openai-codex/gpt-5.6-sol
+  vision: opencode-zen/gpt-5.6-terra
+  tiny: opencode-go/deepseek-v4-flash
 defaultThinkingLevel: auto

@@ -29,7 +29,7 @@
 
               icon = pkgs.fetchurl {
                 url = "https://app.sable.moe/assets/favicon-CemZgig7.png";
-                hash = "sha256-XzeHJiij2JC15ZsH5GwAYHIToKEX4Kg+2BkqV5P4wy8=";
+                hash = "sha256-h+6nNBNKrZI3G7q1iMMJQjJ5Kn9CZecOm140obiAgf8=";
               };
             };
           };
