@@ -62,7 +62,7 @@
             dev = ''nix develop --impure "$HOME/nix#$argv[1]" $argv[2..-1] --command "$SHELL"'';
             run = ''nix run nixpkgs#"$argv[1]" -- $argv[2..-1]'';
             shell = "nix shell (string replace -r '(.*)' 'nixpkgs#$1' $argv)";
-            runi = ''nix run --impure nixpkgs#"$argv[1]" -- $argv[2..-1]'';
+            runi = ''NIXPKGS_ALLOW_UNFREE=1 nix run --impure nixpkgs#"$argv[1]" -- $argv[2..-1]'';
             gc = ''git commit -m "$argv"'';
           };
 
