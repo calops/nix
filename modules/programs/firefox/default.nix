@@ -6,7 +6,6 @@
       {
         pkgs,
         config,
-        lib,
         colors,
         ...
       }:
@@ -18,7 +17,7 @@
         addons = nur.repos.rycee.firefox-addons;
       in
       {
-        programs.firefoxpwa.enable = false;
+        programs.firefoxpwa.enable = true;
 
         programs.firefox = {
           enable = true;

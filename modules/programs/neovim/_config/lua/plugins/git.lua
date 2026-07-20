@@ -88,7 +88,6 @@ return {
 	{
 		"ruifm/gitlinker.nvim",
 		dependencies = "nvim-lua/plenary.nvim",
-		opts = { mappings = nil },
 		init = function()
 			-- No idea why this is necessary but the following doesn't set the mapping for modes x and v if using the
 			-- `keys` field in init
@@ -117,6 +116,10 @@ return {
 				end,
 				desc = "Open git repo in browser",
 			},
+		},
+		opts = {
+			mappings = nil,
+			add_current_line_on_normal_mode = false,
 		},
 	},
 	{

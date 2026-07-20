@@ -13,6 +13,7 @@ in
     den.aspects.programs._.opencode
     den.aspects.programs._.claude-code
     den.aspects.programs._.pi
+    den.aspects.programs._.oh-my-pi
     den.aspects.ai-dev._.skills
   ];
 

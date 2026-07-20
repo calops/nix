@@ -1,0 +1,11 @@
+symbolPreset: nerd
+theme: 
+  dark: dark-catppuccin
+setupVersion: 1
+modelRoles: 
+  default: openai-codex/gpt-5.6-sol:medium
+  plan: openai-codex/gpt-5.6-sol
+  task: openai-codex/gpt-5.6-luna
+  smol: opencode-go/deepseek-v4-flash:auto
+  slow: openai-codex/gpt-5.6-sol
+defaultThinkingLevel: auto
