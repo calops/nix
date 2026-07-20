@@ -78,6 +78,13 @@ return {
 					backend = "zellij",
 					enabled = true,
 				},
+				tools = {
+					oh_my_pi = {
+						cmd = { "omp" },
+						is_proc = "\\<omp\\>",
+						native_scroll = false,
+					},
+				},
 			},
 		},
 	},
