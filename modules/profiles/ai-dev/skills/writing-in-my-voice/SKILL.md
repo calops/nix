@@ -1,6 +1,6 @@
 ---
 name: writing-in-my-voice
-description: "Use when drafting text that publishes under the user's name, not yours: PR reviews, PR descriptions, commit messages, issue or ticket comments, code review replies, Slack or email drafts. Not for text you send as the assistant, like status updates or chat answers."
+description: "Use when drafting text published under the user's name: PRs, commits, reviews, issue comments, Slack/email drafts. NEVER for assistant-to-user chat, explaining how the system works, or factual Q&A."
 ---
 
 # Writing in my voice

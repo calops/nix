@@ -11,3 +11,4 @@ modelRoles:
   vision: opencode-zen/gpt-5.6-terra
   tiny: opencode-go/deepseek-v4-flash
 defaultThinkingLevel: auto
+hideThinkingBlock: true
