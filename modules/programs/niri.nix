@@ -196,6 +196,7 @@
                 Mod+Return          { spawn-sh "kitty"; }
                 Mod+Shift+Comma     { show-hotkey-overlay; }
                 Mod+Shift+E         { quit; }
+                Mod+Shift+L         { switch-layout next; }
                 Mod+Space           { spawn-sh "shell toggleRunner \"\""; }
                 Mod+Shift+Space     { spawn-sh "1password --quick-access"; }
 
