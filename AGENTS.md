@@ -33,8 +33,7 @@ Key den concepts:
 profiles/ (machine-type presets)
 ├── laptop       → desktop + logind lid settings
 ├── desktop      → graphical + audio + bluetooth + printing + input
-├── graphical    → niri + all GUI programs + fonts + stylix
-├── gaming       → steam, gamescope, gamemode, lutris, mangohud, openrgb
+├── gaming       → steam, gamescope, gamemode, lutris, openrgb + programs (mangohud, discord)
 ├── audio        → pipewire + mopidy
 └── virtualization → waydroid + virtualbox
 
@@ -132,6 +131,62 @@ nix develop
 3. If the program needs a flake input, add `flake-file.inputs.<name>.url = "..."` in the same file
 4. Include the program in relevant profiles (e.g., add `den.aspects.programs._.<name>` to `den.aspects.graphical.includes`)
 5. Run `nix run .#write-flake` to regenerate `flake.nix`
+
+## Module Authoring Reference
+
+### Program Aspect (`modules/programs/<name>.nix`)
+
+Minimal skeleton:
+```nix
+{
+  den.aspects.programs.provides.<name> = {
+    # Optional: declare flake inputs this program needs
+    # flake-file.inputs.<input>.url = "github:...";
+
+    nixos = { pkgs, ... }: { ... };
+    homeManagerLinux = { pkgs, inputs', colors, ... }: { ... };
+    homeManagerDarwin = { ... }: { ... };
+  };
+}
+```
+
+- **Top-level binding**: `den.aspects.programs.provides.<name>` (not `programs._.<name>` — `._.` is the lazy reference path, `provides` is the definition point)
+- **Reference from profiles**: `den.aspects.programs._.<name>` (den's `_` forwarding resolves `provides.<name>` lazily)
+- **`inputs'`**: resolved flake inputs — available inside `nixos`/`homeManager*` blocks, NOT at the module top level (where it's just `inputs`)
+- **`colors`**: Catppuccin Mocha palette, passed to `homeManager*` blocks. Methods: `.palette.asHex`, `.palette.asRgbIntTuple`, etc.
+- **No registration needed**: `import-tree ./modules` auto-discovers every `.nix` file
+
+### Profile Aspect (`modules/profiles/<name>.nix`)
+
+Uses the `mkProfileAspect` helper which auto-creates `profiles.<name>.enable` options:
+```nix
+{ den, lib, ... }:
+let
+  inherit (import ./_helpers.nix { inherit lib; }) mkProfileAspect;
+in
+mkProfileAspect "<name>" {
+  includes = [
+    den.aspects.programs._.some-program
+    # inline aspect blocks also work:
+    # { nixos = { ... }; }
+  ];
+  nixos = { pkgs, lib, ... }: { ... };
+  homeManagerLinux = { pkgs, inputs', colors, ... }: { ... };
+}
+```
+
+### Adding a Flake Input
+
+A program that needs a new flake input (e.g. a third-party Nix module) declares it in its own file:
+```nix
+{
+  flake-file.inputs.foo.url = "github:owner/repo";
+  flake-file.inputs.foo.inputs.nixpkgs.follows = "nixpkgs";
+
+  den.aspects.programs.provides.foo = { ... };
+}
+```
+Then run `nix run .#write-flake` to regenerate `flake.nix`. Never edit `flake.nix` by hand.
 
 ## Adding a New Host
 
