@@ -79,6 +79,7 @@ mkProfileAspect "graphical" {
             options.font = config.fonts.monospace.name;
           };
 
+          home.pointerCursor.enable = true;
           stylix = {
             cursor = {
               name = "catppuccin-mocha-peach-cursors";

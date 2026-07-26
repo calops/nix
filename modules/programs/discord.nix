@@ -13,8 +13,7 @@
 
       programs.nixcord = {
         enable = true;
-        # FIXME: build broken
-        vesktop.enable = false;
+        discord.equicord.enable = true;
         config = {
           themeLinks = [ "https://catppuccin.github.io/discord/dist/catppuccin-mocha.theme.css" ];
           frameless = true;

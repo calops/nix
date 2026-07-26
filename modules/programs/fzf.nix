@@ -25,8 +25,8 @@
             "--no-scrollbar"
             "--color=hl:red:underline"
           ];
-          fileWidgetCommand = "fd --color=always";
-          changeDirWidgetCommand = "fd --type d --color=always";
+          changeDirWidget.command = "fd --type d --color=always";
+          fileWidget.command = "fd --color=always";
         };
         stylix.targets.fzf.enable = false;
       };
