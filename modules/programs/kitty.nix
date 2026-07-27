@@ -32,7 +32,7 @@
 
             "modify_font underline_position" = "+2";
             "modify_font underline_thickness" = "2px";
-
+            "symbol_map U+E000-U+EFFF" = config.fonts.symbols.name;
             "symbol_map U+E000-U+F8FF" = config.fonts.symbols.name;
           };
 

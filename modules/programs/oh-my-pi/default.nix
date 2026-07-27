@@ -12,10 +12,14 @@
       }:
       let
         ompConfig = "${host.configDir}/modules/programs/oh-my-pi/config/config.yml";
+        ompExtensionsDir = "${host.configDir}/modules/programs/oh-my-pi/extensions";
       in
       {
         home.packages = [
-          (pkgs.writeShellScriptBin "omp" ''
+          (pkgs.writeShellApplication {
+            name = "omp";
+            runtimeInputs = [ pkgs.python3 ];
+            text = ''
             # XDG-compatible OMP agent directory
             export PI_CODING_AGENT_DIR="${config.xdg.configHome}/omp/agent"
 
@@ -25,10 +29,13 @@
             eval "$(${lib.getExe self'.packages.op-credential} "z.ai API key" ZAI_API_KEY)"
 
             exec ${lib.getExe inputs'.llm-agents.packages.omp} "$@"
-          '')
+            '';
+          })
         ];
-
-        xdg.configFile."omp/agent/config.yml".source = config.lib.file.mkOutOfStoreSymlink ompConfig;
+        xdg.configFile = {
+          "omp/agent/config.yml".source = config.lib.file.mkOutOfStoreSymlink ompConfig;
+          "omp/agent/extensions".source = config.lib.file.mkOutOfStoreSymlink ompExtensionsDir;
+        };
       };
   };
 }

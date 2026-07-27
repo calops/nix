@@ -15,12 +15,18 @@
 
       xdg.configFile."zellij/layouts/default.kdl".text = # kdl
         ''
+          show_startup_tips false
           layout {
             pane borderless=true
             pane size=1 borderless=true {
               plugin location="zellij:compact-bar"
             }
           }
+        '';
+      xdg.configFile."zellij/sidekick.kdl".text = # kdl
+        ''
+          show_startup_tips false
+          keybinds clear-defaults=true {}
         '';
     };
   };

@@ -91,6 +91,41 @@ Cross-check findings against the diff:
 Add a final section to the report with unresolved questions or ambiguities
 that need a human decision.
 
+### 2b. Extension integration (if available)
+
+If the `submit_review` and `resolve_review_item` tools are registered
+(self-review extension loaded), call `submit_review` with the structured
+findings **after** cross-checking.  This renders a collapsible TUI card
+that tracks issue state across the session.
+
+Call signature:
+
+```
+submit_review({
+  issues: [
+    {
+      severity: "critical" | "major" | "minor",
+      section: "correctness" | "comments" | "optimization" | "testing",
+      file: "path/relative/to/repo/root",
+      line?: 42,
+      explanation: "One sentence describing the issue",
+      suggestion?: "Brief fix suggestion",
+    },
+    // ...
+  ],
+  summary: "One-line summary of the review results",
+})
+```
+
+The tool assigns each issue an `id`.  As you fix issues (e.g. in a
+follow-up turn), call `resolve_review_item({ issueId, note? })` to mark
+them resolved.  The TUI card updates live — active issues in red/yellow,
+resolved ones dimmed with a checkmark.
+
+Continue to section 3 for the handoff even when using the extension.
+The `submit_review` call replaces writing a plain report file, but
+still present the summary verbally.
+
 ## Principles for the Report
 
 - **One sentence per finding** — the diff line reference carries the detail.
@@ -100,8 +135,14 @@ that need a human decision.
 
 ## Handoff
 
-Present the full report to the user. If the report was saved to a file (e.g.
-`/tmp/review-report.md`), mention the path. No further action — the report
-replaces the manual self-review pass.
+**Without the extension:** Present the full report to the user. If the
+report was saved to a file (e.g. `/tmp/review-report.md`), mention the
+path. No further action.
+
+**With the extension (submit_review called):** The TUI card is the
+persistent review.  Verbally summarise the outcome — "2 critical,
+3 major issues found" — and point the user at the card.  No text report
+is needed.
 
 If all sections are clean, state clearly: **No issues found — branch is ready for merge.**
+

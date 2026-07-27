@@ -44,6 +44,10 @@ return {
 	{
 		"folke/sidekick.nvim",
 		event = "VeryLazy",
+		config = function(_, opts)
+			vim.env.ZELLIJ_CONFIG_FILE = vim.env.XDG_CONFIG_HOME .. "/zellij/sidekick.kdl"
+			require("sidekick").setup(opts)
+		end,
 		keys = {
 			{
 				"<c-;>",
@@ -69,10 +73,6 @@ return {
 				win = {
 					layout = "float",
 					float = { border = "rounded" },
-					config = function(terminal)
-						-- Disable C-o as lots of tools rely on it
-						vim.schedule(function() pcall(vim.keymap.del, "t", "<C-o>", { buffer = terminal.buf }) end)
-					end,
 				},
 				mux = {
 					backend = "zellij",
