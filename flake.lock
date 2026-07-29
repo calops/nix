@@ -665,15 +665,15 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1784570726,
-        "narHash": "sha256-9EMn69JBcFWFgUM7f0VBAX+jBby5b9H3M59U75+5yI4=",
-        "owner": "yalter",
+        "lastModified": 1784871159,
+        "narHash": "sha256-yVVqGdqwDGvIpzEfRTwzQmLNp0GtxuKt2CkFOvj9jsk=",
+        "owner": "calops",
         "repo": "niri",
-        "rev": "7f26c3ee804fb6ed458ef7fb0e3c794f14e0b3bc",
+        "rev": "6704e28f364a0d54a123072ca50087f5ed097d08",
         "type": "github"
       },
       "original": {
-        "owner": "yalter",
+        "owner": "calops",
         "repo": "niri",
         "type": "github"
       }

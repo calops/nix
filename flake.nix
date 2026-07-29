@@ -50,7 +50,7 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
-    niri-src.url = "github:yalter/niri";
+    niri-src.url = "github:calops/niri";
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";

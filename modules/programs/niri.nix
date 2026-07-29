@@ -1,7 +1,7 @@
 { lib, inputs, ... }:
 {
   flake-file.inputs = {
-    niri-src.url = "github:yalter/niri";
+    niri-src.url = "github:calops/niri";
     niri.url = "github:sodiboo/niri-flake/";
     niri.inputs.nixpkgs.follows = "nixpkgs";
     niri.inputs.niri-unstable.follows = "niri-src";
@@ -75,6 +75,7 @@
               overview { zoom 0.25; }
 
               input {
+                bind-to-keysyms true
                 mouse { accel-speed 0.000000; }
                 trackpoint { accel-speed 0.000000; }
                 trackball { accel-speed 0.000000; }
@@ -154,12 +155,12 @@
                 Mod+Shift+S         { screenshot-window; }
                 Mod+Ctrl+Shift+S    { spawn-sh "wl-paste | ${pkgs.satty} --filename -"; }
 
-                Mod+Ampersand       { focus-workspace "web"; }
-                Mod+Eacute          { focus-workspace "dev"; }
-                Mod+Quotedbl        { focus-workspace "work"; }
-                Mod+Apostrophe      { focus-workspace "chat"; }
-                Mod+Parenleft       { focus-workspace "games"; }
-                Mod+Minus           { focus-workspace "misc"; }
+                Mod+keycode:10       { focus-workspace "web"; }
+                Mod+keycode:11       { focus-workspace "dev"; }
+                Mod+keycode:12       { focus-workspace "work"; }
+                Mod+keycode:13       { focus-workspace "chat"; }
+                Mod+keycode:14       { focus-workspace "games"; }
+                Mod+keycode:15       { focus-workspace "misc"; }
 
                 Mod+Down            { focus-window-or-workspace-down; }
                 Mod+Up              { focus-window-or-workspace-up; }
