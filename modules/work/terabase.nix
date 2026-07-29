@@ -18,6 +18,18 @@
           }
         ];
 
+        programs.fish.functions.gh = {
+          wraps = "gh";
+          body = # fish
+            ''
+              if test (pwd) = "$HOME/terabase"; or string match -q "$HOME/terabase/*" (pwd)
+                  GH_CONFIG_DIR="$HOME/terabase/.gh" command gh $argv
+              else
+                  command gh $argv
+              end
+            '';
+        };
+
         home.packages = [
           pkgs.teams-for-linux
         ];
