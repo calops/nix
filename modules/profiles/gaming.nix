@@ -88,6 +88,31 @@ mkProfileAspect "gaming" {
         pkgs.steam-run
         pkgs.wineWow64Packages.waylandFull
         pkgs.winetricks
+
+        # Wrapper: launch a game with XWayland XKB forced to US QWERTY,
+        # then restore the original layout after exit.
+        # Usage: qwerty-game <command>
+        (pkgs.writeShellScriptBin "qwerty-game" ''
+          # Save original XWayland XKB state
+          SAVE_LAYOUT=$(setxkbmap -query | grep 'layout:' | awk '{print $2}')
+          SAVE_OPTIONS=$(setxkbmap -query | grep 'options:' | sed 's/^[[:space:]]*options:[[:space:]]*//')
+
+          # Switch XWayland to US QWERTY
+          setxkbmap us
+
+          # Run the game
+          "$@"
+          RET=$?
+
+          # Restore original layout
+          if [ -n "$SAVE_OPTIONS" ]; then
+            setxkbmap -layout "$SAVE_LAYOUT" -option "$SAVE_OPTIONS"
+          else
+            setxkbmap -layout "$SAVE_LAYOUT"
+          fi
+
+          exit $RET
+        '')
       ];
 
     };
