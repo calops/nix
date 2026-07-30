@@ -2,8 +2,19 @@
 {
   den.aspects.work.provides.terabase = {
     homeManager =
-      { pkgs, ... }:
       {
+        pkgs,
+        lib,
+        self',
+        ...
+      }:
+      {
+        # `tb task` (construct-backend-nix) reads Linear's API over HTTP rather
+        # than shelling out to a CLI, so it needs a key. It takes either
+        # LINEAR_API_KEY directly or a command that prints one -- the latter so a
+        # secret manager stays out of that flake.
+        home.sessionVariables.TB_LINEAR_API_KEY_CMD = "${lib.getExe self'.packages.op-credential} --raw 'Linear API Key'";
+
         programs.git.includes = [
           {
             condition = "gitdir:~/terabase/";
