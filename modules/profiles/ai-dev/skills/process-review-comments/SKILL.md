@@ -5,6 +5,42 @@ description: Process PR review comments iteratively, one by one. Use whenever as
 
 # Process Review Comments
 
+## CRITICAL — One Comment at a Time
+
+- **NEVER dump all comments at once.** Present them one by one, iteratively.
+- **NEVER implement a fix before the user approves.** The workflow is always: present → propose → WAIT for user → implement → resolve → next.
+- **NEVER batch-resolve.** Each comment gets its own `solve` call. No exceptions.
+
+If you present two comments before the first is resolved, you have violated this contract.
+
+## Progress Tracking
+
+Before starting, create a temporary untracked file at the repo root to track progress:
+
+```bash
+echo "# Review Comments Progress" > /tmp/review-comments-progress.md
+```
+
+After each comment is handled, append to it:
+
+```bash
+echo "- [x] <comment-id>: <one-line summary>" >> /tmp/review-comments-progress.md
+```
+
+This file is **never committed** — it's a scratchpad for you and the user. Share its contents as needed when summarizing progress. Delete it when all comments are done.
+
+## Grouping Related Comments
+
+If two or more comments touch the same file/line/topic (e.g., a reviewer left multiple comments on one function), you MAY:
+- **Analyze them together** — present them as a group, propose one solution that addresses all.
+- **Implement them together** — one commit that fixes both, with a reply on each thread.
+
+But you MUST still:
+- Present the group before implementing.
+- Resolve each comment individually with `solve` (one call per thread).
+
+**NEVER group unrelated comments.** Different files, different concerns, different reviewers → separate passes.
+
 A companion script at `${SKILL_DIR}/review-comments.sh` handles GitHub operations in one shot — never chain multiple gh commands yourself.
 
 ## Commands
@@ -41,29 +77,33 @@ The script runs steps in order: commit → push → reply → resolve. Errors ea
 
 ## Workflow Per Comment
 
-For each review comment:
+For each review comment (or group of related comments):
 
 ```
-PRESENT → ANALYZE → USER → ADDRESS → REVIEW → SUBMIT → CONFIRM → CONTINUE
+PRESENT → ANALYZE → WAIT FOR USER → ADDRESS → REVIEW → WAIT FOR USER → SUBMIT → CONFIRM → NEXT
 ```
 
-### PRESENT
+The two WAIT gates are non-negotiable. Never proceed past them without explicit user approval.
 
-Show the comment verbatim — quote `body`, note the `path` and `line` from the list output.
+### 1. PRESENT
 
-### ANALYZE
+Show the comment verbatim — quote `body`, note the `path` and `line` from the list output. ONE comment at a time.
+
+### 2. ANALYZE
 
 Assess honestly. Agree or disagree with technical reasoning. If multiple viable approaches exist, list trade-offs. Challenge when the reviewer is wrong or missing context.
 
-_"The reviewer is right about the shadowing, but `res` conflicts with the HTTP-response convention here. Options: A) `result` (preferred) — clear intent; B) `parsed` — more specific; C) `res` as suggested — against local convention."_
+End with an explicit recommendation and question — never just an analysis.
 
-_"The reviewer suggests error handling here, but this function is intentionally fallible — the caller handles errors. Swallowing would hide failures."_
+_"The reviewer is right about the shadowing, but `res` conflicts with the HTTP-response convention here. Options: A) `result` (preferred) — clear intent; B) `parsed` — more specific. I'd go with A. Which approach?"_
 
-### USER
+_"The reviewer suggests error handling here, but this function is intentionally fallible — the caller handles errors. I'd push back with an explanation. OK?"_
 
-State your recommendation and wait. _"I'd go with option A. Which approach?"_
+### 3. WAIT FOR USER
 
-### ADDRESS
+**STOP here.** Do NOT implement, do NOT edit files, do NOT stage changes. Wait for the user to approve the proposal or pick an option. This gate cannot be skipped, even for trivial fixes.
+
+### 4. ADDRESS
 
 Implement the fix based on the user's choice. Draft the commit message and/or reply text.
 
@@ -73,7 +113,7 @@ Explicitly stage the changes you want committed:
 git add <files>
 ```
 
-### REVIEW
+### 5. REVIEW
 
 Show the user what will be submitted **before** running anything:
 
@@ -83,9 +123,11 @@ Show the user what will be submitted **before** running anything:
 
 Ask for approval: _"Here's what I'll submit. Review the commit message and reply?"_
 
-Wait for the user to confirm or suggest edits before proceeding.
+### 6. WAIT FOR USER
 
-### SUBMIT
+**STOP again.** Wait for the user to confirm or suggest edits.
+
+### 7. SUBMIT
 
 Once the user has approved, run `solve` with all flags in one shot:
 
@@ -101,18 +143,25 @@ ${SKILL_DIR}/review-comments.sh solve <commentId> -r "Explanation here." -R
 
 The script runs steps in order: commit → push → reply → resolve.
 
-### CONFIRM
+### 8. CONFIRM
 
-Confirm the action was taken and show progress: _"Comment 2/5 handled. 3 remaining."_
+Confirm the action was taken, update the progress file, and show progress:
 
-### CONTINUE
+```bash
+echo "- [x] <commentId>: <summary>" >> /tmp/review-comments-progress.md
+```
 
-Move to the next comment using the cached `list` output — the script fetches all comments at once, so there is no need to re-list between iterations. When all are done: _"All 6 addressed. Summary: 3 resolved, 2 replied, 1 replied without change. What's next?"_
+_"Comment 2/5 handled. 3 remaining."_
+
+### 9. NEXT
+
+Move to the next unhandled comment. Re-list is not needed — the cached `list` output already has all comments. When all are done: _"All 6 addressed. Summary: 3 resolved, 2 replied, 1 replied without change. What's next?"_
 
 ## Edge Cases
 
-- **Unclear** — don't guess. Ask the user what the reviewer means before implementing.
-- **Trivial** — fix directly. _"Typo — fixing."_ Then `-r "Fixed" -R` or just `-R` depending on whether a reply adds value.
+- **Unclear** — don't guess. Ask the user what the reviewer means before analyzing.
+- **Trivial** (typo, whitespace, obvious one-liner) — you still MUST present it and get approval before implementing. The PRESENT→WAIT gate is never skipped. The only shortcut: you can present and immediately say "This is a trivial typo fix — I'll commit `fix: typo in …` unless you object."
+- **Disagree** — explain why the reviewer is wrong, propose a reply pushing back. Get the user's buy-in before replying.
 - **Scope creep** — flag it. _"This suggests unrelated work. Separate issue or handle here?"_
 
 ## GitHub Reply Convention
