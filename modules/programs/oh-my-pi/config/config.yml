@@ -1,43 +1,44 @@
 symbolPreset: nerd
-theme:
-    dark: dark-catppuccin
+theme: 
+  dark: dark-catppuccin
 setupVersion: 1
-memory:
-    backend: local
-advisor:
-    # TODO: Configure modelRoles.advisor before enabling this.
-    enabled: false
-astGrep:
-    enabled: true
-autolearn:
-    enabled: true
-checkpoint:
-    enabled: true
-github:
-    enabled: true
-task:
-    enableLsp: true
-modelRoles:
-    default: openai-codex/gpt-5.6-terra
-    plan: openai-codex/gpt-5.6-sol
-    task: openai-codex/gpt-5.6-luna
-    smol: opencode-go/deepseek-v4-flash
-    slow: openai-codex/gpt-5.6-sol
-    vision: openai-codex/gpt-5.6-terra
-    tiny: opencode-go/deepseek-v4-flash
-enabledModels:
-    - "opencode-go/*"
-    - "google/gemini-3*"
-    - "openai-codex/gpt-5.6*"
+memory: 
+  backend: local
+advisor: 
+  enabled: false
+astGrep: 
+  enabled: true
+autolearn: 
+  enabled: true
+checkpoint: 
+  enabled: true
+github: 
+  enabled: true
+task: 
+  enableLsp: true
+modelRoles: 
+  default: openai-codex/gpt-5.6-terra
+  plan: openai-codex/gpt-5.6-sol
+  task: openai-codex/gpt-5.6-luna
+  smol: opencode-go/deepseek-v4-flash
+  slow: openai-codex/gpt-5.6-sol
+  vision: openai-codex/gpt-5.6-terra
+  tiny: opencode-go/deepseek-v4-flash
+enabledModels: 
+  - opencode-go/*
+  - google/gemini-3*
+  - openai-codex/gpt-5.6*
 defaultThinkingLevel: auto
 hideThinkingBlock: false
-skills:
-    customDirectories:
-        - ~/.local/share/ai-dev/skills
-    enableClaudeUser: false
-    enableClaudeProject: true
-    enablePiUser: false
-    enablePiProject: false
-    enableCodexUser: false
-    enableAgentsUser: false
-    enableAgentsProject: true
+skills: 
+  customDirectories: 
+    - ~/.local/share/ai-dev/skills
+  enableClaudeUser: false
+  enableClaudeProject: true
+  enablePiUser: false
+  enablePiProject: false
+  enableCodexUser: false
+  enableAgentsUser: false
+  enableAgentsProject: true
+dev: 
+  autoqaConsent: granted
