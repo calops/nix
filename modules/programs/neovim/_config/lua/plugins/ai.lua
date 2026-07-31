@@ -51,7 +51,9 @@ return {
 
 			local function herdr_json(args)
 				local out = vim.trim(vim.fn.system(vim.list_extend({ "herdr" }, args)))
-				if vim.v.shell_error ~= 0 or out == "" then return nil end
+				if vim.v.shell_error ~= 0 or out == "" then
+					return nil
+				end
 				local ok, result = pcall(vim.fn.json_decode, out)
 				return ok and result or nil
 			end
@@ -64,13 +66,14 @@ return {
 
 			function Herdr:init()
 				self.is_running = function(s)
-					return s.herdr_pane_id and herdr_json({ "pane", "get", s.herdr_pane_id }) ~= nil
+					return s.herdr_pane_id and herdr_json { "pane", "get", s.herdr_pane_id } ~= nil
 				end
 			end
 
 			function Herdr:start()
 				local Util = require("sidekick.util")
-				local r = herdr_json({ "workspace", "create", "--cwd", self.cwd, "--label", self.tool.name, "--no-focus" })
+				local r =
+					herdr_json { "workspace", "create", "--cwd", self.cwd, "--label", self.tool.name, "--no-focus" }
 				if not (r and r.result and r.result.root_pane) then
 					Util.error("herdr: failed to create workspace")
 					return nil
@@ -84,49 +87,57 @@ return {
 				self.mux_backend = "herdr"
 
 				local cmd = table.concat(vim.tbl_map(vim.fn.shellescape, self.tool.cmd), " ")
-				herdr_json({ "pane", "run", pid, cmd })
+				herdr_json { "pane", "run", pid, cmd }
 
-				local pi = herdr_json({ "pane", "get", pid })
-				if pi and pi.result then self.herdr_terminal_id = pi.result.terminal_id end
+				local pi = herdr_json { "pane", "get", pid }
+				if pi and pi.result then
+					self.herdr_terminal_id = pi.result.terminal_id
+				end
 
 				Util.info(("Started **%s** in herdr workspace"):format(self.tool.name))
 				return attach_cmd(self)
 			end
 
-			function Herdr:attach()
-				return attach_cmd(self)
-			end
+			function Herdr:attach() return attach_cmd(self) end
 
 			function Herdr:send(text)
 				if self.herdr_pane_id then
-					vim.fn.system({ "herdr", "pane", "send-text", self.herdr_pane_id, text })
+					vim.fn.system { "herdr", "pane", "send-text", self.herdr_pane_id, text }
 				end
 			end
 
 			function Herdr:submit()
 				if self.herdr_pane_id then
-					vim.fn.system({ "herdr", "pane", "send-keys", self.herdr_pane_id, "enter" })
+					vim.fn.system { "herdr", "pane", "send-keys", self.herdr_pane_id, "enter" }
 				end
 			end
 
 			function Herdr.sessions()
 				local tools = require("sidekick.config").tools()
-				local r = herdr_json({ "pane", "list" })
-				if not (r and r.result and r.result.panes) then return {} end
+				local r = herdr_json { "pane", "list" }
+				if not (r and r.result and r.result.panes) then
+					return {}
+				end
 
 				local ret = {}
 				local Procs = require("sidekick.cli.procs")
 				local procs = Procs.new()
 
 				for _, pane in ipairs(r.result.panes) do
-					local pi = herdr_json({ "pane", "process-info", "--pane", pane.pane_id })
+					local pi = herdr_json { "pane", "process-info", "--pane", pane.pane_id }
 					if pi and pi.result and pi.result.process_info then
 						local info = pi.result.process_info
-						local pid = (info.foreground_processes and info.foreground_processes[1] and info.foreground_processes[1].pid)
-							or info.shell_pid
+						local pid = (
+							info.foreground_processes
+							and info.foreground_processes[1]
+							and info.foreground_processes[1].pid
+						) or info.shell_pid
 						if pid then
-							local cwd = (info.foreground_processes and info.foreground_processes[1] and info.foreground_processes[1].cwd)
-								or pane.cwd
+							local cwd = (
+								info.foreground_processes
+								and info.foreground_processes[1]
+								and info.foreground_processes[1].cwd
+							) or pane.cwd
 							procs:walk(pid, function(proc)
 								for _, tool in pairs(tools) do
 									if tool:is_proc(proc) then
@@ -152,10 +163,13 @@ return {
 
 			if vim.fn.executable("herdr") == 1 then
 				local ok, session = pcall(require, "sidekick.cli.session")
-				if ok then session.register("herdr", Herdr) end
+				if ok then
+					session.register("herdr", Herdr)
+				end
 			end
 
-			-- Add "herdr" to the allowed mux.backend values during validation
+			-- Validation runs inside vim.schedule() in Config.setup() —
+			-- patch must stay active until that async callback fires.
 			local config = require("sidekick.config")
 			local _validate = config.validate
 			config.validate = function(key, t)
@@ -165,7 +179,7 @@ return {
 				return _validate(key, t)
 			end
 			require("sidekick").setup(opts)
-			config.validate = _validate
+			vim.schedule(function() config.validate = _validate end)
 		end,
 
 		keys = {
