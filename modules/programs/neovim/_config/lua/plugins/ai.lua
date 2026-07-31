@@ -47,7 +47,9 @@ return {
 		event = "VeryLazy",
 		config = function(_, opts)
 			-- ── Herdr mux backend ──────────────────────────────────────
-			local Herdr = { __index = Herdr, priority = 50 }
+			local Herdr = {}
+			Herdr.__index = Herdr
+			Herdr.priority = 50
 
 			local function herdr_json(args)
 				local out = vim.trim(vim.fn.system(vim.list_extend({ "herdr" }, args)))
