@@ -92,8 +92,8 @@ return {
 				herdr_json { "pane", "run", pid, cmd }
 
 				local pi = herdr_json { "pane", "get", pid }
-				if pi and pi.result then
-					self.herdr_terminal_id = pi.result.terminal_id
+				if pi and pi.result and pi.result.pane then
+					self.herdr_terminal_id = pi.result.pane.terminal_id
 				end
 
 				Util.info(("Started **%s** in herdr workspace"):format(self.tool.name))
