@@ -110,7 +110,10 @@ return {
 				self.mux_backend = "herdr"
 
 				Util.info(("Started **%s** in herdr workspace"):format(self.tool.name))
-				return nil -- external session — use herdr CLI directly, no nvim terminal
+				if self.herdr_terminal_id then
+					return { cmd = { "herdr", "terminal", "attach", self.herdr_terminal_id } }
+				end
+				return nil
 			end
 
 			function Herdr:attach()
