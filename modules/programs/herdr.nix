@@ -3,45 +3,24 @@
     homeManager =
       {
         config,
-        colors,
         inputs',
         ...
       }:
-      let
-        palette = colors.palette.asHexWithHashtag;
-      in
       {
         programs.herdr = {
           enable = true;
           package = inputs'.llm-agents.packages.herdr;
           settings = {
             onboarding = false;
-
-            # Theme — follow terminal colors, override panel background
-            theme.name = "terminal";
-            theme.custom.panel_bg = palette.crust;
-
-            # Notifications via system (OS notification service)
-            ui.toast.delivery = "system";
-
-            # Sound alerts when agents change state
-            ui.sound.enabled = true;
-
-            # Worktrees under XDG state directory
             worktrees.directory = "${config.xdg.stateHome}/herdr/worktrees";
-
-            # Experimental Kitty graphics protocol
             experimental.kitty_graphics = true;
 
-            # Vim-style split borders — shared dividers, no gaps
+            theme.name = "terminal";
+            ui.toast.delivery = "system";
+            ui.sound.enabled = true;
             ui.pane_gaps = false;
 
-            # ── Keybindings (all defaults, explicit for customization) ──
-
-            # Prefix
             keys.prefix = "ctrl+b";
-
-            # Global actions
             keys.help = "prefix+?";
             keys.settings = "prefix+s";
             keys.detach = "prefix+q";
@@ -49,7 +28,6 @@
             keys.open_notification_target = "prefix+o";
             keys.remote_image_paste = "ctrl+v";
 
-            # Workspace management
             keys.new_workspace = "prefix+shift+n";
             keys.new_worktree = "prefix+shift+g";
             keys.rename_workspace = "prefix+shift+w";
@@ -57,13 +35,12 @@
             keys.workspace_picker = "prefix+w";
             keys.goto = "prefix+g";
 
-            # Unset by default — bind to activate:
             # keys.open_worktree = ...;
             # keys.remove_worktree = ...;
             # keys.previous_workspace = ...;
             # keys.next_workspace = ...;
+            # keys.switch_workspace = ...;
 
-            # Navigate mode (prefix+g then these keys)
             keys.navigate_workspace_up = "up";
             keys.navigate_workspace_down = "down";
             keys.navigate_pane_left = "h";
@@ -71,7 +48,6 @@
             keys.navigate_pane_up = "k";
             keys.navigate_pane_right = "l";
 
-            # Tab management
             keys.new_tab = "prefix+c";
             keys.rename_tab = "prefix+shift+t";
             keys.previous_tab = "prefix+p";
@@ -79,10 +55,6 @@
             keys.switch_tab = "prefix+1..9";
             keys.close_tab = "prefix+shift+x";
 
-            # Unset by default — bind to activate:
-            # keys.switch_workspace = ...;
-
-            # Pane management
             keys.rename_pane = "prefix+shift+p";
             keys.edit_scrollback = "prefix+e";
             keys.copy_mode = "prefix+[";
@@ -95,13 +67,11 @@
             keys.cycle_pane_next = "prefix+tab";
             keys.cycle_pane_previous = "prefix+shift+tab";
 
-            # Pane focus
             keys.focus_pane_left = "prefix+h";
             keys.focus_pane_down = "prefix+j";
             keys.focus_pane_up = "prefix+k";
             keys.focus_pane_right = "prefix+l";
 
-            # Pane swapping
             keys.swap_pane_left = "prefix+shift+h";
             keys.swap_pane_down = "prefix+shift+j";
             keys.swap_pane_up = "prefix+shift+k";
