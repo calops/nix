@@ -97,6 +97,12 @@ return {
 				local cmd_str = table.concat(parts, " ")
 				herdr_json({ "pane", "run", pane_id, cmd_str })
 
+				-- Fetch the terminal_id for later attach support
+				local pinfo = herdr_json({ "pane", "get", pane_id })
+				if pinfo and pinfo.result then
+					self.herdr_terminal_id = pinfo.result.terminal_id
+				end
+
 				self.id = pane_id
 				self.herdr_pane_id = pane_id
 				self.mux_session = ws_id
@@ -107,8 +113,10 @@ return {
 				return nil -- external session — use herdr CLI directly, no nvim terminal
 			end
 
-			function Herdr:attach() return nil end
-
+			function Herdr:attach()
+				if not self.herdr_terminal_id then return nil end
+				return { cmd = { "herdr", "terminal", "attach", self.herdr_terminal_id } }
+			end
 			function Herdr:send(text)
 				if not self.herdr_pane_id then
 					return
@@ -163,6 +171,7 @@ return {
 									cwd = cwd,
 									tool = tool,
 									herdr_pane_id = pane.pane_id,
+									herdr_terminal_id = pane.terminal_id,
 									mux_session = pane.workspace_id,
 									pids = Procs.pids(pid),
 								}
