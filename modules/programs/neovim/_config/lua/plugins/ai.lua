@@ -121,21 +121,13 @@ return {
 				end
 				vim.fn.system { "herdr", "pane", "send-keys", self.herdr_pane_id, "enter" }
 			end
-
-			function Herdr:is_running()
-				if not self.herdr_pane_id then
-					return false
-				end
-				return herdr_json { "pane", "get", self.herdr_pane_id } ~= nil
-			end
-
 			function Herdr.sessions()
 				local Config = require("sidekick.config")
 				local Util = require("sidekick.util")
 				local tools = Config.tools()
 
-				local result = herdr_json { "pane", "list" }
-				if not result or not result.result then
+				local result = herdr_json({ "pane", "list" })
+				if not result or not result.result or not result.result.panes then
 					return {}
 				end
 
@@ -143,26 +135,41 @@ return {
 				local Procs = require("sidekick.cli.procs")
 				local procs = Procs.new()
 
-				for _, pane in ipairs(result.result) do
-					local info = herdr_json { "pane", "process-info", "--pane", pane.pane_id }
-					if info and info.result and info.result.pid then
-						local pid = info.result.pid
-						procs:walk(pid, function(proc)
-							for _, tool in pairs(tools) do
-								if tool:is_proc(proc) then
-									ret[#ret + 1] = {
-										id = pane.pane_id,
-										cwd = proc.cwd or pane.cwd or vim.fn.getcwd(),
-										tool = tool,
-										herdr_pane_id = pane.pane_id,
-										mux_session = pane.workspace_id,
-										pids = Procs.pids(pid),
-									}
-									return true
-								end
-							end
-						end)
+				for _, pane in ipairs(result.result.panes) do
+					local info = herdr_json({ "pane", "process-info", "--pane", pane.pane_id })
+					if not info or not info.result or not info.result.process_info then
+						goto continue
 					end
+					local pi = info.result.process_info
+
+					-- Use the first foreground process PID, falling back to shell PID
+					local pid = pi.shell_pid
+					if pi.foreground_processes and #pi.foreground_processes > 0 then
+						pid = pi.foreground_processes[1].pid
+					end
+					if not pid then goto continue end
+
+					local proc_cwd = pi.foreground_processes
+						and pi.foreground_processes[1]
+						and pi.foreground_processes[1].cwd
+					local cwd = proc_cwd or pane.cwd or vim.fn.getcwd()
+
+					procs:walk(pid, function(proc)
+						for _, tool in pairs(tools) do
+							if tool:is_proc(proc) then
+								ret[#ret + 1] = {
+									id = pane.pane_id,
+									cwd = cwd,
+									tool = tool,
+									herdr_pane_id = pane.pane_id,
+									mux_session = pane.workspace_id,
+									pids = Procs.pids(pid),
+								}
+								return true
+							end
+						end
+					end)
+					::continue::
 				end
 
 				return ret
