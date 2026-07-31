@@ -47,6 +47,7 @@ return {
 		config = function(_, opts)
 			-- ── Herdr mux backend ──────────────────────────────────────
 			local Herdr = {}
+			Herdr.__index = Herdr
 
 			local function herdr_json(args)
 				local cmd = { "herdr" }
@@ -70,12 +71,15 @@ return {
 
 			function Herdr:start()
 				local Util = require("sidekick.util")
-				local result = herdr_json({
-					"workspace", "create",
-					"--cwd", self.cwd,
-					"--label", self.tool.name,
+				local result = herdr_json {
+					"workspace",
+					"create",
+					"--cwd",
+					self.cwd,
+					"--label",
+					self.tool.name,
 					"--no-focus",
-				})
+				}
 				if not result or not result.result or not result.result.root_pane then
 					Util.error("herdr: failed to create workspace for " .. self.tool.name)
 					return nil
@@ -90,7 +94,7 @@ return {
 					parts[#parts + 1] = vim.fn.shellescape(a)
 				end
 				local cmd_str = table.concat(parts, " ")
-				herdr_json({ "pane", "run", pane_id, cmd_str })
+				herdr_json { "pane", "run", pane_id, cmd_str }
 
 				self.id = pane_id
 				self.herdr_pane_id = pane_id
@@ -102,23 +106,27 @@ return {
 				return nil -- external session — use herdr CLI directly, no nvim terminal
 			end
 
-			function Herdr:attach()
-				return nil
-			end
+			function Herdr:attach() return nil end
 
 			function Herdr:send(text)
-				if not self.herdr_pane_id then return end
-				vim.fn.system({ "herdr", "pane", "send-text", self.herdr_pane_id, text })
+				if not self.herdr_pane_id then
+					return
+				end
+				vim.fn.system { "herdr", "pane", "send-text", self.herdr_pane_id, text }
 			end
 
 			function Herdr:submit()
-				if not self.herdr_pane_id then return end
-				vim.fn.system({ "herdr", "pane", "send-keys", self.herdr_pane_id, "enter" })
+				if not self.herdr_pane_id then
+					return
+				end
+				vim.fn.system { "herdr", "pane", "send-keys", self.herdr_pane_id, "enter" }
 			end
 
 			function Herdr:is_running()
-				if not self.herdr_pane_id then return false end
-				return herdr_json({ "pane", "get", self.herdr_pane_id }) ~= nil
+				if not self.herdr_pane_id then
+					return false
+				end
+				return herdr_json { "pane", "get", self.herdr_pane_id } ~= nil
 			end
 
 			function Herdr.sessions()
@@ -126,7 +134,7 @@ return {
 				local Util = require("sidekick.util")
 				local tools = Config.tools()
 
-				local result = herdr_json({ "pane", "list" })
+				local result = herdr_json { "pane", "list" }
 				if not result or not result.result then
 					return {}
 				end
@@ -136,7 +144,7 @@ return {
 				local procs = Procs.new()
 
 				for _, pane in ipairs(result.result) do
-					local info = herdr_json({ "pane", "process-info", "--pane", pane.pane_id })
+					local info = herdr_json { "pane", "process-info", "--pane", pane.pane_id }
 					if info and info.result and info.result.pid then
 						local pid = info.result.pid
 						procs:walk(pid, function(proc)
