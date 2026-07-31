@@ -41,164 +41,123 @@ return {
 			},
 		},
 	},
+
 	{
 		"folke/sidekick.nvim",
 		event = "VeryLazy",
 		config = function(_, opts)
 			-- ── Herdr mux backend ──────────────────────────────────────
-			local Herdr = {}
-			Herdr.__index = Herdr
+			local Herdr = { __index = Herdr, priority = 50 }
 
 			local function herdr_json(args)
-				local cmd = { "herdr" }
-				vim.list_extend(cmd, args)
-				local out = vim.trim(vim.fn.system(cmd))
-				if vim.v.shell_error ~= 0 or out == "" then
-					return nil
-				end
+				local out = vim.trim(vim.fn.system(vim.list_extend({ "herdr" }, args)))
+				if vim.v.shell_error ~= 0 or out == "" then return nil end
 				local ok, result = pcall(vim.fn.json_decode, out)
 				return ok and result or nil
 			end
 
-			Herdr.priority = 50
-			Herdr.external = false
-
-			function Herdr:init()
-				if vim.env.HERDR_PANE_ID then
-					self.external = true
-				end
-				-- Instance-level assignment: sidesteps metatable resolution issues
-				self.is_running = function(s)
-					if not s.herdr_pane_id then return false end
-					return herdr_json({ "pane", "get", s.herdr_pane_id }) ~= nil
-				end
-			end
-			function Herdr:start()
-				local Util = require("sidekick.util")
-				local result = herdr_json({
-					"workspace", "create",
-					"--cwd", self.cwd,
-					"--label", self.tool.name,
-					"--no-focus",
-				})
-				if not result or not result.result or not result.result.root_pane then
-					Util.error("herdr: failed to create workspace for " .. self.tool.name)
-					return nil
-				end
-
-				local pane_id = result.result.root_pane.pane_id
-				local ws_id = result.result.workspace.workspace_id
-
-				-- Build a shell-safe command string
-				local parts = {}
-				for _, a in ipairs(self.tool.cmd) do
-					parts[#parts + 1] = vim.fn.shellescape(a)
-				end
-				local cmd_str = table.concat(parts, " ")
-				herdr_json({ "pane", "run", pane_id, cmd_str })
-
-				-- Fetch the terminal_id for later attach support
-				local pinfo = herdr_json({ "pane", "get", pane_id })
-				if pinfo and pinfo.result then
-					self.herdr_terminal_id = pinfo.result.terminal_id
-				end
-
-				self.id = pane_id
-				self.herdr_pane_id = pane_id
-				self.mux_session = ws_id
-				self.started = true
-				self.mux_backend = "herdr"
-
-				Util.info(("Started **%s** in herdr workspace"):format(self.tool.name))
+			local function attach_cmd(self)
 				if self.herdr_terminal_id then
 					return { cmd = { "herdr", "terminal", "attach", self.herdr_terminal_id } }
 				end
-				return nil
+			end
+
+			function Herdr:init()
+				self.is_running = function(s)
+					return s.herdr_pane_id and herdr_json({ "pane", "get", s.herdr_pane_id }) ~= nil
+				end
+			end
+
+			function Herdr:start()
+				local Util = require("sidekick.util")
+				local r = herdr_json({ "workspace", "create", "--cwd", self.cwd, "--label", self.tool.name, "--no-focus" })
+				if not (r and r.result and r.result.root_pane) then
+					Util.error("herdr: failed to create workspace")
+					return nil
+				end
+
+				local pid = r.result.root_pane.pane_id
+				self.id = pid
+				self.herdr_pane_id = pid
+				self.mux_session = r.result.workspace.workspace_id
+				self.started = true
+				self.mux_backend = "herdr"
+
+				local cmd = table.concat(vim.tbl_map(vim.fn.shellescape, self.tool.cmd), " ")
+				herdr_json({ "pane", "run", pid, cmd })
+
+				local pi = herdr_json({ "pane", "get", pid })
+				if pi and pi.result then self.herdr_terminal_id = pi.result.terminal_id end
+
+				Util.info(("Started **%s** in herdr workspace"):format(self.tool.name))
+				return attach_cmd(self)
 			end
 
 			function Herdr:attach()
-				if not self.herdr_terminal_id then return nil end
-				return { cmd = { "herdr", "terminal", "attach", self.herdr_terminal_id } }
+				return attach_cmd(self)
 			end
+
 			function Herdr:send(text)
-				if not self.herdr_pane_id then
-					return
+				if self.herdr_pane_id then
+					vim.fn.system({ "herdr", "pane", "send-text", self.herdr_pane_id, text })
 				end
-				vim.fn.system { "herdr", "pane", "send-text", self.herdr_pane_id, text }
 			end
 
 			function Herdr:submit()
-				if not self.herdr_pane_id then
-					return
+				if self.herdr_pane_id then
+					vim.fn.system({ "herdr", "pane", "send-keys", self.herdr_pane_id, "enter" })
 				end
-				vim.fn.system { "herdr", "pane", "send-keys", self.herdr_pane_id, "enter" }
 			end
-			function Herdr.sessions()
-				local Config = require("sidekick.config")
-				local Util = require("sidekick.util")
-				local tools = Config.tools()
 
-				local result = herdr_json({ "pane", "list" })
-				if not result or not result.result or not result.result.panes then
-					return {}
-				end
+			function Herdr.sessions()
+				local tools = require("sidekick.config").tools()
+				local r = herdr_json({ "pane", "list" })
+				if not (r and r.result and r.result.panes) then return {} end
 
 				local ret = {}
 				local Procs = require("sidekick.cli.procs")
 				local procs = Procs.new()
 
-				for _, pane in ipairs(result.result.panes) do
-					local info = herdr_json({ "pane", "process-info", "--pane", pane.pane_id })
-					if not info or not info.result or not info.result.process_info then
-						goto continue
-					end
-					local pi = info.result.process_info
-
-					-- Use the first foreground process PID, falling back to shell PID
-					local pid = pi.shell_pid
-					if pi.foreground_processes and #pi.foreground_processes > 0 then
-						pid = pi.foreground_processes[1].pid
-					end
-					if not pid then goto continue end
-
-					local proc_cwd = pi.foreground_processes
-						and pi.foreground_processes[1]
-						and pi.foreground_processes[1].cwd
-					local cwd = proc_cwd or pane.cwd or vim.fn.getcwd()
-
-					procs:walk(pid, function(proc)
-						for _, tool in pairs(tools) do
-							if tool:is_proc(proc) then
-								ret[#ret + 1] = {
-									id = pane.pane_id,
-									cwd = cwd,
-									tool = tool,
-									herdr_pane_id = pane.pane_id,
-									herdr_terminal_id = pane.terminal_id,
-									mux_session = pane.workspace_id,
-									pids = Procs.pids(pid),
-								}
-								return true
-							end
+				for _, pane in ipairs(r.result.panes) do
+					local pi = herdr_json({ "pane", "process-info", "--pane", pane.pane_id })
+					if pi and pi.result and pi.result.process_info then
+						local info = pi.result.process_info
+						local pid = (info.foreground_processes and info.foreground_processes[1] and info.foreground_processes[1].pid)
+							or info.shell_pid
+						if pid then
+							local cwd = (info.foreground_processes and info.foreground_processes[1] and info.foreground_processes[1].cwd)
+								or pane.cwd
+							procs:walk(pid, function(proc)
+								for _, tool in pairs(tools) do
+									if tool:is_proc(proc) then
+										ret[#ret + 1] = {
+											id = pane.pane_id,
+											cwd = cwd,
+											tool = tool,
+											herdr_pane_id = pane.pane_id,
+											herdr_terminal_id = pane.terminal_id,
+											mux_session = pane.workspace_id,
+											pids = Procs.pids(pid),
+										}
+										return true
+									end
+								end
+							end)
 						end
-					end)
-					::continue::
+					end
 				end
 
 				return ret
 			end
 
-			-- Register before session.setup() runs (it's lazy, called on first use).
-			-- session.register() sets the correct metatable chain.
 			if vim.fn.executable("herdr") == 1 then
 				local ok, session = pcall(require, "sidekick.cli.session")
-				if ok then
-					session.register("herdr", Herdr)
-				end
+				if ok then session.register("herdr", Herdr) end
 			end
 
 			require("sidekick").setup(opts)
 		end,
+
 		keys = {
 			{
 				"<c-;>",
