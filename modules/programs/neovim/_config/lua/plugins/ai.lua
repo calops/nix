@@ -155,11 +155,17 @@ return {
 				if ok then session.register("herdr", Herdr) end
 			end
 
-			-- Suppress "Invalid value for cli.mux.backend: herdr" validation error
-			local _error = require("sidekick.util").error
-			require("sidekick.util").error = function() end
+			-- Add "herdr" to the allowed mux.backend values during validation
+			local config = require("sidekick.config")
+			local _validate = config.validate
+			config.validate = function(key, t)
+				if key == "cli.mux.backend" then
+					t = vim.list_extend(vim.deepcopy(t), { "herdr" })
+				end
+				return _validate(key, t)
+			end
 			require("sidekick").setup(opts)
-			require("sidekick.util").error = _error
+			config.validate = _validate
 		end,
 
 		keys = {
