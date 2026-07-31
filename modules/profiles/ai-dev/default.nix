@@ -15,6 +15,7 @@ in
     den.aspects.programs._.pi
     den.aspects.programs._.oh-my-pi
     den.aspects.ai-dev._.skills
+    den.aspects.programs._.herdr
   ];
 
   nix.extra-substituters = [ "https://cache.numtide.com" ];
