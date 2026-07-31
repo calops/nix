@@ -67,19 +67,20 @@ return {
 				if vim.env.HERDR_PANE_ID then
 					self.external = true
 				end
+				-- Instance-level assignment: sidesteps metatable resolution issues
+				self.is_running = function(s)
+					if not s.herdr_pane_id then return false end
+					return herdr_json({ "pane", "get", s.herdr_pane_id }) ~= nil
+				end
 			end
-
 			function Herdr:start()
 				local Util = require("sidekick.util")
-				local result = herdr_json {
-					"workspace",
-					"create",
-					"--cwd",
-					self.cwd,
-					"--label",
-					self.tool.name,
+				local result = herdr_json({
+					"workspace", "create",
+					"--cwd", self.cwd,
+					"--label", self.tool.name,
 					"--no-focus",
-				}
+				})
 				if not result or not result.result or not result.result.root_pane then
 					Util.error("herdr: failed to create workspace for " .. self.tool.name)
 					return nil
@@ -94,7 +95,7 @@ return {
 					parts[#parts + 1] = vim.fn.shellescape(a)
 				end
 				local cmd_str = table.concat(parts, " ")
-				herdr_json { "pane", "run", pane_id, cmd_str }
+				herdr_json({ "pane", "run", pane_id, cmd_str })
 
 				self.id = pane_id
 				self.herdr_pane_id = pane_id
