@@ -18,7 +18,9 @@
             theme.name = "terminal";
             ui.toast.delivery = "system";
             ui.sound.enabled = true;
+            ui.pane_borders = true;
             ui.pane_gaps = false;
+            ui.hide_tab_bar_when_single_tab = true;
 
             keys.prefix = "ctrl+b";
             keys.help = "prefix+?";
