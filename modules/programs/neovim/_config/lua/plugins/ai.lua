@@ -155,7 +155,11 @@ return {
 				if ok then session.register("herdr", Herdr) end
 			end
 
+			-- Suppress "Invalid value for cli.mux.backend: herdr" validation error
+			local _error = require("sidekick.util").error
+			require("sidekick.util").error = function() end
 			require("sidekick").setup(opts)
+			require("sidekick.util").error = _error
 		end,
 
 		keys = {
