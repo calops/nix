@@ -165,6 +165,17 @@ return {
 				win = {
 					layout = "float",
 					float = { border = "rounded" },
+					keys = {
+						shift_enter = {
+							"<S-CR>",
+							function(terminal)
+								-- Send kitty keyboard protocol shift+enter directly to the job
+								vim.api.nvim_chan_send(terminal.job, "\27[13;2u")
+							end,
+							mode = "t",
+							desc = "send shift+enter to terminal",
+						},
+					},
 				},
 				mux = {
 					backend = "herdr",
