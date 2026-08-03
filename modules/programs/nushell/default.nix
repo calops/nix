@@ -27,7 +27,7 @@
           };
 
           xdg.configFile."nushell/config".source =
-            config.lib.file.mkOutOfStoreSymlink "${host.configDir}/modules/home/programs/nushell/_config";
+            config.lib.file.mkOutOfStoreSymlink "${config.home.configDir}/modules/home/programs/nushell/_config";
 
           home.packages = [
             pkgs.oh-my-posh

@@ -44,6 +44,20 @@
     den.aspects.programs._.fzf
     den.aspects.programs._.git
     den.aspects.programs._.linear
+    den.aspects.fonts
+
+    {
+      homeManager =
+        { config, lib, ... }:
+        {
+          options.home.configDir = lib.mkOption {
+            type = lib.types.str;
+            default = "${config.home.homeDirectory}/nix";
+            description = "Path to the user-managed Nix configuration checkout.";
+          };
+        };
+    }
+
     den.aspects.programs._.neovim
     den.aspects.programs._.nh
     den.aspects.programs._.nushell

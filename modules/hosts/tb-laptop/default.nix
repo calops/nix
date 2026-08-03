@@ -2,7 +2,6 @@
 {
   den.hosts.x86_64-linux.tb-laptop = {
     users.calops = { };
-    configDir = "/home/calops/nix/";
   };
 
   den.aspects.tb-laptop = {

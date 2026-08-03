@@ -7,7 +7,6 @@
 
   den.hosts.x86_64-linux.tocardstation = {
     users.calops = { };
-    configDir = "/home/calops/nix/";
     alternateKeyboardLayout = "us";
   };
 

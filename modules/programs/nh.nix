@@ -8,16 +8,18 @@
         flake = host.configDir;
       };
 
-      homeManager = {
-        programs.nh = {
-          enable = true;
-          flake = host.configDir;
-        };
+      homeManager =
+        { config, ... }:
+        {
+          programs.nh = {
+            enable = true;
+            flake = config.home.configDir;
+          };
 
-        home.sessionVariables = {
-          NH_NO_CHECKS = "1";
+          home.sessionVariables = {
+            NH_NO_CHECKS = "1";
+          };
         };
-      };
 
       darwin =
         { pkgs, ... }:

@@ -11,8 +11,8 @@
         ...
       }:
       let
-        ompConfig = "${host.configDir}/modules/programs/oh-my-pi/config/config.yml";
-        ompExtensionsDir = "${host.configDir}/modules/programs/oh-my-pi/extensions";
+        ompConfig = "${config.home.configDir}/modules/programs/oh-my-pi/config/config.yml";
+        ompExtensionsDir = "${config.home.configDir}/modules/programs/oh-my-pi/extensions";
       in
       {
         home.packages = [
@@ -20,15 +20,15 @@
             name = "omp";
             runtimeInputs = [ pkgs.python3 ];
             text = ''
-            # XDG-compatible OMP agent directory
-            export PI_CODING_AGENT_DIR="${config.xdg.configHome}/omp/agent"
+              # XDG-compatible OMP agent directory
+              export PI_CODING_AGENT_DIR="${config.xdg.configHome}/omp/agent"
 
-            # API credentials from 1Password
-            eval "$(${lib.getExe self'.packages.op-credential} "Gemini API" GEMINI_API_KEY)"
-            eval "$(${lib.getExe self'.packages.op-credential} "OpenCode GO" OPENCODE_API_KEY)"
-            eval "$(${lib.getExe self'.packages.op-credential} "z.ai API key" ZAI_API_KEY)"
+              # API credentials from 1Password
+              eval "$(${lib.getExe self'.packages.op-credential} "Gemini API" GEMINI_API_KEY)"
+              eval "$(${lib.getExe self'.packages.op-credential} "OpenCode GO" OPENCODE_API_KEY)"
+              eval "$(${lib.getExe self'.packages.op-credential} "z.ai API key" ZAI_API_KEY)"
 
-            exec ${lib.getExe inputs'.llm-agents.packages.omp} "$@"
+              exec ${lib.getExe inputs'.llm-agents.packages.omp} "$@"
             '';
           })
         ];

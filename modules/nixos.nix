@@ -1,4 +1,4 @@
-{ ... }:
+{ lib, ... }:
 {
   flake-file.inputs = {
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -7,7 +7,12 @@
   den.schema.host.includes = [
     {
       nixos =
-        { pkgs, ... }:
+        {
+          pkgs,
+          host,
+          config,
+          ...
+        }:
         {
           config = {
             # Settings
@@ -19,6 +24,35 @@
             security.polkit.enable = true;
             home-manager.backupFileExtension = "hm-backup";
             networking.networkmanager.enable = true;
+
+            system.activationScripts.nixosConfigDir = {
+              text =
+                let
+                  path = lib.escapeShellArg host.configDir;
+                  target = lib.escapeShellArg "${config.users.users.calops.home}/nix";
+                in
+                ''
+                  path=${path}
+                  target=${target}
+
+                  if [ ! -d "$target" ]; then
+                    echo "Nix configuration checkout is missing: $target" >&2
+                    exit 1
+                  fi
+
+                  if [ -L "$path" ]; then
+                    if [ "$(readlink "$path")" != "$target" ]; then
+                      echo "$path links to a different checkout: $(readlink "$path")" >&2
+                      exit 1
+                    fi
+                  elif [ -e "$path" ]; then
+                    echo "Refusing to replace existing non-symlink path: $path" >&2
+                    exit 1
+                  else
+                    ln -s "$target" "$path"
+                  fi
+                '';
+            };
 
             i18n = {
               defaultLocale = "en_US.UTF-8";

@@ -23,7 +23,7 @@
           ...
         }:
         let
-          nvimDir = "${host.configDir}/modules/programs/neovim";
+          nvimDir = "${config.home.configDir}/modules/programs/neovim";
 
           rustToolchain = inputs'.fenix.packages.complete.withComponents [
             "cargo"
@@ -100,9 +100,9 @@
             "nvim".source = config.lib.file.mkOutOfStoreSymlink "${nvimDir}/_config";
           };
 
-          home.file."${host.configDir}/.nvim.lua".text =
+          home.file."${config.home.configDir}/.nvim.lua".text =
             let
-              flake = ''builtins.getFlake "${host.configDir}"'';
+              flake = ''builtins.getFlake "${config.home.configDir}"'';
             in
             ''
               vim.g.lazydev_enabled = true

@@ -43,10 +43,9 @@
     }
   ];
 
-  den.schema.host = {
-    options.configDir = lib.mkOption {
-      type = lib.types.str;
-    };
+  den.schema.host.options.configDir = lib.mkOption {
+    type = lib.types.str;
+    default = "/etc/nixos";
   };
 
   den.schema.user = {

@@ -55,7 +55,7 @@
 
           xdg.configFile."quickshell".source =
             if config.programs.quickshell.localDev.enable then
-              config.lib.file.mkOutOfStoreSymlink "${host.configDir}/modules/programs/quickshell/_config"
+              config.lib.file.mkOutOfStoreSymlink "${config.home.configDir}/modules/programs/quickshell/_config"
             else
               ./_config;
         };
