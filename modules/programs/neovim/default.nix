@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ ... }:
 {
   flake-file.inputs = {
     fenix.url = "github:nix-community/fenix";
@@ -12,7 +12,7 @@
   };
 
   den.aspects.programs.provides.neovim =
-    { host, ... }:
+    { ... }:
     {
       homeManager =
         {
