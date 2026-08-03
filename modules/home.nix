@@ -69,6 +69,7 @@
     {
       homeManager =
         {
+          config,
           pkgs,
           lib,
           ...
@@ -82,6 +83,7 @@
           programs.dircolors.enable = true;
 
           home.packages = [
+            config.nix.package
             pkgs.jq
             pkgs.megacmd
             pkgs.ast-grep
