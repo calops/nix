@@ -6,27 +6,28 @@
 let
   homeSettings = [
     { homeManager.nixpkgs.config.allowUnfree = true; }
-    (
-      { user, ... }:
-      {
-        homeManager.nix.settings = {
-          allowed-users = [ user.userName ];
+    {
+      homeManager =
+        { config, ... }:
+        {
+          nix.settings = {
+            allowed-users = [ config.home.username ];
 
-          extra-experimental-features = [
-            "flakes"
-            "nix-command"
-            "pipe-operators"
-          ];
+            extra-experimental-features = [
+              "flakes"
+              "nix-command"
+              "pipe-operators"
+            ];
 
-          trusted-users = [
-            "root"
-            "@wheel"
-            "@sudo"
-            "@admin"
-          ];
+            trusted-users = [
+              "root"
+              "@wheel"
+              "@sudo"
+              "@admin"
+            ];
+          };
         };
-      }
-    )
+    }
   ];
 in
 {
@@ -65,7 +66,8 @@ in
   den.schema.user.includes = homeSettings;
   den.schema.home.includes = [
     den.aspects.nixForwardHM
-  ] ++ homeSettings;
+  ]
+  ++ homeSettings;
 
   den.schema.host.includes = [
     den.aspects.nixForwardNixos
