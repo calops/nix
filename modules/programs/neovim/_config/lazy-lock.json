@@ -27,7 +27,6 @@
   "mini.icons": { "branch": "main", "commit": "98faae31e9be1cc054ae63485e58ceb185efcad0" },
   "mini.move": { "branch": "main", "commit": "48fcaac289a19b8eff2fd5fe203267d478a8abdc" },
   "mini.operators": { "branch": "main", "commit": "f94f9184155c7f7f9a8fb069be2a97ce8a48c97f" },
-  "minuet-ai.nvim": { "branch": "main", "commit": "14c7fdae6421d32b4ae5cb681bd87bb8c148d40b" },
   "modes.nvim": { "branch": "main", "commit": "2badf8771dbb2d1e1066fd6a5dddaad2fc836e72" },
   "neotest": { "branch": "master", "commit": "1c529a1ef9c82e8131e872368415cecc2bb86ea2" },
   "neotest-python": { "branch": "master", "commit": "1b56ca4ba51c6014f986d6548ee629bdc95589d1" },
