@@ -36,7 +36,6 @@ in
         agentPkgs.antigravity-cli
         agentPkgs.cursor-agent
         agentPkgs.codex
-        agentPkgs.rtk
         agentPkgs.spec-kit
         agentPkgs.reasonix
       ];

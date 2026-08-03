@@ -26,17 +26,7 @@ in
           settings = {
             permissions.defaultMode = "auto";
             tui = "fullscreen";
-            hooks.PreToolUse = [
-              {
-                matcher = "Bash";
-                hooks = [
-                  {
-                    type = "command";
-                    command = "${lib.getExe pkgs.rtk} hook claude";
-                  }
-                ];
-              }
-            ];
+            hooks = { };
             enabledPlugins = {
               "superpowers@claude-plugins-official" = true;
             };
