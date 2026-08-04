@@ -15,6 +15,7 @@
       den.aspects.desktop
       den.aspects.gaming
       den.aspects.ai-dev
+      den.aspects.stickers
       den.aspects.hardware._.nuphy
       den.aspects.hardware._.logitech
       den.aspects.hardware._.nvidia
