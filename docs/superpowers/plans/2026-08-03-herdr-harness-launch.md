@@ -10,6 +10,13 @@
 
 **Spec:** `docs/superpowers/specs/2026-08-03-herdr-harness-launch-design.md`
 
+> **Implemented 2026-08-03 (branch `feat/herdr-harness-launch`).** Execution
+> deviated from the code below: Task 1 uses per-file `xdg.configFile` entries
+> (no `symlinkJoin` — pure eval forbids store-importing the checkout); Task 2
+> adds `ws_existed` retry gating, strict name sanitization, per-project `flock`,
+> `jq first() // empty`, explicit start-failure exits, `--takeover` after the
+> attach target, and in-branch credential loading. The spec is authoritative.
+
 **Commits:** per repo rule (CLAUDE.md), do NOT commit unless the user explicitly asks. Verification is build + store inspection + the manual acceptance checklist.
 
 ---

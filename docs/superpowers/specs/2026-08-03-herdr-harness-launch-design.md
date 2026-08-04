@@ -75,40 +75,64 @@ ensure server:
     poll herdr status server until running (bounded)
 
 project = git root inside a repo, else $PWD
-name    = sanitize(basename(project))
+name    = sanitize(basename(project))   # lowercase, non [a-z0-9_-] → '-',
+                                       # strip leading non-[a-z], cap ≤29,
+                                       # strip trailing dashes, fallback "omp"
+
+flock 9 >> state/omp-$name.lock        # serialize concurrent launches
 
 ws = workspace list | select label == name
+     AND root pane cwd == project   # via pane get .result.pane.cwd — same-basename repos stay separate
 
 if ws exists and not --new and ws has a live omp agent (agent list, kind omp in ws):
-    agent attach <that agent>           # idempotent re-entry
+    agent attach <that agent> --takeover    # idempotent re-entry (takeover: herdr rejects a second attach client otherwise)
     exit
 
+ws_existed = (ws exists)
 if ws missing:
     created = workspace create --cwd "$project" --label "$name" --no-focus
     pane    = created.root_pane.pane_id
 else:
-    pane    = root pane of ws             # pane list | select workspace_id == ws | first
+    pane    = root pane of ws           # pane list | select workspace_id == ws | first
 
-agent start "$name" --kind omp --pane "$pane" --timeout 60000 -- "$@"
-if start failed and ws existed:          # root pane not at a shell prompt
+agent start "$name" --kind omp --pane "$pane" --timeout 60000 -- "$@"   # retries agent_pane_busy
+                                                                          # (fresh-pane shell boot race) up to 15s
+if start failed and ws_existed:        # root pane not at a shell prompt
     tab = tab create --workspace "$ws" --cwd "$project" --no-focus
     agent start "$name" --kind omp --pane "$tab.root_pane.pane_id" --timeout 60000 -- "$@"
-agent attach "$name"                     # transparent view; ctrl+b q detaches
+    (failure here exits 1)
+else if start failed:
+    exit 1                              # never attach blindly
+agent attach "$name" --takeover          # transparent view; ctrl+b q detaches
 ```
 
 Notes:
 
+- The lock (`exec 9>>…/omp-$name.lock; flock 9`, acquired after name
+  sanitization) prevents two simultaneous `omp` invocations in the same
+  project from racing the lookup/create/start sequence. The lock is RELEASED
+  (fd 9 closed) before each `agent attach` exec, so a second terminal can
+  re-attach with `--takeover` while the first is still attached. The
+  `--no-herdr`/`HERDR_ENV` direct-exec paths return before the lock; `mkdir -p
+  state_dir` runs unconditionally (the server may already be running with a
+  different state dir).
+- `herdr agent attach` takes the target FIRST (`attach <target> --takeover`);
+  the flag is not accepted before the target.
 - The "root pane reuse" branch degrades gracefully: `agent start` fails with a
   clear error (exit 1) when the pane is not at a shell prompt; the wrapper then
   creates a fresh tab and retries. This keeps the state machine from needing
   process introspection. Existing workspace root panes are resolved via
   `herdr pane list` (records carry `workspace_id`; no pane ids in
-  `workspace get`/`tab list`).
+  `workspace get`/`tab list`). Lookups use jq `first(...) // empty` — never
+  `jq | head -1` (SIGPIPE under `set -o pipefail`).
+- Every `agent start` failure exits 1 with a message (mentioning
+  `omp --no-herdr`); `agent attach` runs only after a confirmed start.
 - `agent start` runs the nix `omp` wrapper inside the pane, so
   `PI_CODING_AGENT_DIR` and the 1Password credential evals happen in-pane at
   launch. API keys never enter herdr session state.
-- Agent name collision (two dirs with the same basename): append `-2`, `-3`.
-  Workspace labels do not need uniqueness but follow the same scheme.
+- Agent name collision (two dirs with the same basename): append `-2`, `-3`,
+  truncating the base so the total stays ≤32 chars (herdr grammar
+  `[a-z][a-z0-9_-]{0,31}`). Workspace labels need no uniqueness.
 
 ## Module changes
 
@@ -126,34 +150,45 @@ Notes:
    '';
    ```
 
-   The extracted file is merged into the store-backed extensions dir with
-   `symlinkJoin` (a nested `xdg.configFile` entry under the already-managed
-   `extensions/` symlink is impossible — home-manager cannot write through a
-   store symlink):
+   The extracted file lands beside the repo-managed extensions via PER-FILE
+   `xdg.configFile` entries. A dir-level `symlinkJoin` merge was rejected:
+   joining the out-of-store checkout dir requires importing it into the nix
+   store, which pure evaluation forbids (`builtins.path` on the checkout
+   errors; den exposes neither `inputs'.self` nor `self'.outPath`). Per-file
+   entries keep the repo files as activation-time symlinks (as before) and add
+   the generated file as a store source:
 
    ```nix
-   ompExtensionsDir = pkgs.symlinkJoin {
-     name = "omp-agent-extensions";
-     paths = [
-       "${host.configDir}/modules/programs/oh-my-pi/extensions"
-       herdrOmpStateExt
-     ];
-   };
-
-   xdg.configFile."omp/agent/extensions".source = ompExtensionsDir;
+   "omp/agent/extensions/self-review.ts".source =
+     config.lib.file.mkOutOfStoreSymlink "${ompExtensionsSrc}/self-review.ts";
+   "omp/agent/extensions/herdr-omp-agent-state.ts".source = herdrOmpStateExt;
    ```
 
-   The dir stays store-backed (as today); the file is read by the agent at
-   runtime, never written, so immutability is fine. `herdr integration status`
-   reports `current (v6)`. Version stays in sync with the flake-locked herdr
-   automatically.
+   (`ompExtensionsSrc` = "${config.home.configDir}/modules/programs/oh-my-pi/extensions".
+   Add a matching entry for each new repo-managed extension.) The dir is
+   managed by home-manager as a real directory of symlinks; the herdr file is
+   read by the agent at runtime, never written, so store immutability is fine.
+   `herdr integration status` reports `current (v6)`. Version stays in sync
+   with the flake-locked herdr automatically.
+
+   Transition migration: the previous config had a dir-LEVEL `extensions`
+   entry (symlink to the checkout). On the first switch, home-manager retains
+   the old dir symlink (the path still exists in the new gen) and would link
+   the per-file children through it into the checkout. A pre-linkGeneration
+   activation entry removes the stale symlink once:
+
+   ```nix
+   home.activation.removeOmpExtensionsDirSymlink = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
+     if [[ -L "${config.xdg.configHome}/omp/agent/extensions" ]]; then
+       rm "${config.xdg.configHome}/omp/agent/extensions"
+     fi
+   '';
+   ```
 
    Risk (mitigated): `herdr integration install` must work in the nix sandbox
-   (no herdr server, no `$HOME` config). The command writes a bundled asset
-   locally and was observed to need only `PI_CODING_AGENT_DIR`; verify in the
-   sandbox during implementation. Fallback if sandbox breaks: extract the
-   embedded bytes from the binary with `strings`/asset extraction at build
-   time.
+   (no herdr server, no `$HOME` config). Verified: the runCommand sets
+   `HOME="$TMPDIR/home"` and a scratch `PI_CODING_AGENT_DIR`; the derivation
+   realizes in the sandbox (targeted `nix build` exit 0).
 
 2. **Wrapper** — the launcher flow above, replacing the direct `exec omp`.
 
@@ -168,7 +203,7 @@ Notes:
 |---------|----------|
 | Server down | Spawn `herdr server` detached (`nohup`/`setsid`, log to `~/.local/state/herdr/`), poll `herdr status server` up to ~15 s, then fail with instructions. |
 | `workspace create` / `tab create` error | Print the herdr JSON error, exit 1. |
-| `agent start` timeout / pane not at prompt | Retry once in a fresh tab; if still failing, print the error and exit 1 (no fallback to direct exec — except via `--no-herdr`). |
+| `agent start` timeout / pane not at prompt | Retry on `agent_pane_busy` (pane shell still booting) with 1s backoff up to 15s; then retry once in a fresh tab (only when the workspace pre-existed); on any remaining failure print the error and exit 1 (no fallback to direct exec — except via `--no-herdr`). |
 | Agent-name collision | Append `-2`, `-3`, … until free (checked against `agent list`). |
 | Two terminals attach simultaneously | Second attach uses `--takeover` (input ownership); both can view. |
 | `omp` invoked inside herdr | `HERDR_ENV=1` → plain exec, current behavior. |
@@ -194,3 +229,53 @@ Notes:
 - pi and other harness kinds (same pattern later; `--kind` is the only diff).
 - Remote herdr servers (`herdr --remote`); the wrapper targets the local
   default session.
+
+---
+
+# herdr-run: harness-agnostic launcher (2026-08-03, approved)
+
+Generalizes the omp launcher to every herdr-supported harness kind. Lives in
+`modules/programs/herdr.nix`; the harness binaries (`omp`, `claude`, …) are
+NOT overridden — they keep their direct-exec behavior.
+
+## Command
+
+```
+herdr-run <kind> [--new] [--dir <path>] [--timeout <ms>] [-- <harness-args>…]
+```
+
+- `<kind>` validated against herdr's supported kinds (pi claude codex gemini
+  cursor devin agy cline omp mastracode opencode copilot kimi kiro droid amp
+  grok hermes kilo qodercli maki) — clear error otherwise.
+- `--new` forces a fresh agent for this kind (re-entry attaches otherwise).
+- `--dir` overrides the project root (default: git root, else `$PWD`).
+- `--timeout` sets the `agent start` readiness timeout (default 60000 ms).
+- Everything after `--` is passed to the harness in the pane.
+- `HERDR_ENV=1` (already inside herdr) → refuse with a hint to run the harness
+  directly.
+
+## Behavior (same state machine as the omp launcher)
+
+ensure server → project identity → name sanitization → per-project `flock` →
+workspace lookup (label == sanitized project basename AND root-pane cwd ==
+project) → re-entry: attach a live agent of `<kind>` in that workspace
+(`--takeover`) unless `--new` → unique agent name `<project>-<kind>`
+(≤32 chars, herdr grammar, numeric suffix with base truncation) → pane
+selection (workspace create root pane / first pane of workspace) →
+`agent start <name> --kind <kind>` with `agent_pane_busy` retry (1s backoff,
+15 attempts) → fresh-tab retry when the workspace pre-existed → attach
+`--takeover`. Lock released before attach. Agent-name allocation (uniqueness
+probe) happens UNDER the lock; `agent_name_taken` at start time (cross-project
+truncation collisions) advances the numeric suffix and retries. Credentials
+are never loaded by the launcher — each harness wrapper loads its own in-pane.
+
+## Module changes
+
+- `herdr.nix`: add `herdr-run` (writeShellApplication; runtimeInputs herdr, jq,
+  git). `programs.herdr` settings unchanged.
+- `oh-my-pi/default.nix`: the `omp` wrapper REVERTS to the plain direct-exec
+  form (PI_CODING_AGENT_DIR + 1Password evals + `exec omp`). The launcher
+  logic leaves this module. KEPT: `herdrOmpStateExt` build-time extraction,
+  per-file `xdg.configFile` entries, activation migration.
+- `claude-code.nix`: unchanged (claude is on PATH via `programs.claude-code`;
+  `agent start --kind claude` runs it; integration not required to launch).
