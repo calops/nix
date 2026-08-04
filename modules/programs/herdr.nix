@@ -111,6 +111,32 @@
               log_file="''${state_dir}/herdr-run-server.log"
               kinds="pi claude codex gemini cursor devin agy cline omp mastracode opencode copilot kimi kiro droid amp grok hermes kilo qodercli maki"
 
+              # --- helpers ---
+              # herdr CLI, hiding stderr for read-only queries (mutations stay raw so errors surface)
+              hr() { "$herdr_bin" "$@" 2>/dev/null; }
+
+              # lowercase, non [a-z0-9_-] → '-', strip leading non-[a-z], cap, strip trailing dashes
+              sanitize() {
+                local s="$1" cap="$2"
+                s="$(printf '%s' "$s" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9_-' '-')"
+                [[ "$s" =~ ^[^a-z]+(.*)$ ]] && s="''${BASH_REMATCH[1]}"
+                s="''${s:0:$cap}"
+                while [[ "$s" == *- ]]; do s="''${s%-}"; done
+                printf '%s' "$s"
+              }
+
+              server_up() { hr status server | grep -q "^status: running"; }
+
+              # first pane of a workspace
+              ws_pane() { hr pane list | jq -r --arg w "$1" 'first(.result.panes[] | select(.workspace_id == $w) | .pane_id) // empty'; }
+
+              # release the project lock and hand the terminal to the agent
+              attach() {
+                flock -u 9 2>/dev/null || true
+                exec 9>&-
+                exec "$herdr_bin" agent attach "$1" --takeover
+              }
+
               # --- argument parsing ---
               kind=""
               force_new=0
@@ -121,8 +147,7 @@
                 case "$1" in
                   --new) force_new=1; shift ;;
                   --dir)
-                    [[ $# -ge 2 ]] || { echo "herdr-run: --dir requires a path" >&2; exit 2; }
-                    [[ -n "$2" ]] || { echo "herdr-run: --dir requires a non-empty path" >&2; exit 2; }
+                    [[ $# -ge 2 && -n "$2" ]] || { echo "herdr-run: --dir requires a non-empty path" >&2; exit 2; }
                     dir_override="$2"; shift 2 ;;
                   --timeout)
                     [[ $# -ge 2 ]] || { echo "herdr-run: --timeout requires a value in ms" >&2; exit 2; }
@@ -130,28 +155,13 @@
                   --) shift; harness_args=("$@"); break ;;
                   -*) echo "herdr-run: unknown option: $1" >&2; exit 2 ;;
                   *)
-                    if [[ -n "$kind" ]]; then
-                      echo "herdr-run: unexpected extra argument: $1" >&2
-                      exit 2
-                    fi
+                    [[ -z "$kind" ]] || { echo "herdr-run: unexpected extra argument: $1" >&2; exit 2; }
                     kind="$1"; shift ;;
                 esac
               done
 
-              if [[ -z "$kind" ]]; then
-                echo "herdr-run: missing <kind>; one of: $kinds" >&2
-                exit 2
-              fi
-              if [[ " $kinds " != *" $kind "* ]]; then
-                echo "herdr-run: unsupported kind '$kind'; one of: $kinds" >&2
-                exit 2
-              fi
-
-              if ! [[ "$timeout_ms" =~ ^[0-9]+$ ]] || (( timeout_ms <= 3000 || timeout_ms > 300000 )); then
-                echo "herdr-run: --timeout must be an integer in 3001..300000" >&2
-                exit 2
-              fi
-
+              [[ -n "$kind" && " $kinds " == *" $kind "* ]] || { echo "herdr-run: kind must be one of: $kinds" >&2; exit 2; }
+              [[ "$timeout_ms" =~ ^[0-9]+$ && $timeout_ms -gt 3000 && $timeout_ms -le 300000 ]] || { echo "herdr-run: --timeout must be an integer in 3001..300000" >&2; exit 2; }
               if [[ "''${HERDR_ENV:-}" == "1" ]]; then
                 echo "herdr-run: you are already inside herdr; run '$kind' directly in this pane" >&2
                 exit 1
@@ -163,105 +173,88 @@
               else
                 project="$(git rev-parse --show-toplevel 2>/dev/null || printf '%s' "$PWD")"
               fi
-              name="$(basename "$project" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9_-' '-')"
-              [[ "$name" =~ ^[^a-z]+(.*)$ ]] && name="''${BASH_REMATCH[1]}"
-              name="''${name:0:28}"
-              while [[ "$name" == *- ]]; do name="''${name%-}"; done
+              name="$(sanitize "$(basename "$project")" 28)"
               [[ -n "$name" ]] || name="harness"
 
               # --- ensure herdr server (lazy, in-wrapper) ---
               mkdir -p "$state_dir"
-              server_up() { "$herdr_bin" status server 2>/dev/null | grep -q "^status: running"; }
               if ! server_up; then
                 nohup "$herdr_bin" server >>"$log_file" 2>&1 &
                 for ((attempt = 0; attempt < 30; attempt++)); do
                   sleep 0.5
-                  server_up && break
+                  if server_up; then break; fi
                 done
-              fi
-              if ! server_up; then
-                echo "herdr-run: herdr server did not start within 15s (log: $log_file)" >&2
-                exit 1
+                if ! server_up; then
+                  echo "herdr-run: herdr server did not start within 15s (log: $log_file)" >&2
+                  exit 1
+                fi
               fi
 
               # --- serialize concurrent launches for the same project ---
               exec 9>>"$state_dir/herdr-run-$name.lock"
               flock 9
 
-              # --- unique agent name: <project>-<kind>, ≤32 chars, suffix with base truncation ---
-              proj_part="''${name:0:$((28 - ''${#kind}))}"
-              while [[ "$proj_part" == *- ]]; do proj_part="''${proj_part%-}"; done
+              # --- unique agent name: <project>-<kind>, ≤32 chars, numeric suffix on collision ---
+              proj_part="$(sanitize "$name" $((28 - ''${#kind})))"
               base_name="''${proj_part}-''${kind}"
               base_name="''${base_name:0:29}"
               final_name="$base_name"
               suffix=2
-              while "$herdr_bin" agent get "$final_name" >/dev/null 2>&1; do
+              while hr agent get "$final_name" >/dev/null 2>&1; do
                 final_name="''${base_name:0:$((29 - ''${#suffix}))}-''${suffix}"
                 suffix=$((suffix + 1))
               done
 
               # --- find the project workspace (label AND root-pane cwd) ---
               ws_id=""
-              for wid in $("$herdr_bin" workspace list 2>/dev/null | jq -r --arg l "$name" '.result.workspaces[] | select(.label == $l) | .workspace_id'); do
-                p="$("$herdr_bin" pane list 2>/dev/null | jq -r --arg w "$wid" 'first(.result.panes[] | select(.workspace_id == $w) | .pane_id) // empty')"
+              while read -r wid; do
+                p="$(ws_pane "$wid")"
                 [[ -n "$p" ]] || continue
-                cwd="$("$herdr_bin" pane get "$p" 2>/dev/null | jq -r '.result.pane.cwd // empty')"
+                cwd="$(hr pane get "$p" | jq -r '.result.pane.cwd // empty')"
                 if [[ "$cwd" == "$project" ]]; then
                   ws_id="$wid"
                   break
                 fi
-              done
+              done < <(hr workspace list | jq -r --arg l "$name" '.result.workspaces[] | select(.label == $l) | .workspace_id')
 
               # --- idempotent re-entry: attach a live agent of this kind ---
-              ws_existed=0
-              if [[ -n "$ws_id" ]]; then
-                ws_existed=1
-                if [[ "$force_new" -eq 0 ]]; then
-                  pane="$("$herdr_bin" agent list 2>/dev/null | jq -r --arg w "$ws_id" --arg k "$kind" 'first(.result.agents[] | select(.workspace_id == $w and .agent == $k and (.agent_status == "idle" or .agent_status == "working" or .agent_status == "blocked" or .agent_status == "done")) | .pane_id) // empty')"
-                  if [[ -n "$pane" ]]; then
-                    flock -u 9 2>/dev/null || true
-                    exec 9>&-
-                    exec "$herdr_bin" agent attach "$pane" --takeover
-                  fi
+              ws_existed=$([[ -n "$ws_id" ]] && echo 1 || echo 0)
+              if [[ -n "$ws_id" && "$force_new" -eq 0 ]]; then
+                pane="$(hr agent list | jq -r --arg w "$ws_id" --arg k "$kind" \
+                  'first(.result.agents[] | select(.workspace_id == $w and .agent == $k and (.agent_status == "idle" or .agent_status == "working" or .agent_status == "blocked" or .agent_status == "done")) | .pane_id) // empty')"
+                if [[ -n "$pane" ]]; then
+                  attach "$pane"
                 fi
               fi
 
-              # --- pick the pane ---
               if [[ -z "$ws_id" ]]; then
                 created="$("$herdr_bin" workspace create --cwd "$project" --label "$name" --no-focus)"
                 ws_id="$(printf '%s' "$created" | jq -r '.result.workspace.workspace_id')"
                 pane="$(printf '%s' "$created" | jq -r '.result.root_pane.pane_id')"
               else
-                pane="$("$herdr_bin" pane list 2>/dev/null | jq -r --arg w "$ws_id" 'first(.result.panes[] | select(.workspace_id == $w) | .pane_id) // empty')"
+                pane="$(ws_pane "$ws_id")"
               fi
 
-              # --- start; retry transient agent_pane_busy, then once in a fresh tab when the workspace pre-existed ---
+              # --- start; retry transient busy / name-taken, then once in a fresh tab (pre-existing workspace only) ---
               start_agent() {
                 local pane="$1" attempt out
                 for ((attempt = 0; attempt < 15; attempt++)); do
                   if out="$("$herdr_bin" agent start "$final_name" --kind "$kind" --pane "$pane" --timeout "$timeout_ms" -- "''${harness_args[@]}" 2>&1)"; then
                     return 0
                   fi
-                  if [[ "$out" == *agent_pane_busy* ]]; then
-                    sleep 1
-                    continue
-                  fi
-                  if [[ "$out" == *agent_name_taken* ]]; then
-                    final_name="''${base_name:0:$((29 - ''${#suffix}))}-''${suffix}"
-                    suffix=$((suffix + 1))
-                    continue
-                  fi
-                  printf '%s\n' "$out" >&2
-                  return 1
+                  case "$out" in
+                    *agent_pane_busy*) sleep 1 ;;
+                    *agent_name_taken*) final_name="''${base_name:0:$((29 - ''${#suffix}))}-''${suffix}"; suffix=$((suffix + 1)) ;;
+                    *) printf '%s\n' "$out" >&2; return 1 ;;
+                  esac
                 done
-                echo "herdr-run: pane $pane never became an available shell (15s)" >&2
+                echo "herdr-run: gave up after 15 attempts on pane $pane" >&2
                 return 2
               }
 
-              if start_agent "$pane"; then
-                :
-              else
-                rc=$?
+              rc=0
+              start_agent "$pane" || rc=$?
+              if [[ "$rc" -ne 0 ]]; then
                 if [[ "$rc" -eq 2 && "$ws_existed" -eq 1 ]]; then
                   tab="$("$herdr_bin" tab create --workspace "$ws_id" --cwd "$project" --no-focus)"
                   pane="$(printf '%s' "$tab" | jq -r '.result.root_pane.pane_id')"
@@ -271,9 +264,7 @@
                 fi
               fi
 
-              flock -u 9 2>/dev/null || true
-              exec 9>&-
-              exec "$herdr_bin" agent attach "$final_name" --takeover
+              attach "$final_name"
             '';
           })
         ];
