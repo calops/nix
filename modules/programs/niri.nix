@@ -38,7 +38,6 @@
           package = inputs'.niri.packages.niri-unstable;
         };
 
-        systemd.user.services.niri-flake-polkit.enable = false;
         xdg.portal.xdgOpenUsePortal = false;
       };
 

@@ -35,11 +35,7 @@ mkProfileAspect "stickers" {
       systemd.user.services.rclone-gdrive = {
         Unit = {
           Description = "rclone mount for Google Drive (Stickers)";
-          After = [
-            "graphical-session.target"
-            "network-online.target"
-          ];
-          Requires = [ "network-online.target" ];
+          After = [ "graphical-session.target" ];
         };
 
         Service = {
