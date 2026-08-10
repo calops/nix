@@ -104,17 +104,41 @@
 
         op-credential = pkgs.writeShellApplication {
           name = "op-credential";
-          runtimeInputs = with pkgs; [ coreutils ];
+          runtimeInputs = with pkgs; [
+            coreutils
+            jq
+          ];
           text = ''
             raw_output=false
-            if [ "$1" = "--raw" ] || [ "$1" = "-r" ]; then
-            	raw_output=true
-            	shift
-            fi
+            field=credential
+            while [ $# -gt 0 ]; do
+            	case "$1" in
+            		--raw | -r)
+            			raw_output=true
+            			shift
+            			;;
+            		--field)
+            			if [ $# -lt 2 ]; then
+            				echo "Error: --field requires a field name" >&2
+            				exit 1
+            			fi
+            			field="$2"
+            			shift 2
+            			;;
+            		--field=*)
+            			field="''${1#--field=}"
+            			shift
+            			;;
+            		*)
+            			break
+            			;;
+            	esac
+            done
 
             if [ $# -lt 1 ]; then
-            	echo "Usage: op-credential [-r|--raw] <name> [env-var]" >&2
+            	echo "Usage: op-credential [-r|--raw] [--field <field>] <name> [env-var]" >&2
             	echo "  name:    1Password item name" >&2
+            	echo "  field:   1Password field name (defaults to credential)" >&2
             	echo "  env-var: environment variable to export (defaults to upper-snake-case of name)" >&2
             	exit 1
             fi
@@ -126,20 +150,26 @@
             state_dir="''${XDG_STATE_HOME:-$HOME/.local/state}/op-credentials"
             cache_key=$(echo "$item_name" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
             cache_file="$state_dir/$cache_key"
+            if [ "$field" != credential ]; then
+            	field_cache_key=$(echo "$field" | tr '[:upper:]' '[:lower:]' | tr ' ' '-')
+            	cache_file="$cache_file-$field_cache_key"
+            fi
 
             if [ ! -f "$cache_file" ]; then
-            	echo "Fetching '$item_name' from 1Password..." >&2
+            	echo "Fetching '$field' from '$item_name' in 1Password..." >&2
             	mkdir -p "$state_dir"
             	chmod 700 "$state_dir"
-            	value="$(op signin && op item get "$item_name" --fields credential --reveal 2>/dev/null)"
+            	if ! value="$(op item get "$item_name" --format json --reveal 2>/dev/null | jq -er --arg field "$field" '.fields | map(select(.label == $field)) | if length == 1 then .[0].value else empty end' 2>/dev/null)"; then
+            		echo "Error: failed to fetch '$field' from '$item_name' in 1Password" >&2
+            		exit 1
+            	fi
             	if [ -z "$value" ]; then
-            		echo "Error: failed to fetch '$item_name' from 1Password" >&2
+            		echo "Error: '$field' is empty in '$item_name'" >&2
             		exit 1
             	fi
             	printf '%s' "$value" >"$cache_file"
             	chmod 600 "$cache_file"
             fi
-
             if $raw_output; then
             	cat "$cache_file"
             else

@@ -241,7 +241,7 @@
                 shadow { off; }
               }
               window-rule {
-                match app-id="^1Password$"
+                match app-id="1Password"
                 match app-id="org.kde.polkit-kde-authentication-agent-1"
                 open-floating true
               }

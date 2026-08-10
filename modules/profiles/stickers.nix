@@ -1,8 +1,12 @@
-{ lib, ... }:
+{ den, lib, ... }:
 let
   inherit (import ./_helpers.nix { inherit lib; }) mkProfileAspect;
 in
 mkProfileAspect "stickers" {
+  includes = [
+    den.aspects.programs._.onepassword
+  ];
+
   nixos = {
     programs.fuse.userAllowOther = true;
   };
@@ -17,12 +21,15 @@ mkProfileAspect "stickers" {
       gdrive-mount = pkgs.writeShellScript "rclone-gdrive-mount" ''
         set -euo pipefail
 
-        # Get the GDrive token via op-credential (cached by default, fetches if missing)
-        GDRIVE_TOKEN="$(op-credential --raw "rclone gdrive")"
+        GDRIVE_TOKEN="$(op-credential --raw "Stickers Gdrive API token")"
+        GDRIVE_CLIENT_ID="$(op-credential --raw --field username "Stickers Gdrive API client")"
+        GDRIVE_CLIENT_SECRET="$(op-credential --raw "Stickers Gdrive API client")"
 
         export RCLONE_CONFIG_GDRIVE_TYPE=drive
         export RCLONE_CONFIG_GDRIVE_SCOPE=drive
         export RCLONE_CONFIG_GDRIVE_TOKEN="$GDRIVE_TOKEN"
+        export RCLONE_CONFIG_GDRIVE_CLIENT_ID="$GDRIVE_CLIENT_ID"
+        export RCLONE_CONFIG_GDRIVE_CLIENT_SECRET="$GDRIVE_CLIENT_SECRET"
 
         exec ${lib.getExe pkgs.rclone} mount gdrive:Pictures/Stickers "$HOME/Pictures/Stickers" \
           --vfs-cache-mode writes \
