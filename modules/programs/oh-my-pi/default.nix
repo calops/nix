@@ -1,6 +1,6 @@
 { ... }:
 {
-  den.aspects.programs.provides.oh-my-pi = { host, ... }: {
+  den.aspects.programs.provides.oh-my-pi = { ... }: {
     homeManager =
       {
         pkgs,
@@ -25,9 +25,15 @@
             }
             ''
               export HOME="$TMPDIR/home"
-              mkdir -p "$HOME" "$TMPDIR/scratch"
-              PI_CODING_AGENT_DIR="$TMPDIR/scratch" herdr integration install omp >/dev/null
-              cp "$TMPDIR/scratch/extensions/herdr-omp-agent-state.ts" "$out"
+              # herdr ≥0.8.0 refuses to install the omp integration when Pi and
+              # OMP resolve to the same extensions dir, and PI_CODING_AGENT_DIR
+              # drives both — so leave it unset and point OMP at its own scratch
+              # dir via PI_CONFIG_DIR (extension dir = <PI_CONFIG_DIR>/agent/extensions;
+              # the agent parent dir must pre-exist). Only the file content
+              # matters; the runtime location is managed by xdg.configFile below.
+              mkdir -p "$HOME" "$TMPDIR/omp/agent"
+              PI_CONFIG_DIR="$TMPDIR/omp" herdr integration install omp >/dev/null
+              cp "$TMPDIR/omp/agent/extensions/herdr-omp-agent-state.ts" "$out"
             '';
 
       in

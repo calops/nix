@@ -59,31 +59,7 @@ mkProfileAspect "gaming" {
       home.packages = [
         pkgs.protonup-qt
 
-        # FIXME: upstream openldap is failing so this is needed, remove when fixed
-        (pkgs.lutris.override {
-          # Intercept buildFHSEnv to modify target packages
-          buildFHSEnv =
-            args:
-            pkgs.buildFHSEnv (
-              args
-              // {
-                multiPkgs =
-                  envPkgs:
-                  let
-                    # Fetch original package list
-                    originalPkgs = args.multiPkgs envPkgs;
-
-                    # Disable tests for openldap
-                    customLdap = envPkgs.openldap.overrideAttrs (_: {
-                      doCheck = false;
-                    });
-                  in
-                  # Replace broken openldap with the custom one
-                  builtins.filter (p: (p.pname or "") != "openldap") originalPkgs ++ [ customLdap ];
-              }
-            );
-        })
-
+        pkgs.lutris
         pkgs.steamcmd
         pkgs.steam-run
         pkgs.wineWow64Packages.waylandFull

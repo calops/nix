@@ -45,10 +45,7 @@
     };
     niri = {
       url = "github:sodiboo/niri-flake/";
-      inputs = {
-        niri-unstable.follows = "niri-src";
-        nixpkgs.follows = "nixpkgs";
-      };
+      inputs.niri-unstable.follows = "niri-src";
     };
     niri-src.url = "github:calops/niri";
     nix-darwin = {
@@ -71,10 +68,6 @@
     };
     quickshell = {
       url = "github:calops/quickshell?ref=feat/region-dynamic-items";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    solaar = {
-      url = "github:Svenum/Solaar-Flake/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     stasis = {

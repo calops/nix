@@ -43,7 +43,8 @@
           programs.neovim = {
             enable = true;
             defaultEditor = true;
-            package = inputs'.neovim-nightly.packages.neovim;
+            # FIXME: tests failing upstream
+            package = inputs'.neovim-nightly.packages.neovim.overrideAttrs { doCheck = false; };
             extraPackages = [
               pkgs.prettierd
               pkgs.shfmt

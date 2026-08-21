@@ -185,7 +185,15 @@
         # plugin root on every switch — idempotent, and re-points the registry
         # when a package upgrade changes the store path.
         home.activation.collieSetup = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-          chmod 600 "${config.xdg.configHome}/collie/.env"
+          envFile="${config.xdg.configHome}/collie/.env"
+          # xdg.configFile links into the read-only nix store, so materialize
+          # a regular file before tightening permissions — chmod on the store
+          # symlink fails with EROFS and aborts the whole activation.
+          if [[ -L "$envFile" ]]; then
+            tmp="$envFile.tmp.$$"
+            cp "$envFile" "$tmp" && mv "$tmp" "$envFile"
+          fi
+          chmod 600 "$envFile"
           ${lib.getExe herdr} plugin link ${collie}/lib/collie \
             >/dev/null 2>&1 \
             || echo "collie: herdr plugin link failed" >&2
@@ -206,7 +214,7 @@
               herdr_bin="${lib.getExe inputs'.llm-agents.packages.herdr}"
               state_dir="${config.xdg.stateHome}/herdr"
               log_file="''${state_dir}/herdr-run-server.log"
-              kinds="pi claude codex gemini cursor devin agy cline omp mastracode opencode copilot kimi kiro droid amp grok hermes kilo qodercli maki"
+              kinds="claude gemini cursor omp opencode"
 
               # --- helpers ---
               # herdr CLI, hiding stderr for read-only queries (mutations stay raw so errors surface)
