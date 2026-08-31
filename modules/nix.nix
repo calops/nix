@@ -72,6 +72,10 @@ in
   den.schema.host.includes = [
     den.aspects.nixForwardNixos
     {
+      nixos.nix.settings.trusted-users = [
+        "@wheel"
+        "@sudo"
+      ];
       nixos.nixpkgs.config.allowUnfree = true;
       darwin.nixpkgs.config.allowUnfree = true;
     }

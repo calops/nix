@@ -2,7 +2,7 @@
 {
   flake-file.inputs = {
     omp = {
-      url = "github:can1357/oh-my-pi";
+      url = "github:can1357/oh-my-pi/dd570453966ec791670b8307ec0aee2904c8cc53";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
