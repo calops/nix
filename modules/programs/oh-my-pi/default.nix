@@ -1,5 +1,12 @@
-{ ... }:
+{ inputs, ... }:
 {
+  flake-file.inputs = {
+    omp = {
+      url = "github:can1357/oh-my-pi";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
   den.aspects.programs.provides.oh-my-pi = { ... }: {
     homeManager =
       {
@@ -12,12 +19,24 @@
       }:
       let
         herdrPackage = inputs'.llm-agents.packages.herdr;
-        ompConfig = "${config.home.configDir}/modules/programs/oh-my-pi/config/config.yml";
+        ompPackage = inputs'.omp.packages.omp.override { withWaylandScreencast = true; };
+        ompConfigDir = "${config.home.homeDirectory}/.omp/agent";
+        legacyOmpConfigDir = "${config.xdg.configHome}/omp/agent";
         ompExtensionsSrc = "${config.home.configDir}/modules/programs/oh-my-pi/extensions";
-        # herdr's omp integration extension, bundled in the pinned herdr
-        # binary. Extracted at build time: declarative, version-synced with the
-        # flake lock, no fetchUrl dependency. The file is read by the agent at
-        # runtime and never written, so the store copy is fine.
+        ompWrapper = pkgs.writeShellApplication {
+          name = "omp";
+          runtimeInputs = [ pkgs.python3 ];
+          text = ''
+            eval "$(${lib.getExe self'.packages.op-credential} "Gemini API" GEMINI_API_KEY)"
+            eval "$(${lib.getExe self'.packages.op-credential} "OpenCode GO" OPENCODE_API_KEY)"
+            eval "$(${lib.getExe self'.packages.op-credential} "z.ai API key" ZAI_API_KEY)"
+
+            exec ${lib.getExe ompPackage} "$@"
+          '';
+        };
+        # herdr's OMP integration is bundled in the pinned herdr binary.
+        # Extract it at build time so its version remains synchronized with the
+        # flake lock, then deploy it declaratively as an OMP extension.
         herdrOmpStateExt =
           pkgs.runCommand "herdr-omp-agent-state.ts"
             {
@@ -25,47 +44,77 @@
             }
             ''
               export HOME="$TMPDIR/home"
-              # herdr ≥0.8.0 refuses to install the omp integration when Pi and
-              # OMP resolve to the same extensions dir, and PI_CODING_AGENT_DIR
-              # drives both — so leave it unset and point OMP at its own scratch
-              # dir via PI_CONFIG_DIR (extension dir = <PI_CONFIG_DIR>/agent/extensions;
-              # the agent parent dir must pre-exist). Only the file content
-              # matters; the runtime location is managed by xdg.configFile below.
               mkdir -p "$HOME" "$TMPDIR/omp/agent"
               PI_CONFIG_DIR="$TMPDIR/omp" herdr integration install omp >/dev/null
               cp "$TMPDIR/omp/agent/extensions/herdr-omp-agent-state.ts" "$out"
             '';
-
       in
       {
-        home.packages = [
-          (pkgs.writeShellApplication {
-            name = "omp";
-            runtimeInputs = [ pkgs.python3 ];
-            text = ''
-              # XDG-compatible OMP agent directory
-              export PI_CODING_AGENT_DIR="${config.xdg.configHome}/omp/agent"
+        imports = [ inputs.omp.homeManagerModules.default ];
 
-              # API credentials from 1Password
-              eval "$(${lib.getExe self'.packages.op-credential} "Gemini API" GEMINI_API_KEY)"
-              eval "$(${lib.getExe self'.packages.op-credential} "OpenCode GO" OPENCODE_API_KEY)"
-              eval "$(${lib.getExe self'.packages.op-credential} "z.ai API key" ZAI_API_KEY)"
-
-              exec ${lib.getExe inputs'.llm-agents.packages.omp} "$@"
-            '';
-          })
-        ];
-        xdg.configFile = {
-          "omp/agent/config.yml".source = config.lib.file.mkOutOfStoreSymlink ompConfig;
-          # Add a matching entry here for each new repo-managed extension.
-          "omp/agent/extensions/self-review.ts".source =
-            config.lib.file.mkOutOfStoreSymlink "${ompExtensionsSrc}/self-review.ts";
-          "omp/agent/extensions/herdr-omp-agent-state.ts".source = herdrOmpStateExt;
+        programs.omp = {
+          enable = true;
+          package = ompWrapper;
+          settings = {
+            symbolPreset = "nerd";
+            theme.dark = "dark-catppuccin";
+            setupVersion = 2;
+            memory.backend = "local";
+            advisor.enabled = false;
+            astGrep.enabled = true;
+            autolearn.enabled = true;
+            checkpoint.enabled = true;
+            github.enabled = true;
+            task.enableLsp = true;
+            modelRoles = {
+              default = "openai-codex/gpt-5.6-terra";
+              plan = "openai-codex/gpt-5.6-sol";
+              task = "openai-codex/gpt-5.6-luna";
+              smol = "opencode-go/deepseek-v4-flash";
+              slow = "openai-codex/gpt-5.6-sol";
+              vision = "openai-codex/gpt-5.6-terra";
+              tiny = "opencode-go/deepseek-v4-flash";
+            };
+            enabledModels = [
+              "opencode-go/*"
+              "google/gemini-3*"
+              "openai-codex/gpt-5.6*"
+            ];
+            defaultThinkingLevel = "auto";
+            hideThinkingBlock = true;
+            skills = {
+              customDirectories = [ "~/.local/share/ai-dev/skills" ];
+              enableClaudeUser = false;
+              enableClaudeProject = true;
+              enablePiUser = false;
+              enablePiProject = false;
+              enableCodexUser = false;
+              enableAgentsUser = false;
+              enableAgentsProject = true;
+            };
+            dev.autoqaConsent = "granted";
+            composer.shape = "box";
+          };
         };
 
-        home.activation.removeOmpExtensionsDirSymlink = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
-          if [[ -L "${config.xdg.configHome}/omp/agent/extensions" ]]; then
-            rm "${config.xdg.configHome}/omp/agent/extensions"
+        home.file = {
+          ".omp/agent/extensions/self-review.ts" = {
+            source = config.lib.file.mkOutOfStoreSymlink "${ompExtensionsSrc}/self-review.ts";
+            force = true;
+          };
+          ".omp/agent/extensions/herdr-omp-agent-state.ts" = {
+            source = herdrOmpStateExt;
+            force = true;
+          };
+        };
+
+        home.activation.migrateOmpAgentDir = lib.hm.dag.entryBefore [ "writeBoundary" ] ''
+          if [[ ! -e "${ompConfigDir}" && -d "${legacyOmpConfigDir}" ]]; then
+            run mkdir -p "$(dirname "${ompConfigDir}")"
+            run cp -a "${legacyOmpConfigDir}" "${ompConfigDir}"
+            if [[ -L "${ompConfigDir}/extensions" ]]; then
+              run rm "${ompConfigDir}/extensions"
+            fi
           fi
         '';
       };

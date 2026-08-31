@@ -66,6 +66,10 @@
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    omp = {
+      url = "github:can1357/oh-my-pi";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     quickshell = {
       url = "github:calops/quickshell?ref=feat/region-dynamic-items";
       inputs.nixpkgs.follows = "nixpkgs";

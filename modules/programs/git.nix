@@ -54,6 +54,7 @@
             "typings"
             "linear.toml"
             ".pi"
+            "docs/superpowers"
           ];
 
           settings =
@@ -124,7 +125,7 @@
 
               push = {
                 autoSetupRemote = true;
-                default = "upstream";
+                default = "simple";
               };
 
               delta.catppuccin = {
