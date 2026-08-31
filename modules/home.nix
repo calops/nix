@@ -44,7 +44,6 @@
     den.aspects.programs._.fzf
     den.aspects.programs._.git
     den.aspects.programs._.linear
-    den.aspects.fonts
 
     {
       homeManager =
