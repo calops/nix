@@ -95,7 +95,8 @@ jobs:
     needs: prepare
     if: needs.prepare.outputs.has-changes == 'true'
     strategy:
-      fail-fast: false
+      fail-fast: true
+      max-parallel: 1
       matrix: ${{ fromJson(needs.prepare.outputs.matrix) }}
     runs-on: ubuntu-latest
     name: build (${{ matrix.name }})

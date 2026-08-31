@@ -62,7 +62,8 @@ jobs:
   build:
     needs: discover
     strategy:
-      fail-fast: false
+      fail-fast: true
+      max-parallel: 1
       matrix: ${{ fromJson(needs.discover.outputs.matrix) }}
     runs-on: ubuntu-latest
     name: build (${{ matrix.name }})
