@@ -7,13 +7,13 @@
         {
           gtk = {
             enable = true;
-            iconTheme = lib.mkIf pkgs.stdenv.isLinux {
+            iconTheme = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
               name = "Papirus";
               package = pkgs.papirus-icon-theme;
             };
           };
 
-          qt = lib.mkIf (!pkgs.stdenv.isDarwin) {
+          qt = lib.mkIf (!pkgs.stdenv.hostPlatform.isDarwin) {
             enable = true;
           };
 

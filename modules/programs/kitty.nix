@@ -17,7 +17,7 @@
 
             undercurl_style = "thick-sparse";
             cursor_trail = 3;
-            hide_window_decorations = if pkgs.stdenv.isDarwin then "titlebar-only" else "yes";
+            hide_window_decorations = if pkgs.stdenv.hostPlatform.isDarwin then "titlebar-only" else "yes";
             cursor_blink_interval = "-1 ease-in-out";
             macos_hide_from_tasks = true;
             scrollback_lines = 10000;

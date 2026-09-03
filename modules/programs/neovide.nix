@@ -14,7 +14,7 @@
               };
             in
             {
-              frame = if pkgs.stdenv.isDarwin then "buttonless" else "none";
+              frame = if pkgs.stdenv.hostPlatform.isDarwin then "buttonless" else "none";
               title-hidden = true;
               font =
                 let

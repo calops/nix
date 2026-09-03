@@ -14,7 +14,6 @@ in
         config,
         inputs',
         lib,
-        pkgs,
         ...
       }:
       {

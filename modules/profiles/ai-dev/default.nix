@@ -52,6 +52,7 @@ in
           notion.url = "https://mcp.notion.com/mcp";
           linear.url = "https://mcp.linear.app/mcp";
           sentry.url = "https://mcp.sentry.dev/mcp";
+          grafana.url = "https://mcp.grafana.com/mcp";
         };
       };
     };

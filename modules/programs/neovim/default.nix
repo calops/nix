@@ -91,7 +91,7 @@
               vim.g.gcc_bin_path = '${lib.getExe pkgs.gcc}'
               vim.g.codeium_language_server_path = '${lib.getExe' pkgs.codeium "codeium_language_server"}'
               vim.g.sqlite_clib_path = '${pkgs.sqlite.out}/lib/libsqlite3.${
-                if pkgs.stdenv.isDarwin then "dylib" else "so"
+                if pkgs.stdenv.hostPlatform.isDarwin then "dylib" else "so"
               }'
             '';
           };
@@ -121,7 +121,7 @@
                 }
               })
             ''
-            + lib.optionalString pkgs.stdenv.isLinux ''
+            + lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
               vim.lsp.config("qmlls", {
                 cmd = {
                   "qmlls",
