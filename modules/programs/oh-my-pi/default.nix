@@ -2,7 +2,7 @@
 {
   flake-file.inputs = {
     omp = {
-      url = "github:can1357/oh-my-pi/dd570453966ec791670b8307ec0aee2904c8cc53";
+      url = "github:can1357/oh-my-pi";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -19,7 +19,7 @@
       }:
       let
         herdrPackage = inputs'.llm-agents.packages.herdr;
-        ompPackage = inputs'.omp.packages.omp.override { withWaylandScreencast = true; };
+        ompPackage = inputs'.llm-agents.packages.omp;
         ompConfigDir = "${config.home.homeDirectory}/.omp/agent";
         legacyOmpConfigDir = "${config.xdg.configHome}/omp/agent";
         ompExtensionsSrc = "${config.home.configDir}/modules/programs/oh-my-pi/extensions";
