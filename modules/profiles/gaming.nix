@@ -23,6 +23,8 @@ mkProfileAspect "gaming" {
         gamescopeSession.enable = true;
         remotePlay.openFirewall = true;
         extraCompatPackages = [ pkgs.proton-ge-bin ];
+        # Steam Input needs extest to inject mapped input under Wayland.
+        extest.enable = true;
       };
 
       programs.gamescope = {
