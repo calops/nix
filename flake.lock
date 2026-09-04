@@ -583,6 +583,22 @@
         "type": "gitlab"
       }
     },
+    "herdr-link": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788256074,
+        "narHash": "sha256-AQYQgP1l9IpOkmVA9l1B7KhIwnM0HRE7KyhtzCQ0p8Q=",
+        "owner": "LZHcode1986",
+        "repo": "herdr-link",
+        "rev": "17a42de6568f2cbdf99080976dc79985ad41e98e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "LZHcode1986",
+        "repo": "herdr-link",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -1087,6 +1103,7 @@
         "flake-file": "flake-file",
         "flake-fmt": "flake-fmt",
         "flake-parts": "flake-parts_3",
+        "herdr-link": "herdr-link",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
         "llm-agents": "llm-agents",

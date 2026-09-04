@@ -1,4 +1,10 @@
+{ inputs, ... }:
 {
+  flake-file.inputs.herdr-link = {
+    url = "github:LZHcode1986/herdr-link";
+    flake = false;
+  };
+
   den.aspects.programs.provides.herdr = {
     # Collie (herdr's phone PWA) is fronted by `tailscale serve` — Variant A of
     # the upstream README. The bridge itself only ever binds 127.0.0.1; this
@@ -42,6 +48,28 @@
       let
         herdr = inputs'.llm-agents.packages.herdr;
         collie = inputs'.llm-agents.packages.collie;
+        herdrLink = pkgs.stdenvNoCC.mkDerivation {
+          pname = "herdr-link";
+          version = (builtins.fromJSON (builtins.readFile "${inputs.herdr-link}/package.json")).version;
+          src = inputs.herdr-link;
+          nativeBuildInputs = [ pkgs.gnused ];
+          installPhase = ''
+            runHook preInstall
+            mkdir -p "$out/lib/herdr-link"
+            cp -R . "$out/lib/herdr-link"
+            substituteInPlace "$out/lib/herdr-link/herdr-plugin.toml" \
+              --replace-fail '["node", "scripts/plugin-action.mjs", "doctor"]' \
+              '["${lib.getExe pkgs.nodejs}", "scripts/plugin-action.mjs", "doctor"]'
+            runHook postInstall
+          '';
+        };
+        herdrLinkMcp = pkgs.writeShellApplication {
+          name = "herdr-link";
+          runtimeInputs = [ pkgs.nodejs ];
+          text = ''
+            exec ${lib.getExe pkgs.nodejs} ${herdrLink}/lib/herdr-link/dist/herdr-link.mcp.js "$@"
+          '';
+        };
       in
       {
         # Tailscale systray applet (needs a graphical session + tray.target,
@@ -134,6 +162,8 @@
             # keys.last_pane = ...;
           };
         };
+
+        programs.mcp.servers.herdr-link.command = lib.getExe herdrLinkMcp;
         # Collie bridge — runs the phone PWA server (loopback only; the
         # collie-tailscale-serve oneshot publishes it on the tailnet).
         systemd.user.services.collie = {
@@ -199,8 +229,15 @@
             || echo "collie: herdr plugin link failed" >&2
         '';
 
+        home.activation.herdrLinkSetup = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+          ${lib.getExe herdr} plugin link ${herdrLink}/lib/herdr-link \
+            >/dev/null 2>&1 \
+            || echo "herdr-link: herdr plugin link failed" >&2
+        '';
+
         home.packages = [
           collie
+          herdrLinkMcp
         ];
       };
   };
