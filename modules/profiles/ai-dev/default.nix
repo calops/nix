@@ -7,6 +7,11 @@ in
     llm-agents.url = "github:numtide/llm-agents.nix";
     llm-agents.inputs.nixpkgs.follows = "nixpkgs";
   };
+
+  caches.numtide = {
+    url = "https://cache.numtide.com";
+    key = "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=";
+  };
 }
 // mkProfileAspect "ai-dev" {
   includes = [

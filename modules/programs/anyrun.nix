@@ -5,6 +5,11 @@
     anyrun.inputs.nixpkgs.follows = "nixpkgs";
   };
 
+  caches.anyrun = {
+    url = "https://anyrun.cachix.org";
+    key = "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s=";
+  };
+
   den.aspects.programs.provides.anyrun = {
     includes = [
       {

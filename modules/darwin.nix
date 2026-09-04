@@ -1,5 +1,12 @@
 { den, ... }:
 {
+  # Scoped to darwin hosts; CI and devshells still see it via the compiled union.
+  caches.nix-darwin = {
+    url = "https://nix-darwin.cachix.org";
+    key = "nix-darwin.cachix.org-1:LxMyKzQk7Uqkc1Pfq5uhm9GSn07xkERpy+7cpwc006A=";
+    scope = "darwin";
+  };
+
   flake-file.inputs = {
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";

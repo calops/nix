@@ -1,70 +1,91 @@
-# Single source of truth for every binary cache used in this repository.
+# Binary cache registry.
 #
-# Consumed by:
-#   - den.default.includes below (global NixOS/Darwin `nix` settings)
-#   - den.default.darwin.includes below (darwin-scoped nix-darwin cache)
-#   - CI (.github/workflows): `nix eval --raw .#nixConfigText` to configure
-#     runners without duplicating the list in workflow YAML
-#   - anything else via `config.flake.nixConfigText`
-{ den, lib, ... }:
+# Dendritic declaration: modules that fetch from a substituter declare it
+# right where they use it:
+#
+#   caches.<name> = {
+#     url = "https://...";
+#     key = "signing-key";
+#     scope = "global";   # optional: "global" (default) | "darwin"
+#   };
+#
+# This module compiles the union into every format that needs it:
+#   - den.default.includes          → host `nix` settings, by scope
+#   - flake.nixConfigText           → CI (`.#nixConfigText`, see workflows)
+#   - anything else                 → config.flake.nixConfigText
+{
+  den,
+  lib,
+  config,
+  ...
+}:
 let
-  list = {
-    nixos = {
-      url = "https://cache.nixos.org";
-      key = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=";
-    };
-    calops = {
-      url = "https://calops.cachix.org";
-      key = "calops.cachix.org-1:6RTG80il2oS2ECFeG2QubG+mvD9OJc1s6Lm9JGAFcM0=";
-    };
-    nix-community = {
-      url = "https://nix-community.cachix.org";
-      key = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
-    };
-    numtide = {
-      url = "https://cache.numtide.com";
-      key = "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=";
-    };
-    anyrun = {
-      url = "https://anyrun.cachix.org";
-      key = "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s=";
-    };
-    niri = {
-      url = "https://niri.cachix.org";
-      key = "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964=";
-    };
-    nix-darwin = {
-      url = "https://nix-darwin.cachix.org";
-      key = "nix-darwin.cachix.org-1:LxMyKzQk7Uqkc1Pfq5uhm9GSn07xkERpy+7cpwc006A=";
-    };
-  };
-
-  # nix-darwin stays darwin-scoped; everything else is trusted on every host.
-  global = builtins.removeAttrs list [ "nix-darwin" ];
   urlsOf = lib.mapAttrsToList (_: cache: cache.url);
   keysOf = lib.mapAttrsToList (_: cache: cache.key);
+  byScope = scope: lib.filterAttrs (_: cache: (cache.scope or "global") == scope) config.caches;
   nixConfLines = urls: keys: ''
     extra-substituters = ${builtins.concatStringsSep " " urls}
     extra-trusted-public-keys = ${builtins.concatStringsSep " " keys}
   '';
 in
 {
-  # Consumed by CI: `nix eval --raw .#nixConfigText >> ~/.config/nix/nix.conf`
-  # and by anything else via `config.flake.nixConfigText`.
-  flake.nixConfigText = nixConfLines (urlsOf list) (keysOf list);
+  options.caches = lib.mkOption {
+    description = ''
+      Binary caches declared by the modules that use them, keyed by name.
+      Compiled by this module into host Nix settings (per scope) and the
+      `.#nixConfigText` consumed by CI.
+    '';
+    type = lib.types.lazyAttrsOf (
+      lib.types.submodule {
+        options = {
+          url = lib.mkOption {
+            type = lib.types.str;
+            description = "Substituter URL.";
+          };
+          key = lib.mkOption {
+            type = lib.types.str;
+            description = "Substituter signing key.";
+          };
+          scope = lib.mkOption {
+            type = lib.types.enum [
+              "global"
+              "darwin"
+            ];
+            default = "global";
+            description = ''
+              Where the cache is trusted: "global" on every host, "darwin" only
+              on nix-darwin hosts. CI and devshells always see every cache.
+            '';
+          };
+        };
+      }
+    );
+  };
 
-  den.default.includes = [
-    {
-      nix.extra-substituters = urlsOf global;
-      nix.extra-trusted-public-keys = keysOf global;
-    }
-  ];
+  config = {
+    # Repo-level baseline; feature modules add their own where they use them.
+    caches.nixos.url = "https://cache.nixos.org";
+    caches.nixos.key = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=";
+    caches.calops.url = "https://calops.cachix.org";
+    caches.calops.key = "calops.cachix.org-1:6RTG80il2oS2ECFeG2QubG+mvD9OJc1s6Lm9JGAFcM0=";
+    caches.nix-community.url = "https://nix-community.cachix.org";
+    caches.nix-community.key = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
 
-  # darwin-scoped: only nix-darwin hosts need the nix-darwin cache.
-  den.default.darwin.includes = [
-    {
-      nix.extra-substituters = [ list.nix-darwin.url ];
-      nix.extra-trusted-public-keys = [ list.nix-darwin.key ];
-    }
-  ];
+    # Consumed by CI: `nix eval --raw .#nixConfigText >> ~/.config/nix/nix.conf`
+    flake.nixConfigText = nixConfLines (urlsOf config.caches) (keysOf config.caches);
+
+    den.default.includes = [
+      {
+        nix.extra-substituters = urlsOf (byScope "global");
+        nix.extra-trusted-public-keys = keysOf (byScope "global");
+      }
+    ];
+
+    den.default.darwin.includes = [
+      {
+        nix.extra-substituters = urlsOf (byScope "darwin");
+        nix.extra-trusted-public-keys = keysOf (byScope "darwin");
+      }
+    ];
+  };
 }

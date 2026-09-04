@@ -17,6 +17,11 @@
     }
   ];
 
+  caches.niri = {
+    url = "https://niri.cachix.org";
+    key = "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964=";
+  };
+
   den.aspects.programs.provides.niri = {
     includes = [
       {
