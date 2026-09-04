@@ -8,11 +8,6 @@
   den.default.darwin.includes = [ den.aspects.darwin ];
 
   den.aspects.darwin = {
-    nix.extra-substituters = [ "https://nix-darwin.cachix.org" ];
-    nix.extra-trusted-public-keys = [
-      "nix-darwin.cachix.org-1:LxMyKzQk7Uqkc1Pfq5uhm9GSn07xkERpy+7cpwc006A="
-    ];
-
     darwin =
       { config, pkgs, ... }:
       {

@@ -18,11 +18,6 @@
   ];
 
   den.aspects.programs.provides.niri = {
-    nix.extra-substituters = [ "https://niri.cachix.org" ];
-    nix.extra-trusted-public-keys = [
-      "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
-    ];
-
     includes = [
       {
         homeManager.imports = [

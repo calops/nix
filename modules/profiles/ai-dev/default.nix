@@ -18,11 +18,6 @@ in
     den.aspects.programs._.herdr
   ];
 
-  nix.extra-substituters = [ "https://cache.numtide.com" ];
-  nix.extra-trusted-public-keys = [
-    "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
-  ];
-
   homeManager =
     { pkgs, inputs', ... }:
     let

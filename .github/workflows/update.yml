@@ -127,6 +127,11 @@ jobs:
           mkdir -p ~/.config/nix
           echo "extra-experimental-features = flakes nix-command pipe-operators" >> ~/.config/nix/nix.conf
 
+      - name: Configure substituters from flake
+        run: |
+          nix eval --raw .#nixConfigText >> ~/.config/nix/nix.conf
+          echo "" >> ~/.config/nix/nix.conf
+
       - uses: cachix/cachix-action@master
         with:
           name: calops
