@@ -14,7 +14,6 @@
 #   - flake.nixConfigText           → CI (`.#nixConfigText`, see workflows)
 #   - anything else                 → config.flake.nixConfigText
 {
-  den,
   lib,
   config,
   ...
