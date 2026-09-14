@@ -1,0 +1,13 @@
+# Permission grants for the Lua in this config dir. Without this file every
+# gated call is denied; keys listed here are granted. See the API reference for
+# which calls need which permission:
+# https://maki.sh/docs/lua-api/
+#
+# Grants are intentionally broad so plugins can be iterated on quickly.
+
+[permissions]
+fs_read = true
+fs_write = true
+net = true
+run = true
+env = true

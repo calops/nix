@@ -19,6 +19,7 @@ in
     den.aspects.programs._.claude-code
     den.aspects.programs._.pi
     den.aspects.programs._.oh-my-pi
+    den.aspects.programs._.maki
     den.aspects.ai-dev._.skills
     den.aspects.programs._.herdr
   ];

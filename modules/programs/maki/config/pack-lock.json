@@ -1,0 +1,8 @@
+{
+  "packages": {
+    "herdr.maki": {
+      "src": "https://github.com/calops/herdr.maki",
+      "rev": "dbf8d30313305864e796803e4cf9b57ba584462c"
+    }
+  }
+}
