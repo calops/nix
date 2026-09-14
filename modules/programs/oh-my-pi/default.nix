@@ -119,18 +119,19 @@
             github.enabled = true;
             task.enableLsp = true;
             modelRoles = {
-              default = "openai-codex/gpt-5.6-terra";
+              default = "openai-codex/gpt-5.6-sol";
               plan = "openai-codex/gpt-5.6-sol";
-              task = "openai-codex/gpt-5.6-luna";
-              smol = "opencode-go/deepseek-v4-flash";
-              slow = "openai-codex/gpt-5.6-sol";
+              task = "openai-codex/gpt-5.6-terra";
+              smol = "openai-codex/gpt-5.6-luna";
+              slow = "openai-codex/gpt-6-astra";
               vision = "openai-codex/gpt-5.6-terra";
-              tiny = "opencode-go/deepseek-v4-flash";
+              tiny = "openai-codex/gpt-5.6-luna";
             };
             enabledModels = [
               "opencode-go/*"
               "google/gemini-3*"
               "openai-codex/gpt-5.6*"
+              "openai-codex/gpt-6*"
             ];
             defaultThinkingLevel = "auto";
             hideThinkingBlock = true;
