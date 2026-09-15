@@ -6,6 +6,7 @@
         pkgs,
         lib,
         self',
+        config,
         ...
       }:
       {
@@ -13,7 +14,8 @@
           pkgs._1password-cli
           self'.packages.op-credential
           self'.packages.op-ssh-key
-        ];
+        ]
+        ++ lib.optional config.profiles.headless.enable self'.packages.op-ssh-agent;
 
         home.sessionVariables.SUDO_ASKPASS = toString (
           pkgs.writeShellScript "1password-askpass" ''
@@ -24,17 +26,33 @@
 
         programs.fish.shellAbbrs.s = "sudo --askpass";
 
-        programs.ssh.extraConfig = lib.mkDefault ''
-          IdentityAgent "~/.1password/agent.sock"
+        # On headless hosts there is no 1Password agent socket, so run a local
+        # ssh-agent and lazily load the 1Password SSH keys into it. The agent
+        # starts once and persists; `op signin` only prompts on first load.
+        programs.fish.interactiveShellInit = lib.mkIf config.profiles.headless.enable ''
+          if not set -q SSH_AUTH_SOCK
+            set -gx SSH_AUTH_SOCK "$HOME/.ssh/op-agent.sock"
+            op-ssh-agent >/dev/null
+          end
         '';
+
+        programs.ssh.extraConfig = lib.mkIf (!config.profiles.headless.enable) (
+          lib.mkDefault ''
+            IdentityAgent "~/.1password/agent.sock"
+          ''
+        );
 
         programs.git.signing = {
           signByDefault = true;
           key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG5fbZ1KwrHKB+ItUQ5CRhjDVztrVBs4ZgULBkZHs2Iw";
           format = "ssh";
-          signer = lib.mkDefault (lib.getExe' pkgs._1password-gui "op-ssh-sign");
+          signer = lib.mkMerge [
+            # Headless hosts sign with the local ssh-agent, since the 1Password
+            # desktop app (op-ssh-sign) isn't available there.
+            (lib.mkIf config.profiles.headless.enable (lib.getExe' pkgs.openssh "ssh-keygen"))
+            (lib.mkDefault (lib.getExe' pkgs._1password-gui "op-ssh-sign"))
+          ];
         };
-
       };
 
     homeManagerDarwin =
@@ -174,6 +192,42 @@
             	cat "$cache_file"
             else
             	printf 'export %s=%q\n' "$env_var" "$(cat "$cache_file")"
+            fi
+          '';
+        };
+
+        op-ssh-agent = pkgs.writeShellApplication {
+          name = "op-ssh-agent";
+          runtimeInputs = with pkgs; [
+            coreutils
+            openssh
+          ];
+          text = ''
+            # Run a persistent local ssh-agent with the 1Password SSH keys loaded.
+            # Used on headless hosts that can't run the 1Password desktop agent.
+            socket="$HOME/.ssh/op-agent.sock"
+            mkdir -p "$HOME/.ssh"
+            chmod 700 "$HOME/.ssh"
+
+            rc=0
+            SSH_AUTH_SOCK="$socket" ssh-add -l >/dev/null 2>&1 || rc=$?
+            if [ "$rc" -ne 0 ] && [ "$rc" -ne 1 ]; then
+            	rm -f "$socket"
+            	ssh-agent -a "$socket" >/dev/null
+            	rc=1
+            fi
+
+            export SSH_AUTH_SOCK="$socket"
+
+            if [ "$rc" -ne 0 ]; then
+            	if ! op whoami >/dev/null 2>&1; then
+            		eval "$(op signin)"
+            	fi
+            	for item in "SSH Key" "SSH Key Git"; do
+            		if ! op read "op://Private/$item/private key?ssh-format=openssh" | ssh-add - 2>/dev/null; then
+            			echo "op-ssh-agent: failed to load '$item' from 1Password" >&2
+            		fi
+            	done
             fi
           '';
         };

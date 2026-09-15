@@ -6,6 +6,7 @@
         pkgs,
         lib,
         colors,
+        config,
         ...
       }:
       {
@@ -71,7 +72,9 @@
 
               core = {
                 whitespace = "-trailing-space";
-                sshCommand = ''ssh -i "$(op-ssh-key 'SSH Key')"'';
+                # Headless hosts have no 1Password agent socket; they run a local
+                # ssh-agent populated from 1Password instead (see onepassword.nix).
+                sshCommand = lib.mkIf (!config.profiles.headless.enable) (''ssh -i "$(op-ssh-key 'SSH Key')"'');
               };
 
               grep.extendedRegexp = true;
