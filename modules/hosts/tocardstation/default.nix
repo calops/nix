@@ -109,7 +109,10 @@
               content = {
                 type = "luks";
                 name = "crypted";
-                settings.allowDiscards = true;
+                settings = {
+                  allowDiscards = true;
+                  bypassWorkqueues = true;
+                };
                 passwordFile = "/tmp/secret.key";
                 content = {
                   type = "filesystem";

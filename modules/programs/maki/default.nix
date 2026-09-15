@@ -13,6 +13,7 @@
           config,
           inputs',
           pkgs,
+          self',
           ...
         }:
         let
@@ -79,7 +80,15 @@
           mcpServers = lib.mapAttrs asMakiServer config.programs.mcp.servers;
         in
         {
-          home.packages = [ inputs'.maki.packages.default ];
+          home.packages = [
+            (pkgs.writeShellScriptBin "maki" ''
+              eval "$(${lib.getExe self'.packages.op-credential} "Gemini API" GEMINI_API_KEY)"
+              eval "$(${lib.getExe self'.packages.op-credential} "OpenCode GO" OPENCODE_API_KEY)"
+              eval "$(${lib.getExe self'.packages.op-credential} "z.ai API key" ZHIPU_API_KEY)"
+
+              exec ${lib.getExe inputs'.maki.packages.default} "$@"
+            '')
+          ];
 
           # Keep ~/.config/maki pointed at the checkout instead of a store
           # copy. The directory holds init.lua and plugin.toml as editable
