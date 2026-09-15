@@ -12,7 +12,7 @@
       url = "github:calops/iosevka-aporetic";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    den.url = "github:vic/den";
+    den.url = "github:calops/den/fix/dup-class-args-standalone-homes";
     disko = {
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";

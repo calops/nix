@@ -234,15 +234,16 @@
     },
     "den": {
       "locked": {
-        "lastModified": 1788296001,
-        "narHash": "sha256-Xiwc4gVA4Gx7mvFgPN4DZDem0iZnUoDToVY37CBsK3M=",
-        "owner": "vic",
+        "lastModified": 1789470141,
+        "narHash": "sha256-9ayaKrNz48md7lguAoRtb36C/Ck33JCfYU7fD100580=",
+        "owner": "calops",
         "repo": "den",
-        "rev": "5f78bef87047c5ecd632a5a23c9b3718f1de3301",
+        "rev": "521e87e1f4835d3557774876391668c6ad4b0ef8",
         "type": "github"
       },
       "original": {
-        "owner": "vic",
+        "owner": "calops",
+        "ref": "fix/dup-class-args-standalone-homes",
         "repo": "den",
         "type": "github"
       }

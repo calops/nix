@@ -7,7 +7,7 @@
 {
   flake-file.inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    den.url = "github:vic/den";
+    den.url = "github:calops/den/fix/dup-class-args-standalone-homes";
     import-tree.url = "github:vic/import-tree";
 
     nur.url = "github:nix-community/NUR";
