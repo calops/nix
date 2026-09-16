@@ -3,8 +3,7 @@
   flake-file.inputs = {
     niri-src.url = "github:calops/niri";
     niri.url = "github:sodiboo/niri-flake/";
-    # TODO: put this back in once upstream stops depending on libdisplay-info_2
-    # niri.inputs.nixpkgs.follows = "nixpkgs";
+    niri.inputs.nixpkgs.follows = "nixpkgs";
     niri.inputs.niri-unstable.follows = "niri-src";
   };
 
