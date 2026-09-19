@@ -72,6 +72,7 @@ mkProfileAspect "graphical" {
           home.packages = [
             pkgs.libnotify
             pkgs.slack
+            pkgs.gpu-screen-recorder-gtk
           ];
 
           programs.zathura = {
