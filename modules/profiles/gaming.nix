@@ -13,7 +13,7 @@ mkProfileAspect "gaming" {
   ];
 
   nixos =
-    { pkgs, lib, ... }:
+    { pkgs, ... }:
     {
       programs.gamemode.enable = true;
       programs.coolercontrol.enable = true;
@@ -45,11 +45,6 @@ mkProfileAspect "gaming" {
         pkgs.protontricks
         pkgs.i2c-tools
       ];
-
-      services.hardware.openrgb = {
-        enable = true;
-        motherboard = lib.mkDefault "intel";
-      };
     };
 
   homeManagerLinux =
