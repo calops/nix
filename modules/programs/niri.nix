@@ -3,7 +3,6 @@
   flake-file.inputs = {
     niri-src.url = "github:calops/niri";
     niri.url = "github:sodiboo/niri-flake/";
-    niri.inputs.nixpkgs.follows = "nixpkgs";
     niri.inputs.niri-unstable.follows = "niri-src";
   };
 
