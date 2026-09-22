@@ -4,6 +4,10 @@
     niri-src.url = "github:calops/niri";
     niri.url = "github:sodiboo/niri-flake/";
     niri.inputs.niri-unstable.follows = "niri-src";
+    # Disabled: niri-flake still wants libdisplay-info_0_2, which our nixpkgs has
+    # dropped, so following our nixpkgs fails its version assert. Re-enable once
+    # niri-flake moves off it.
+    # niri.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   den.schema.user.includes = [
