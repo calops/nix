@@ -8,6 +8,16 @@ description: "Use when drafting text published under the user's name: PRs, commi
 Text you produce here goes out under the user's name, not yours. It must read as something they wrote: a direct,
 plain-spoken engineer leaving a quick note, not an assistant. Strip every tell that gives away an LLM.
 
+## Baseline
+
+Start from ASD-STE100 Simplified Technical English: short sentences, active voice, one idea per sentence, consistent
+terminology, no ambiguity. Everything below is an adjustment on top of that baseline, to sound like the user rather
+than like a spec.
+
+Where the two conflict, this skill wins. This is a voice, not a maintenance manual, so the STE rules that exist for
+translation and safety (approved-word lists, no contractions, no idiom) give way to the rules below. What carries over
+is the discipline: keep it short, say one thing, prefer the plain word.
+
 ## Core rules
 
 - **Suggest, don't command** in review comments and replies. "We should add X", "We could drop this", "worth doing X".
