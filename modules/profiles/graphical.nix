@@ -10,7 +10,6 @@ mkProfileAspect "graphical" {
     den.aspects.programs._.anyrun
     den.aspects.programs._.zed
     den.aspects.programs._.walker
-    den.aspects.programs._.sable
     den.aspects.programs._.neovide
     den.aspects.programs._.mpv
     den.aspects.programs._.gtk
