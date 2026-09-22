@@ -17,8 +17,6 @@
         addons = nur.repos.rycee.firefox-addons;
       in
       {
-        programs.firefoxpwa.enable = true;
-
         programs.firefox = {
           enable = true;
           package = pkgs.firefox-beta;
@@ -62,7 +60,6 @@
                 addons.sponsorblock
                 addons.firenvim
                 addons.video-downloadhelper
-                addons.pwas-for-firefox
               ];
 
               search = {
