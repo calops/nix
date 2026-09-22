@@ -13,6 +13,9 @@ let
           nix.settings = {
             allowed-users = [ config.home.username ];
 
+            # Lets this flake's `nixConfig` supply its own substituters.
+            accept-flake-config = true;
+
             extra-experimental-features = [
               "flakes"
               "nix-command"

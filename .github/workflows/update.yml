@@ -127,11 +127,6 @@ jobs:
           mkdir -p ~/.config/nix
           echo "extra-experimental-features = flakes nix-command pipe-operators" >> ~/.config/nix/nix.conf
 
-      - name: Configure substituters from flake
-        run: |
-          nix eval --raw .#nixConfigText >> ~/.config/nix/nix.conf
-          echo "" >> ~/.config/nix/nix.conf
-
       - uses: cachix/cachix-action@master
         with:
           name: calops
@@ -139,7 +134,7 @@ jobs:
           useDaemon: true
 
       - name: Build ${{ matrix.name }}
-        run: nix build ".#${{ matrix.attr }}" --no-link
+        run: nix build ".#${{ matrix.attr }}" --no-link --accept-flake-config
 
   manage-pr:
     needs: [prepare, build]

@@ -1,7 +1,6 @@
 {
   den,
   lib,
-  config,
   ...
 }:
 {
@@ -15,7 +14,6 @@
   perSystem =
     { pkgs, ... }:
     let
-      nixConfigText = config.flake.nixConfigText;
       update-flake = pkgs.writeShellApplication {
         name = "update-flake";
         runtimeInputs = [
@@ -59,9 +57,10 @@
       devShells.default = pkgs.mkShell {
         name = "calops-flake";
 
+        # Experimental features cannot come from the flake's `nixConfig`:
+        # Nix needs them to evaluate the flake in the first place.
         NIX_CONFIG = ''
           extra-experimental-features = flakes nix-command pipe-operators
-          ${nixConfigText}
         '';
 
         buildInputs = [
