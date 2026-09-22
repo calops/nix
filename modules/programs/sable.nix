@@ -27,9 +27,11 @@
                 "Chat"
               ];
 
+              # The /assets/ names are content-hashed by Vite, so they change on
+              # every Sable deploy and rot the pin. /public/ is stable.
               icon = pkgs.fetchurl {
-                url = "https://app.sable.moe/assets/favicon-CemZgig7.png";
-                hash = "sha256-h+6nNBNKrZI3G7q1iMMJQjJ5Kn9CZecOm140obiAgf8=";
+                url = "https://app.sable.moe/public/logo-maskable/logo-maskable-512x512.png";
+                hash = "sha256-osszM1f+cMn+dC9E6TlRNB62/eqGe3cO6Jj9kc4eHSU=";
               };
             };
           };
