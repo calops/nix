@@ -17,7 +17,6 @@ in
   includes = [
     den.aspects.programs._.opencode
     den.aspects.programs._.claude-code
-    den.aspects.programs._.pi
     den.aspects.programs._.oh-my-pi
     den.aspects.programs._.maki
     den.aspects.ai-dev._.skills
@@ -37,8 +36,6 @@ in
         agentPkgs.antigravity-cli
         agentPkgs.cursor-agent
         agentPkgs.codex
-        agentPkgs.spec-kit
-        agentPkgs.reasonix
       ];
 
       programs.git.ignores = [
