@@ -22,8 +22,6 @@
       den.aspects.work._.terabase
     ];
 
-    user.extraGroups = [ "i2c" ];
-
     homeManager = {
       nix.settings.cores = 22; # keep two cores for the system
       niriExtraConfig = # kdl
@@ -47,6 +45,50 @@
         # keep two cores for the system
         nix.settings.cores = 22;
         services.fstrim.enable = true;
+
+        services.openssh = {
+          enable = true;
+          openFirewall = true;
+          settings = {
+            AllowUsers = [ "calops" ];
+            AuthenticationMethods = "publickey";
+            KbdInteractiveAuthentication = false;
+            PasswordAuthentication = false;
+            PermitRootLogin = "no";
+          };
+        };
+
+        services.sunshine = {
+          enable = true;
+          autoStart = true;
+          capSysAdmin = true;
+        };
+
+        # Keep Sunshine's management UI (47990/tcp) local-only.
+        networking.firewall = {
+          allowedTCPPorts = [
+            47984
+            47989
+            48010
+          ];
+          allowedUDPPorts = [
+            47998
+            47999
+            48000
+            48002
+            48010
+          ];
+        };
+
+        users.users.calops = {
+          extraGroups = [
+            "i2c"
+            "uinput"
+          ];
+          openssh.authorizedKeys.keys = [
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEszWDPDhuxnY9j8wfQ7A6JPHxeKuw1OwtqgrO2WLQyo"
+          ];
+        };
 
         boot = {
           kernelPackages = pkgs.linuxPackages_latest;
