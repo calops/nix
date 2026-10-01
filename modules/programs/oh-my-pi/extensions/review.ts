@@ -80,9 +80,9 @@ export default function (pi: ExtensionAPI) {
     name: "submit_review",
     label: "Submit Review",
     description:
-      "Submit structured code-review results from a self-review pass. " +
+      "Submit structured code-review results from a branch review pass. " +
       "Each issue gets an auto-assigned id so it can be resolved later via " +
-      "resolve_review_item.  Replaces any prior review in this session.",
+      "resolve_review_item. Replaces any prior review in this session.",
     parameters: z.object({
       issues: z.array(IssueSchema),
       summary: z.string().describe("One-line summary of the review results"),
@@ -252,11 +252,11 @@ export default function (pi: ExtensionAPI) {
 
   pi.registerCommand("review", {
     description:
-      "Resend the current self-review state to the TUI. " +
-      "The skill workflow is the primary entrypoint; this just re-shows the last snapshot.",
+      "Resend the current branch-review state to the TUI. " +
+      "The skill workflow is the primary entrypoint; this re-shows the last snapshot.",
     handler: async (_args, ctx) => {
       if (issues.length === 0) {
-        ctx.ui.notify("No review loaded yet — run self-review-branch first.", "warning");
+        ctx.ui.notify("No review loaded yet — run review-branch first.", "warning");
         return;
       }
       broadcast();

@@ -43,7 +43,7 @@ In the `let` block of `modules/programs/oh-my-pi/default.nix` (next to `ompExten
           cp "$TMPDIR/scratch/extensions/herdr-omp-agent-state.ts" "$out"
         '';
 
-        # Merge the repo-managed extensions (e.g. self-review.ts) with herdr's
+        # Merge the repo-managed extensions (e.g. review.ts) with herdr's
         # bundled omp extension into one store dir. A nested xdg.configFile
         # entry under the `extensions` symlink is impossible — home-manager
         # cannot write through a store symlink.
@@ -244,7 +244,7 @@ grep -rl "agent attach" "$result"/sw/ 2>/dev/null | grep '/omp$'   # the generat
 find /nix/store -maxdepth 1 -name '*omp-agent-extensions*' | head -1
 ```
 
-Expected: a path for the `omp` wrapper containing `agent attach`, and a `omp-agent-extensions` store dir listing both `self-review.ts` and `herdr-omp-agent-state.ts`.
+Expected: a path for the `omp` wrapper containing `agent attach`, and a `omp-agent-extensions` store dir listing both `review.ts` and `herdr-omp-agent-state.ts`.
 
 ---
 

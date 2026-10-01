@@ -151,8 +151,8 @@
         };
 
         home.file = {
-          ".omp/agent/extensions/self-review.ts".source =
-            config.lib.file.mkOutOfStoreSymlink "${ompExtensionsSrc}/self-review.ts";
+          ".omp/agent/extensions/review.ts".source =
+            config.lib.file.mkOutOfStoreSymlink "${ompExtensionsSrc}/review.ts";
           ".omp/agent/extensions/herdr-omp-agent-state.ts".source = herdrOmpStateExt;
           ".omp/agent/extensions/herdr-link".source = herdrLinkOmpExtension;
         };
