@@ -28,14 +28,10 @@ in
         ];
         statusLinePalette = pkgs.writeText "claude-statusline-palette.scss" colors.palette.asScss;
 
-        # Two lines of oh-my-posh style pills built from the statusLine JSON
-        # payload. Kept as a plain shell script (not writeShellApplication) so
-        # a missing/optional field never triggers `set -e`; PATH is pinned
-        # explicitly so it doesn't depend on the caller's environment.
         statusLine = pkgs.writeShellScript "claude-code-statusline" ''
           export PATH="${statusLineDeps}:$PATH"
           export CLAUDE_STATUSLINE_PALETTE="''${CLAUDE_STATUSLINE_PALETTE:-${statusLinePalette}}"
-          ${builtins.readFile ./claude-code-statusline.sh}
+          ${builtins.readFile ./statusline.sh}
         '';
 
       in
