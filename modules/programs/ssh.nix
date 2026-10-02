@@ -13,7 +13,7 @@
               HostName = "tocards.net";
               User = "calops";
             };
-            tocardstation = {
+            "station tocardstation" = {
               HostName = "station.tocards.net";
               User = "calops";
             };

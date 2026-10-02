@@ -21,6 +21,7 @@ in
     den.aspects.programs._.maki
     den.aspects.ai-dev._.skills
     den.aspects.programs._.herdr
+    den.aspects.programs._.orca
   ];
 
   homeManager =
