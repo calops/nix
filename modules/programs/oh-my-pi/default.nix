@@ -130,7 +130,7 @@
             enabledModels = [
               "opencode-go/*"
               "google/gemini-3*"
-              "openai-codex/gpt-5.6*"
+              "openai-codex/gpt-5*"
               "openai-codex/gpt-6*"
             ];
             defaultThinkingLevel = "auto";

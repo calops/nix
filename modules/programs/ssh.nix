@@ -9,8 +9,12 @@
           enableDefaultConfig = false;
           settings = {
             "*" = { };
-            tocards = {
+            tocardland = {
               HostName = "tocards.net";
+              User = "calops";
+            };
+            tocardstation = {
+              HostName = "station.tocards.net";
               User = "calops";
             };
           };

@@ -102,6 +102,15 @@ reset=$'\e[0m'
 bold=$'\e[1m'
 nobold=$'\e[22m'
 fgdef=$'\e[39m'
+
+# OSC 8 hyperlinks: terminals that support them make the text clickable,
+# others print it as-is. An empty URL (forge unknown) yields plain text.
+osc8=$'\e]8;;'
+st=$'\e\\'
+maybe_link() { # $1: url, $2: text
+  if [ -n "$1" ]; then printf '%s%s%s%s%s' "$osc8" "$1" "$st" "$2" "$osc8$st"
+  else printf '%s' "$2"; fi
+}
 pill_bg="${B[surface0]:-}"
 track_bg="${B[surface1]:-}"
 
@@ -127,13 +136,18 @@ fi
 # any less and Claude Code truncates the last pill with an ellipsis).
 margin="${CLAUDE_STATUSLINE_MARGIN:-5}"
 
-visible_width() { # $1: string with SGR escapes -> printed cell count
-  # Chunk-wise instead of an extglob ${s//...}, which is quadratic in bash.
-  local LC_ALL=C.UTF-8 s="$1" out="" esc=$'\e['
-  while [[ $s == *"$esc"* ]]; do
-    out+="${s%%"$esc"*}"
-    s="${s#*"$esc"}"
-    s="${s#*m}"
+visible_width() { # $1: string with escapes -> printed cell count
+  # Single pass: drop CSI (SGR) and OSC (OSC 8 hyperlink) sequences, keeping
+  # only the literal text between them.
+  local LC_ALL=C.UTF-8 s="$1" out=""
+  while [[ $s == *$'\e'* ]]; do
+    out+="${s%%$'\e'*}"
+    s="${s#*$'\e'}"
+    case "$s" in
+      ']'*) s="${s#*$'\e\\'}" ;; # OSC .. ST (ESC \)
+      '['*) s="${s#*m}" ;;       # CSI .. final byte 'm'
+      *) s="${s#?}" ;;           # lone ESC
+    esac
   done
   out+="$s"
   echo "${#out}"
@@ -482,6 +496,35 @@ if [ -n "${cwd:-}" ]; then
 fi
 
 # ------------------------------------------------------- ticket and PRs --
+# Repo identity for clickable PR links: forge host + owner/repo from origin.
+# Unparseable remotes just yield plain text (maybe_link with an empty URL).
+pr_host="" repo_slug=""
+if [ -n "${cwd:-}" ] && remote=$(git -C "$cwd" remote get-url origin 2>/dev/null); then
+  case "$remote" in
+    *://*)
+      remote="${remote#*://}"
+      remote="${remote#*@}"
+      pr_host="${remote%%/*}"
+      repo_slug="${remote#*/}"
+      ;;
+    *@*:*)
+      remote="${remote#*@}"
+      pr_host="${remote%%:*}"
+      repo_slug="${remote#*:}"
+      ;;
+  esac
+  pr_host="${pr_host%%:*}"
+  repo_slug="${repo_slug%.git}"
+  repo_slug="${repo_slug%/}"
+fi
+pr_url() { # $1: PR/MR number -> forge URL, empty when the remote is unknown
+  [ -n "$repo_slug" ] || return 0
+  case "${repo_host:-$pr_host}" in
+    *gitlab*) printf 'https://%s/%s/-/merge_requests/%s' "$pr_host" "$repo_slug" "$1" ;;
+    *) printf 'https://%s/%s/pull/%s' "${pr_host:-github.com}" "$repo_slug" "$1" ;;
+  esac
+}
+
 # Center of line 2: the Linear ticket and the PR stack of the current branch.
 # Open PRs come from `gh pr list`, cached per repo and refreshed in the
 # background so a render never waits on the network. The stack is the chain
@@ -541,7 +584,7 @@ for src in "${head:-}" "$cur_title"; do
     break
   fi
 done
-[ -n "$ticket" ] && pill center2 "${F[blue]:-}${g_ticket} ${bold}${ticket}${nobold}"
+[ -n "$ticket" ] && pill center2 "${F[blue]:-}${g_ticket} ${bold}$(maybe_link "https://linear.app/issue/${ticket}" "$ticket")${nobold}"
 
 label="PR"
 [ "${pr_kind:-}" = "mr" ] && label="MR"
@@ -560,16 +603,17 @@ if ((${#stack[@]} > 0)); then
       *:CHANGES_REQUESTED) col=red ;;
       *) col=purple ;;
     esac
+    pr_ref="$(maybe_link "$(pr_url "$num")" "#${num}")"
     if [ "$current" = "true" ]; then
-      p+="${F[$col]:-}${bold}#${num}${nobold}"
+      p+="${F[$col]:-}${bold}${pr_ref}${nobold}"
     else
-      p+="${F[$col]:-}#${num}"
+      p+="${F[$col]:-}${pr_ref}"
     fi
   done
   pill center2 "${p}${pr_state:+ ${F[overlay1]:-}${pr_state}}"
 elif [ -n "${pr_number:-}" ]; then
   # No gh data (yet, or not GitHub): the PR Claude Code knows about.
-  pill center2 "${F[purple]:-}${g_pr} ${label}#${pr_number}${pr_state:+ ${F[overlay1]:-}${pr_state}}"
+  pill center2 "${F[purple]:-}${g_pr} $(maybe_link "$(pr_url "$pr_number")" "${label}#${pr_number}")${pr_state:+ ${F[overlay1]:-}${pr_state}}"
 fi
 
 [ -n "${style:-}" ] && [ "$style" != "default" ] && pill left2 "${F[blue]:-}${g_style} ${style}"
