@@ -6,6 +6,7 @@
     includes = [
       den.aspects.headless
       den.aspects.standalone
+      den.aspects.ai-dev
     ];
 
     homeManager =
