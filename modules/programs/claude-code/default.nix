@@ -1,6 +1,6 @@
 { ... }:
 let
-  skillsDir = ./../profiles/ai-dev/skills;
+  skillsDir = ./../../profiles/ai-dev/skills;
   skillsSubdirs = builtins.readDir skillsDir;
   skillNames =
     skillsSubdirs
