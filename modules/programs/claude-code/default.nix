@@ -43,6 +43,7 @@ in
 
           settings = {
             permissions.defaultMode = "auto";
+            effortLevel = "xhigh";
             tui = "fullscreen";
             hooks = { };
             enabledPlugins = {

@@ -119,13 +119,13 @@
             github.enabled = true;
             task.enableLsp = true;
             modelRoles = {
-              default = "openai-codex/gpt-5.6-sol";
-              plan = "openai-codex/gpt-5.6-sol";
-              task = "openai-codex/gpt-5.6-terra";
-              smol = "openai-codex/gpt-5.6-luna";
+              default = "openai-codex/gpt-6.1-sol";
+              plan = "openai-codex/gpt-6.1-sol";
+              task = "openai-codex/gpt-6.1-sol";
+              smol = "openai-codex/gpt-5.6-terra";
               slow = "openai-codex/gpt-6-astra";
-              vision = "openai-codex/gpt-5.6-terra";
-              tiny = "openai-codex/gpt-5.6-luna";
+              vision = "openai-codex/gpt-6.1-sol";
+              tiny = "openai-codex/gpt-6-luna";
             };
             enabledModels = [
               "opencode-go/*"
