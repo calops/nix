@@ -16,11 +16,13 @@ locked `llm-agents` input.
   and desktop entry. `orca open` also uses this launcher. The `station` SSH alias
   and the existing `tocardstation` alias both resolve to `station.tocards.net`.
 
-Launch **Orca** from the application menu or run `orca-ide`. The laptop launcher
-opens `127.0.0.1:16768` through SSH to the station's `127.0.0.1:6768`, imports the
-server's pairing offer only if the saved `station` environment is absent, and
-checks authenticated connectivity before opening the GUI. SSH keys, host-key
-verification, and agent configuration come from the existing SSH setup.
+Launch **Orca** from the application menu or run `orca-ide` or `orca open`.
+The laptop launcher opens `127.0.0.1:16768` through SSH to the station's
+`127.0.0.1:6768`, imports the server's pairing offer only if the saved `station`
+environment is absent, and checks authenticated connectivity before opening
+the GUI. It clears the CLI's `ELECTRON_RUN_AS_NODE` flag before executing the
+desktop, including launches through `orca open`. SSH keys, host-key verification,
+and agent configuration come from the existing SSH setup.
 
 On the first launch, select **Settings → Remote Orca Servers → Advanced →
 Active Server → station**. Orca currently has no supported CLI to set this GUI

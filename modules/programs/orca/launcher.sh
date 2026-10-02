@@ -42,4 +42,8 @@ fi
 
 flock -u 9
 exec 9>&-
+
+# Orca's ORCA_OPEN_COMMAND override inherits the CLI's Node-mode flag.
+# Keep it for CLI calls, but never pass it into the desktop executable.
+unset ELECTRON_RUN_AS_NODE
 exec "$ORCA_GUI" "$@"
