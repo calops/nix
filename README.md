@@ -6,9 +6,10 @@ Personal flake for home-manager and nixos configuration.
 
 `modules/programs/ghostty.nix` installs the
 [pixel-scroll fork](https://github.com/parkers0405/ghostty-pixel-scroll) through
-Home Manager, enabled only on `tb-laptop`. It uses the fork's pinned nixpkgs
-for its compatible Zig build environment and declares its binary cache.
-Stylix supplies the shared terminal font and theme.
+Home Manager, enabled only on `tb-laptop`. It follows the host's nixpkgs so
+Ghostty and the graphics drivers use compatible runtime libraries. The aspect
+restores Zig's configure phase to initialize its build cache and declares the
+fork's binary cache. Stylix supplies the shared terminal font and theme.
 
 Launch `ghostty` or select Ghostty in the application menu after rebuilding.
 Kitty remains installed and the existing terminal keybindings are unchanged.

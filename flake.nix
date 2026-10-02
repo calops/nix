@@ -55,7 +55,10 @@
     };
     ghostty = {
       url = "github:parkers0405/ghostty-pixel-scroll";
-      inputs.home-manager.follows = "home-manager";
+      inputs = {
+        home-manager.follows = "home-manager";
+        nixpkgs.follows = "nixpkgs";
+      };
     };
     herdr-link = {
       url = "github:LZHcode1986/herdr-link";

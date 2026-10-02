@@ -2,8 +2,10 @@
 {
   flake-file.inputs.ghostty = {
     url = "github:parkers0405/ghostty-pixel-scroll";
-    # Keep the fork's nixpkgs pin: its Zig build needs the older cache setup hook.
-    inputs.home-manager.follows = "home-manager";
+    inputs = {
+      nixpkgs.follows = "nixpkgs";
+      home-manager.follows = "home-manager";
+    };
   };
 
   caches.ghostty-pixel-scroll = {
@@ -17,7 +19,10 @@
       {
         programs.ghostty = {
           enable = true;
-          package = inputs'.ghostty.packages.default;
+          package = inputs'.ghostty.packages.default.overrideAttrs {
+            # Current nixpkgs initializes Zig's cache during configurePhase.
+            dontConfigure = false;
+          };
         };
       };
   };
