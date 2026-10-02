@@ -2,6 +2,17 @@
 
 Personal flake for home-manager and nixos configuration.
 
+## Ghostty
+
+`modules/programs/ghostty.nix` installs the
+[pixel-scroll fork](https://github.com/parkers0405/ghostty-pixel-scroll) through
+Home Manager, enabled only on `tb-laptop`. It uses the fork's pinned nixpkgs
+for its compatible Zig build environment and declares its binary cache.
+Stylix supplies the shared terminal font and theme.
+
+Launch `ghostty` or select Ghostty in the application menu after rebuilding.
+Kitty remains installed and the existing terminal keybindings are unchanged.
+
 ## Orca
 
 The `ai-dev` profile includes `modules/programs/orca.nix`. Orca is installed only

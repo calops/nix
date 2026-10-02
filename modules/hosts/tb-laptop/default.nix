@@ -9,6 +9,7 @@
       den.aspects.laptop
       den.aspects.ai-dev
       den.aspects.stickers
+      den.aspects.programs._.ghostty
       den.aspects.hardware._.nuphy
       den.aspects.hardware._.logitech
       den.aspects.work._.terabase
