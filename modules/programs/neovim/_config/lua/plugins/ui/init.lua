@@ -101,6 +101,12 @@ return {
 				picker = {
 					ui_select = true,
 					db = { sqlite3_path = vim.g.sqlite_clib_path },
+					win = {
+						input = {
+							-- Keep the insertion point valid during modes.nvim's preview redraws.
+							wo = { virtualedit = "onemore" },
+						},
+					},
 					layout = {
 						border = vim.g.floating_border,
 					},

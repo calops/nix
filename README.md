@@ -14,6 +14,15 @@ fork's binary cache. Stylix supplies the shared terminal font and theme.
 Launch `ghostty` or select Ghostty in the application menu after rebuilding.
 Kitty remains installed and the existing terminal keybindings are unchanged.
 
+## Neovim picker input
+
+Snacks picker input windows use `virtualedit = "onemore"` so the insertion
+point stays valid when `modes.nvim` redraws during preview Normal-mode commands.
+Without it, preview updates can move the prompt cursor left and reorder typed
+characters. Other editor windows retain `virtualedit = "block"`.
+
+Restart Neovim after changing the picker configuration; no Nix rebuild is needed.
+
 ## Orca
 
 The `ai-dev` profile includes `modules/programs/orca.nix`. Orca is installed only
