@@ -1,5 +1,10 @@
 return {
 	{
+		"ChmaraX/herdr-nvim",
+		dir = vim.g.herdr_nvim_root,
+		opts = {},
+	},
+	{
 		"folke/sidekick.nvim",
 		event = "VeryLazy",
 		config = function(_, opts)

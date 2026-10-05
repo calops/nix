@@ -46,7 +46,7 @@
                     ];
                     template = builtins.concatStringsSep "" [
                       "{{ if or .SSHSession .Root }} {{ .UserName }}{{ end }}"
-                      "{{ if .SSHSession }}  {{ .Hostname }}{{end}}"
+                      "{{ if .SSHSession }}  {{ .HostName }}{{end}}"
                     ];
                   }
                   {

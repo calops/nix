@@ -60,8 +60,16 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
+    herdr = {
+      url = "github:calops/herdr/calops/sidebar-workspaces";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     herdr-link = {
       url = "github:LZHcode1986/herdr-link";
+      flake = false;
+    };
+    herdr-nvim = {
+      url = "github:ChmaraX/herdr-nvim";
       flake = false;
     };
     home-manager = {

@@ -14,6 +14,22 @@ fork's binary cache. Stylix supplies the shared terminal font and theme.
 Launch `ghostty` or select Ghostty in the application menu after rebuilding.
 Kitty remains installed and the existing terminal keybindings are unchanged.
 
+## Shell prompt
+
+Oh My Posh shows the user and hostname in SSH sessions; non-root local sessions
+omit that segment. The session template uses the case-sensitive `.HostName` field.
+After applying prompt changes through Home Manager, start a new shell to discard
+cached prompt templates.
+
+## Neovim clipboard
+
+Neovim always uses OSC 52 for clipboard access. `,y` copies through the attached
+terminal rather than the host's `wl-copy`/`xclip`; a local Kitty terminal handles
+the system clipboard, and Herdr forwards clipboard writes over SSH.
+
+Herdr does not answer OSC 52 clipboard-read queries, so use Kitty's
+`Ctrl+Shift+V` to paste into Neovim through Herdr instead of `"+p`.
+
 ## Neovim picker input
 
 Snacks picker input windows use `virtualedit = "onemore"` so the insertion
@@ -22,6 +38,19 @@ Without it, preview updates can move the prompt cursor left and reorder typed
 characters. Other editor windows retain `virtualedit = "block"`.
 
 Restart Neovim after changing the picker configuration; no Nix rebuild is needed.
+
+## Herdr theme
+
+`modules/programs/herdr.nix` uses the global palette from `modules/colors.nix`.
+Sidebar and UI chrome use `mantle`, sidebar separators use `crust`, and focused/selected
+sidebar rows use `surface0`. Terminal contents retain Kitty's default `base`
+background. UI accents use `blue`; sidebar agent names use `mauve` without bold.
+Split panes share single dividers, with no outer frame or gaps. Pane divider
+colors retain Herdr's upstream focus-dependent styling.
+
+After applying the Home Manager configuration, reload Herdr with
+`Ctrl+B`, then `Shift+R`. For remote sessions, detach and relaunch the remote
+client to pick up theme changes.
 
 ## Orca
 
@@ -80,3 +109,71 @@ If the server's saved client grant is revoked, remove the laptop's saved
 environment with `orca environment rm --environment station`. Explicitly
 restart `orca.service` on the station to generate a fresh offer, then relaunch
 the laptop client. The launcher never restarts the server to obtain credentials.
+
+## Herdr
+
+Herdr comes from [calops/herdr](https://github.com/calops/herdr/tree/calops/sidebar-workspaces),
+locked through the `herdr` flake input. The checkout is in `~/projects/herdr`.
+Both the Herdr aspect and the OMP integration use this package; Collie and OMP
+itself still come from `llm-agents`.
+
+The expanded desktop sidebar is one workspace-first tree. Workspaces retain
+their metadata, including a second line when present; their agents appear as
+indented children. Agent names occupy the first line, with the gray tab/pane
+description on the second. One empty line separates workspace groups.
+
+Tree guides connect workspace status dots to agent status dots using `├──` and
+a rounded `╰──` for the last child. Guides continue through metadata/description
+lines but stop below the last child.
+
+Click a workspace label to focus it, its arrow to collapse or expand agents, or
+either line of an agent to focus that pane. Hover and focus backgrounds cover
+both lines and the indentation; hover uses `surface1` and never overrides focus.
+The tree has one scrollbar, and wheel input over agents scrolls that same tree.
+
+Collapse state lasts for the client session. Agent shortcuts reveal their target
+automatically. Sorting and plugin views affect agents within the workspace
+hierarchy. Compact and mobile layouts retain their compact presentation.
+
+After applying the Nix configuration, detach and relaunch the Herdr client.
+The server and its pane processes can keep running.
+
+### Fork development
+
+Edit and commit changes in `~/projects/herdr` on `calops/sidebar-workspaces`.
+To test local edits without changing the lock:
+
+```sh
+nix build path:.#nixosConfigurations.tocardstation.config.home-manager.users.calops.programs.herdr.package \
+  --override-input herdr "path:$HOME/projects/herdr" --no-write-lock-file --no-link
+```
+
+After pushing the fork, update and build the pinned package:
+
+```sh
+nix flake update herdr
+nix build path:.#nixosConfigurations.tocardstation.config.home-manager.users.calops.programs.herdr.package --no-link
+```
+
+Package builds do not run tests. Validate UI changes by launching the built
+binary and exercising the actual sidebar. Home Manager installs the same package
+derivation, so activation reuses the built output. `path:.` includes untracked
+working-tree files during development.
+
+### Neovim sidebar
+
+The Herdr aspect builds [herdr-nvim](https://github.com/ChmaraX/herdr-nvim)
+from the locked source and registers it on each Home Manager switch. Lazy.nvim
+loads its annotations plugin from the same Nix store package; Herdr's upstream
+download/build hooks are removed because Nix supplies the binary.
+
+- `Ctrl+B`, then `Shift+E`: toggle the persistent Neovim sidebar for the tab.
+- `Ctrl+B`, then `Shift+O`: open the file picker for agent-touched files.
+- Existing `Ctrl+B`, then `e` (scrollback) and `o` (notification target) stay unchanged.
+- In Neovim: `,ac` comments on a line/selection, `,al` lists comments,
+  `,as` pastes comments to the agent, `,aS` submits them, and `,ai` inserts a reference.
+  These are also available through `:Herdr`; see `:help herdr-nvim` for details.
+
+The sidebar uses the Home Manager Neovim package and normal editor configuration.
+Closing its tab discards unsaved sidebar buffers; `herdr-nvim daemons` lists
+running sidebar daemons.

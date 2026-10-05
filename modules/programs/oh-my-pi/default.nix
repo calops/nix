@@ -18,7 +18,7 @@
         ...
       }:
       let
-        herdrPackage = inputs'.llm-agents.packages.herdr;
+        herdrPackage = inputs'.herdr.packages.herdr;
         ompPackage = inputs'.llm-agents.packages.omp;
         ompConfigDir = "${config.home.homeDirectory}/.omp/agent";
         legacyOmpConfigDir = "${config.xdg.configHome}/omp/agent";
