@@ -117,26 +117,43 @@ locked through the `herdr` flake input. The checkout is in `~/projects/herdr`.
 Both the Herdr aspect and the OMP integration use this package; Collie and OMP
 itself still come from `llm-agents`.
 
-The expanded desktop sidebar is one workspace-first tree. Workspaces retain
-their metadata, including a second line when present; their agents appear as
-indented children. Agent names occupy the first line, with the gray tab/pane
-description on the second. One empty line separates workspace groups.
+The expanded desktop sidebar is one workspace-first tree. Workspace names occupy
+the first line; the second shows comma-separated Git repository names from all
+panes across every tab, deduplicated and sorted alphabetically (for example,
+`backend, frontend`). Non-Git panes are ignored; branches and worktree checkout
+directory names are not used. The built-in `projects` token uses `overlay0`
+without bold, including on grouped worktree children, and its row disappears when
+there are no repositories. Agents appear as indented children. Agent names occupy
+the first line, with the gray tab/pane description on the second. One empty line
+separates workspace groups.
 
-Tree guides connect workspace status dots to agent status dots using `├──` and
-a rounded `╰──` for the last child. Guides continue through metadata/description
-lines but stop below the last child.
+Tree guides drop directly from each workspace's status dot, with no leftover
+arrow padding. They connect agents using `├──` and a rounded `╰──` for the last
+child, continue through metadata/description lines, and stop below the last child.
 
-Click a workspace label to focus it, its arrow to collapse or expand agents, or
-either line of an agent to focus that pane. Hover and focus backgrounds cover
-both lines and the indentation; hover uses `surface1` and never overrides focus.
-The tree has one scrollbar, and wheel input over agents scrolls that same tree.
+Workspace groups have no disclosure arrow or reserved arrow padding. Double-click
+anywhere in a group (its header, projects, or either agent line) to fold or unfold
+it. Workspace names are bold and use the normal `text` color in both states.
+Folded groups occupy one line: the colored status dot and workspace name followed
+by muted middle dots filling the
+remaining width, with metadata hidden. Long names truncate to keep a visible fold
+marker.
+
+Single-click a workspace label to focus it, or either line of an agent to focus
+that pane. Rapid clicks on different rows do not fold the group. Hover and focus
+backgrounds cover both lines and the indentation; hover uses `surface1` and never
+overrides focus. The tree has one scrollbar, and wheel input over agents scrolls
+that same tree.
 
 Collapse state lasts for the client session. Agent shortcuts reveal their target
 automatically. Sorting and plugin views affect agents within the workspace
 hierarchy. Compact and mobile layouts retain their compact presentation.
 
 After applying the Nix configuration, detach and relaunch the Herdr client.
-The server and its pane processes can keep running.
+Client-only sidebar changes do not require stopping the server or pane processes.
+The automatic `projects` metadata is server-produced, so deploying this feature
+requires the updated server as well; an older server leaves the projects row
+absent rather than falling back to one repository.
 
 ### Fork development
 
