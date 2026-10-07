@@ -121,8 +121,10 @@ the laptop client. The launcher never restarts the server to obtain credentials.
 
 Herdr comes from [calops/herdr](https://github.com/calops/herdr/tree/calops/sidebar-workspaces),
 locked through the `herdr` flake input. The checkout is in `~/projects/herdr`.
-Both the Herdr aspect and the OMP integration use this package; Collie and OMP
-itself still come from `llm-agents`.
+Both the Herdr aspect and the OMP integration use this package; OMP itself
+still comes from `llm-agents`. The phone bridge and Tailscale integration are
+not installed. SSH aliases `station` and `tocardstation` connect directly to
+`station.tocards.net`; its public IPv6 address does not require Tailscale.
 
 The expanded desktop sidebar is one workspace-first tree. Workspace names occupy
 one line. Agents appear as indented children, with agent names on the first line
