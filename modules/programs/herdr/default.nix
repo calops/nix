@@ -180,13 +180,6 @@
             ];
             ui.sidebar.spaces.rows = [
               [ "state_icon" "workspace" ]
-              [
-                {
-                  token = "projects";
-                  fg = palette.overlay0;
-                  bold = false;
-                }
-              ]
             ];
 
             keys.prefix = "ctrl+b";

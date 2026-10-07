@@ -125,14 +125,13 @@ Both the Herdr aspect and the OMP integration use this package; Collie and OMP
 itself still come from `llm-agents`.
 
 The expanded desktop sidebar is one workspace-first tree. Workspace names occupy
-the first line; the second shows comma-separated Git repository names from all
-panes across every tab, deduplicated and sorted alphabetically (for example,
-`backend, frontend`). Non-Git panes are ignored; branches and worktree checkout
-directory names are not used. The built-in `projects` token uses `overlay0`
-without bold, including on grouped worktree children, and its row disappears when
-there are no repositories. Agents appear as indented children. Agent names occupy
-the first line, with the gray tab/pane description on the second. One empty line
-separates workspace groups.
+one line. Agents appear as indented children, with agent names on the first line
+and the gray tab/pane description on the second. One empty line separates
+workspace groups.
+
+The fork supports a `projects` metadata row, but this configuration leaves it
+disabled for compatibility with older running servers. Those servers reject the
+token when parsing the UI section, preventing updated border settings from loading.
 
 Tree guides drop directly from each workspace's status dot, with no leftover
 arrow padding. They connect agents using `├──` and a rounded `╰──` for the last
@@ -158,9 +157,8 @@ hierarchy. Compact and mobile layouts retain their compact presentation.
 
 After applying the Nix configuration, detach and relaunch the Herdr client.
 Client-only sidebar changes do not require stopping the server or pane processes.
-The automatic `projects` metadata is server-produced, so deploying this feature
-requires the updated server as well; an older server leaves the projects row
-absent rather than falling back to one repository.
+Enabling the optional `projects` token requires the updated server as well as the
+updated client; an older server cannot parse that sidebar configuration.
 
 ### Fork development
 
