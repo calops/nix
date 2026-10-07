@@ -7,7 +7,6 @@
     extra-substituters = [
       "https://anyrun.cachix.org"
       "https://calops.cachix.org"
-      "https://ghostty-pixel-scroll.cachix.org"
       "https://niri.cachix.org"
       "https://nix-community.cachix.org"
       "https://nix-darwin.cachix.org"
@@ -17,7 +16,6 @@
     extra-trusted-public-keys = [
       "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
       "calops.cachix.org-1:6RTG80il2oS2ECFeG2QubG+mvD9OJc1s6Lm9JGAFcM0="
-      "ghostty-pixel-scroll.cachix.org-1:vkWtQpi2OeQk5pzrpOAEF+FHm6b6PjKoypJBbYiZMuU="
       "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "nix-darwin.cachix.org-1:LxMyKzQk7Uqkc1Pfq5uhm9GSn07xkERpy+7cpwc006A="
@@ -53,23 +51,12 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    ghostty = {
-      url = "github:parkers0405/ghostty-pixel-scroll";
-      inputs = {
-        home-manager.follows = "home-manager";
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
     herdr = {
       url = "github:calops/herdr/calops/sidebar-workspaces";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     herdr-link = {
       url = "github:LZHcode1986/herdr-link";
-      flake = false;
-    };
-    herdr-nvim = {
-      url = "github:ChmaraX/herdr-nvim";
       flake = false;
     };
     home-manager = {

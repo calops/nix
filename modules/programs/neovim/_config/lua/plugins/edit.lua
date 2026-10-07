@@ -196,6 +196,10 @@ return {
 				storage = "sqlite",
 				cancel_event = "move",
 			},
+			system_clipboard = {
+				-- Herdr forwards OSC 52 writes but cannot answer focus-triggered reads.
+				sync_with_ring = false,
+			},
 		},
 		init = function()
 			-- Remove trailing whitespace from visual block yanks

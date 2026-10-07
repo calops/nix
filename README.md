@@ -23,12 +23,19 @@ cached prompt templates.
 
 ## Neovim clipboard
 
-Neovim always uses OSC 52 for clipboard access. `,y` copies through the attached
+Neovim uses OSC 52 for clipboard access. `,y` copies through the attached
 terminal rather than the host's `wl-copy`/`xclip`; a local Kitty terminal handles
 the system clipboard, and Herdr forwards clipboard writes over SSH.
 
-Herdr does not answer OSC 52 clipboard-read queries, so use Kitty's
-`Ctrl+Shift+V` to paste into Neovim through Herdr instead of `"+p`.
+Yanky's `system_clipboard.sync_with_ring` is disabled: its focus-loss/focus-gain
+callbacks read the clipboard, and Herdr does not answer OSC 52 read queries.
+This prevents the "Waiting for OSC 52 response" freeze when returning to Neovim.
+Normal yank history remains enabled, but external clipboard changes are no
+longer automatically imported into the yank ring.
+
+Use Kitty's `Ctrl+Shift+V` to paste into Neovim through Herdr instead of `"+p`,
+which still requests an unsupported clipboard read. Restart Neovim to apply the
+focus-sync change; no Nix rebuild is needed.
 
 ## Neovim picker input
 
@@ -180,12 +187,24 @@ working-tree files during development.
 ### Neovim sidebar
 
 The Herdr aspect builds [herdr-nvim](https://github.com/ChmaraX/herdr-nvim)
-from the locked source and registers it on each Home Manager switch. Lazy.nvim
+from a manually pinned `fetchFromGitHub` source in `modules/programs/herdr.nix`,
+not a flake input, and registers it on each Home Manager switch. Lazy.nvim
 loads its annotations plugin from the same Nix store package; Herdr's upstream
 download/build hooks are removed because Nix supplies the binary.
 
+A small local patch makes the file picker and its `fff-search`/`crossterm`
+dependencies optional. The package uses `--no-default-features`, so it does not
+compile them or expose their commands, plugin entries, or keybinding. The upstream
+source and Cargo lockfile remain intact to keep the patch small; optional crates
+remain vendored but are not compiled.
+
+Full release LTO and build-time tests are disabled. A plain Neovim supplies
+build-time tools; the sidebar still launches the Home Manager Neovim package.
+To update manually, change the source revision/hash, rebase
+`modules/programs/herdr-nvim/disable-file-picker.patch` if needed, and update
+`cargoHash` only when the upstream Cargo lockfile changes.
+
 - `Ctrl+B`, then `Shift+E`: toggle the persistent Neovim sidebar for the tab.
-- `Ctrl+B`, then `Shift+O`: open the file picker for agent-touched files.
 - Existing `Ctrl+B`, then `e` (scrollback) and `o` (notification target) stay unchanged.
 - In Neovim: `,ac` comments on a line/selection, `,al` lists comments,
   `,as` pastes comments to the agent, `,aS` submits them, and `,ai` inserts a reference.

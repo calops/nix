@@ -9,10 +9,6 @@
       url = "github:LZHcode1986/herdr-link";
       flake = false;
     };
-    herdr-nvim = {
-      url = "github:ChmaraX/herdr-nvim";
-      flake = false;
-    };
   };
 
   den.aspects.programs.provides.herdr = {
@@ -82,27 +78,34 @@
             exec ${lib.getExe pkgs.nodejs} ${herdrLink}/lib/herdr-link/dist/herdr-link.mcp.js "$@"
           '';
         };
-        herdrNvimManifest = builtins.fromTOML (builtins.readFile "${inputs.herdr-nvim}/herdr-plugin.toml");
+        herdrNvimSrc = pkgs.fetchFromGitHub {
+          owner = "ChmaraX";
+          repo = "herdr-nvim";
+          rev = "5e849b5377fd409d2fd4be159c9c9fa36c251f7a";
+          hash = "sha256-BdZygw+OdfNlcEmb6v6ic9HV8ImxU3bDCq+28qu8Er0=";
+        };
+        herdrNvimManifest = builtins.fromTOML (builtins.readFile "${herdrNvimSrc}/herdr-plugin.toml");
         # Nix builds the binary; Herdr must not run upstream's download/build hooks.
         herdrNvimManifestFile = (pkgs.formats.toml { }).generate "herdr-plugin.toml" (
           builtins.removeAttrs herdrNvimManifest [ "build" ]
+          // {
+            actions = lib.filter (action: action.id != "pick-file") herdrNvimManifest.actions;
+            panes = lib.filter (pane: pane.id != "picker") herdrNvimManifest.panes;
+          }
         );
         herdrNvim = pkgs.rustPlatform.buildRustPackage {
           pname = "herdr-nvim";
           inherit (herdrNvimManifest) version;
-          src = inputs.herdr-nvim;
+          src = herdrNvimSrc;
           cargoHash = "sha256-pImtQ1YiM47VvA8u9ER/lXtDVsZhQy38fkCbzmT/gc4=";
+          patches = [ ./herdr-nvim/disable-file-picker.patch ];
+          buildNoDefaultFeatures = true;
+          # Avoid upstream's full LTO and release-mode test compilation.
+          CARGO_PROFILE_RELEASE_LTO = "false";
+          doCheck = false;
           nativeBuildInputs = [
-            pkgs.pkg-config
-            pkgs.neovim
+            pkgs.neovim-unwrapped
           ];
-          buildInputs = [ pkgs.openssl ];
-          nativeCheckInputs = [ pkgs.git ];
-          # The picker integration test indexes tracked files; flake sources omit .git.
-          preCheck = ''
-            git init --quiet
-            git add .
-          '';
           postInstall = ''
             cp -R lua plugin doc "$out/"
             cp ${herdrNvimManifestFile} "$out/herdr-plugin.toml"
@@ -239,12 +242,6 @@
                 type = "plugin_action";
                 command = "chmarax.herdr-nvim.toggle";
                 description = "nvim sidebar";
-              }
-              {
-                key = "prefix+shift+o";
-                type = "plugin_action";
-                command = "chmarax.herdr-nvim.pick-file";
-                description = "open file from agent output";
               }
             ];
 

@@ -1,0 +1,211 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -3,19 +3,24 @@
+ version = "1.1.0"
+ edition = "2021"
+ 
++[features]
++default = ["file-picker"]
++file-picker = ["dep:crossterm", "dep:fff-search"]
++
+ [dependencies]
+ serde = { version = "1", features = ["derive"] }
+ serde_json = "1"
+ toml = "0.8"
+ anyhow = "1"
+-crossterm = "0.28"
++crossterm = { version = "0.28", optional = true }
+ # fff-search backend for the picker's fuzzy fallback tier. Users install
+ # prebuilt release binaries, so the extra dependency weight is a CI/build
+ # cost, not a user-facing one.
+-fff-search = "0.10.6"
++fff-search = { version = "0.10.6", optional = true }
+ 
+ [[example]]
+ name = "fff_cold"
++required-features = ["file-picker"]
+ 
+ [dev-dependencies]
+ regex = "1"
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -1,9 +1,11 @@
+ mod bridge;
++#[cfg(feature = "file-picker")]
+ mod candidates;
+ mod config;
+ mod daemon;
+ mod doctor;
+ mod extract;
++#[cfg(feature = "file-picker")]
+ mod fff;
+ mod gitscan;
+ mod herdr;
+@@ -11,7 +13,9 @@
+ mod maneuver;
+ mod openlink;
+ mod path;
++#[cfg(feature = "file-picker")]
+ mod picker;
++#[cfg(feature = "file-picker")]
+ mod sessions;
+ mod state;
+ #[cfg(test)]
+@@ -31,12 +35,19 @@
+         "on-event" => run(daemon::events::on_event_cmd),
+         "daemons" => run(daemon::inventory::daemons_cmd),
+         "doctor" => run(doctor::doctor_cmd),
++        #[cfg(feature = "file-picker")]
+         "pick-file" => run(bridge::pick_file_cmd),
++        #[cfg(feature = "file-picker")]
+         "picker" => run(picker::picker_cmd),
+         "open-link" => run(openlink::open_link_cmd),
+         _ => {
++            let picker_modes = if cfg!(feature = "file-picker") {
++                "|pick-file|picker"
++            } else {
++                ""
++            };
+             eprintln!(
+-                "usage: herdr-nvim <toggle|sidebar|daemon-gc|on-event|daemons|doctor|pick-file|picker|open-link>"
++                "usage: herdr-nvim <toggle|sidebar|daemon-gc|on-event|daemons|doctor{picker_modes}|open-link>"
+             );
+             2
+         }
+--- a/src/bridge.rs
++++ b/src/bridge.rs
+@@ -13,30 +13,39 @@
+ //! Only the pure selection rule [`target_agent_pane`] is unit tested; the two
+ //! phases are exercised live in Task 4's end-to-end run.
+ 
++use std::{path::Path, process::Command};
++#[cfg(feature = "file-picker")]
+ use std::{
+     collections::HashSet,
+     env,
+     io::ErrorKind,
+-    path::{Path, PathBuf},
+-    process::Command,
++    path::PathBuf,
+     time::{SystemTime, UNIX_EPOCH},
+ };
+ 
+ use anyhow::{bail, Context, Result};
+ 
+ use crate::{
+-    candidates::{self, BuildInput, Candidate},
+-    config, daemon, extract, gitscan,
+-    herdr::{self, CliHerdr, Herdr},
++    config, daemon,
++    herdr::Herdr,
+     maneuver::{self, Ctx},
++    state,
++};
++#[cfg(feature = "file-picker")]
++use crate::{
++    candidates::{self, BuildInput, Candidate},
++    extract, gitscan,
++    herdr::{self, CliHerdr},
+     picker::Handoff,
+-    sessions, state,
++    sessions,
+ };
+ 
++#[cfg(feature = "file-picker")]
+ const PLUGIN_ID: &str = "chmarax.herdr-nvim";
+ 
+ /// Entry point for the `pick-file` subcommand. Dispatches to the finisher when
+ /// invoked as `pick-file --finish <handoff>`, otherwise runs the action phase.
++#[cfg(feature = "file-picker")]
+ pub fn pick_file_cmd() -> Result<()> {
+     match finish_handoff_path(env::args()) {
+         Some(handoff) => finish_pick(&handoff),
+@@ -45,6 +54,7 @@
+ }
+ 
+ /// Extract the handoff path from a `--finish <path>` argument pair, if present.
++#[cfg(feature = "file-picker")]
+ fn finish_handoff_path(args: impl Iterator<Item = String>) -> Option<String> {
+     let mut args = args;
+     while let Some(arg) = args.next() {
+@@ -61,6 +71,7 @@
+ /// lines). Nothing is lost: deep file history still comes from session mining
+ /// and git. `None` (older herdr without the scroll block in `pane get`) keeps
+ /// the configured value unchanged.
++#[cfg(feature = "file-picker")]
+ fn effective_scan_lines(configured: u32, scroll: Option<herdr::PaneScroll>) -> u32 {
+     scroll.map_or(configured, |scroll| {
+         configured.min(scroll.cheap_read_limit())
+@@ -77,6 +88,7 @@
+ ///   picking it silently searches the wrong repo).
+ /// * Otherwise fall back to the first agent pane in `workspace`.
+ /// * If the workspace has no agent panes, error.
++#[cfg(feature = "file-picker")]
+ pub fn target_agent_pane(
+     h: &mut dyn Herdr,
+     workspace: &str,
+@@ -100,6 +112,7 @@
+ /// Phase 1: read the target agent pane, gather candidates from the three
+ /// read-only layers (session mining, git worktree status, scrape), and open
+ /// the picker.
++#[cfg(feature = "file-picker")]
+ fn start_pick() -> Result<()> {
+     let mut herdr = CliHerdr;
+     let ctx = maneuver::read_ctx(&mut herdr)?;
+@@ -140,6 +153,7 @@
+ /// the cwd). Never fails: any session-file read error, JSON parse failure,
+ /// or git command failure degrades to the remaining layers (brief) -- this
+ /// function's return type is `Vec<Candidate>`, not `Result`, on purpose.
++#[cfg(feature = "file-picker")]
+ fn gather_candidates(
+     agent_session: Option<&herdr::AgentSession>,
+     scrape_text: &str,
+@@ -214,6 +228,7 @@
+ }
+ 
+ /// Phase 2: act on the user's selection from the handoff file.
++#[cfg(feature = "file-picker")]
+ fn finish_pick(handoff_path: &str) -> Result<()> {
+     let raw = std::fs::read_to_string(handoff_path)
+         .with_context(|| format!("reading handoff {handoff_path}"))?;
+@@ -350,6 +365,7 @@
+ 
+ /// Open the picker as a floating popup pane, passing the handoff path via the
+ /// environment.
++#[cfg(feature = "file-picker")]
+ fn open_picker(handoff_path: &str) -> Result<()> {
+     let status = Command::new("herdr")
+         .args([
+@@ -379,6 +395,7 @@
+ 
+ /// Show a herdr notification (best-effort, falling back to stderr) that no file
+ /// paths were found. Callers exit 0 after this — an empty result is not an error.
++#[cfg(feature = "file-picker")]
+ fn notify_no_candidates() {
+     let shown = Command::new("herdr")
+         .args([
+@@ -397,6 +414,7 @@
+ }
+ 
+ /// Serialize `handoff` to a uniquely-named temp file, returning its path.
++#[cfg(feature = "file-picker")]
+ fn write_handoff(handoff: &Handoff) -> Result<String> {
+     let nanos = SystemTime::now()
+         .duration_since(UNIX_EPOCH)
+@@ -414,6 +432,7 @@
+ }
+ 
+ /// Delete the handoff temp file, ignoring a missing file.
++#[cfg(feature = "file-picker")]
+ fn cleanup_handoff(handoff_path: &str) {
+     match std::fs::remove_file(handoff_path) {
+         Ok(()) => {}
+@@ -422,7 +441,7 @@
+     }
+ }
+ 
+-#[cfg(test)]
++#[cfg(all(test, feature = "file-picker"))]
+ mod tests {
+     use std::collections::VecDeque;
+ 
