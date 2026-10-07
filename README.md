@@ -48,7 +48,7 @@ Restart Neovim after changing the picker configuration; no Nix rebuild is needed
 
 ## Herdr theme
 
-`modules/programs/herdr.nix` uses the global palette from `modules/colors.nix`.
+`modules/programs/herdr/default.nix` uses the global palette from `modules/colors.nix`.
 Sidebar and UI chrome use `mantle`, sidebar separators use `crust`, and focused/selected
 sidebar rows use `surface0`. Terminal contents retain Kitty's default `base`
 background. UI accents use `blue`; sidebar agent names use `mauve` without bold.
@@ -187,7 +187,7 @@ working-tree files during development.
 ### Neovim sidebar
 
 The Herdr aspect builds [herdr-nvim](https://github.com/ChmaraX/herdr-nvim)
-from a manually pinned `fetchFromGitHub` source in `modules/programs/herdr.nix`,
+from a manually pinned `fetchFromGitHub` source in `modules/programs/herdr/default.nix`,
 not a flake input, and registers it on each Home Manager switch. Lazy.nvim
 loads its annotations plugin from the same Nix store package; Herdr's upstream
 download/build hooks are removed because Nix supplies the binary.
@@ -196,12 +196,13 @@ A small local patch makes the file picker and its `fff-search`/`crossterm`
 dependencies optional. The package uses `--no-default-features`, so it does not
 compile them or expose their commands, plugin entries, or keybinding. The upstream
 source and Cargo lockfile remain intact to keep the patch small; optional crates
-remain vendored but are not compiled.
+remain vendored but are not compiled. Only necessary feature gates are patched;
+lightweight unused helpers and upstream tests are left unchanged.
 
 Full release LTO and build-time tests are disabled. A plain Neovim supplies
 build-time tools; the sidebar still launches the Home Manager Neovim package.
 To update manually, change the source revision/hash, rebase
-`modules/programs/herdr-nvim/disable-file-picker.patch` if needed, and update
+`modules/programs/herdr/disable-file-picker.patch` if needed, and update
 `cargoHash` only when the upstream Cargo lockfile changes.
 
 - `Ctrl+B`, then `Shift+E`: toggle the persistent Neovim sidebar for the tab.

@@ -98,7 +98,7 @@
           inherit (herdrNvimManifest) version;
           src = herdrNvimSrc;
           cargoHash = "sha256-pImtQ1YiM47VvA8u9ER/lXtDVsZhQy38fkCbzmT/gc4=";
-          patches = [ ./herdr-nvim/disable-file-picker.patch ];
+          patches = [ ./disable-file-picker.patch ];
           buildNoDefaultFeatures = true;
           # Avoid upstream's full LTO and release-mode test compilation.
           CARGO_PROFILE_RELEASE_LTO = "false";
@@ -310,7 +310,7 @@
         # (this HM's file type has no mode option, and the file may later
         # hold COLLIE_VAPID_PRIVATE).
         xdg.configFile."collie/.env".text = ''
-          # Collie configuration — managed by modules/programs/herdr.nix.
+          # Collie configuration — managed by modules/programs/herdr/default.nix.
           # Fill these in once your tailnet account exists:
           # COLLIE_TRUSTED_USER=you@example.com   # tailnet login — rejects everyone else
           # COLLIE_PUBLIC_HOSTS=myhost.tail1234.ts.net  # MagicDNS name(s) you serve on

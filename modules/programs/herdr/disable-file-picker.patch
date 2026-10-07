@@ -1,0 +1,71 @@
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -5,2 +5,5 @@
+ 
++[features]
++file-picker = ["dep:crossterm", "dep:fff-search"]
++
+ [dependencies]
+@@ -10,3 +13,3 @@
+ anyhow = "1"
+-crossterm = "0.28"
++crossterm = { version = "0.28", optional = true }
+ # fff-search backend for the picker's fuzzy fallback tier. Users install
+@@ -14,3 +17,3 @@
+ # cost, not a user-facing one.
+-fff-search = "0.10.6"
++fff-search = { version = "0.10.6", optional = true }
+ 
+@@ -18,2 +21,3 @@
+ name = "fff_cold"
++required-features = ["file-picker"]
+ 
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -6,2 +6,3 @@
+ mod extract;
++#[cfg(feature = "file-picker")]
+ mod fff;
+@@ -13,2 +14,3 @@
+ mod path;
++#[cfg(feature = "file-picker")]
+ mod picker;
+@@ -33,3 +35,5 @@
+         "doctor" => run(doctor::doctor_cmd),
++        #[cfg(feature = "file-picker")]
+         "pick-file" => run(bridge::pick_file_cmd),
++        #[cfg(feature = "file-picker")]
+         "picker" => run(picker::picker_cmd),
+@@ -38,3 +42,3 @@
+             eprintln!(
+-                "usage: herdr-nvim <toggle|sidebar|daemon-gc|on-event|daemons|doctor|pick-file|picker|open-link>"
++                "usage: herdr-nvim <toggle|sidebar|daemon-gc|on-event|daemons|doctor|open-link>"
+             );
+--- a/src/bridge.rs
++++ b/src/bridge.rs
+@@ -31,3 +31,2 @@
+     maneuver::{self, Ctx},
+-    picker::Handoff,
+     sessions, state,
+@@ -35,2 +34,5 @@
+ 
++#[cfg(feature = "file-picker")]
++use crate::picker::Handoff;
++
+ const PLUGIN_ID: &str = "chmarax.herdr-nvim";
+@@ -39,2 +41,3 @@
+ /// invoked as `pick-file --finish <handoff>`, otherwise runs the action phase.
++#[cfg(feature = "file-picker")]
+ pub fn pick_file_cmd() -> Result<()> {
+@@ -102,2 +105,3 @@
+ /// the picker.
++#[cfg(feature = "file-picker")]
+ fn start_pick() -> Result<()> {
+@@ -216,2 +220,3 @@
+ /// Phase 2: act on the user's selection from the handoff file.
++#[cfg(feature = "file-picker")]
+ fn finish_pick(handoff_path: &str) -> Result<()> {
+@@ -399,2 +404,3 @@
+ /// Serialize `handoff` to a uniquely-named temp file, returning its path.
++#[cfg(feature = "file-picker")]
+ fn write_handoff(handoff: &Handoff) -> Result<String> {
