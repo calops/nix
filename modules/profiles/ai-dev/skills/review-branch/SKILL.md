@@ -42,12 +42,14 @@ Dispatch one parallel subagent per focus area. They share the saved diff and no 
 | Focus | Checks |
 | --- | --- |
 | Correctness | Semantic correctness, contract violations, edge cases, unsafe behavior, and behavioral footguns. |
-| Code quality | Proper language and framework idioms, technical best practices, low-level implementation quality, DRY, and especially readability: clear naming, straightforward control flow, cohesive functions, explicit data flow, and abstractions that earn their cost. |
+| Code quality | Proper language and framework idioms, technical best practices, low-level implementation quality, DRY, code placement (no test-only code in production modules), and especially readability: clear naming, straightforward control flow, cohesive functions, explicit data flow, and abstractions that earn their cost. |
 | Comments and documentation | Comments explain why, not what; no repeated rationale, stale enumerations, rename-sensitive references, bare measurements, version-specific defaults, or generated exposition. Load the relevant language skill for its full criteria. |
 | Optimization and pragmatism | Avoidable allocation, copying, computation, query cost, concurrency, asymptotic behavior, unjustified complexity, and speculative future-proofing. |
 | Testing strategy | Consumer-visible invariants and plausible regressions; no framework tests, mock echoes, combinatorial bloat, or expensive integration coverage where a unit test proves the behavior. |
 
 The code-quality subagent must load the relevant language skills and follow established repository conventions. Look for concrete maintenance costs: obscure state changes, unnecessary indirection or nesting, overly broad responsibilities, and duplicated logic or knowledge that can drift. For DRY findings, identify the repeated rule and how copies can diverge; similar-looking code with different responsibilities is not enough. Prefer a readable local simplification or an existing helper over a new abstraction. Do not report personal style preferences, mechanically extract every repetition, or trade clarity for cleverness.
+
+For code placement, grep the callers of every function, class, method and constant the diff adds to a non-test module, and every one whose last production caller the diff removes. If all callers are tests or test seeding (fixtures, factories, `testing/` helpers), the code belongs in the test tree, and so does anything only it uses. On a stacked branch, judge by the callers at the top of the stack. Framework hooks (serializer `validate_*`, management command methods, settings) are called by name and are not findings.
 
 Keep focus ownership clear: correctness owns behavioral defects; code quality owns implementation clarity, idioms, and duplication; comments and documentation owns explanatory prose; optimization owns runtime cost; testing owns coverage strategy. Overlapping evidence should become one finding during synthesis, not duplicate feedback.
 

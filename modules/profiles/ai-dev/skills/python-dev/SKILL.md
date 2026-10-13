@@ -16,6 +16,13 @@ Don't rely on old best practices and idioms, use modern constructs when relevant
 Always strive to be correct. That means using the standard, idiomatic constructs of the language and
 frameworks you're using. Don't take shortcuts by disabling lints with #noqa.
 
+# Code placement
+
+Put code where its callers are. A function, class or constant that only tests or test seeding call
+(fixtures, factories, seed helpers) lives in the test tree, not in a production module, even when it
+is the natural inverse of a production function. Before adding a helper to a production module, check
+that production code calls it, and when removing a production caller, check what it leaves test-only.
+
 # Comments
 
 Every comment has to earn its place. Prefer deleting one over writing one that restates the code.
