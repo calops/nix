@@ -1,4 +1,17 @@
 { lib, ... }:
+let
+  # `IdentityAgent` takes precedence over SSH_AUTH_SOCK, so hardcoding the
+  # 1Password socket silently shadows an agent forwarded with `ssh -A`. Prefer
+  # the forwarded agent when we are inside an SSH session and fall back to the
+  # 1Password desktop agent when working on the machine directly.
+  mkIdentityAgent = agentPath: ''
+    Match exec "test -n \"$SSH_CONNECTION\" -a -n \"$SSH_AUTH_SOCK\""
+      IdentityAgent SSH_AUTH_SOCK
+
+    Match all
+      IdentityAgent "${agentPath}"
+  '';
+in
 {
   den.aspects.programs.provides.onepassword = {
     homeManager =
@@ -37,9 +50,7 @@
         '';
 
         programs.ssh.extraConfig = lib.mkIf (!config.profiles.headless.enable) (
-          lib.mkDefault ''
-            IdentityAgent "~/.1password/agent.sock"
-          ''
+          lib.mkDefault (mkIdentityAgent "~/.1password/agent.sock")
         );
 
         programs.git.signing = {
@@ -59,9 +70,7 @@
       { pkgs, ... }:
       {
         programs.git.signing.signer = "${pkgs._1password-gui}/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
-        programs.ssh.extraConfig = ''
-          IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-        '';
+        programs.ssh.extraConfig = mkIdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock";
       };
 
     nixos =
