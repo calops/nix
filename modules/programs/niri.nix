@@ -16,6 +16,10 @@
         type = lib.types.str;
         default = "";
       };
+      homeManager.options.niriExtraEnvironment = lib.mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        default = { };
+      };
     }
   ];
 
@@ -149,6 +153,11 @@
               environment {
                   "ELECTRON_OZONE_PLATFORM_HINT" "auto"
                   "NIXOS_OZONE_WL" "1"
+                  ${lib.concatStringsSep "\n" (
+                    lib.mapAttrsToList
+                      (name: value: "    ${builtins.toJSON name} ${builtins.toJSON value}")
+                      config.niriExtraEnvironment
+                  )}
               }
 
               binds {

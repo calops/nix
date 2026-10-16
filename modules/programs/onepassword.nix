@@ -62,6 +62,21 @@ in
         };
       };
 
+    homeManagerLinux =
+      { config, lib, ... }:
+      {
+        # Set the host agent in Niri's child environment, including GUI apps.
+        # SSH sessions do not descend from Niri, and Bkpr overrides this with
+        # its stable relay socket when it launches a pane.
+        niriExtraEnvironment.SSH_AUTH_SOCK = lib.mkIf (!config.profiles.headless.enable) (
+          "${config.home.homeDirectory}/.1password/agent.sock"
+        );
+        # Services and D-Bus-activated apps do not inherit Niri's environment.
+        systemd.user.sessionVariables.SSH_AUTH_SOCK = lib.mkIf (!config.profiles.headless.enable) (
+          "${config.home.homeDirectory}/.1password/agent.sock"
+        );
+      };
+
     homeManagerDarwin =
       { pkgs, ... }:
       {
