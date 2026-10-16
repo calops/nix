@@ -1,15 +1,12 @@
 { lib, ... }:
 let
-  # `IdentityAgent` takes precedence over SSH_AUTH_SOCK, so hardcoding the
-  # 1Password socket silently shadows an agent forwarded with `ssh -A`. Prefer
-  # the forwarded agent when we are inside an SSH session and fall back to the
-  # 1Password desktop agent when working on the machine directly.
-  mkIdentityAgent = agentPath: ''
-    Match exec "test -n \"$SSH_CONNECTION\" -a -n \"$SSH_AUTH_SOCK\""
-      IdentityAgent SSH_AUTH_SOCK
-
-    Match all
-      IdentityAgent "${agentPath}"
+  # Home Manager's sessionVariables override SSH_AUTH_SOCK in every Fish shell,
+  # including SSH sessions and panes using Bkpr's stable relay. Only replace
+  # the desktop shell's agent; retain forwarded and multiplexer sockets.
+  localAgent = agentPath: ''
+    if not set -q SSH_CONNECTION; and not set -q ZELLIJ; and not set -q TMUX; and not set -q BKPR_ZELLIJ
+      set -gx SSH_AUTH_SOCK "${agentPath}"
+    end
   '';
 in
 {
@@ -39,19 +36,18 @@ in
 
         programs.fish.shellAbbrs.s = "sudo --askpass";
 
-        # On headless hosts there is no 1Password agent socket, so run a local
-        # ssh-agent and lazily load the 1Password SSH keys into it. The agent
-        # starts once and persists; `op signin` only prompts on first load.
-        programs.fish.interactiveShellInit = lib.mkIf config.profiles.headless.enable ''
-          if not set -q SSH_AUTH_SOCK
-            set -gx SSH_AUTH_SOCK "$HOME/.ssh/op-agent.sock"
-            op-ssh-agent >/dev/null
-          end
-        '';
-
-        programs.ssh.extraConfig = lib.mkIf (!config.profiles.headless.enable) (
-          lib.mkDefault (mkIdentityAgent "~/.1password/agent.sock")
-        );
+        # Headless SSH sessions receive their forwarded socket from sshd; only
+        # start a local agent when none was forwarded.
+        programs.fish.interactiveShellInit =
+          if config.profiles.headless.enable then
+            ''
+              if not set -q SSH_AUTH_SOCK
+                set -gx SSH_AUTH_SOCK "$HOME/.ssh/op-agent.sock"
+                op-ssh-agent >/dev/null
+              end
+            ''
+          else
+            localAgent "$HOME/.1password/agent.sock";
 
         programs.git.signing = {
           signByDefault = true;
@@ -70,7 +66,8 @@ in
       { pkgs, ... }:
       {
         programs.git.signing.signer = "${pkgs._1password-gui}/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
-        programs.ssh.extraConfig = mkIdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock";
+        programs.fish.interactiveShellInit =
+          localAgent "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock";
       };
 
     nixos =
