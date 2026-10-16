@@ -1,8 +1,7 @@
 { lib, ... }:
 let
-  # Home Manager's sessionVariables override SSH_AUTH_SOCK in every Fish shell,
-  # including SSH sessions and panes using Bkpr's stable relay. Only replace
-  # the desktop shell's agent; retain forwarded and multiplexer sockets.
+  # Darwin has no user-systemd environment; keep the local shell's agent
+  # without replacing forwarded SSH or multiplexer sockets.
   localAgent = agentPath: ''
     if not set -q SSH_CONNECTION; and not set -q ZELLIJ; and not set -q TMUX; and not set -q BKPR_ZELLIJ
       set -gx SSH_AUTH_SOCK "${agentPath}"
@@ -38,16 +37,12 @@ in
 
         # Headless SSH sessions receive their forwarded socket from sshd; only
         # start a local agent when none was forwarded.
-        programs.fish.interactiveShellInit =
-          if config.profiles.headless.enable then
-            ''
-              if not set -q SSH_AUTH_SOCK
-                set -gx SSH_AUTH_SOCK "$HOME/.ssh/op-agent.sock"
-                op-ssh-agent >/dev/null
-              end
-            ''
-          else
-            localAgent "$HOME/.1password/agent.sock";
+        programs.fish.interactiveShellInit = lib.mkIf config.profiles.headless.enable ''
+          if not set -q SSH_AUTH_SOCK
+            set -gx SSH_AUTH_SOCK "$HOME/.ssh/op-agent.sock"
+            op-ssh-agent >/dev/null
+          end
+        '';
 
         programs.git.signing = {
           signByDefault = true;
@@ -65,13 +60,8 @@ in
     homeManagerLinux =
       { config, lib, ... }:
       {
-        # Set the host agent in Niri's child environment, including GUI apps.
-        # SSH sessions do not descend from Niri, and Bkpr overrides this with
-        # its stable relay socket when it launches a pane.
-        niriExtraEnvironment.SSH_AUTH_SOCK = lib.mkIf (!config.profiles.headless.enable) (
-          "${config.home.homeDirectory}/.1password/agent.sock"
-        );
-        # Services and D-Bus-activated apps do not inherit Niri's environment.
+        # The user manager is shared across logins; SSH forwarding from sshd
+        # still supplies its own socket to remote shells.
         systemd.user.sessionVariables.SSH_AUTH_SOCK = lib.mkIf (!config.profiles.headless.enable) (
           "${config.home.homeDirectory}/.1password/agent.sock"
         );
@@ -90,6 +80,8 @@ in
       {
         programs._1password.enable = true;
         programs._1password-gui.enable = config.profiles.graphical.enable;
+        # GCR's socket unit also sets SSH_AUTH_SOCK in the user manager.
+        services.gnome.gcr-ssh-agent.enable = lib.mkIf config.profiles.graphical.enable (lib.mkForce false);
         environment.etc."1password/custom_allowed_browsers" = lib.mkIf config.profiles.graphical.enable {
           text = ''
             firefox-beta

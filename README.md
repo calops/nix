@@ -14,6 +14,15 @@ fork's binary cache. Stylix supplies the shared terminal font and theme.
 Launch `ghostty` or select Ghostty in the application menu after rebuilding.
 Kitty remains installed and the existing terminal keybindings are unchanged.
 
+## SSH agent
+
+Graphical Linux hosts disable GCR's SSH-agent socket. Home Manager sets
+`SSH_AUTH_SOCK` to `~/.1password/agent.sock` in the user systemd manager, so
+user services use 1Password even without an active graphical login. SSH logins
+with agent forwarding keep the socket supplied by `sshd`; headless hosts retain
+their local agent fallback. Rebuild and log out/in to replace the old user
+manager environment; restart existing services and sessions to inherit it.
+
 ## Shell prompt
 
 Oh My Posh shows the user and hostname in SSH sessions; non-root local sessions
