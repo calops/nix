@@ -57,6 +57,88 @@
         };
     }
 
+    # gh with a config per directory tree, e.g. a work account under ~/terabase. Wrapping the
+    # package rather than a shell function makes it hold for every caller: bash, scripts, gh
+    # extensions and git's credential helper, which runs `gh auth git-credential` inside the repo.
+    # Only declared directories count: a config found by searching upwards would let any checkout
+    # pick gh's pager, browser or token.
+    {
+      homeManager =
+        {
+          config,
+          lib,
+          pkgs,
+          ...
+        }:
+        let
+          cfg = config.programs.gh;
+          yamlFormat = pkgs.formats.yaml { };
+          home = config.home.homeDirectory;
+          # Longest first, so a directory nested in another declared one takes precedence.
+          roots = lib.sort (a: b: lib.stringLength a > lib.stringLength b) (lib.attrNames cfg.configDirs);
+          wrapper = pkgs.writeShellScriptBin "gh" ''
+            if [ -z "''${GH_CONFIG_DIR:-}" ] && here=$(pwd -P 2>/dev/null); then
+              for root in ${lib.escapeShellArgs roots}; do
+                real=$(cd -P "$root" 2>/dev/null && pwd -P) || continue
+                case "$here/" in
+                  "$real"/*)
+                    export GH_CONFIG_DIR="$root/.gh"
+                    break
+                    ;;
+                esac
+              done
+            fi
+            exec ${lib.getExe pkgs.gh} "$@"
+          '';
+        in
+        {
+          options.programs.gh.configDirs = lib.mkOption {
+            type = lib.types.attrsOf (
+              lib.types.submodule {
+                options.settings = lib.mkOption {
+                  inherit (yamlFormat) type;
+                  default = { };
+                  description = "Written to {file}`<directory>/.gh/config.yml`.";
+                };
+              }
+            );
+            default = { };
+            example = lib.literalExpression ''{ "''${config.home.homeDirectory}/work".settings.git_protocol = "ssh"; }'';
+            description = ''
+              Directories under which gh uses its own config, `<directory>/.gh`, instead of the
+              default one. Its `hosts.yml`, which holds the accounts, stays gh's to write.
+            '';
+          };
+
+          config = lib.mkIf (cfg.configDirs != { }) {
+            assertions = map (root: {
+              assertion = lib.hasPrefix "${home}/" root;
+              message = "programs.gh.configDirs: ${root} is not under ${home}.";
+            }) roots;
+
+            programs.gh.package = pkgs.symlinkJoin {
+              name = "gh-${pkgs.gh.version}";
+              # The wrapper comes first, so its bin/gh wins over the real one.
+              paths = [
+                wrapper
+                pkgs.gh
+              ];
+              inherit (pkgs.gh) version;
+              meta = pkgs.gh.meta // {
+                mainProgram = "gh";
+              };
+            };
+
+            home.file = lib.mapAttrs' (
+              root: dir:
+              lib.nameValuePair "${lib.removePrefix "${home}/" root}/.gh/config.yml" {
+                source = yamlFormat.generate "gh-config.yml" ({ version = "1"; } // dir.settings);
+              }
+            ) cfg.configDirs;
+          };
+        };
+    }
+
     den.aspects.programs._.neovim
     den.aspects.programs._.nh
     den.aspects.programs._.nushell

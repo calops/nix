@@ -24,7 +24,8 @@ in
           pkgs.jq
           pkgs.git
           pkgs.coreutils
-          pkgs.gh
+          # The wrapped gh, so a work repo's PR lookups use its own account.
+          config.programs.gh.package
         ];
         statusLinePalette = pkgs.writeText "claude-statusline-palette.scss" colors.palette.asScss;
 

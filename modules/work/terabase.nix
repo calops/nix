@@ -3,6 +3,7 @@
   den.aspects.work.provides.terabase = {
     homeManager =
       {
+        config,
         pkgs,
         lib,
         self',
@@ -29,16 +30,10 @@
           }
         ];
 
-        programs.fish.functions.gh = {
-          wraps = "gh";
-          body = # fish
-            ''
-              if test (pwd) = "$HOME/terabase"; or string match -q "$HOME/terabase/*" (pwd)
-                  GH_CONFIG_DIR="$HOME/terabase/.gh" command gh $argv
-              else
-                  command gh $argv
-              end
-            '';
+        # The work GitHub account, logged in under ~/terabase/.gh/hosts.yml.
+        programs.gh.configDirs."${config.home.homeDirectory}/terabase".settings = {
+          git_protocol = "https";
+          aliases.co = "pr checkout";
         };
 
         home.packages = [
