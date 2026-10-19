@@ -197,7 +197,7 @@ return {
 				cancel_event = "move",
 			},
 			system_clipboard = {
-				-- Herdr forwards OSC 52 writes but cannot answer focus-triggered reads.
+				-- Avoid focus-triggered clipboard reads over OSC 52.
 				sync_with_ring = false,
 			},
 		},

@@ -51,14 +51,6 @@
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
-    herdr = {
-      url = "github:calops/herdr/calops/sidebar-workspaces";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    herdr-link = {
-      url = "github:LZHcode1986/herdr-link";
-      flake = false;
-    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -66,10 +58,6 @@
     import-tree.url = "github:vic/import-tree";
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    maki = {
-      url = "github:tontinton/maki";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     neovim-nightly = {
@@ -105,10 +93,6 @@
     };
     quickshell = {
       url = "github:calops/quickshell?ref=feat/region-dynamic-items";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    stasis = {
-      url = "github:saltnpepper97/stasis";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     stylix = {

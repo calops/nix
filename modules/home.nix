@@ -34,7 +34,6 @@
   den.schema.home.includes = [ den.aspects.homeDefault ];
 
   den.aspects.homeDefault.includes = [
-    den.aspects.programs._.stasis
     den.aspects.programs._.ssh
     den.aspects.programs._.oh-my-posh
     den.aspects.programs._.nix-index

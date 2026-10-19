@@ -29,7 +29,7 @@ vim.o.smartcase = true
 
 -- Edit
 vim.g.mapleader = ","
--- Let the attached terminal own the clipboard, including through SSH and Herdr.
+-- Let the attached terminal own the clipboard, including through SSH.
 vim.g.clipboard = "osc52"
 vim.o.colorcolumn = "120"
 vim.o.concealcursor = "nc"

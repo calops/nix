@@ -46,6 +46,7 @@
           };
 
           home.packages = [
+            pkgs.brightnessctl
             (pkgs.writeShellScriptBin "shell" ''
               exec quickshell ipc call actions "$@"
             '')
