@@ -44,6 +44,8 @@
             symbolPreset = "nerd";
             theme.dark = "dark-catppuccin";
             setupVersion = 2;
+            # OpenCode already receives every server from programs.mcp.
+            enabledProviders = [ "opencode" ];
             memory.backend = "local";
             advisor.enabled = false;
             astGrep.enabled = true;

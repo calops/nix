@@ -71,8 +71,7 @@ in
       { pkgs, ... }:
       {
         programs.git.signing.signer = "${pkgs._1password-gui}/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
-        programs.fish.interactiveShellInit =
-          localAgent "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock";
+        programs.fish.interactiveShellInit = localAgent "$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock";
       };
 
     nixos =
@@ -84,7 +83,7 @@ in
         services.gnome.gcr-ssh-agent.enable = lib.mkIf config.profiles.graphical.enable (lib.mkForce false);
         environment.etc."1password/custom_allowed_browsers" = lib.mkIf config.profiles.graphical.enable {
           text = ''
-            firefox-beta
+            firefox
           '';
           mode = "0755";
         };

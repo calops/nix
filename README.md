@@ -2,6 +2,86 @@
 
 Personal flake for home-manager and nixos configuration.
 
+## Xerj
+
+The `ai-dev` profile installs [Xerj](https://github.com/xerj-org/xerj)
+`1.0.0-rc.98` from a hash-pinned upstream static Linux binary. The user
+`xerj.service` runs a persistent search/indexing node; each harness launches
+its own lightweight `xerj mcp` stdio bridge to that node.
+
+Claude Code, OpenCode and Codex use the shared Home Manager MCP registry.
+OMP opts into its built-in OpenCode discovery provider, so it inherits the
+entire registry through `~/.config/opencode/opencode.json`, not a separate
+Xerj-only `~/.omp/agent/mcp.json`. The provider also discovers other OpenCode
+resources and settings. Codex settings remain writable and merge with
+client-managed state. Cursor Agent and Antigravity are not installed.
+
+The node binds only to `127.0.0.1`: Elasticsearch-compatible HTTP on `9200`,
+native REST on `9201`, and gRPC on `9202`. HTTP API-key authentication stays
+enabled; TLS is disabled for loopback traffic. Data lives in
+`$XDG_STATE_HOME/xerj` (normally `~/.local/state/xerj`), with a private generated
+`admin.key`. The installed CLI/MCP wrapper reads that key at runtime; no secret
+is embedded in Nix. These harnesses share the user's node and memory, not
+separate security boundaries.
+
+After rebuilding/activating Home Manager, start or check the service and
+restart harness sessions to load their new MCP configuration:
+
+```sh
+systemctl --user start xerj.service
+systemctl --user status xerj.service
+journalctl --user -u xerj.service
+xerj search --prefix nix-config "SSH agent configuration"
+```
+
+`services.xerj.indexedDirectories` maps stable index prefixes to directory paths:
+
+```nix
+services.xerj.indexedDirectories = {
+  my-project = "~/projects/my-project";
+};
+```
+
+`nix-config` defaults to `config.home.configDir`. The Terabase work aspect adds
+the backend, backend Nix environment, frontend C3, web, DT3 explorer and guide
+checkouts; worktrees, dumps and performance traces are not included.
+Absolute paths and `~/` are supported. A missing directory is skipped without
+failing; its systemd path unit starts indexing if it appears later.
+
+Each folder gets a `xerj-index-<prefix>.service` and `.path` unit. The service
+waits for node readiness, indexes once, then watches filesystem events with a
+two-second debounce and two indexing workers. Added, changed, renamed and
+deleted files are reconciled automatically. Xerj's watch mode requires
+`--no-graph`, so these indexes have no second-brain relationship graph.
+Normal ignore rules apply. Indexing can consume substantial disk and memory;
+even a small change currently involves corpus-wide work upstream.
+
+Keep prefixes stable and use one per folder. Avoid prefixes that start with
+another prefix followed by `-`: a search for `foo` also matches `foo-bar-*`.
+Removing an option stops its watcher but deliberately retains indexed data.
+Use `xerj autoindex remove --prefix <prefix>` to review and explicitly remove it.
+Keep Xerj's data directory outside indexed folders.
+
+The node uses built-in neural embeddings (`all-MiniLM-L6-v2`). Xerj downloads
+the model from Hugging Face on first startup (about 90 MB), caches it, and
+runs it in-process. No additional daemon or API key is needed; document text
+is embedded locally. Startup allows up to 15 minutes for the initial download.
+A model load failure fails startup rather than falling back to lexical vectors.
+
+On first startup of each managed watcher after the neural cutover, it removes
+only that configured prefix/source folder's old autoindex data, then rebuilds
+using a separate neural resume journal. Search for that folder can be incomplete
+until its rebuild finishes. A completion marker prevents repeated removal on
+later restarts. Missing folders defer the migration until they exist.
+Unrelated indexes and agent memory are not deleted or automatically re-embedded;
+any pre-existing lexical vectors there need their own deliberate migration.
+
+Semantic/hybrid MCP queries can use these embeddings on fields mapped as
+`semantic_text`; autoindex infers those fields, so not every short/structured
+dataset has them. External embedding providers, Corpus Hub downloads and
+reference corpora are not provisioned here. Upstream feedback invitations
+are disabled. Do not run `xerj init`: Nix supplies the MCP configuration.
+
 ## Quickshell brightness
 
 The Quickshell Home Manager module installs `brightnessctl` for its backlight

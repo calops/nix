@@ -10,6 +10,13 @@
         ...
       }:
       {
+        services.xerj.indexedDirectories = {
+          tb-backend = "~/terabase/construct-backend";
+          tb-nix = "~/terabase/construct-backend-nix";
+          tb-frontend = "~/terabase/construct-frontend-c3";
+          tb-frontend-c2 = "~/terabase/construct-web";
+        };
+
         # `tb task` (construct-backend-nix) reads Linear's API over HTTP rather
         # than shelling out to a CLI, so it needs a key. It takes either
         # LINEAR_API_KEY directly or a command that prints one -- the latter so a

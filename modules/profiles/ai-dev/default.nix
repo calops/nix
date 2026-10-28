@@ -17,24 +17,19 @@ in
   includes = [
     den.aspects.programs._.opencode
     den.aspects.programs._.claude-code
+    den.aspects.programs._.codex
     den.aspects.programs._.oh-my-pi
     den.aspects.ai-dev._.skills
     den.aspects.programs._.orca
+    den.aspects.programs._.xerj
   ];
 
   homeManager =
-    { pkgs, inputs', ... }:
-    let
-      agentPkgs = inputs'.llm-agents.packages;
-    in
+    { pkgs, ... }:
     {
       home.packages = [
         # TODO: remove this, put it where it's needed only
         pkgs.nodejs
-
-        agentPkgs.antigravity-cli
-        agentPkgs.cursor-agent
-        agentPkgs.codex
       ];
 
       programs.git.ignores = [

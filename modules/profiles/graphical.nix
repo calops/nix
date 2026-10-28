@@ -92,7 +92,7 @@ mkProfileAspect "graphical" {
             enable = true;
             defaultApplications =
               let
-                firefox = "firefox-beta.desktop";
+                firefox = "firefox.desktop";
               in
               {
                 "text/html" = firefox;
