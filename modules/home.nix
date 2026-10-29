@@ -5,33 +5,41 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  den.aspects.hmPlatforms =
-    { aspect-chain, ... }:
-    den._.forward {
-      each = [
-        "Linux"
-        "Darwin"
-      ];
-      fromClass = platform: "homeManager${platform}";
-      intoClass = _: "homeManager";
-      intoPath = _: [ ];
-      fromAspect = _: lib.head aspect-chain;
-      guard =
-        # Arguments need to be explicitly listed for den to forward them to the module
-        {
-          pkgs,
-          config,
-          colors,
-          inputs',
-          ...
-        }:
-        platform: lib.mkIf pkgs.stdenv."is${platform}";
-    };
+  den.classes = {
+    homeManagerLinux.description = "Linux-only Home Manager configuration";
+    homeManagerDarwin.description = "Darwin-only Home Manager configuration";
+  };
 
-  den.schema.host.includes = [ den.aspects.hmPlatforms ];
+  # Route only the current scope's modules; a forward can aggregate other hosts.
+  den.policies.hmPlatforms =
+    { system, ... }:
+    let
+      target = lib.systems.elaborate system;
+    in
+    map
+      (
+        platform:
+        den.lib.policy.route {
+          fromClass = "homeManager${platform}";
+          intoClass = "homeManager";
+          path = [ ];
+        }
+      )
+      (
+        builtins.filter (platform: target."is${platform}") [
+          "Linux"
+          "Darwin"
+        ]
+      );
 
-  den.schema.user.includes = [ den.aspects.homeDefault ];
-  den.schema.home.includes = [ den.aspects.homeDefault ];
+  den.schema.user.includes = [
+    den.policies.hmPlatforms
+    den.aspects.homeDefault
+  ];
+  den.schema.home.includes = [
+    den.policies.hmPlatforms
+    den.aspects.homeDefault
+  ];
 
   den.aspects.homeDefault.includes = [
     den.aspects.programs._.ssh

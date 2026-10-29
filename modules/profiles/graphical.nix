@@ -4,7 +4,6 @@ let
 in
 mkProfileAspect "graphical" {
   includes = [
-    den.aspects.hmPlatforms
     den.aspects.fonts
     den.aspects.programs._.niri
     den.aspects.programs._.anyrun

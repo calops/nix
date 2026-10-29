@@ -2,6 +2,16 @@
 
 Personal flake for home-manager and nixos configuration.
 
+## Profile isolation
+
+`modules/home.nix` routes `homeManagerLinux` and `homeManagerDarwin` into
+Home Manager within each user or standalone home's scope, selecting the class
+from the target system. Platform-specific modules must not be forwarded from
+the fleet-wide aggregate: that leaks packages between hosts.
+
+The `gaming` profile is selected only by `tocardstation`. `tb-laptop` must not
+receive its Lutris, Wine, Steam helpers, or MangoHud packages.
+
 ## Xerj
 
 The `ai-dev` profile installs [Xerj](https://github.com/xerj-org/xerj)
