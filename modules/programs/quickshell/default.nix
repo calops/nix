@@ -18,6 +18,28 @@
           inputs',
           ...
         }:
+        let
+          quickshell = inputs'.quickshell.packages.default;
+
+          # Qt 6.12 makes moc require complete types for QML class property
+          # metatypes; quickshell's 0.2.1-era headers rely on opaque pointers, so
+          # mocs_compilation fails with "Meta Types must be fully defined".
+          # Backport of upstream quickshell commit 5d5d498 ("use MOC includes
+          # instead of opaque pointer definitions"). Drop when the branch is
+          # rebased onto upstream master.
+          quickshellUnwrapped = quickshell.unwrapped.overrideAttrs (old: {
+            patches = (old.patches or [ ]) ++ [ ./qt-6.12-moc-completeness.patch ];
+          });
+
+          # Same derivation as upstream's wrapper, repointing it at the patched
+          # build so qtWrapperArgs/QML import paths are preserved.
+          quickshellPatched = quickshell.overrideAttrs (_: {
+            installPhase = ''
+              mkdir -p $out
+              cp -r ${quickshellUnwrapped}/* $out
+            '';
+          });
+        in
         {
           programs.quickshell = {
             enable = true;
@@ -26,7 +48,7 @@
 
             package = pkgs.symlinkJoin {
               name = "quickshell";
-              paths = [ inputs'.quickshell.packages.default ];
+              paths = [ quickshellPatched ];
               nativeBuildInputs = [ pkgs.makeWrapper ];
               postBuild = ''
                 wrapProgram $out/bin/quickshell \
