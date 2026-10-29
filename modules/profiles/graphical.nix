@@ -7,7 +7,6 @@ mkProfileAspect "graphical" {
     den.aspects.fonts
     den.aspects.programs._.niri
     den.aspects.programs._.anyrun
-    den.aspects.programs._.zed
     den.aspects.programs._.walker
     den.aspects.programs._.neovide
     den.aspects.programs._.mpv
