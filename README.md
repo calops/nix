@@ -26,6 +26,10 @@ Xerj-only `~/.omp/agent/mcp.json`. The provider also discovers other OpenCode
 resources and settings. Codex settings remain writable and merge with
 client-managed state. Cursor Agent and Antigravity are not installed.
 
+The Terabase work aspect adds [PostHog MCP](https://posthog.com/docs/model-context-protocol)
+to this shared registry at `https://mcp.posthog.com/mcp`. Authenticate through
+the client's OAuth flow on first use; no API key is stored in Nix.
+
 The node binds only to `127.0.0.1`: Elasticsearch-compatible HTTP on `9200`,
 native REST on `9201`, and gRPC on `9202`. HTTP API-key authentication stays
 enabled; TLS is disabled for loopback traffic. Data lives in

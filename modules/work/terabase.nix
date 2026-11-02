@@ -10,6 +10,8 @@
         ...
       }:
       {
+        programs.mcp.servers.posthog.url = "https://mcp.posthog.com/mcp";
+
         services.xerj.indexedDirectories = {
           tb-backend = "~/terabase/construct-backend";
           tb-nix = "~/terabase/construct-backend-nix";
