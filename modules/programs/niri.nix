@@ -1,13 +1,8 @@
-{ lib, inputs, ... }:
+{ lib, ... }:
 {
   flake-file.inputs = {
     niri-src.url = "github:calops/niri";
-    niri.url = "github:sodiboo/niri-flake/";
-    niri.inputs.niri-unstable.follows = "niri-src";
-    # Disabled: niri-flake still wants libdisplay-info_0_2, which our nixpkgs has
-    # dropped, so following our nixpkgs fails its version assert. Re-enable once
-    # niri-flake moves off it.
-    # niri.inputs.nixpkgs.follows = "nixpkgs";
+    niri-src.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   den.schema.user.includes = [
@@ -19,26 +14,13 @@
     }
   ];
 
-  caches.niri = {
-    url = "https://niri.cachix.org";
-    key = "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964=";
-  };
-
   den.aspects.programs.provides.niri = {
-    includes = [
-      {
-        homeManager.imports = [
-          inputs.niri.homeModules.niri
-        ];
-      }
-    ];
-
     nixos =
       { inputs', ... }:
       {
         programs.niri = {
           enable = true;
-          package = inputs'.niri.packages.niri-unstable;
+          package = inputs'.niri-src.packages.niri;
         };
 
         xdg.portal.xdgOpenUsePortal = false;
@@ -58,14 +40,14 @@
         palette = colors.palette.asHexWithHashtag;
         wallpaper = config.stylix.image;
         lock = lib.getExe config.programs.swaylock.package;
-        niri = lib.getExe config.programs.niri.package;
+        niri = lib.getExe config.wayland.windowManager.niri.package;
         pidof = lib.getExe' pkgs.sysvinit "pidof";
       in
       {
-        programs.niri = {
+        wayland.windowManager.niri = {
           enable = true;
-          package = nixosConfig.programs.niri.package or inputs'.niri.packages.niri-unstable;
-          config =
+          package = nixosConfig.programs.niri.package or inputs'.niri-src.packages.niri;
+          extraConfig =
             # kdl
             ''
               ${config.niriExtraConfig}
@@ -287,6 +269,8 @@
             '';
         };
 
+        services.gnome-keyring.enable = true;
+
         programs.swaylock = {
           enable = true;
           package = pkgs.swaylock-effects;
@@ -328,7 +312,6 @@
         home.packages = [
           pkgs.awww
           pkgs.nautilus
-          pkgs.xwayland-satellite
           pkgs.playerctl
         ];
       };

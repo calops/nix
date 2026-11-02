@@ -92,6 +92,22 @@ dataset has them. External embedding providers, Corpus Hub downloads and
 reference corpora are not provisioned here. Upstream feedback invitations
 are disabled. Do not run `xerj init`: Nix supplies the MCP configuration.
 
+## Niri
+
+`modules/programs/niri.nix` uses the native NixOS and Home Manager modules,
+with the compositor built by `calops/niri`'s own flake. Its nixpkgs input follows
+the system's nixpkgs so niri and the runtime Mesa drivers use compatible glibc.
+A compositor built against an older glibc can accept a login but fail to load
+the system's GBM backend, leaving it running without display outputs.
+
+Home Manager validates the raw KDL configuration with that same compositor
+before activation. The native modules provide session registration, systemd
+units, portals and Xwayland; the aspect also enables GNOME keyring.
+The former `niri-flake` typed settings and action helpers were unused.
+
+Inputs and caches are declared in the aspect. Regenerate `flake.nix` with
+`nix run .#write-flake`; do not edit the generated file directly.
+
 ## Quickshell brightness
 
 The Quickshell Home Manager module installs `brightnessctl` for its backlight

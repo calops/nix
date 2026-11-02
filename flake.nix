@@ -7,7 +7,6 @@
     extra-substituters = [
       "https://anyrun.cachix.org"
       "https://calops.cachix.org"
-      "https://niri.cachix.org"
       "https://nix-community.cachix.org"
       "https://nix-darwin.cachix.org"
       "https://cache.nixos.org"
@@ -16,7 +15,6 @@
     extra-trusted-public-keys = [
       "anyrun.cachix.org-1:pqBobmOjI7nKlsUMV25u9QHa9btJK65/C8vnO3p346s="
       "calops.cachix.org-1:6RTG80il2oS2ECFeG2QubG+mvD9OJc1s6Lm9JGAFcM0="
-      "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "nix-darwin.cachix.org-1:LxMyKzQk7Uqkc1Pfq5uhm9GSn07xkERpy+7cpwc006A="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -64,11 +62,10 @@
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    niri = {
-      url = "github:sodiboo/niri-flake/";
-      inputs.niri-unstable.follows = "niri-src";
+    niri-src = {
+      url = "github:calops/niri";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
-    niri-src.url = "github:calops/niri";
     nix-darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
