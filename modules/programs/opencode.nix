@@ -23,7 +23,6 @@
 
           settings = {
             provider.zai-coding-plan.options.apiKey = "{env:ZAI_API_KEY}";
-            provider.cursor.name = "Cursor";
             plugin = [
               "opencode-notify"
               "opencode-firecrawl"
@@ -31,26 +30,8 @@
               "opencode-worktree"
               "opencode-dynamic-context-pruning"
               "opencode-openai-codex-auth"
-              "opencode-cursor-oauth"
               "superpowers@git+https://github.com/obra/superpowers.git"
             ];
-          };
-
-          agents = {
-            codex = ''
-              ---
-              description: Generic coding agent running OpenAI Codex
-              mode: subagent
-              model: openai/gpt-5.3-codex
-              ---
-            '';
-            cursor = ''
-              ---
-              description: Generic coding agent running Cursor
-              mode: subagent
-              model: cursor/auto
-              ---
-            '';
           };
         };
       };
