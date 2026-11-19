@@ -4,8 +4,8 @@ let
 in
 {
   flake-file.inputs = {
+    # Preserve upstream derivations so Numtide's binary cache can substitute them.
     llm-agents.url = "github:numtide/llm-agents.nix";
-    llm-agents.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   caches.numtide = {

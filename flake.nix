@@ -54,10 +54,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     import-tree.url = "github:vic/import-tree";
-    llm-agents = {
-      url = "github:numtide/llm-agents.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    llm-agents.url = "github:numtide/llm-agents.nix";
     neovim-nightly = {
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -90,6 +87,10 @@
     };
     quickshell = {
       url = "github:calops/quickshell?ref=feat/region-dynamic-items";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sable = {
+      url = "github:SableClient/sable-next";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     stylix = {

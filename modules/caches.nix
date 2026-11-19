@@ -73,14 +73,14 @@ in
       key = "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=";
       scope = "global";
     };
-    caches.calops = {
-      url = "https://calops.cachix.org";
-      key = "calops.cachix.org-1:6RTG80il2oS2ECFeG2QubG+mvD9OJc1s6Lm9JGAFcM0=";
-      scope = "global";
-    };
     caches.nix-community = {
       url = "https://nix-community.cachix.org";
       key = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
+      scope = "global";
+    };
+    caches.calops = {
+      url = "https://calops.cachix.org";
+      key = "calops.cachix.org-1:6RTG80il2oS2ECFeG2QubG+mvD9OJc1s6Lm9JGAFcM0=";
     };
 
     # Emitted into flake.nix by `nix run .#write-flake`. Consumers need

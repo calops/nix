@@ -12,6 +12,23 @@ the fleet-wide aggregate: that leaks packages between hosts.
 The `gaming` profile is selected only by `tocardstation`. `tb-laptop` must not
 receive its Lutris, Wine, Steam helpers, or MangoHud packages.
 
+## Sable
+
+The `graphical` profile installs [Sable](https://github.com/SableClient/sable-next)
+through `modules/programs/sable.nix`, alongside Element. The upstream
+`sable-desktop` package follows this flake's nixpkgs input. No Sable-specific
+binary cache is configured.
+
+Launch `sable` or select Sable in the application menu after activating the
+updated configuration.
+
+## Coding agent packages
+
+`llm-agents` keeps its upstream nixpkgs pin so its packages match the signed
+derivations in `https://cache.numtide.com`. Making that input follow the root
+nixpkgs changes store paths and can force uncached source builds. Codex's
+terminal clipboard/color wrapper is built locally around the cached package.
+
 ## Xerj
 
 The `ai-dev` profile installs [Xerj](https://github.com/xerj-org/xerj)

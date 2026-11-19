@@ -12,6 +12,7 @@ mkProfileAspect "graphical" {
     den.aspects.programs._.mpv
     den.aspects.programs._.gtk
     den.aspects.programs._.element
+    den.aspects.programs._.sable
     den.aspects.programs._.wezterm
     den.aspects.programs._.quickshell
     den.aspects.programs._.firefox
