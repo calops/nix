@@ -215,7 +215,6 @@
               spawn-sh-at-startup "awww-daemon"
               spawn-sh-at-startup "awww img ${wallpaper}"
               spawn-sh-at-startup "${lib.getExe config.programs.firefox.package}"
-              spawn-sh-at-startup "${lib.getExe config.programs.element.package}"
 
               window-rule {
                 geometry-corner-radius 8.000000 8.000000 8.000000 8.000000
@@ -240,7 +239,7 @@
                 open-on-workspace "web"
               }
               window-rule {
-                match app-id="^Element$"
+                match app-id="^Sable$"
                 match app-id="^Slack$"
                 match app-id="^discord$"
                 default-column-width { proportion 0.500000; }
