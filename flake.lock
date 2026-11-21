@@ -645,11 +645,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1795219766,
-        "narHash": "sha256-IgFMPjdCMXf5R6ESu4QXZsoTHQmQiC29ba6dezi7hEI=",
+        "lastModified": 1795241446,
+        "narHash": "sha256-v8/CnsHh4/p58E5d0k208omIYUUu6EruiKRIYYNNuE0=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "d0810b5d0a80c16783c5180ffa848ba4a8aa8a62",
+        "rev": "a59764a6424689d67c1bd9070fd48afa44a47ee0",
         "type": "github"
       },
       "original": {
@@ -811,11 +811,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1795215121,
-        "narHash": "sha256-YxcbpHvrOYWNE65gfQjNGX9RtDyjP/AfM5av8MsuWIQ=",
+        "lastModified": 1795251560,
+        "narHash": "sha256-U+5GoTgPlQCnf6MIfwmW6LDh1iC+v/F7+lAaIWI756Y=",
         "owner": "kaylorben",
         "repo": "nixcord",
-        "rev": "0ddb1c558973efc6a5b4be8960bdcffca7269dbb",
+        "rev": "f3e90381e09a75d0c97f4680622dbb37b63452e1",
         "type": "github"
       },
       "original": {
@@ -950,11 +950,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795220540,
-        "narHash": "sha256-BV2v9sftxIntHlDzChBIos8pg22i6pu1tikAoQpR/0Q=",
+        "lastModified": 1795250799,
+        "narHash": "sha256-dJwAlDfkdW3FPoSLMSedwkFq8JzDIvYCBcWiu5uGjnM=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "192494d286543510000b32f08791b601465af752",
+        "rev": "985dbce28a313bc98a8cbeb1c9b20595400c437e",
         "type": "github"
       },
       "original": {
@@ -976,11 +976,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1795216111,
-        "narHash": "sha256-4AcufSNqaqXqRPjgHCkKEo5M0J6OOG6DFg6DW8iQVkQ=",
+        "lastModified": 1795248807,
+        "narHash": "sha256-ev+4PEKRCMX0oYnUFdZNNAUYcjeMdnGozr33fn0LlCs=",
         "owner": "can1357",
         "repo": "oh-my-pi",
-        "rev": "efd92300eec7e1d20e4d07393632f9b9ffcf031f",
+        "rev": "c61a4881a55389ca576662d62dbee0399463a0c1",
         "type": "github"
       },
       "original": {
@@ -1082,11 +1082,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795215558,
-        "narHash": "sha256-3TM4Bp+9TWNfTFkoXFqhdEaksqMAIxMAj81AnfJlhbs=",
+        "lastModified": 1795251322,
+        "narHash": "sha256-UABiZ6xWzFy4bgaK+fFxEjiRU32OjRizC65l0trE4QQ=",
         "owner": "SableClient",
         "repo": "sable-next",
-        "rev": "ce77df6afa83fa9cb6c8c2b22db6891e0e6b445a",
+        "rev": "af11f616f1cb4eb3ec5aa14f955557ecfe93f77a",
         "type": "github"
       },
       "original": {
