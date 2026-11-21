@@ -64,8 +64,6 @@
     homeManager =
       { ... }:
       {
-        programs.orca.sshHost = "station";
-
         programs.quickshell.localDev.enable = true;
 
         niriExtraConfig = # kdl

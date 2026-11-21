@@ -20,7 +20,6 @@ in
     den.aspects.programs._.codex
     den.aspects.programs._.oh-my-pi
     den.aspects.ai-dev._.skills
-    den.aspects.programs._.orca
     den.aspects.programs._.xerj
   ];
 

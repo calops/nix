@@ -23,8 +23,6 @@
     ];
 
     homeManager = {
-      services.orca.enable = true;
-
       nix.settings.cores = 22; # keep two cores for the system
       niriExtraConfig = # kdl
         ''
