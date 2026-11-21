@@ -30,6 +30,7 @@
             eval "$(${lib.getExe self'.packages.op-credential} "OpenCode GO" OPENCODE_API_KEY)"
             eval "$(${lib.getExe self'.packages.op-credential} "z.ai API key" ZAI_API_KEY)"
 
+            export PI_NOTIFICATIONS=off
             exec ${lib.getExe ompPackage} "$@"
           '';
         };
