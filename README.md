@@ -22,6 +22,18 @@ binary cache is configured.
 Launch `sable` or select Sable in the application menu after activating the
 updated configuration.
 
+## Cargo
+
+Home Manager writes `~/.cargo/config.toml` and installs `sccache` as Cargo's
+`rustc` wrapper. Project toolchains and Cargo's incremental-build defaults
+are unchanged. Run `sccache --show-stats` to inspect cache hits.
+
+Worktrees can reuse cacheable dependency compilations, but separate `target/`
+directories still hold separate artifacts. To share the artifacts themselves,
+point `CARGO_TARGET_DIR` at the same absolute directory in that project's
+worktrees. This also shares build locks and output paths, and `cargo clean`
+affects every worktree using that directory.
+
 ## Coding agent packages
 
 `llm-agents` keeps its upstream nixpkgs pin so its packages match the signed

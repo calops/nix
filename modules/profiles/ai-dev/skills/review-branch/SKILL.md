@@ -1,21 +1,25 @@
 ---
 name: review-branch
-description: Review a pull request or branch for correctness, code quality, readability, maintainability, comments, optimization balance, and testing, then prepare approved inline feedback in a pending GitHub review.
+description: Review a pull request or branch for correctness, code quality, readability, maintainability, comments, optimization balance, and testing. Propose fixes for the user's own branch or prepare approved inline feedback for someone else's PR.
 ---
 
 # Review Branch
 
-Review a pull request or branch as an external reviewer. The default deliverable is feedback, not edits to the reviewed branch.
+Review a pull request or branch from an external reviewer's perspective. If the user authored the branch, the goal is to propose a concrete fix for each finding, not to draft review comments. Do not edit the branch unless the user asks. For someone else's branch, the deliverable is review feedback.
 
 ## Workflow
 
 ```
-TARGET → DIFF → FAN OUT → SYNTHESIZE → REPORT → ITERATE → PENDING REVIEW → SUBMIT
+TARGET → DIFF → FAN OUT → SYNTHESIZE → REPORT → ITERATE
+  User's own branch: PROPOSE FIXES
+  Someone else's PR: PENDING REVIEW → SUBMIT
 ```
 
 ## 0. Resolve the target
 
 An explicit PR URL or number wins over the current branch. Read the PR metadata, base, head, existing reviews, and existing inline comments so the review uses the right comparison and does not repeat resolved feedback.
+
+Determine whether the user authored the target branch from the request and available PR or branch metadata. Do not assume the user authored it just because it is checked out locally.
 
 For a GitHub PR, use the companion helper to save the complete diff once:
 
@@ -73,7 +77,7 @@ Keep generic engine concerns separate from schema-specific configuration. A prod
 
 ## 3. Present the complete report first
 
-Before creating a GitHub review, show all findings to the user:
+Show all findings to the user before discussing fixes or drafting comments:
 
 - Number findings globally and sort by severity.
 - Include an explicit `No issues found.` under empty severity sections.
@@ -88,14 +92,16 @@ If every section is clean, state `No issues found, the branch is ready for revie
 
 After the complete report, process findings individually in report order.
 
-For every item:
+For every item, show its severity and progress as `MAJOR (2/7)`, then restate the finding and explain the concrete failing case.
 
-1. Show its severity and progress as `MAJOR (2/7)`.
-2. Restate the finding and explain the concrete failing case.
-3. Load `writing-in-my-voice` and draft a concise inline comment.
-4. Wait for the user to approve, rewrite, or skip it.
-5. Add it to the pending review only when the user explicitly says to send it.
-6. Confirm the pending comment URL, then move to the next item.
+**User's own branch:** Propose a concrete fix for each finding: say what to change and why it addresses the problem. Do not draft or post inline comments, open a pending review, or proceed to step 5. Apply fixes only when the user asks.
+
+**Someone else's PR:**
+
+1. Load `writing-in-my-voice` and draft a concise inline comment.
+2. Wait for the user to approve, rewrite, or skip it.
+3. Add it to the pending review only when the user explicitly says to send it.
+4. Confirm the pending comment URL, then move to the next item.
 
 Normal review comments are one to three sentences. State the problem first, then suggest the fix. Do not include the visible file and line in the prose. A skipped finding gets no GitHub comment and still advances the progress count.
 
@@ -109,7 +115,7 @@ ${SKILL_DIR}/review.sh comment --pr <number-or-url> \
 
 `open` is idempotent. `comment` creates or reuses the current user's pending review. Never create a standalone inline comment when a pending review is intended.
 
-## 5. Review and submit the pending review
+## 5. Review and submit the pending review (someone else's PR only)
 
 Keep the review pending while iterating. Never submit because the last finding was handled.
 

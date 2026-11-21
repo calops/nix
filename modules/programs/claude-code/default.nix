@@ -46,6 +46,11 @@ in
             permissions.defaultMode = "auto";
             effortLevel = "xhigh";
             tui = "fullscreen";
+            # No co-author footer on commits, no "Generated with" line on PRs.
+            attribution = {
+              commit = "";
+              pr = "";
+            };
             hooks = { };
             enabledPlugins = {
               "superpowers@claude-plugins-official" = true;
